@@ -117,7 +117,7 @@ CREATE TABLE registro_minuta (
 
 CREATE TABLE tipo_incidente(
   id_tipo_inc int primary key auto_increment,
-  tipo_inc VARCHAR(30),
+  tipo_incidente VARCHAR(30),
   observacion_inc TEXT
 );
 
