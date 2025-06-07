@@ -16,35 +16,13 @@ CREATE TABLE Usuario (
   correo VARCHAR(20),
   contrasena VARCHAR(15)
 );
+
 CREATE TABLE user_rol (
   id_user_rol INT PRIMARY KEY auto_increment,
   doc_id INT,
   rol_id INT,
   FOREIGN KEY (doc_id) REFERENCES Usuario(documento),
   FOREIGN KEY (rol_id) REFERENCES rol(id_rol)
-);
-
-
-
-CREATE TABLE control_accesos (
-  id_accesos INT PRIMARY KEY auto_increment NOT NULL,
-  tipo_usr_acceso ENUM('visitante', 'funcionario', 'aprendiz'),
-  fecha_hora_entrada DATETIME NOT NULL,
-  fecha_hora_salida DATETIME NOT NULL,
-  tipo_acceso VARCHAR (15),
-  permiso_acceso VARCHAR(10), 
-  observacion TEXT
-
-);
-
-CREATE TABLE guarda_seguridad (
-  id_guarda INT PRIMARY KEY auto_increment,
-  cargo_guarda VARCHAR(15),
-  estado VARCHAR(20),
-  id_user int,
-  id_control_accesos INT,
-  FOREIGN KEY (id_user) REFERENCES Usuario(documento),
-  FOREIGN KEY (id_control_accesos) REFERENCES control_accesos(id_accesos)
 );
 
  CREATE TABLE turno (
