@@ -43,8 +43,10 @@ CREATE TABLE programas (
   duracion VARCHAR(50),
   jornada_id INT,
   modalidad_id INT,
+  coordinacion_id INT,
   FOREIGN KEY (jornada_id) REFERENCES jornada(id_jornada),
   FOREIGN KEY (modalidad_id) REFERENCES modalidad(id_modalidad)
+  FOREING KEY (coordinacion_id) REFERENCES coordinacion(id_coordinacion)
 );
 
 CREATE TABLE aprendiz (
