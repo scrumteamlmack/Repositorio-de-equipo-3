@@ -93,8 +93,9 @@ CREATE TABLE ambiente (
 );
 
 CREATE TABLE recursos (
-  id_recurso INT PRIMARY KEY auto_increment,
+  serial_recurso VARCHAR PRIMARY KEY,
   nombre_recurso VARCHAR(50),
+  num_recurso TINYINT,
   tipo_recurso VARCHAR(30),
   estado VARCHAR(20),
   ambiente_id INT,
