@@ -33,8 +33,6 @@ CREATE TABLE modalidad (
 CREATE TABLE jornada (
   id_jornada INT PRIMARY KEY auto_increment,
   nombre_jornada VARCHAR(10),
-  id_horario INT,
-  FOREIGN KEY (id_horario) REFERENCES horarios(id_horario)
 );
 
 
