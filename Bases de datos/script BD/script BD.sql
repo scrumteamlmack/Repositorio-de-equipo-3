@@ -36,6 +36,12 @@ CREATE TABLE jornada (
 );
 
 
+CREATE TABLE coordinacion (
+  id_coordinacion  INT PRIMARY KEY auto_increment,
+  nombre_coordinacion VARCHAR(50),
+  correo_cordinacion VARCHAR(30)
+);
+
 CREATE TABLE programas (
   id_programas INT PRIMARY KEY auto_increment,
   nombre_programa VARCHAR(50),
@@ -45,8 +51,8 @@ CREATE TABLE programas (
   modalidad_id INT,
   coordinacion_id INT,
   FOREIGN KEY (jornada_id) REFERENCES jornada(id_jornada),
-  FOREIGN KEY (modalidad_id) REFERENCES modalidad(id_modalidad)
-  FOREING KEY (coordinacion_id) REFERENCES coordinacion(id_coordinacion)
+  FOREIGN KEY (modalidad_id) REFERENCES modalidad(id_modalidad),
+  FOREIGN KEY (coordinacion_id) REFERENCES coordinacion(id_coordinacion)
 );
 
 CREATE TABLE aprendiz (
@@ -62,24 +68,10 @@ CREATE TABLE aprendiz (
   FOREIGN KEY (usua_id) REFERENCES Usuario(documento)
 );
 
-
-CREATE TABLE registro_equipo (
-  id_equipo INT PRIMARY KEY auto_increment,
-  tipo_equipo VARCHAR(30),
-  marca VARCHAR(20),
-  modelo VARCHAR(20),
-  descripcion TEXT,
-  estado VARCHAR(20),
-  observacion TEXT,
-  placa_equipo VARCHAR(20),
-  usuario_docu int,
-  FOREIGN KEY (usuario_docu) REFERENCES Usuario(documento)
-);
-
-CREATE TABLE coordinacion (
-  id_coordinacion  INT PRIMARY KEY auto_increment,
-  nombre_coordinacion VARCHAR(50),
-  correo_cordinacion VARCHAR(30)
+CREATE TABLE registro_asistencia (
+  id_asistencia int PRIMARY KEY auto_increment,
+  fecha_asistencia DATE,
+  estado_asistencia ENUM('N', 'E', 'S')
 );
 
 CREATE TABLE ambiente (
@@ -93,7 +85,7 @@ CREATE TABLE ambiente (
 );
 
 CREATE TABLE recursos (
-  serial_recurso VARCHAR PRIMARY KEY,
+  serial_recurso VARCHAR(30) PRIMARY KEY,
   nombre_recurso VARCHAR(50),
   num_recurso TINYINT,
   tipo_recurso VARCHAR(30),
