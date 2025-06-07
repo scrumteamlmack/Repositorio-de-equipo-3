@@ -16,56 +16,13 @@ CREATE TABLE Usuario (
   correo VARCHAR(20),
   contrasena VARCHAR(15)
 );
+
 CREATE TABLE user_rol (
   id_user_rol INT PRIMARY KEY auto_increment,
   doc_id INT,
   rol_id INT,
   FOREIGN KEY (doc_id) REFERENCES Usuario(documento),
   FOREIGN KEY (rol_id) REFERENCES rol(id_rol)
-);
-CREATE TABLE vehiculo (
-  placa VARCHAR(20) PRIMARY KEY,
-  tipo VARCHAR(20),
-  marca VARCHAR(20),
-  modelo VARCHAR(20),
-  color VARCHAR(30),
-  estado VARCHAR(20),
-  observacion TEXT,
-  id_usr int,
-  FOREIGN KEY (id_usr) REFERENCES Usuario(documento)
-);
-
-create table registro_parqueadero( 
-id_registro int primary key auto_increment NOT NULL,
-fecha_hora_ingreso DATETIME NOT NULL,
-fecha_hora_salida DATETIME NOT NULL, 
-tipo_acceso_veh VARCHAR (20) NOT NULL,
-permisos_veh VARCHAR (15) NOT NULL,
-observacion text NOT NULL,
-placa_veh VARCHAR(20) NOT NULL,
-capacidad VARCHAR(20) NOT NULL,
-FOREIGN KEY (placa_veh) REFERENCES vehiculo(placa)
-);
-
-CREATE TABLE control_accesos (
-  id_accesos INT PRIMARY KEY auto_increment NOT NULL,
-  tipo_usr_acceso ENUM('visitante', 'funcionario', 'aprendiz'),
-  fecha_hora_entrada DATETIME NOT NULL,
-  fecha_hora_salida DATETIME NOT NULL,
-  tipo_acceso VARCHAR (15),
-  permiso_acceso VARCHAR(10), 
-  observacion TEXT
-
-);
-
-CREATE TABLE guarda_seguridad (
-  id_guarda INT PRIMARY KEY auto_increment,
-  cargo_guarda VARCHAR(15),
-  estado VARCHAR(20),
-  id_user int,
-  id_control_accesos INT,
-  FOREIGN KEY (id_user) REFERENCES Usuario(documento),
-  FOREIGN KEY (id_control_accesos) REFERENCES control_accesos(id_accesos)
 );
 
  CREATE TABLE turno (
