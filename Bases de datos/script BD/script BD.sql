@@ -108,8 +108,8 @@ CREATE TABLE registro_minuta (
   fecha_hora_entrega DATETIME,
   novedad TEXT,
   responsable VARCHAR(30),
-  ambiente_id INT,
   descripcion_amb TEXT,
+  ambiente_id INT,
   docu_id int,
   FOREIGN KEY (ambiente_id) REFERENCES ambiente(id_ambiente),
   FOREIGN KEY (docu_id) REFERENCES Usuario(documento)
