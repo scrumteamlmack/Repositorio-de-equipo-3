@@ -25,22 +25,9 @@ CREATE TABLE user_rol (
   FOREIGN KEY (rol_id) REFERENCES rol(id_rol)
 );
 
- CREATE TABLE turno (
-  turno_id INT PRIMARY KEY auto_increment,
-  turno_guarda ENUM('mañana', 'tarde', 'noche')
- );
-
-
 CREATE TABLE modalidad (
   id_modalidad INT PRIMARY KEY auto_increment,
   nombre_modalidad ENUM('presencial', 'sincronica')
-);
-
-CREATE TABLE horarios (
-  id_horario INT PRIMARY KEY auto_increment,
-  dia_semana VARCHAR(10),
-  hora_inicio TIME,
-  hora_fin TIME
 );
 
 CREATE TABLE jornada (
