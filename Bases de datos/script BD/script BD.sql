@@ -62,19 +62,11 @@ CREATE TABLE aprendiz (
   FOREIGN KEY (usua_id) REFERENCES Usuario(documento)
 );
 
-
-CREATE TABLE registro_equipo (
-  id_equipo INT PRIMARY KEY auto_increment,
-  tipo_equipo VARCHAR(30),
-  marca VARCHAR(20),
-  modelo VARCHAR(20),
-  descripcion TEXT,
-  estado VARCHAR(20),
-  observacion TEXT,
-  placa_equipo VARCHAR(20),
-  usuario_docu int,
-  FOREIGN KEY (usuario_docu) REFERENCES Usuario(documento)
-);
+CREATE TABLE registro_asistencia (
+  id_asistencia int PRIMARY KEY auto_increment,
+  fecha_asistencia DATE,
+  estado_asistencia ENUM('N', 'E', 'S')
+)
 
 CREATE TABLE coordinacion (
   id_coordinacion  INT PRIMARY KEY auto_increment,
