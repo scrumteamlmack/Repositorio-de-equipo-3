@@ -32,7 +32,8 @@ CREATE TABLE modalidad (
 
 CREATE TABLE jornada (
   id_jornada INT PRIMARY KEY auto_increment,
-  nombre_jornada VARCHAR(10),
+  nombre_jornada ENUM('mañana', 'tarde', 'noche', 'madrugada'),
+
 );
 
 
