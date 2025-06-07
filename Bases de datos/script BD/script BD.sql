@@ -24,17 +24,7 @@ CREATE TABLE user_rol (
   FOREIGN KEY (rol_id) REFERENCES rol(id_rol)
 );
 
-create table registro_parqueadero( 
-id_registro int primary key auto_increment NOT NULL,
-fecha_hora_ingreso DATETIME NOT NULL,
-fecha_hora_salida DATETIME NOT NULL, 
-tipo_acceso_veh VARCHAR (20) NOT NULL,
-permisos_veh VARCHAR (15) NOT NULL,
-observacion text NOT NULL,
-placa_veh VARCHAR(20) NOT NULL,
-capacidad VARCHAR(20) NOT NULL,
-FOREIGN KEY (placa_veh) REFERENCES vehiculo(placa)
-);
+
 
 CREATE TABLE control_accesos (
   id_accesos INT PRIMARY KEY auto_increment NOT NULL,
