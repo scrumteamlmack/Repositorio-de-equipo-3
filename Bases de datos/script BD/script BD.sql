@@ -82,30 +82,6 @@ CREATE TABLE coordinacion (
   correo_cordinacion VARCHAR(30)
 );
 
-CREATE TABLE visitante (
-  id_visita INT PRIMARY KEY auto_increment,
-  pv_nombre VARCHAR(50),
-  sv_nombre VARCHAR(50),
-  pv_apellido VARCHAR(50),
-  sv_apellido VARCHAR(50),
-  correo_vis VARCHAR(50),
-  tel_vis INT(20),
-  motivo_visita TEXT,
-  coordinacion_id INT,
-  guarda_id INT,
-  foreign key (coordinacion_id) references coordinacion(id_coordinacion),
-  foreign key (guarda_id) references guarda_seguridad(id_guarda)
-);
-
-CREATE TABLE registro_visitante (
-  id_visitas INT PRIMARY KEY auto_increment,
-  fecha_hora_ingreso DATETIME,
-  fecha_hora_salida DATETIME,
-  obs_visita TEXT,
-  visita_id INT,
-  FOREIGN KEY (visita_id) REFERENCES visitante(id_visita)
-);
-
 CREATE TABLE ambiente (
   id_ambiente INT PRIMARY KEY auto_increment,
   num_ambiente SMALLINT,
