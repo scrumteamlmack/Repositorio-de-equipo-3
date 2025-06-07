@@ -56,10 +56,10 @@ CREATE TABLE aprendiz (
   p_apellido VARCHAR(30),
   s_apellido VARCHAR(30),
   Num_ficha MEDIUMINT,
-  control_accesos INT,
   programa_id INT,
-  FOREIGN KEY (control_accesos) REFERENCES control_accesos(id_accesos),
-  FOREIGN KEY (programa_id) REFERENCES programas(id_programas)
+  usua_id INT,
+  FOREIGN KEY (programa_id) REFERENCES programas(id_programas),
+  FOREIGN KEY (usua_id) REFERENCES Usuario(documento)
 );
 
 
