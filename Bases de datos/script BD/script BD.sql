@@ -23,17 +23,6 @@ CREATE TABLE user_rol (
   FOREIGN KEY (doc_id) REFERENCES Usuario(documento),
   FOREIGN KEY (rol_id) REFERENCES rol(id_rol)
 );
-CREATE TABLE vehiculo (
-  placa VARCHAR(20) PRIMARY KEY,
-  tipo VARCHAR(20),
-  marca VARCHAR(20),
-  modelo VARCHAR(20),
-  color VARCHAR(30),
-  estado VARCHAR(20),
-  observacion TEXT,
-  id_usr int,
-  FOREIGN KEY (id_usr) REFERENCES Usuario(documento)
-);
 
 create table registro_parqueadero( 
 id_registro int primary key auto_increment NOT NULL,
