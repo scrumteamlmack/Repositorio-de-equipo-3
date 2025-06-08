@@ -22,8 +22,9 @@ CREATE TABLE instructor (
   estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
 );
 
+-- 
 
-INSERT INTO usuarios (nombre_usuario, contrasena, rol, privilegios) VALUES
+INSERT INTO usuarios (nombre_usuario, contraseña, rol, privilegios) VALUES
 ('santiago.cruzuwu25', 'Aprz#2025xy!', 'APRENDIZ', 'SELECT, UPDATE (solo su perfil)'),
 ('javier.pineda21', 'Instruc@321!', 'INSTRUCTOR', 'SELECT, INSERT, UPDATE'),
 ('jtavarez92', 'VgS3cuR@9!', 'VIGILANTE', 'SELECT, INSERT, UPDATE'),
