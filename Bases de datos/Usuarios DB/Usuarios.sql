@@ -22,6 +22,34 @@ CREATE TABLE instructor (
   estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
 );
 
+
+-- info instructor
+INSERT INTO instructor (
+  nombre,
+  apellido,
+  tipo_documento,
+  numero_documento,
+  email,
+  telefono,
+  coordinacion,
+  fichas_asignadas,
+  especialidad,
+  fecha_ingreso,
+  estado
+) VALUES (
+  'Javier Leonardo',
+  'Pineda Uribe',
+  'CC',
+  '1089347652',
+  'jpinedau@sena.edu.co',
+  '3124567890',
+  'Tecnología e Innovación',
+  '3197815',
+  'Sistemas',
+  '2012-03-15',
+  'Activo'
+);
+
 -- llenar la tabla de usuarios
 
 INSERT INTO usuarios (nombre_usuario, contraseña, rol, privilegios) VALUES
@@ -78,3 +106,4 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON tipo_incidente TO 'rositarelepea100'@'lo
 GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'rositarelepea100'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'rositarelepea100'@'localhost'; 
 GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'rositarelepea100'@'localhost';
+
