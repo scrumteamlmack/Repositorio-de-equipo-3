@@ -41,3 +41,16 @@ GRANT SELECT ON coordinacion TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON instructor TO 'santiago.cruzuwu25'@'localhost';
 GRANT UPDATE ON jornada TO 'santiago.cruzuwu25'@'localhost';
 GRANT UPDATE ON rol TO 'santiago.cruzuwu25'@'localhost';
+
+
+--Acceso a tablas instructor
+GRANT SELECT, INSERT, UPDATE ON aprendiz TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON ambiente TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON instructor TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON jornada TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON registro_asistencia TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON modalidad TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON coordinacion TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON programas TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON recursos TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON rol TO 'javier.pineda21'@'localhost';
