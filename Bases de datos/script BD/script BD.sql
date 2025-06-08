@@ -74,8 +74,8 @@ CREATE TABLE registro_asistencia (
   estado_asistencia ENUM('N', 'E', 'S'),
   jorn_id int,
   apr_id int,
-  FOREIGN KEY jorn_id REFERENCES jornada(id_jornada),
-  FOREIGN KEY apr_id REFERENCES aprendiz(id_aprendiz)
+  FOREIGN KEY (jorn_id) REFERENCES jornada(id_jornada),
+  FOREIGN KEY (apr_id) REFERENCES aprendiz(id_aprendiz)
 );
 
 CREATE TABLE ambiente (
@@ -88,22 +88,24 @@ CREATE TABLE ambiente (
   FOREIGN KEY (coordinacion_id) REFERENCES coordinacion(id_coordinacion)
 );
 
+CREATE TABLE tipo_recurso (
+  id_recurso int PRIMARY KEY auto_increment,
+  recurso_tipo VARCHAR (15),
+  descripcion varchar (30)
+);
+
 CREATE TABLE recursos (
   serial_recurso VARCHAR(30) PRIMARY KEY,
   num_recurso TINYINT,
   estado VARCHAR(20),
   observacion TEXT, 
   ambiente_id INT,
-  id_recurso int,
+  recurso_id int,
   FOREIGN KEY (ambiente_id) REFERENCES ambiente(id_ambiente),
-  FOREIGN KEY (id_recurso) REFERENCES recursos(serial_recurso)
+  FOREIGN KEY (recurso_id) REFERENCES tipo_recurso(id_recurso)
 );
 
-CREATE TABLE tipo_recurso (
-  id_recurso int PRIMARY KEY auto_increment,
-  tipo_recurso VARCHAR (15),
-  descripcion varchar (30)
-);
+
 
 CREATE TABLE registro_minuta (
   id_minuta INT PRIMARY KEY auto_increment,
