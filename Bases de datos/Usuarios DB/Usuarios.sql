@@ -62,6 +62,7 @@ GRANT SELECT, INSERT, UPDATE ON ambiente TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON registro_incidente TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON tipo_recurso TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON instructor TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON rol TO 'jtavarez92'@'localhost';
 
 
 --Acceso a tablas administrador
