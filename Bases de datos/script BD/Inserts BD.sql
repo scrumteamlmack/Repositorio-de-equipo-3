@@ -18,7 +18,7 @@ INSERT INTO user_rol (doc_id, rol_id) VALUES
 INSERT INTO modalidad (nombre_modalidad) VALUES ('presencial'), ('sincronica');
 
 -- Insertar jornadas
-INSERT INTO jornada (nombre_jornada) VALUES ('mañana'), ('tarde'), ('noche');
+INSERT INTO jornada (nombre_jornada) VALUES ('mañana'), ('tarde'), ('noche'), ('madrugada');
 
 -- Insertar coordinaciones
 INSERT INTO coordinacion (nombre_coordinacion, correo_cordinacion) VALUES 
@@ -26,29 +26,37 @@ INSERT INTO coordinacion (nombre_coordinacion, correo_cordinacion) VALUES
 ('Coordinación Académica', 'academica@mail.com');
 
 -- Insertar programas
-INSERT INTO programas (nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES
-('ADSO', 'Tecnólogo', '24 meses', 1, 1, 1),
-('Contabilidad', 'Técnico', '18 meses', 2, 2, 2);
+INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES
+(1, 'ADSO', 'Tecnólogo', '24 meses', 1, 1, 1),
+(2, 'Contabilidad', 'Técnico', '18 meses', 2, 2, 2),
+(3, 'Amn empresa', 'tecnologo', '24 meses',1, 1, 1);
 
 -- Insertar aprendices
 INSERT INTO aprendiz (p_nombre, s_nombre, p_apellido, s_apellido, Num_ficha, programa_id, usua_id) VALUES
-('Juan', 'Carlos', 'Gómez', 'Mora', 123456, 1, 3030);
+('Juan', 'Carlos', 'Gómez', 'Mora', 123456, 1, 3030),
+('Mahilo', 'Yohan', 'Gutierrez', 'Ruiz', 3187969, 2, 2020),
+('Luisa', 'Fernanda', 'Cruz', 'Montenegro', 3187969, 3, 3030);
 
 -- Insertar ambientes
-INSERT INTO ambiente (num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
-(101, 30, 'Sala de Sistemas', 'Disponible', 1),
-(202, 20, 'Aula', 'Mantenimiento', 2);
+INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
+(1, 101, 30, 'Sala de Sistemas', 'Disponible', 1),
+(2, 202, 20, 'Aula', 'Mantenimiento', 2);
 
--- Insertar recursos
-INSERT INTO recursos (serial_recurso, nombre_recurso, num_recurso, tipo_recurso, estado, ambiente_id) VALUES
-('SR1001', 'Computador', 10, 'Tecnológico', 'Operativo', 1),
-('SR1002', 'Video Beam', 1, 'Tecnológico', 'Dañado', 2);
+-- insertar tipo recurso
+INSERT INTo tipo_recurso(id_recurso, recurso_tipo, descripcion) VALUES 
+(1, 'conputador', 'negro'),
+(2, 'televisor', 'azul');
+
+-- Insertar recurso
+INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente_id, recurso_id) VALUES
+('SR1001', 10, 'Operativo', 'ninguno', 1, 1),
+('SR1002', 1, 'Dañado', 'dañado', 2, 2);
 
 -- Insertar registros de asistencia
-INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia) VALUES
-('2025-06-01', 'N'),
-('2025-06-02', 'E'),
-('2025-06-03', 'S');
+INSERT INTO registro_asistencia (id_asistencia, fecha_asistencia, estado_asistencia, jorn_id, apr_id) VALUES
+(1,'2025-06-01', 'N', 1, 1),
+(2,'2025-06-02', 'E', 1, 2),
+(3,'2025-06-03', 'S', 1, 3);
 
 -- Insertar registros de minuta
 INSERT INTO registro_minuta (fecha_hora_recibido, fecha_hora_entrega, novedad, responsable, descripcion_amb, ambiente_id, docu_id) VALUES
