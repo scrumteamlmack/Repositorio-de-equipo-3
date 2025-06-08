@@ -29,3 +29,15 @@ INSERT INTO usuarios (nombre_usuario, contraseña, rol, privilegios) VALUES
 ('javier.pineda21', 'Instruc@321!', 'INSTRUCTOR', 'SELECT, INSERT, UPDATE'),
 ('jtavarez92', 'VgS3cuR@9!', 'VIGILANTE', 'SELECT, INSERT, UPDATE'),
 ('rositarpelea100', 'Adm!nR0!X@8', 'ADMINISTRADOR', 'SELECT, INSERT, UPDATE, DELETE');
+
+
+
+-- Solo puede actualizar aprendiz (su perfil)
+GRANT SELECT ON aprendiz TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON ambientes TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON equipos TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON horarios TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON modalidad TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON coordinacion TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON instructor TO 'santiago.cruzuwu25'@'localhost';
+GRANT UPDATE ON aprendiz TO 'santiago.cruzuwu25'@'localhost';
