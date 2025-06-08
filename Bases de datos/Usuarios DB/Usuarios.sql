@@ -62,3 +62,18 @@ GRANT SELECT, INSERT, UPDATE ON ambiente TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON registro_incidente TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON tipo_recurso TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON instructor TO 'jtavarez92'@'localhost';
+
+
+--Acceso a tablas administrador
+GRANT SELECT, INSERT, UPDATE, DELETE ON aprendiz TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ambiente TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON instructor TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON rol TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_asistencia TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON modalidad TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON coordinacion TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON programas TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON tipo_incidente TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'rositarelepea100'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'rositarelepea100'@'localhost'; 
+GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'rositarelepea100'@'localhost';
