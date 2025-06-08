@@ -5,6 +5,8 @@ CREATE TABLE usuarios (
     privilegios TEXT NOT NULL
 );
 
+
+
 CREATE TABLE instructor (
   id_instructor INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
@@ -19,3 +21,10 @@ CREATE TABLE instructor (
   fecha_ingreso DATE,
   estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
 );
+
+
+INSERT INTO usuarios (nombre_usuario, contrasena, rol, privilegios) VALUES
+('santiago.cruzuwu25', 'Aprz#2025xy!', 'APRENDIZ', 'SELECT, UPDATE (solo su perfil)'),
+('javier.pineda21', 'Instruc@321!', 'INSTRUCTOR', 'SELECT, INSERT, UPDATE'),
+('jtavarez92', 'VgS3cuR@9!', 'VIGILANTE', 'SELECT, INSERT, UPDATE'),
+('rositarpelea100', 'Adm!nR0!X@8', 'ADMINISTRADOR', 'SELECT, INSERT, UPDATE, DELETE');
