@@ -22,7 +22,7 @@ CREATE TABLE instructor (
   estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
 );
 
--- 
+-- llenar la tabla de usuarios
 
 INSERT INTO usuarios (nombre_usuario, contraseña, rol, privilegios) VALUES
 ('santiago.cruzuwu25', 'Aprz#2025xy!', 'APRENDIZ', 'SELECT, UPDATE (solo su perfil)'),
