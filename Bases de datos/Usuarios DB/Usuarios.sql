@@ -5,7 +5,7 @@ CREATE TABLE usuarios (
     privilegios TEXT NOT NULL
 );
 
-
+-- Aqui es para mirar informacion sobre el instructor, ejm: el aprtendiz tiene derecho a mirar con que instructor le toca, cual es su correo en q se especializa etc
 
 CREATE TABLE instructor (
   id_instructor INT AUTO_INCREMENT PRIMARY KEY,
