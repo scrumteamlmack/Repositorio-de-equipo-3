@@ -12,7 +12,7 @@ CREATE TABLE Usuario (
   nombre VARCHAR(50),
   apellido VARCHAR(50),
   tipo_documento VARCHAR(20),
-  telefono INT(10),
+  telefono BIGINT(10),
   correo VARCHAR(20),
   contrasena VARCHAR(15)
 );
