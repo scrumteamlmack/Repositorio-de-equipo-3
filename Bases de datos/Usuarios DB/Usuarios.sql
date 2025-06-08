@@ -34,10 +34,11 @@ INSERT INTO usuarios (nombre_usuario, contraseña, rol, privilegios) VALUES
 
 -- Solo puede actualizar aprendiz (su perfil)
 GRANT SELECT ON aprendiz TO 'santiago.cruzuwu25'@'localhost';
-GRANT SELECT ON ambientes TO 'santiago.cruzuwu25'@'localhost';
-GRANT SELECT ON equipos TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON ambiente TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON equipouser_rol TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON horarios TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON modalidad TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON coordinacion TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON instructor TO 'santiago.cruzuwu25'@'localhost';
-GRANT UPDATE ON aprendiz TO 'santiago.cruzuwu25'@'localhost';
+GRANT UPDATE ON jornada TO 'santiago.cruzuwu25'@'localhost';
+GRANT UPDATE ON rol TO 'santiago.cruzuwu25'@'localhost';
