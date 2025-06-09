@@ -64,6 +64,13 @@ INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estad
 (4, 404, 35, 'Bienestar', 'Disponible', 2), 
 (5, 505, 15, 'Sala Audiovisual', 'Mantenimiento', 1);
 
+-- insertar recursos
+INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente_id, recurso_id) VALUES
+('SR1011', 1, 'En reparación', 'Pantalla rota enviada al técnico', 1, 2),
+('SR1012', 1, 'Con fallas', 'Rayas en la pantalla', 2, 2),
+('SR1014', 1, 'Pendiente de revisión', 'No se ha probado aún', 1, 1),
+('SR1015', 10, 'Perfecto', 'Nuevo', 2, 1);
+
 
 
 -- Insertar registros de asistencia
