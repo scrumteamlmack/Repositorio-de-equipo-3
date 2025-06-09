@@ -124,3 +124,16 @@ WHERE nombre_usuario = 'coordinador.gomez90';
 
 --crear usuario de coordinador 
 CREATE USER 'PedritoGomez64'@'localhost' IDENTIFIED BY 'Coordimez#0039';
+
+-- Asignar privilegios a coordinador
+GRANT SELECT, INSERT, UPDATE, DELETE ON ambiente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON aprendiz TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON instructor TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON coordinacion TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON programas TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_asistencia TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON tipo_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON rol TO 'PedritoGomez64'@'localhost';
