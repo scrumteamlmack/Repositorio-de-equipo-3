@@ -112,3 +112,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'rositarelepea100'@'localhost
 UPDATE usuarios
 SET rol = 'GUARDA DE SEGURIDAD'
 WHERE rol = 'VIGILANTE';
+
+-- Insertar nuevo usuario con rol de COORDINADOR
+INSERT INTO usuarios (nombre_usuario, contrasena, rol, privilegios)
+VALUES ('coordinador.gomez90', 'Coordimez#0039v', 'COORDINADOR', 'SELECT, INSERT, UPDATE');
