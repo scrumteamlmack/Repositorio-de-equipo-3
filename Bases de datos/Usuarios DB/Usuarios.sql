@@ -107,3 +107,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'rositarelepea100'
 GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'rositarelepea100'@'localhost'; 
 GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'rositarelepea100'@'localhost';
 
+
+-- Cambiar el rol 'VIGILANTE' a 'GUARDA DE SEGURIDAD'
+UPDATE usuarios
+SET rol = 'GUARDA DE SEGURIDAD'
+WHERE rol = 'VIGILANTE';
