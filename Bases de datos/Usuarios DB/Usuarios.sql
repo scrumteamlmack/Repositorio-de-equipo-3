@@ -121,3 +121,6 @@ VALUES ('coordinador.gomez90', 'Coordimez#0039v', 'COORDINADOR', 'SELECT, INSERT
 UPDATE usuarios
 SET nombre_usuario = 'PedritoGomez64'
 WHERE nombre_usuario = 'coordinador.gomez90';
+
+--crear usuario de coordinador 
+CREATE USER 'PedritoGomez64'@'localhost' IDENTIFIED BY 'Coordimez#0039';
