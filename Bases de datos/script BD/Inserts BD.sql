@@ -52,6 +52,38 @@ INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente
 ('SR1001', 10, 'Operativo', 'ninguno', 1, 1),
 ('SR1002', 1, 'Dañado', 'dañado', 2, 2);
 
+-- insertar tipo_recurso
+INSERT INTO tipo_recurso (recurso_tipo, descripcion) VALUES
+('teclado', 'inalámbrico'),
+('mouse', 'óptico'),
+('proyector', 'alta resolución');
+
+-- Insertar ambientes
+INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES 
+(3, 303, 25, 'Laboratorio', 'Disponible', 1), 
+(4, 404, 35, 'Bienestar', 'Disponible', 2), 
+(5, 505, 15, 'Sala Audiovisual', 'Mantenimiento', 1);
+
+-- insertar recursos
+INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente_id, recurso_id) VALUES
+('SR1011', 1, 'En reparación', 'Pantalla rota enviada al técnico', 1, 2),
+('SR1012', 2, 'Con fallas', 'Rayas en la pantalla', 2, 2),
+('SR1014', 3, 'Pendiente de revisión', 'No se ha probado aún', 1, 1),
+('SR1015', 10, 'Perfecto', 'Nuevo', 2, 1);
+
+-- Actualizar num_recurso
+-- Cambiar SR1012 de 1 a 2
+UPDATE recursos
+SET num_recurso = 2
+WHERE serial_recurso = 'SR1012';
+
+-- Cambiar SR1014 de 1 a 3
+UPDATE recursos
+SET num_recurso = 3
+WHERE serial_recurso = 'SR1014'; 
+
+
+
 -- Insertar registros de asistencia
 INSERT INTO registro_asistencia (id_asistencia, fecha_asistencia, estado_asistencia, jorn_id, apr_id) VALUES
 (1,'2025-06-01', 'N', 1, 1),

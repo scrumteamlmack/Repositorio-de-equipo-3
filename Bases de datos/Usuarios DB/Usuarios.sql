@@ -107,3 +107,36 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'rositarelepea100'
 GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'rositarelepea100'@'localhost'; 
 GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'rositarelepea100'@'localhost';
 
+
+-- Cambiar el rol 'VIGILANTE' a 'GUARDA DE SEGURIDAD'
+UPDATE usuarios
+SET rol = 'GUARDA DE SEGURIDAD'
+WHERE rol = 'VIGILANTE';
+
+-- Insertar nuevo usuario con rol de COORDINADOR
+INSERT INTO usuarios (nombre_usuario, contrasena, rol, privilegios)
+VALUES ('coordinador.gomez90', 'Coordimez#0039v', 'COORDINADOR', 'SELECT, INSERT, UPDATE');
+
+--Cambiar nombre de usuario coordinador
+UPDATE usuarios
+SET nombre_usuario = 'PedritoGomez64'
+WHERE nombre_usuario = 'coordinador.gomez90';
+
+--crear usuario de coordinador 
+CREATE USER 'PedritoGomez64'@'localhost' IDENTIFIED BY 'Coordimez#0039';
+
+-- Asignar privilegios a coordinador
+GRANT SELECT, INSERT, UPDATE, DELETE ON ambiente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON aprendiz TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON instructor TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON coordinacion TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON jornada TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON programas TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON recursos TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_asistencia TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON tipo_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON rol TO 'PedritoGomez64'@'localhost';
+
+-- Aplicar cambios
+FLUSH PRIVILEGES;
