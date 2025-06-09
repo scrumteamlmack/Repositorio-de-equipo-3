@@ -137,3 +137,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON registro_asistencia TO 'PedritoGomez64'@
 GRANT SELECT, INSERT, UPDATE, DELETE ON registro_incidente TO 'PedritoGomez64'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON tipo_incidente TO 'PedritoGomez64'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON rol TO 'PedritoGomez64'@'localhost';
+
+-- Aplicar cambios
+FLUSH PRIVILEGES;
