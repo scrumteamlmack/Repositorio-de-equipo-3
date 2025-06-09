@@ -58,6 +58,12 @@ INSERT INTO tipo_recurso (recurso_tipo, descripcion) VALUES
 ('mouse', 'óptico'),
 ('proyector', 'alta resolución');
 
+-- Insertar ambientes
+INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES 
+(3, 303, 25, 'Laboratorio', 'Disponible', 1), 
+(4, 404, 35, 'Bienestar', 'Disponible', 2), 
+(5, 505, 15, 'Sala Audiovisual', 'Mantenimiento', 1);
+
 
 
 -- Insertar registros de asistencia
