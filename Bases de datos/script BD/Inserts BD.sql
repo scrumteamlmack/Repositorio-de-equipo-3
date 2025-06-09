@@ -52,13 +52,6 @@ INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente
 ('SR1001', 10, 'Operativo', 'ninguno', 1, 1),
 ('SR1002', 1, 'Dañado', 'dañado', 2, 2);
 
---insertar recursos
-('SR1011', 1, 'En reparación', 'pantalla rota enviada al técnico', 1, 11),
-('SR1012', 1, 'con fallas', 'lineas en la pantalla', 2, 12),
-('SR1013', 2, 'En préstamo', 'prestado a otro ambiente', 3, 13),
-('SR1014', 1, 'Pendiente de revisión', 'no se ha probado aún', 1, 14),
-('SR1015', 10, 'Operativo', 'mouses nuevos', 2, 15),
-('SR1016', 1, 'Dañado', 'no enciende', 3, 16);
 
 
 
