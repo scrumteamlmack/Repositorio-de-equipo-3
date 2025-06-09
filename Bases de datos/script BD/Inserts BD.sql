@@ -52,7 +52,11 @@ INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente
 ('SR1001', 10, 'Operativo', 'ninguno', 1, 1),
 ('SR1002', 1, 'Dañado', 'dañado', 2, 2);
 
-
+-- insertar tipo_recurso
+INSERT INTO tipo_recurso (recurso_tipo, descripcion) VALUES
+('teclado', 'inalámbrico'),
+('mouse', 'óptico'),
+('proyector', 'alta resolución');
 
 
 
