@@ -67,9 +67,20 @@ INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estad
 -- insertar recursos
 INSERT INTO recursos (serial_recurso, num_recurso, estado, observacion, ambiente_id, recurso_id) VALUES
 ('SR1011', 1, 'En reparación', 'Pantalla rota enviada al técnico', 1, 2),
-('SR1012', 1, 'Con fallas', 'Rayas en la pantalla', 2, 2),
-('SR1014', 1, 'Pendiente de revisión', 'No se ha probado aún', 1, 1),
+('SR1012', 2, 'Con fallas', 'Rayas en la pantalla', 2, 2),
+('SR1014', 3, 'Pendiente de revisión', 'No se ha probado aún', 1, 1),
 ('SR1015', 10, 'Perfecto', 'Nuevo', 2, 1);
+
+-- Actualizar num_recurso
+-- Cambiar SR1012 de 1 a 2
+UPDATE recursos
+SET num_recurso = 2
+WHERE serial_recurso = 'SR1012';
+
+-- Cambiar SR1014 de 1 a 3
+UPDATE recursos
+SET num_recurso = 3
+WHERE serial_recurso = 'SR1014'; 
 
 
 
