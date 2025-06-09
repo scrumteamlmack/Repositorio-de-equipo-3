@@ -116,3 +116,8 @@ WHERE rol = 'VIGILANTE';
 -- Insertar nuevo usuario con rol de COORDINADOR
 INSERT INTO usuarios (nombre_usuario, contrasena, rol, privilegios)
 VALUES ('coordinador.gomez90', 'Coordimez#0039v', 'COORDINADOR', 'SELECT, INSERT, UPDATE');
+
+--Cambiar nombre de usuario coordinador
+UPDATE usuarios
+SET nombre_usuario = 'PedritoGomez64'
+WHERE nombre_usuario = 'coordinador.gomez90';
