@@ -104,3 +104,33 @@ INSERT INTO tipo_incidente (tipo_incidente, observacion_inc) VALUES
 INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id) VALUES
 ('Apagón durante la clase', '2025-06-01', '09:30:00', 2, 1),
 ('Filtración de agua en equipos', '2025-06-02', '11:00:00', 1, 2);
+
+
+-- info instructor
+INSERT INTO instructor (
+  p_nombre,
+  s_nombre,
+  p_apellido,
+  s_apellido,
+  tipo_documento,
+  numero_documento,
+  email,
+  telefono,
+  coordinacion,
+  fichas_asignadas,
+  especialidad,
+  fecha_ingreso,
+  estado
+) VALUES (
+  'Javier',' Leonardo',
+  'Pineda',' Uribe',
+  'CC',
+  '1089347652',
+  'jpinedau@sena.edu.co',
+  '3124567890',
+  'Tecnología e Innovación',
+  '3197815',
+  'Sistemas',
+  '2012-03-15',
+  'Activo'
+);
