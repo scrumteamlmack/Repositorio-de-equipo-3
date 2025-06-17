@@ -156,6 +156,7 @@ CREATE TABLE alertas_inasistencia (
   FOREIGN KEY (usua_id) REFERENCES usuario(documento)
 );
 
+
 -- Crear tabla instructor
 CREATE TABLE instructor (
   id_instructor INT AUTO_INCREMENT PRIMARY KEY,
@@ -207,3 +208,4 @@ ADD COLUMN id_responsable INT;
 
 
 
+>>>>>>> 297359e8bf5452a46fb0f4646be428312439fcc3
