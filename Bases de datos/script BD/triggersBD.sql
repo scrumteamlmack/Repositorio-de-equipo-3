@@ -38,3 +38,36 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER tr_asignar_estado_minuta
+BEFORE INSERT ON registro_minuta
+FOR EACH ROW
+BEGIN
+    DECLARE ahora DATETIME;
+    SET ahora = NOW();
+
+    IF (ahora BETWEEN NEW.fecha_hora_recibido AND NEW.fecha_hora_entrega) THEN
+        SET NEW.estado = 'Ocupado';
+    ELSE
+        SET NEW.estado = 'Disponible';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS actualizar_minutas_a_disponible
+ON SCHEDULE EVERY 1 MINUTE
+DO
+BEGIN
+    UPDATE registro_minuta
+    SET estado = 'Disponible'
+    WHERE estado = 'Ocupado'
+      AND NOW() > fecha_hora_entrega;
+END //
+
+DELIMITER ;

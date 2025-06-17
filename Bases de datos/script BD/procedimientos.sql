@@ -6,7 +6,6 @@ CREATE PROCEDURE control_minuta(
     IN novedad TEXT,
     IN responsable VARCHAR(30),
     IN descripcion TEXT,
-    IN estado varchar(15),
     IN ambiente_id INT,
     IN documento_usuario INT
 )
