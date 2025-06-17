@@ -137,6 +137,13 @@ CREATE TABLE registro_incidente (
   FOREIGN KEY (tipo_inc_id) REFERENCES tipo_incidente(id_tipo_inc)
 );
  
+CREATE TABLE alertas_inasistencia (
+    id_alerta INT AUTO_INCREMENT PRIMARY KEY,
+    aprendiz_id INT,
+    cantidad_fallas INT,
+    fecha_alerta DATETIME DEFAULT NOW(),
+    mensaje TEXT
+);
 
  -- Creación tabla guarda_Seguridad
  CREATE TABLE guarda_seguridad (
