@@ -208,4 +208,3 @@ ADD COLUMN id_responsable INT;
 
 
 
->>>>>>> 297359e8bf5452a46fb0f4646be428312439fcc3
