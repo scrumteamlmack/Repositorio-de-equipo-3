@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Área Coordinador</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f9fafb;
+    color: #374151;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header, footer {
+    background-color: #10b981;
+    color: white;
+    padding: 16px 32px;
+  }
+  header {
+    position: sticky;
+    top: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+  nav a {
+    margin-left: 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 900px;
+    margin: 48px auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  h2 {
+    color: #10b981;
+    margin-bottom: 36px;
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 32px;
+  }
+  button.action-btn {
+    background-color: #10b981;
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  button.action-btn .material-icons {
+    font-size: 48px;
+  }
+  button.action-btn:hover,
+  button.action-btn:focus {
+    background-color: #059669;
+    outline: none;
+    transform: translateY(-4px);
+  }
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  @media (max-width: 640px) {
+    main {
+      margin: 32px 16px;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Coordinador</div>
+    <nav aria-label="Navegación coordinador">
+      <a href="index.html" aria-label="Página de bienvenida">Inicio</a>
+      <a href="login.html" aria-label="Cerrar sesión">Cerrar Sesión</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Panel de Coordinador</h2>
+    <div class="button-grid" role="grid">
+      <!-- Admin-like functionalities -->
+      <button class="action-btn" aria-label="Registrar asistencia aprendiz" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">check_circle</span>
+        Registrar Asistencia
+      </button>
+      <button class="action-btn" aria-label="Consultar minutas de ambientes" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">description</span>
+        Consultar Minutas
+      </button>
+      <button class="action-btn" aria-label="Consultar incidentes de ambientes" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">report_problem</span>
+        Consultar Incidentes
+      </button>
+      <button class="action-btn" aria-label="Consultar ambientes" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">business</span>
+        Consultar Ambientes
+      </button>
+      <button class="action-btn" aria-label="Registrar minutas" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">description</span>
+        Registrar Minutas
+      </button>
+      <button class="action-btn" aria-label="Registrar incidentes" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">report_problem</span>
+        Registrar Incidentes
+      </button>
+      <button class="action-btn" aria-label="Registrar recursos" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">devices</span>
+        Registrar Recursos
+      </button>
+      <button class="action-btn" aria-label="Actualizar datos aprendiz" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">edit</span>
+        Actualizar Datos Aprendiz
+      </button>
+      <button class="action-btn" aria-label="Consultar asistencias aprendiz" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">check_circle_outline</span>
+        Consultar Asistencias Aprendiz
+      </button>
+
+      <!-- Additional for Coordinator -->
+      <button class="action-btn" aria-label="Ver programa del aprendiz" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">calendar_view_week</span>
+        Ver Programa del Aprendiz
+      </button>
+      <button class="action-btn" aria-label="Ver jornada" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">schedule</span>
+        Ver Jornada
+      </button>
+      <button class="action-btn" aria-label="Ver modalidad" onclick="alert('Función no implementada')">
+        <span class="material-icons" aria-hidden="true">menu_book</span>
+        Ver Modalidad
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2024 Sistema Gestión
+  </footer>
+</body>
+</html>
+
