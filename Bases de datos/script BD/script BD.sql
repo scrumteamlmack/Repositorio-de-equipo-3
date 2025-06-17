@@ -185,3 +185,7 @@ UPDATE instructor
 SET p_apellido = REPLACE(p_apellido, 'Uribe', '')
 WHERE id_instructor = 1;
 
+
+--Añadir campo en minuta "id_responsable"
+ALTER TABLE registro_minuta
+ADD COLUMN id_responsable INT;
