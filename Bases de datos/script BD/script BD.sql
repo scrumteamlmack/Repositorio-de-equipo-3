@@ -138,3 +138,14 @@ CREATE TABLE registro_incidente (
 );
  
 
+ -- Creación tabla guarda_Seguridad
+ CREATE TABLE guarda_seguridad (
+  id_guarda INT PRIMARY KEY AUTO_INCREMENT,
+  p_nombre VARCHAR(30),
+  s_nombre VARCHAR(30),
+  p_apellido VARCHAR(30),
+  s_apellido VARCHAR(30),
+  usua_id INT,
+  FOREIGN KEY (usua_id) REFERENCES usuario(documento)
+);
+
