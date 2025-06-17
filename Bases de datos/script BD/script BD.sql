@@ -159,3 +159,11 @@ ADD s_apellido VARCHAR(30) AFTER p_apellido,
 ADD usua_id INT AFTER id_instructor,
 ADD FOREIGN KEY (usua_id) REFERENCES usuario(documento);
 
+
+--Actualizar s_nombre y s_apellido instructor 
+UPDATE instructor
+SET 
+    s_nombre = 'Leonardo',
+    s_apellido = 'Uribe'
+WHERE id_instructor = 1;
+
