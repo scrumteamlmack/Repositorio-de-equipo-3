@@ -34,3 +34,14 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Función 4: contar aprendices programa
+DELIMITER //
+CREATE FUNCTION contar_aprendices_programa(id_programa INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM aprendiz WHERE programa_id = id_programa;
+    RETURN total;
+END //
+DELIMITER ;
