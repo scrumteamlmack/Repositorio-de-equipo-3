@@ -45,3 +45,44 @@ BEGIN
     RETURN total;
 END //
 DELIMITER ;
+
+-- Función 5: consultar programa del aprendiz
+DELIMITER //
+CREATE FUNCTION programa_aprendiz(id_aprendiz INT)
+RETURNS VARCHAR(30)
+READS SQL DATA
+BEGIN
+    DECLARE nombre_programa VARCHAR(50);
+    SELECT p.nombre_programa INTO nombre_programa
+    FROM aprendiz a JOIN programas p ON a.programa_id = p.id_programas
+    WHERE a.id_aprendiz = id_aprendiz;
+    RETURN nombre_programa;
+END //
+
+-- Función 6: buscar correo usuario
+DELIMITER //
+CREATE FUNCTION correo_usuario(doc INT)
+RETURNS VARCHAR(30)
+READS SQL DATA
+BEGIN
+    DECLARE correo VARCHAR(30);
+    SELECT u.correo INTO correo FROM Usuario u WHERE u.documento = doc;
+    RETURN correo;
+END //
+DELIMITER ;
+
+-- Función 7: buscar coordinación de programa
+DELIMITER //
+CREATE FUNCTION buscar_coordinacion_aprendiz(id_aprendiz INT)
+RETURNS VARCHAR(30)
+READS SQL DATA
+BEGIN
+    DECLARE nombre_coord VARCHAR(30);
+    SELECT c.nombre_coordinacion INTO nombre_coord
+    FROM aprendiz a
+    JOIN programas p ON a.programa_id = p.id_programas
+    JOIN coordinacion c ON p.coordinacion_id = c.id_coordinacion
+    WHERE a.id_aprendiz = id_aprendiz;
+    RETURN nombre_coord;
+END //
+DELIMITER ;
