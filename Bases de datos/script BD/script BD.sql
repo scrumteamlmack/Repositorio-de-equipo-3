@@ -149,3 +149,13 @@ CREATE TABLE registro_incidente (
   FOREIGN KEY (usua_id) REFERENCES usuario(documento)
 );
 
+
+--Alterar tabla instructor
+ALTER TABLE instructor
+CHANGE nombre p_nombre VARCHAR(30),
+ADD s_nombre VARCHAR(30) AFTER p_nombre,
+CHANGE apellido p_apellido VARCHAR(30),
+ADD s_apellido VARCHAR(30) AFTER p_apellido,
+ADD usua_id INT AFTER id_instructor,
+ADD FOREIGN KEY (usua_id) REFERENCES usuario(documento);
+
