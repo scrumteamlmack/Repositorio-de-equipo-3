@@ -156,41 +156,7 @@ CREATE TABLE alertas_inasistencia (
   FOREIGN KEY (usua_id) REFERENCES usuario(documento)
 );
 
-
---Alterar tabla instructor
-ALTER TABLE instructor
-CHANGE nombre p_nombre VARCHAR(30),
-ADD s_nombre VARCHAR(30) AFTER p_nombre,
-CHANGE apellido p_apellido VARCHAR(30),
-ADD s_apellido VARCHAR(30) AFTER p_apellido,
-ADD usua_id INT AFTER id_instructor,
-ADD FOREIGN KEY (usua_id) REFERENCES usuario(documento);
-
-
---Actualizar s_nombre y s_apellido instructor 
-UPDATE instructor
-SET 
-    s_nombre = 'Leonardo',
-    s_apellido = 'Uribe'
-WHERE id_instructor = 1;
-
---p_nombre instructor
-UPDATE instructor
-SET p_nombre = REPLACE(p_nombre, 'Leonardo', '')
-WHERE id_instructor = 1;
-
-
---p_apellido instructor
-UPDATE instructor
-SET p_apellido = REPLACE(p_apellido, 'Uribe', '')
-WHERE id_instructor = 1;
-
-
---Añadir campo en minuta "id_responsable"
-ALTER TABLE registro_minuta
-ADD COLUMN id_responsable INT;
-
-
+-- Crear tabla instructor
 CREATE TABLE instructor (
   id_instructor INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
@@ -205,3 +171,39 @@ CREATE TABLE instructor (
   fecha_ingreso DATE,
   estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
 );
+
+-- Alterar tabla instructor
+ALTER TABLE instructor
+CHANGE nombre p_nombre VARCHAR(30),
+ADD s_nombre VARCHAR(30) AFTER p_nombre,
+CHANGE apellido p_apellido VARCHAR(30),
+ADD s_apellido VARCHAR(30) AFTER p_apellido,
+ADD usua_id INT AFTER id_instructor,
+ADD FOREIGN KEY (usua_id) REFERENCES usuario(documento);
+
+
+-- Actualizar s_nombre y s_apellido instructor 
+UPDATE instructor
+SET 
+    s_nombre = 'Leonardo',
+    s_apellido = 'Uribe'
+WHERE id_instructor = 1;
+
+-- p_nombre instructor
+UPDATE instructor
+SET p_nombre = REPLACE(p_nombre, 'Leonardo', '')
+WHERE id_instructor = 1;
+
+
+-- p_apellido instructor
+UPDATE instructor
+SET p_apellido = REPLACE(p_apellido, 'Uribe', '')
+WHERE id_instructor = 1;
+
+
+-- Añadir campo en minuta "id_responsable"
+ALTER TABLE registro_minuta
+ADD COLUMN id_responsable INT;
+
+
+
