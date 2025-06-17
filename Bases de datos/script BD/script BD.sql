@@ -179,3 +179,9 @@ UPDATE instructor
 SET p_nombre = REPLACE(p_nombre, 'Leonardo', '')
 WHERE id_instructor = 1;
 
+
+--p_apellido instructor
+UPDATE instructor
+SET p_apellido = REPLACE(p_apellido, 'Uribe', '')
+WHERE id_instructor = 1;
+
