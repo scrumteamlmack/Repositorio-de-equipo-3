@@ -5,22 +5,6 @@ CREATE TABLE usuarios (
     privilegios TEXT NOT NULL
 );
 
--- Aqui es para mirar informacion sobre el instructor, ejm: el aprtendiz tiene derecho a mirar con que instructor le toca, cual es su correo en q se especializa etc
-
-CREATE TABLE instructor (
-  id_instructor INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(50) NOT NULL,
-  apellido VARCHAR(50) NOT NULL,
-  tipo_documento ENUM('CC', 'TI', 'CE', 'Pasaporte') NOT NULL,
-  numero_documento VARCHAR(20) UNIQUE NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  telefono VARCHAR(20),
-  coordinacion VARCHAR(100) NOT NULL,
-  fichas_asignadas TEXT NOT NULL,
-  especialidad VARCHAR(100),
-  fecha_ingreso DATE,
-  estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
-);
 
 
 -- info instructor

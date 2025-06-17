@@ -189,3 +189,19 @@ WHERE id_instructor = 1;
 --Añadir campo en minuta "id_responsable"
 ALTER TABLE registro_minuta
 ADD COLUMN id_responsable INT;
+
+
+CREATE TABLE instructor (
+  id_instructor INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  apellido VARCHAR(50) NOT NULL,
+  tipo_documento ENUM('CC', 'TI', 'CE', 'Pasaporte') NOT NULL,
+  numero_documento VARCHAR(20) UNIQUE NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20),
+  coordinacion VARCHAR(100) NOT NULL,
+  fichas_asignadas TEXT NOT NULL,
+  especialidad VARCHAR(100),
+  fecha_ingreso DATE,
+  estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
+);
