@@ -145,3 +145,24 @@ CREATE TABLE alertas_inasistencia (
     mensaje TEXT
 );
 
+ -- Creación tabla guarda_Seguridad
+ CREATE TABLE guarda_seguridad (
+  id_guarda INT PRIMARY KEY AUTO_INCREMENT,
+  p_nombre VARCHAR(30),
+  s_nombre VARCHAR(30),
+  p_apellido VARCHAR(30),
+  s_apellido VARCHAR(30),
+  usua_id INT,
+  FOREIGN KEY (usua_id) REFERENCES usuario(documento)
+);
+
+
+--Alterar tabla instructor
+ALTER TABLE instructor
+CHANGE nombre p_nombre VARCHAR(30),
+ADD s_nombre VARCHAR(30) AFTER p_nombre,
+CHANGE apellido p_apellido VARCHAR(30),
+ADD s_apellido VARCHAR(30) AFTER p_apellido,
+ADD usua_id INT AFTER id_instructor,
+ADD FOREIGN KEY (usua_id) REFERENCES usuario(documento);
+
