@@ -1,20 +1,24 @@
 DELIMITER $$
 
-CREATE TRIGGER verificar_inasistencias
+CREATE TRIGGER contar_inasistencias_aprendiz
 AFTER INSERT ON registro_asistencia
 FOR EACH ROW
 BEGIN
   DECLARE total_fallas INT;
 
-  -- Contar inasistencias del aprendiz
+  -- Contar cuántas inasistencias ('N') tiene el aprendiz
   SELECT COUNT(*) INTO total_fallas
   FROM registro_asistencia
   WHERE apr_id = NEW.apr_id AND estado_asistencia = 'N';
 
-  -- Si llegó a 5, mostrar alerta
-  IF total_fallas = 5 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'El aprendiz ya tiene 5 inasistencias. Debe iniciarse el proceso de deserción.';
+  -- Si tiene 5 o más, registrar una alerta
+  IF total_fallas >= 5 THEN
+    INSERT INTO alertas_inasistencia (aprendiz_id, cantidad_fallas, mensaje)
+    VALUES (
+      NEW.apr_id,
+      total_fallas,
+      CONCAT('⚠️ Atención: El aprendiz con ID ', NEW.apr_id, ' tiene ', total_fallas, ' inasistencias. Iniciar proceso de deserción.')
+    );
   END IF;
 END$$
 
