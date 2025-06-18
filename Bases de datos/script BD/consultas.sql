@@ -1,3 +1,4 @@
+use bdproyectoprueba;
 -- 1. Aprendices con su programa, jornada y modalidad
 SELECT a.p_nombre, a.p_apellido, p.nombre_programa, j.nombre_jornada, m.nombre_modalidad
 FROM aprendiz a
@@ -7,7 +8,8 @@ JOIN modalidad m ON p.modalidad_id = m.id_modalidad;
 
 -- 2. Ambientes, coordinación encargada y responsable de la última minuta
 
-SELECT amb.num_ambiente, amb.tipo_ambiente, c.nombre_coordinacion, u.nombre AS responsable
+SELECT amb.num_ambiente, amb.tipo_ambiente, c.nombre_coordinacion, u.nombre, 
+rm.fecha_hora_recibido AS responsable
 FROM ambiente amb
 JOIN coordinacion c ON amb.coordinacion_id = c.id_coordinacion
 JOIN registro_minuta rm ON rm.ambiente_id = amb.id_ambiente
