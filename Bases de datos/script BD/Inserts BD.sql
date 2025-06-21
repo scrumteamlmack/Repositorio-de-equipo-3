@@ -11,7 +11,6 @@ INSERT INTO jornada (id_jornada, nombre_jornada) VALUES
 INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
 (1, 'Presencial'),
 (2, 'Virtual'),
-(3, 'Mixta');
 
 -- Poblar tabla coordinacion
 INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
