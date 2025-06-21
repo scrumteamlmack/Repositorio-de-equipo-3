@@ -91,15 +91,10 @@ INSERT INTO Coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUE
 
 -- Poblar tabla instructor
 INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, fichas_asignadas, estado, jornada_id_jornada, programas_id_programas) VALUES
-(6, 'instructor1@sena.edu.co', '3001234567', 'Sistemas de Información', '2567890,2567891', 'Activo', 1, 1001),
 (7, 'instructor2@sena.edu.co', '3001234568', 'Sistemas de Información', '2567892', 'Activo', 2, 1002),
-(8, 'instructor3@sena.edu.co', '3001234569', 'Electrónica y Telecomunicaciones', '2567893,2567894', 'Activo', 1, 1003),
 (9, 'instructor4@sena.edu.co', '3001234570', 'Electrónica y Telecomunicaciones', '2567895', 'Activo', 3, 1004),
-(10, 'instructor5@sena.edu.co', '3001234571', 'Mecánica Industrial', '2567896,2567897', 'Activo', 1, 1005),
 (11, 'instructor6@sena.edu.co', '3001234572', 'Mecánica Industrial', '2567898', 'Activo', 2, 1006),
-(12, 'instructor7@sena.edu.co', '3001234573', 'Administración de Empresas', '2567899', 'Activo', 2, 1007),
 (13, 'instructor8@sena.edu.co', '3001234574', 'Administración de Empresas', '2567900', 'Activo', 1, 1008),
-(14, 'instructor9@sena.edu.co', '3001234575', 'Salud y Bienestar', '2567901', 'Activo', 1, 1009),
 (15, 'instructor10@sena.edu.co', '3001234576', 'Salud y Bienestar', '2567902', 'Activo', 2, 1010);
 
 -- Poblar tabla guarda_seguridad
