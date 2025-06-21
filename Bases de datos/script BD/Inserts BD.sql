@@ -125,11 +125,9 @@ INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estad
 (103, 103, 35, 'Aula Teórica', 'Disponible', 1),
 (201, 201, 20, 'Laboratorio de Electrónica', 'Disponible', 2),
 (202, 202, 25, 'Taller de Telecomunicaciones', 'Disponible', 2),
-(301, 301, 30, 'Taller de Mecánica', 'Disponible', 3),
-(302, 302, 15, 'Laboratorio de Soldadura', 'Disponible', 3),
 (401, 401, 40, 'Aula de Administración', 'Disponible', 4),
 (501, 501, 25, 'Laboratorio de Enfermería', 'Disponible', 5),
-(502, 502, 20, 'Consultorio Odontológico', 'Disponible', 5);
+(601, 601, 30, 'Aula de deportes', 'Disponible', 5),
 
 -- Poblar tabla tipo_incidente
 INSERT INTO tipo_incidente (id_tipo_inc, tipo_incidente, observacion_inc) VALUES
