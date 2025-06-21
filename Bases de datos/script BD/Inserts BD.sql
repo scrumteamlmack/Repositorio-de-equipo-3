@@ -224,7 +224,6 @@ INSERT INTO alertas_inasistencia (id_alerta, aprendiz_id, cantidad_fallas, fecha
 (1, 16, 1, '2024-06-05 16:00:00', 'El aprendiz ha faltado 1 día esta semana', 1),
 (2, 18, 2, '2024-06-04 16:00:00', 'El aprendiz ha acumulado 2 faltas consecutivas', 1),
 (3, 22, 2, '2024-06-03 16:00:00', 'Alerta por inasistencias frecuentes', 3),
-(4, 26, 1, '2024-06-02 16:00:00', 'Primera alerta por inasistencia', 4);
 
 -- Verificar el conteo total de registros
 SELECT 'Total de registros insertados:' as Info;
