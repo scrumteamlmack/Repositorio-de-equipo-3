@@ -171,7 +171,6 @@ INSERT INTO registro_minuta (fecha_hora_recibo, fecha_hora_entrega, novedad, res
 ('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 103, 2, 28),
 ('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 201, 3, 29),
 ('2024-06-04 07:00:00', '2024-06-04 18:00:00', 'Herramienta faltante', 'Ana Jiménez', 'Falta un destornillador', 301, 4, 29),
-('2024-06-05 07:00:00', '2024-06-05 18:00:00', 'Todo normal', 'Luis Vargas', 'Sin novedades que reportar', 501, 5, 28);
 
 -- Poblar tabla registro_asistencia (múltiples registros por aprendiz)
 INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id, aprendiz_Usuario_id_usuario) VALUES
