@@ -100,7 +100,8 @@ INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, ficha
 -- Poblar tabla guarda_seguridad
 INSERT INTO guarda_seguridad (Usuario_id_usuario, turno, fecha_ingreso, estado) VALUES
 (28, 'Mañana', '2024-01-15', 'Activo'),
-(29, 'Tarde', '2024-02-20', 'Activo');
+(29, 'Tarde', '2024-02-20', 'Activo'),
+(30, 'Noche', '2024-05-20', 'Activo');
 
 -- Poblar tabla aprendiz
 INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jornada_id_jornada) VALUES
