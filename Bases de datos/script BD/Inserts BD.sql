@@ -114,9 +114,7 @@ INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jor
 (22, 2567896, 1005, 1),
 (23, 2567897, 1005, 1),
 (24, 2567898, 1006, 2),
-(25, 2567899, 1007, 2),
-(26, 2567900, 1008, 1),
-(27, 2567901, 1009, 1);
+
 
 -- Poblar tabla ambiente
 INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
