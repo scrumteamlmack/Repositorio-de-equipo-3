@@ -16,7 +16,7 @@ INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
 -- Poblar tabla coordinacion
 INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
 ('Sistemas de Información', 'sistemas@sena.edu.co'),
-('Electrónica y Telecomunicaciones', 'electronica@sena.edu.co'),
+('Tecnologiía e innovación', 'tecnologia@sena.edu.co'),
 ('Mecánica Industrial', 'mecanica@sena.edu.co'),
 ('Administración de Empresas', 'administracion@sena.edu.co'),
 ('Salud y Bienestar', 'salud@sena.edu.co'),
