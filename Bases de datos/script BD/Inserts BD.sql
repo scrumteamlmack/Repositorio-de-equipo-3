@@ -140,10 +140,9 @@ INSERT INTO tipo_incidente (id_tipo_inc, tipo_incidente, observacion_inc) VALUES
 -- Poblar tabla registro_incidente
 INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, guarda_seguridad_Usuario_id_usuario) VALUES
 ('Computador presenta fallas en el arranque', '2024-03-15', '10:30:00', 101, 1, 28),
-('Estudiante se cortó con herramienta en el taller', '2024-03-20', '14:15:00', 301, 2, 29),
-('Falta un mouse del laboratorio', '2024-03-25', '08:45:00', 102, 3, 28),
+('Falta un mouse en ambiente ', '2024-03-25', '08:45:00', 102, 3, 28),
 ('Discusión entre estudiantes', '2024-04-01', '16:20:00', 401, 4, 29),
-('Estudiante se sintió mal durante la clase', '2024-04-05', '11:30:00', 501, 5, 28);
+('Estudiante dañó equipo', '2024-04-05', '11:30:00', 501, 5, 28);
 
 -- Poblar tabla tipo_recurso
 INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUES
