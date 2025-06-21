@@ -161,7 +161,7 @@ INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUE
 (2, 'Proyector', 'Equipos de proyección'),
 (3, 'Herramienta', 'Herramientas de taller'),
 (4, 'Mobiliario', 'Mesas, sillas, escritorios'),
-(5, 'Equipo Médico', 'Equipos para salud');
+(5, 'Televidor','herramienta visual');
 
 -- Poblar tabla recursos
 INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, observacion, ambiente_id) VALUES
