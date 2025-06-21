@@ -27,13 +27,9 @@ INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion,
 (1001, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 1, 1),
 (1002, 'Técnico en Sistemas', 'Técnico', '18 meses', 2, 1, 1),
 (1003, 'Redes y Telecomunicaciones', 'Tecnólogo', '24 meses', 1, 2, 2),
-(1004, 'Electrónica Industrial', 'Técnico', '18 meses', 3, 1, 2),
-(1005, 'Mantenimiento Industrial', 'Técnico', '18 meses', 1, 1, 3),
-(1006, 'Soldadura Industrial', 'Técnico', '12 meses', 2, 1, 3),
 (1007, 'Administración de Empresas', 'Tecnólogo', '24 meses', 2, 3, 4),
 (1008, 'Contabilidad y Finanzas', 'Técnico', '18 meses', 1, 2, 4),
-(1009, 'Enfermería', 'Técnico', '18 meses', 1, 1, 5),
-(1010, 'Auxiliar en Salud Oral', 'Técnico', '12 meses', 2, 1, 5);
+
 
 -- Poblar tabla Usuario (30 usuarios)
 INSERT INTO Usuario (p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento, num_documento, correo, contraseña) VALUES
