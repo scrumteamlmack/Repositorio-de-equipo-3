@@ -122,7 +122,7 @@ INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jor
 INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
 (101, 101, 30, 'Aula de Sistemas', 'Disponible', 1),
 (102, 102, 25, 'Laboratorio de Programación', 'Disponible', 1),
-(103, 103, 35, 'Aula Teórica', 'Disponible', 1),
+(103, 103, 35, 'Biblioteca', 'Disponible', 1),
 (201, 201, 20, 'Laboratorio de Electrónica', 'Disponible', 2),
 (202, 202, 25, 'Taller de Telecomunicaciones', 'Disponible', 2),
 (401, 401, 40, 'Aula de Administración', 'Disponible', 4),
@@ -132,10 +132,10 @@ INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estad
 -- Poblar tabla tipo_incidente
 INSERT INTO tipo_incidente (id_tipo_inc, tipo_incidente, observacion_inc) VALUES
 (1, 'Daño de Equipo', 'Equipos dañados o averiados'),
-(2, 'Accidente Laboral', 'Accidentes durante las prácticas'),
 (3, 'Hurto', 'Pérdida o robo de elementos'),
 (4, 'Indisciplina', 'Comportamientos inadecuados'),
 (5, 'Emergencia Médica', 'Situaciones médicas de emergencia');
+
 
 -- Poblar tabla registro_incidente
 INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, guarda_seguridad_Usuario_id_usuario) VALUES
