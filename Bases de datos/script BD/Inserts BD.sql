@@ -5,7 +5,8 @@ USE `mydb`;
 INSERT INTO jornada (id_jornada, nombre_jornada) VALUES
 (1, 'Mañana'),
 (2, 'Tarde'),
-(3, 'Noche');
+(3, 'Noche'),
+(4, 'madrugada');
 
 -- Poblar tabla modalidad
 INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
@@ -19,9 +20,7 @@ INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
 ('Mecánica Industrial', 'mecanica@sena.edu.co'),
 ('Administración de Empresas', 'administracion@sena.edu.co'),
 ('Salud y Bienestar', 'salud@sena.edu.co'),
-('Construcción', 'construccion@sena.edu.co'),
-('Agricultura', 'agricultura@sena.edu.co'),
-('Turismo y Hotelería', 'turismo@sena.edu.co');
+
 
 -- Poblar tabla programas
 INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES
