@@ -1,4 +1,4 @@
-
+drop database if exists `mydb`;
 CREATE DATABASE IF NOT EXISTS `mydb` ;
 USE `mydb` ;
 
@@ -29,7 +29,7 @@ CREATE TABLE Coordinador(
 
 CREATE TABLE jornada(
   `id_jornada` INT NOT NULL,
-  `nombre_jornada` ENUM('Mañana', 'Tarde', 'Noche') NOT NULL,
+  `nombre_jornada` ENUM('Mañana', 'Tarde', 'Noche', 'Madrugada') NOT NULL,
   PRIMARY KEY (`id_jornada`));
 
 CREATE TABLE modalidad(

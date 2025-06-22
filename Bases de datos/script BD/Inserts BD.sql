@@ -11,7 +11,7 @@ INSERT INTO jornada (id_jornada, nombre_jornada) VALUES
 -- Poblar tabla modalidad
 INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
 (1, 'Presencial'),
-(2, 'sincronica');
+(2, 'Virtual');
 
 -- Poblar tabla coordinacion
 INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
@@ -68,7 +68,8 @@ INSERT INTO rol (id_rol, nombre_rol) VALUES
 (1, 'Coordinador'),
 (2, 'Aprendiz'),
 (3, 'Guarda de Seguridad'),
-(4, 'Administrador');
+(4, 'Administrador'),
+(5, 'Instructor	');
 
 -- Poblar tabla user_rol
 INSERT INTO user_rol (id_usuario, id_rol) VALUES
@@ -139,7 +140,7 @@ INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, am
 INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUES
 (1, 'Computador', 'Equipos de cómputo'),
 (2, 'Proyector', 'Equipos de proyección'),
-(3, 'Televidor','herramienta visual');
+(3, 'Televisor','herramienta visual');
 
 -- Poblar tabla recursos
 INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, observacion, ambiente_id) VALUES
