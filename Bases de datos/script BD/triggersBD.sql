@@ -1,85 +1,88 @@
-DELIMITER $
-CREATE TRIGGER `mydb`.`contar_inasistencias_aprendiz` 
-AFTER INSERT ON `mydb`.`registro_asistencia` 
-FOR EACH ROW 
-BEGIN   
+DELIMITER $$
+
+CREATE TRIGGER contar_inasistencias_aprendiz
+AFTER INSERT ON registro_asistencia
+FOR EACH ROW
+BEGIN
     DECLARE total_fallas INT;
     DECLARE coordinacion_aprendiz INT;
-    
-    -- Contar cuántas faltas ('F') tiene el aprendiz
-    SELECT COUNT(*) INTO total_fallas   
-    FROM `mydb`.`registro_asistencia`   
-    WHERE aprendiz_id = NEW.aprendiz_id AND estado_asistencia = 'F';
-    
+
+    -- Contar cuántas inasistencias ('N') tiene el aprendiz
+    SELECT COUNT(*) INTO total_fallas
+    FROM registro_asistencia
+    WHERE aprendiz_Usuario_id_usuario = NEW.aprendiz_Usuario_id_usuario
+      AND estado_asistencia = 'N';
+
     -- Obtener la coordinación del aprendiz a través de su programa
     SELECT p.coordinacion_id INTO coordinacion_aprendiz
-    FROM `mydb`.`aprendiz` a
-    INNER JOIN `mydb`.`programas` p ON a.programas_id_programas = p.id_programas
-    WHERE a.id_aprendiz = NEW.aprendiz_id;
-    
-    -- Si tiene 5 o más faltas, gestionar la alerta
-    IF total_fallas >= 5 THEN     
-        -- Verificar si ya existe una alerta para este aprendiz
-        IF EXISTS (       
-            SELECT 1 FROM `mydb`.`alertas_inasistencia`       
-            WHERE aprendiz_id = NEW.aprendiz_id     
-        ) THEN       
-            -- Actualizar la alerta existente
-            UPDATE `mydb`.`alertas_inasistencia`       
-            SET cantidad_fallas = total_fallas,           
-                fecha_alerta = NOW(),           
-                mensaje = CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.')       
-            WHERE aprendiz_id = NEW.aprendiz_id;      
-        ELSE       
-            -- Crear nueva alerta
-            INSERT INTO `mydb`.`alertas_inasistencia` (
-                aprendiz_id, 
-                cantidad_fallas, 
+    FROM aprendiz a
+    INNER JOIN programas p ON a.programas_id_programas = p.id_programas
+    WHERE a.Usuario_id_usuario = NEW.aprendiz_Usuario_id_usuario;
+
+    -- Si tiene 5 o más inasistencias, alerta crítica
+    IF total_fallas >= 5 THEN
+        IF EXISTS (
+            SELECT 1 FROM alertas_inasistencia
+            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario
+        ) THEN
+            UPDATE alertas_inasistencia
+            SET cantidad_fallas = total_fallas,
+                fecha_alerta = NOW(),
+                mensaje = CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.')
+            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario;
+        ELSE
+            INSERT INTO alertas_inasistencia (
+                id_alerta,
+                aprendiz_id,
+                cantidad_fallas,
                 fecha_alerta,
                 mensaje,
                 coordinacion_id
-            )       
-            VALUES (         
-                NEW.aprendiz_id,         
+            )
+            VALUES (
+                NULL,
+                NEW.aprendiz_Usuario_id_usuario,
                 total_fallas,
-                NOW(),         
-                CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.'),
+                NOW(),
+                CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.'),
                 IFNULL(coordinacion_aprendiz, 1)
-            );     
+            );
         END IF;
-        
-    -- Si tiene 3 o 4 faltas, crear/actualizar alerta de advertencia
+
+    -- Si tiene entre 3 y 4 inasistencias, advertencia
     ELSEIF total_fallas >= 3 THEN
-        IF EXISTS (       
-            SELECT 1 FROM `mydb`.`alertas_inasistencia`       
-            WHERE aprendiz_id = NEW.aprendiz_id     
-        ) THEN       
-            -- Actualizar la alerta existente
-            UPDATE `mydb`.`alertas_inasistencia`       
-            SET cantidad_fallas = total_fallas,           
-                fecha_alerta = NOW(),           
-                mensaje = CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.')       
-            WHERE aprendiz_id = NEW.aprendiz_id;      
-        ELSE       
-            -- Crear nueva alerta de advertencia
-            INSERT INTO `mydb`.`alertas_inasistencia` (
-                aprendiz_id, 
-                cantidad_fallas, 
+        IF EXISTS (
+            SELECT 1 FROM alertas_inasistencia
+            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario
+        ) THEN
+            UPDATE alertas_inasistencia
+            SET cantidad_fallas = total_fallas,
+                fecha_alerta = NOW(),
+                mensaje = CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.')
+            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario;
+        ELSE
+            INSERT INTO alertas_inasistencia (
+                id_alerta,
+                aprendiz_id,
+                cantidad_fallas,
                 fecha_alerta,
                 mensaje,
                 coordinacion_id
-            )       
-            VALUES (         
-                NEW.aprendiz_id,         
+            )
+            VALUES (
+                NULL,
+                NEW.aprendiz_Usuario_id_usuario,
                 total_fallas,
-                NOW(),         
-                CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.'),
+                NOW(),
+                CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.'),
                 IFNULL(coordinacion_aprendiz, 1)
-            );     
+            );
         END IF;
-    END IF;   
-END$  
+    END IF;
+END$$
+
 DELIMITER ;
+
 
 DELIMITER //
 
@@ -90,14 +93,19 @@ BEGIN
     DECLARE ahora DATETIME;
     SET ahora = NOW();
 
-    IF (ahora BETWEEN NEW.fecha_hora_recibido AND NEW.fecha_hora_entrega) THEN
-        SET NEW.estado = 'Ocupado';
+    IF (ahora BETWEEN NEW.fecha_hora_recibo AND NEW.fecha_hora_entrega) THEN
+        UPDATE ambiente
+        SET estado = 'Ocupado'
+        WHERE id_ambiente = NEW.ambiente_id;
     ELSE
-        SET NEW.estado = 'Disponible';
+        UPDATE ambiente
+        SET estado = 'Disponible'
+        WHERE id_ambiente = NEW.ambiente_id;
     END IF;
 END //
 
 DELIMITER ;
+
 
 
 DELIMITER //
