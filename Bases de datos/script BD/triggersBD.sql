@@ -1,5 +1,4 @@
 DELIMITER $$
-
 CREATE TRIGGER contar_inasistencias_aprendiz
 AFTER INSERT ON registro_asistencia
 FOR EACH ROW
@@ -19,7 +18,7 @@ BEGIN
     INNER JOIN programas p ON a.programas_id_programas = p.id_programas
     WHERE a.Usuario_id_usuario = NEW.aprendiz_Usuario_id_usuario;
 
-    -- Si tiene 5 o más inasistencias, alerta crítica
+    -- Si tiene 5 o más inasistencias
     IF total_fallas >= 5 THEN
         IF EXISTS (
             SELECT 1 FROM alertas_inasistencia
@@ -45,36 +44,6 @@ BEGIN
                 total_fallas,
                 NOW(),
                 CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.'),
-                IFNULL(coordinacion_aprendiz, 1)
-            );
-        END IF;
-
-    -- Si tiene entre 3 y 4 inasistencias, advertencia
-    ELSEIF total_fallas >= 3 THEN
-        IF EXISTS (
-            SELECT 1 FROM alertas_inasistencia
-            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario
-        ) THEN
-            UPDATE alertas_inasistencia
-            SET cantidad_fallas = total_fallas,
-                fecha_alerta = NOW(),
-                mensaje = CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.')
-            WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario;
-        ELSE
-            INSERT INTO alertas_inasistencia (
-                id_alerta,
-                aprendiz_id,
-                cantidad_fallas,
-                fecha_alerta,
-                mensaje,
-                coordinacion_id
-            )
-            VALUES (
-                NULL,
-                NEW.aprendiz_Usuario_id_usuario,
-                total_fallas,
-                NOW(),
-                CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.'),
                 IFNULL(coordinacion_aprendiz, 1)
             );
         END IF;
