@@ -173,7 +173,7 @@ CREATE TABLE registro_asistencia (
     FOREIGN KEY (`aprendiz_Usuario_id_usuario`) REFERENCES aprendiz(`Usuario_id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION);
 
 CREATE TABLE alertas_inasistencia (
-  `id_alerta` INT NULL DEFAULT NULL,
+  `id_alerta` INT NOT NULL AUTO_INCREMENT,
   `aprendiz_id` INT NOT NULL,
   `cantidad_fallas` INT NOT NULL,
   `fecha_alerta` DATETIME NOT NULL,
