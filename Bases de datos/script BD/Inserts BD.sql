@@ -17,7 +17,6 @@ INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
 INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
 ('Sistemas de Información', 'sistemas@sena.edu.co'),
 ('Tecnologiía e innovación', 'tecnologia@sena.edu.co'),
-('Mecánica Industrial', 'mecanica@sena.edu.co'),
 ('Administración de Empresas', 'administracion@sena.edu.co'),
 ('Salud y Bienestar', 'salud@sena.edu.co');
 
@@ -67,10 +66,9 @@ INSERT INTO Usuario (p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento,
 -- Poblar tabla rol
 INSERT INTO rol (id_rol, nombre_rol) VALUES
 (1, 'Coordinador'),
-(2, 'Instructor'),
-(3, 'Aprendiz'),
-(4, 'Guarda de Seguridad'),
-(5, 'Administrador');
+(2, 'Aprendiz'),
+(3, 'Guarda de Seguridad'),
+(4, 'Administrador');
 
 -- Poblar tabla user_rol
 INSERT INTO user_rol (id_usuario, id_rol) VALUES
@@ -79,23 +77,22 @@ INSERT INTO user_rol (id_usuario, id_rol) VALUES
 (11, 2), (12, 2), (13, 2), (14, 2), (15, 2),
 (16, 3), (17, 3), (18, 3), (19, 3), (20, 3),
 (21, 3), (22, 3), (23, 3), (24, 3), (25, 3),
-(26, 3), (27, 3), (28, 4), (29, 4), (30, 5);
+(26, 3), (27, 3), (28, 4), (29, 4);
 
 -- Poblar tabla Coordinador
 INSERT INTO Coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
-(4, 4),
-(5, 5);
+(4, 4);
 
 -- Poblar tabla instructor
 INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, fichas_asignadas, estado, jornada_id_jornada, programas_id_programas) VALUES
-(7, 'instructor2@sena.edu.co', '3001234568', 'Sistemas de Información', '2567892', 'Activo', 2, 1002),
-(9, 'instructor4@sena.edu.co', '3001234570', 'Electrónica y Telecomunicaciones', '2567895', 'Activo', 3, 1004),
-(11, 'instructor6@sena.edu.co', '3001234572', 'Mecánica Industrial', '2567898', 'Activo', 2, 1006),
+(7, 'instructor2@sena.edu.co', '3001234568', 'Técnico en Sistemas', '2567892', 'Activo', 2, 1002),
+(9, 'instructor4@sena.edu.co', '3001234570', 'Redes y Telecomunicaciones', '2567895', 'Activo', 3, 1003),
+(11, 'instructor6@sena.edu.co', '3001234572', 'Mecánica Industrial', '2567898', 'Activo', 2, 1007),
 (13, 'instructor8@sena.edu.co', '3001234574', 'Administración de Empresas', '2567900', 'Activo', 1, 1008),
-(15, 'instructor10@sena.edu.co', '3001234576', 'Salud y Bienestar', '2567902', 'Activo', 2, 1010);
+(15, 'instructor10@sena.edu.co', '3001234576', 'Salud y Bienestar', '2567902', 'Activo', 2, 1002);
 
 -- Poblar tabla guarda_seguridad
 INSERT INTO guarda_seguridad (Usuario_id_usuario, turno, fecha_ingreso, estado) VALUES
@@ -110,65 +107,53 @@ INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jor
 (18, 2567892, 1002, 2),
 (19, 2567893, 1003, 1),
 (20, 2567894, 1003, 1),
-(21, 2567895, 1004, 3),
-(22, 2567896, 1005, 1),
-(23, 2567897, 1005, 1),
-(24, 2567898, 1006, 2),
+(21, 2567895, 1007, 3),
+(22, 2567896, 1008, 1),
+(23, 2567897, 1007, 1),
+(24, 2567898, 1008, 2);
 
 
 -- Poblar tabla ambiente
 INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
 (101, 101, 30, 'Aula de Sistemas', 'Disponible', 1),
 (102, 102, 25, 'Laboratorio de Programación', 'Disponible', 1),
-(103, 103, 35, 'Biblioteca', 'Disponible', 1),
 (201, 201, 20, 'Laboratorio de Electrónica', 'Disponible', 2),
 (202, 202, 25, 'Taller de Telecomunicaciones', 'Disponible', 2),
-(401, 401, 40, 'Aula de Administración', 'Disponible', 4),
-(501, 501, 25, 'Laboratorio de Enfermería', 'Disponible', 5),
-(601, 601, 30, 'Aula de deportes', 'Disponible', 5),
+(401, 401, 40, 'Aula de Administración', 'Disponible', 3),
+(501, 501, 25, 'Laboratorio de Enfermería', 'Disponible', 4),
+(601, 601, 30, 'Aula de deportes', 'Disponible', 4);
 
 -- Poblar tabla tipo_incidente
 INSERT INTO tipo_incidente (id_tipo_inc, tipo_incidente, observacion_inc) VALUES
 (1, 'Daño de Equipo', 'Equipos dañados o averiados'),
-(3, 'Hurto', 'Pérdida o robo de elementos'),
-(4, 'Indisciplina', 'Comportamientos inadecuados'),
-(5, 'Emergencia Médica', 'Situaciones médicas de emergencia');
+(2, 'Emergencia Médica', 'Situaciones médicas de emergencia');
 
 
 -- Poblar tabla registro_incidente
 INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, guarda_seguridad_Usuario_id_usuario) VALUES
 ('Computador presenta fallas en el arranque', '2024-03-15', '10:30:00', 101, 1, 28),
-('Falta un mouse en ambiente ', '2024-03-25', '08:45:00', 102, 3, 28),
-('Discusión entre estudiantes', '2024-04-01', '16:20:00', 401, 4, 29),
-('Estudiante dañó equipo', '2024-04-05', '11:30:00', 501, 5, 28);
+('Falta un mouse en ambiente ', '2024-03-25', '08:45:00', 102, 1, 28),
+('Estudiante dañó equipo', '2024-04-05', '11:30:00', 501, 1, 28);
 
 -- Poblar tabla tipo_recurso
 INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUES
 (1, 'Computador', 'Equipos de cómputo'),
 (2, 'Proyector', 'Equipos de proyección'),
-(3, 'Herramienta', 'Herramientas de taller'),
-(4, 'Mobiliario', 'Mesas, sillas, escritorios'),
-(5, 'Televidor','herramienta visual');
+(3, 'Televidor','herramienta visual');
 
 -- Poblar tabla recursos
 INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, observacion, ambiente_id) VALUES
 ('PC001', 1, 'Computador Dell Optiplex', 1, 'Estado: Bueno', 101),
 ('PC002', 2, 'Computador HP Pavilion', 1, 'Estado: Regular', 101),
 ('PC003', 3, 'Computador Lenovo ThinkCentre', 1, 'Estado: Bueno', 102),
-('PROY001', 1, 'Proyector Epson', 2, 'Estado: Excelente', 103),
-('PROY002', 2, 'Proyector Sony', 2, 'Estado: Bueno', 401),
-('HERR001', 1, 'Taladro Industrial', 3, 'Estado: Bueno', 301),
-('HERR002', 2, 'Soldador Eléctrico', 3, 'Estado: Regular', 302),
-('MESA001', 1, 'Mesa de Trabajo', 4, 'Estado: Bueno', 301),
-('SILLA001', 1, 'Silla Ergonómica', 4, 'Estado: Excelente', 101),
-('MED001', 1, 'Tensiómetro Digital', 5, 'Estado: Bueno', 501);
+('PROY001', 1, 'Proyector Epson', 2, 'Estado: Excelente', 101),
+('PROY002', 2, 'Proyector Sony', 2, 'Estado: Bueno', 401);
 
 -- Poblar tabla registro_minuta
 INSERT INTO registro_minuta (fecha_hora_recibo, fecha_hora_entrega, novedad, responsable, descripcion_min, ambiente_id, Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario) VALUES
 ('2024-06-01 07:00:00', '2024-06-01 18:00:00', 'Todo en orden', 'Carlos García', 'Entrega normal del ambiente', 101, 1, 28),
-('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 103, 2, 28),
-('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 201, 3, 29),
-('2024-06-04 07:00:00', '2024-06-04 18:00:00', 'Herramienta faltante', 'Ana Jiménez', 'Falta un destornillador', 301, 4, 29),
+('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 102, 2, 28),
+('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 201, 3, 29);
 
 -- Poblar tabla registro_asistencia (múltiples registros por aprendiz)
 INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id, aprendiz_Usuario_id_usuario) VALUES
@@ -178,6 +163,7 @@ INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id
 ('2024-06-03', 'R', 1, 16),
 ('2024-06-04', 'S', 1, 16),
 ('2024-06-05', 'N', 1, 16),
+
 -- Aprendiz 17
 
 ('2024-06-02', 'S', 1, 17),
@@ -210,18 +196,8 @@ INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id
 ('2024-06-03', 'N', 1, 22),
 ('2024-06-02', 'S', 1, 23),
 ('2024-06-01', 'S', 2, 24),
-('2024-06-02', 'R', 2, 24),
-('2024-06-01', 'S', 2, 25),
-('2024-06-01', 'S', 1, 26),
-('2024-06-02', 'N', 1, 26),
-('2024-06-01', 'S', 1, 27),
-('2024-06-02', 'S', 1, 27);
+('2024-06-02', 'R', 2, 24);
 
--- Poblar tabla alertas_inasistencia
-INSERT INTO alertas_inasistencia (id_alerta, aprendiz_id, cantidad_fallas, fecha_alerta, mensaje, coordinacion_id) VALUES
-(1, 16, 1, '2024-06-05 16:00:00', 'El aprendiz ha faltado 1 día esta semana', 1),
-(2, 18, 2, '2024-06-04 16:00:00', 'El aprendiz ha acumulado 2 faltas consecutivas', 1),
-(3, 22, 2, '2024-06-03 16:00:00', 'Alerta por inasistencias frecuentes', 3),
 
 -- Verificar el conteo total de registros
 SELECT 'Total de registros insertados:' as Info;
