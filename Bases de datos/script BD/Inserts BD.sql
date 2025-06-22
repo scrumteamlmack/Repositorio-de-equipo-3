@@ -68,7 +68,9 @@ INSERT INTO rol (id_rol, nombre_rol) VALUES
 (1, 'Coordinador'),
 (2, 'Aprendiz'),
 (3, 'Guarda de Seguridad'),
-(4, 'Administrador');
+(4, 'Administrador'),
+(5, 'Instructor');
+
 
 -- Poblar tabla user_rol
 INSERT INTO user_rol (id_usuario, id_rol) VALUES
@@ -76,8 +78,8 @@ INSERT INTO user_rol (id_usuario, id_rol) VALUES
 (6, 2), (7, 2), (8, 2), (9, 2), (10, 2),
 (11, 2), (12, 2), (13, 2), (14, 2), (15, 2),
 (16, 3), (17, 3), (18, 3), (19, 3), (20, 3),
-(21, 3), (22, 3), (23, 3), (24, 3), (25, 3),
-(26, 3), (27, 3), (28, 4), (29, 4);
+(21, 3), (22, 3), (23, 5), (24, 3), (25, 3),
+(26, 5), (27, 5), (28, 5), (29, 4);
 
 -- Poblar tabla Coordinador
 INSERT INTO Coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUES
