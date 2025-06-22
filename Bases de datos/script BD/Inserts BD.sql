@@ -19,7 +19,7 @@ INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
 ('Tecnologiía e innovación', 'tecnologia@sena.edu.co'),
 ('Mecánica Industrial', 'mecanica@sena.edu.co'),
 ('Administración de Empresas', 'administracion@sena.edu.co'),
-('Salud y Bienestar', 'salud@sena.edu.co'),
+('Salud y Bienestar', 'salud@sena.edu.co');
 
 
 -- Poblar tabla programas
@@ -27,8 +27,8 @@ INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion,
 (1001, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 1, 1),
 (1002, 'Técnico en Sistemas', 'Técnico', '18 meses', 2, 1, 1),
 (1003, 'Redes y Telecomunicaciones', 'Tecnólogo', '24 meses', 1, 2, 2),
-(1007, 'Administración de Empresas', 'Tecnólogo', '24 meses', 2, 3, 4),
-(1008, 'Contabilidad y Finanzas', 'Técnico', '18 meses', 1, 2, 4),
+(1007, 'Administración de Empresas', 'Tecnólogo', '24 meses', 2, 2, 4),
+(1008, 'Contabilidad y Finanzas', 'Técnico', '18 meses', 1, 1, 4);
 
 
 -- Poblar tabla Usuario (30 usuarios)
