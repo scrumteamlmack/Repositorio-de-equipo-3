@@ -68,6 +68,33 @@ END$$
 
 DELIMITER ;
 
+-- trigger para saber quien fue el que registro el incidente 
+DELIMITER $$
+
+CREATE TRIGGER responsable_registro_incidente
+AFTER INSERT ON registro_incidente
+FOR EACH ROW
+BEGIN
+    INSERT INTO historico_incidentes (
+        incidente_id,
+        ambiente_id,
+        tipo_incidente_id,
+        descripcion,
+        usuario_registra_id,
+        fecha_registro
+    )
+    VALUES (
+        NEW.id_incidente,
+        NEW.ambiente_id,
+        NEW.tipo_inc_id,
+        NEW.descripcion,
+        NEW.guarda_seguridad_Usuario_id_usuario, -- se asume que cualquier rol usa este campo
+        NOW()
+    );
+END$$
+
+DELIMITER ;
+
 
 
 
