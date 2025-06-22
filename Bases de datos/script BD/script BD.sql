@@ -29,12 +29,12 @@ CREATE TABLE Coordinador(
 
 CREATE TABLE jornada(
   `id_jornada` INT NOT NULL,
-  `nombre_jornada` ENUM('Mañana', 'Tarde', 'Noche') NOT NULL,
+  `nombre_jornada` ENUM('Mañana', 'Tarde', 'Noche', 'Madrugada') NOT NULL,
   PRIMARY KEY (`id_jornada`));
 
 CREATE TABLE modalidad(
   `id_modalidad` INT NOT NULL,
-  `nombre_modalidad` ENUM('Presencial', 'Virtual', 'Mixta') NOT NULL,
+  `nombre_modalidad` ENUM('Presencial', 'sincronica') NOT NULL,
   PRIMARY KEY (`id_modalidad`));
 
 CREATE TABLE programas(
