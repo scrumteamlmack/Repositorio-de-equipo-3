@@ -39,23 +39,23 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE eliminar_incidente(
-    IN id_incidente INT
+    IN incidente_id INT
 )
 BEGIN
     DELETE FROM registro_incidente
-    WHERE id_incidente = id_incidente;
+    WHERE id_incidente = incidente_id;	
 END //
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE actualizar_estado_recurso(
-    IN id_recurso INT,
+    IN recurso_id INT,
     IN nuevo_estado VARCHAR(20)
 )
 BEGIN
     UPDATE recursos
     SET estado = nuevo_estado
-    WHERE id_recurso = id_recurso;
+    WHERE id_recurso = recurso_id;
 END //
 DELIMITER ;
 
@@ -71,32 +71,53 @@ BEGIN
 END //
 DELIMITER ;
 
-DELIMITER //
-CREATE PROCEDURE consultar_ambientes_disponibles()
-BEGIN
-    SELECT * FROM ambiente
-    WHERE estado = 'Disponible';
-END //
-DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE actualizar_responsable_minuta(
     IN id_min INT,
-    IN nuevo_responsable VARCHAR(250)
+    IN nuevo_responsable VARCHAR(30),
+    IN nuevo_id_usuario INT
 )
 BEGIN
     UPDATE registro_minuta
-    SET responsable = nuevo_responsable
+    SET responsable = nuevo_responsable,
+        Usuario_id_usuario = nuevo_id_usuario
     WHERE id_minuta = id_min;
 END //
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE eliminar_recurso(
-    IN id_recurso INT
+    IN recurso_id INT
 )
 BEGIN
     DELETE FROM recursos
-    WHERE id_recurso = id_recurso;
+    WHERE id_recurso = recurso_id;
 END //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE monitorear_traslado_recurso(
+    IN recurso_id INT,
+    IN ambiente_origen INT,
+    IN ambiente_destino INT,
+    IN observacion TEXT
+)
+BEGIN
+    INSERT INTO traslado_recurso (
+        recurso_id, ambiente_origen_id, ambiente_destino_id,
+        fecha_traslado, observacion
+    )
+    VALUES (
+        recurso_id, ambiente_origen, ambiente_destino,
+        NOW(), observacion
+    );
+
+    UPDATE recursos
+    SET ambiente_id = ambiente_destino
+    WHERE id_recurso = recurso_id;
+END //
+
+DELIMITER ;
+
