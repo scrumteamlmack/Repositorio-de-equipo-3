@@ -1,110 +1,102 @@
--- Procedimiento 1: control de la minuta
 DELIMITER //
+
 CREATE PROCEDURE control_minuta(
     IN fecha_recibido DATETIME,
     IN fecha_entrega DATETIME,
     IN novedad TEXT,
-    IN responsable VARCHAR(30),
+    IN responsable VARCHAR(250),
     IN descripcion TEXT,
     IN ambiente_id INT,
-    IN documento_usuario INT
+    IN documento_usuario INT,
+    IN id_guardia INT
 )
 BEGIN
-    INSERT INTO registro_minuta(fecha_hora_recibido, fecha_hora_entrega, novedad, responsable, descripcion_amb, ambiente_id, docu_id)
-    VALUES (fecha_recibido, fecha_entrega, novedad, responsable, descripcion, ambiente_id, documento_usuario);
+    INSERT INTO registro_minuta(
+        fecha_hora_recibo, fecha_hora_entrega, novedad,
+        responsable, descripcion_min, ambiente_id,
+        Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario
+    )
+    VALUES (
+        fecha_recibido, fecha_entrega, novedad,
+        responsable, descripcion, ambiente_id,
+        documento_usuario, id_guardia
+    );
 END //
+
 DELIMITER ;
 
--- Procedimiento 2: registrar ingreso aprendiz
+
 DELIMITER //
-CREATE PROCEDURE registrar_ingreso_aprendiz(
-    IN fecha DATE,
-    IN estado ENUM('N', 'E', 'S'),
-    IN id_jornada INT,
+CREATE PROCEDURE consultar_asistencia_aprendiz(
     IN id_aprendiz INT
 )
 BEGIN
-    INSERT INTO registro_asistencia(fecha_asistencia, estado_asistencia, jorn_id, apr_id)
-    VALUES (fecha, estado, id_jornada, id_aprendiz);
+    SELECT fecha_asistencia, estado_asistencia
+    FROM registro_asistencia
+    WHERE aprendiz_Usuario_id_usuario = id_aprendiz;
 END //
 DELIMITER ;
 
-
--- Procedimiento 3: registrar incidente
 DELIMITER //
-CREATE PROCEDURE registrar_incidente(
-    IN descripcion TEXT,
-    IN fecha DATE,
-    IN hora TIME,
-    IN id_ambiente INT,
-    IN id_tipo INT
+CREATE PROCEDURE eliminar_incidente(
+    IN id_incidente INT
 )
 BEGIN
-    INSERT INTO registro_incidente(descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id)
-    VALUES (descripcion, fecha, hora, id_ambiente, id_tipo);
+    DELETE FROM registro_incidente
+    WHERE id_incidente = id_incidente;
 END //
 DELIMITER ;
 
--- Procedimiento 4: asignar recursos a ambiente
-DELIMITER //
-CREATE PROCEDURE asignar_recurso_ambiente(
-    IN serial VARCHAR(30),
-    IN numero TINYINT,
-    IN estado VARCHAR(20),
-    IN observacion TEXT,
-    IN ambiente INT,
-    IN tipo INT
-)
-BEGIN
-    INSERT INTO recursos(serial_recurso, num_recurso, estado, observacion, ambiente_id, recurso_id)
-    VALUES (serial, numero, estado, observacion, ambiente, tipo);
-END //
-DELIMITER ;
-
--- Procedimiento 5: actualizar estado recurso
 DELIMITER //
 CREATE PROCEDURE actualizar_estado_recurso(
-    IN serial VARCHAR(30),
+    IN id_recurso INT,
     IN nuevo_estado VARCHAR(20)
 )
 BEGIN
     UPDATE recursos
     SET estado = nuevo_estado
-    WHERE serial_recurso = serial;
+    WHERE id_recurso = id_recurso;
 END //
 DELIMITER ;
 
--- Procedimiento 6: mostrar ambientes disponibles
 DELIMITER //
-CREATE PROCEDURE ambientes_disponibles()
-BEGIN
-    SELECT * FROM ambiente WHERE estado = 'disponible';
-END //
-DELIMITER ;
-
--- Procedimiento 7: cambiar responsable minuta
-DELIMITER //
-CREATE PROCEDURE actualizar_responsable_minuta(
-    IN id_minuta INT,
-    IN nuevo_responsable VARCHAR(30)
-)
-BEGIN
-    UPDATE registro_minuta
-    SET responsable = nuevo_responsable
-    WHERE id_minuta = id_minuta;
-END //
-DELIMITER ;
-
--- Procedimiento 8: reporte de recursos de ambiente
-DELIMITER //
-CREATE PROCEDURE reporte_recursos_ambiente(
+CREATE PROCEDURE consultar_recursos_ambiente(
     IN id_ambiente INT
 )
 BEGIN
-    SELECT r.serial_recurso, tr.recurso_tipo, r.estado, r.observacion
+    SELECT r.serial_recurso, r.nombre_recurso, tr.recurso_tipo, r.estado, r.observacion
     FROM recursos r
-    JOIN tipo_recurso tr ON r.recurso_id = tr.id_recurso
+    JOIN tipo_recurso tr ON r.tipo_recurso = tr.id_tipo_recurso
     WHERE r.ambiente_id = id_ambiente;
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE consultar_ambientes_disponibles()
+BEGIN
+    SELECT * FROM ambiente
+    WHERE estado = 'Disponible';
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE actualizar_responsable_minuta(
+    IN id_min INT,
+    IN nuevo_responsable VARCHAR(250)
+)
+BEGIN
+    UPDATE registro_minuta
+    SET responsable = nuevo_responsable
+    WHERE id_minuta = id_min;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE eliminar_recurso(
+    IN id_recurso INT
+)
+BEGIN
+    DELETE FROM recursos
+    WHERE id_recurso = id_recurso;
+END //
+DELIMITER ;

@@ -97,6 +97,8 @@ CREATE TABLE user_rol(
   PRIMARY KEY (`id_user_rol`),
     FOREIGN KEY (`id_usuario`) REFERENCES Usuario(`id_usuario`),
     FOREIGN KEY (`id_rol`) REFERENCES  rol(`id_rol`));
+    
+    
 
 CREATE TABLE ambiente(
   `id_ambiente` INT NOT NULL,
@@ -141,11 +143,25 @@ CREATE TABLE recursos(
   `num_recurso` TINYINT NOT NULL,
   `nombre_recurso` VARCHAR(60) NOT NULL,
   `tipo_recurso` INT NOT NULL,
+  `estado` enum('Disponible', 'En mantenimiento' , 'Dañado'),
   `observacion` TEXT NULL,
   `ambiente_id` INT NOT NULL,
   PRIMARY KEY (`id_recurso`),
     FOREIGN KEY (`tipo_recurso`) REFERENCES tipo_recurso(`id_tipo_recurso`),
     FOREIGN KEY (`ambiente_id`) REFERENCES ambiente(`id_ambiente`));
+    
+    CREATE TABLE traslado_recurso (
+    id_traslado INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    ambiente_origen_id INT NOT NULL,
+    ambiente_destino_id INT NOT NULL,
+    fecha_traslado DATETIME NOT NULL,
+    observacion TEXT,
+    FOREIGN KEY (recurso_id) REFERENCES recursos(id_recurso),
+    FOREIGN KEY (ambiente_origen_id) REFERENCES ambiente(id_ambiente),
+    FOREIGN KEY (ambiente_destino_id) REFERENCES ambiente(id_ambiente)
+);
+
 
 CREATE TABLE registro_minuta(
   `id_minuta` INT NOT NULL AUTO_INCREMENT,
@@ -154,6 +170,7 @@ CREATE TABLE registro_minuta(
   `novedad` TEXT NULL,
   `responsable` VARCHAR(250) NOT NULL,
   `descripcion_min` TEXT NULL DEFAULT NULL,
+  `estado` TEXT not NULL,
   `ambiente_id` INT NOT NULL,
   `Usuario_id_usuario` INT NOT NULL,
   `guarda_seguridad_Usuario_id_usuario` INT NOT NULL,
