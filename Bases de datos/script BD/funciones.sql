@@ -1,3 +1,21 @@
+DELIMITER //
+CREATE FUNCTION estado_recursos_ambiente(id INT)
+RETURNS TEXT
+READS SQL DATA
+BEGIN
+    DECLARE resultado TEXT DEFAULT '';
+    
+    SELECT GROUP_CONCAT(CONCAT(nombre_recurso, ' (', estado, ')') SEPARATOR ', ')
+    INTO resultado	
+    FROM recursos
+    WHERE ambiente_id = id;
+
+    RETURN resultado;
+END //
+DELIMITER ;
+
+
+
 -- Función 1: obtener estado ambiente
 DELIMITER //
 CREATE FUNCTION estado_ambiente(id INT)
