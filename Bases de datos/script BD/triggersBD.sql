@@ -52,28 +52,49 @@ END$$
 
 DELIMITER ;
 
+-- segundo trigger que pone la minuta en ocupado 
 
-DELIMITER //
+DELIMITER $$
 
-CREATE TRIGGER tr_asignar_estado_minuta
-BEFORE INSERT ON registro_minuta
+CREATE TRIGGER ocupar_ambiente_por_minuta
+AFTER INSERT ON registro_minuta
 FOR EACH ROW
 BEGIN
-    DECLARE ahora DATETIME;
-    SET ahora = NOW();
-
-    IF (ahora BETWEEN NEW.fecha_hora_recibo AND NEW.fecha_hora_entrega) THEN
-        UPDATE ambiente
-        SET estado = 'Ocupado'
-        WHERE id_ambiente = NEW.ambiente_id;
-    ELSE
-        UPDATE ambiente
-        SET estado = 'Disponible'
-        WHERE id_ambiente = NEW.ambiente_id;
-    END IF;
-END //
+    -- Cambia el estado del ambiente relacionado a 'Ocupado'
+    UPDATE ambiente
+    SET estado = 'Ocupado'
+    WHERE id_ambiente = NEW.ambiente_id;
+END$$
 
 DELIMITER ;
+
+-- trigger para saber quien fue el que registro el incidente 
+DELIMITER $$
+
+CREATE TRIGGER responsable_registro_incidente
+AFTER INSERT ON registro_incidente
+FOR EACH ROW
+BEGIN
+    INSERT INTO historico_incidentes (
+        incidente_id,
+        ambiente_id,
+        tipo_incidente_id,
+        descripcion,
+        usuario_registra_id,
+        fecha_registro
+    )
+    VALUES (
+        NEW.id_incidente,
+        NEW.ambiente_id,
+        NEW.tipo_inc_id,
+        NEW.descripcion,
+        NEW.guarda_seguridad_Usuario_id_usuario, -- se asume que cualquier rol usa este campo
+        NOW()
+    );
+END$$
+
+DELIMITER ;
+
 
 
 

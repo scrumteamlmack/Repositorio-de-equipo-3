@@ -184,3 +184,16 @@ CREATE TABLE alertas_inasistencia (
   PRIMARY KEY (`id_alerta`),
     FOREIGN KEY (`coordinacion_id`) REFERENCES coordinacion(`id_coordinacion`));
 
+CREATE TABLE historico_incidentes (
+  id_historico INT AUTO_INCREMENT PRIMARY KEY,
+  incidente_id INT NOT NULL,
+  ambiente_id INT NOT NULL,
+  tipo_incidente_id INT NOT NULL,
+  descripcion TEXT,
+  usuario_registra_id INT NOT NULL,
+  fecha_registro DATETIME NOT NULL,
+  FOREIGN KEY (incidente_id) REFERENCES registro_incidente(id_incidente),
+  FOREIGN KEY (usuario_registra_id) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (ambiente_id) REFERENCES ambiente(id_ambiente),
+  FOREIGN KEY (tipo_incidente_id) REFERENCES tipo_incidente(id_tipo_inc)
+);
