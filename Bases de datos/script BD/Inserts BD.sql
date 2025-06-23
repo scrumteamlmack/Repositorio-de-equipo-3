@@ -144,18 +144,18 @@ INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUE
 (3, 'Televidor','herramienta visual');
 
 -- Poblar tabla recursos
-INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, observacion, ambiente_id) VALUES
-('PC001', 1, 'Computador Dell Optiplex', 1, 'Estado: Bueno', 101),
-('PC002', 2, 'Computador HP Pavilion', 1, 'Estado: Regular', 101),
-('PC003', 3, 'Computador Lenovo ThinkCentre', 1, 'Estado: Bueno', 102),
-('PROY001', 1, 'Proyector Epson', 2, 'Estado: Excelente', 101),
-('PROY002', 2, 'Proyector Sony', 2, 'Estado: Bueno', 401);
+INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, estado, observacion, ambiente_id) VALUES
+('PC001', 1, 'Computador Dell Optiplex', 1, 'Disponible', 'Estado: Bueno', 101),
+('PC002', 2, 'Computador HP Pavilion', 1, 'En mantenimiento', 'Estado: Regular', 101),
+('PC003', 3, 'Computador Lenovo ThinkCentre', 1, 'Dañado', 'Estado: Bueno', 102),
+('PROY001', 1, 'Proyector Epson', 2, 'Disponible', 'Estado: Excelente', 101),
+('PROY002', 2, 'Proyector Sony', 2, 'Disponible', 'Estado: Bueno', 401);
 
 -- Poblar tabla registro_minuta
-INSERT INTO registro_minuta (fecha_hora_recibo, fecha_hora_entrega, novedad, responsable, descripcion_min, ambiente_id, Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario) VALUES
-('2024-06-01 07:00:00', '2024-06-01 18:00:00', 'Todo en orden', 'Carlos García', 'Entrega normal del ambiente', 101, 1, 28),
-('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 102, 2, 28),
-('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 201, 3, 29);
+INSERT INTO registro_minuta (fecha_hora_recibo, fecha_hora_entrega, novedad, responsable, descripcion_min, estado, ambiente_id, Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario) VALUES
+('2024-06-01 07:00:00', '2024-06-01 18:00:00', 'Todo en orden', 'Carlos García', 'Entrega normal del ambiente', 'Ocupado',  101, 1, 28),
+('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 'Ocupado', 102, 2, 28),
+('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 'Ocupado', 201, 3, 29);
 
 -- Poblar tabla registro_asistencia (múltiples registros por aprendiz)
 INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id, aprendiz_Usuario_id_usuario) VALUES
