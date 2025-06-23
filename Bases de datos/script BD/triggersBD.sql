@@ -56,17 +56,19 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE TRIGGER tr_asignar_estado_minuta
-BEFORE INSERT ON registro_minuta
+CREATE TRIGGER tr_ocupar_ambiente_al_registrar_minuta
+AFTER INSERT ON registro_minuta
 FOR EACH ROW
 BEGIN
-    DECLARE ahora DATETIME;
-    SET ahora = NOW();
-
-    IF (ahora BETWEEN NEW.fecha_hora_recibo AND NEW.fecha_hora_entrega) THEN
-        SET NEW.estado = 'Ocupado';
+    -- Si la fecha actual está entre recibo y entrega, marcar ambiente como ocupado
+    IF NOW() BETWEEN NEW.fecha_hora_recibo AND NEW.fecha_hora_entrega THEN
+        UPDATE ambiente
+        SET estado = 'Ocupado'
+        WHERE id_ambiente = NEW.ambiente_id;
     ELSE
-        SET NEW.estado = 'Disponible';
+        UPDATE ambiente
+        SET estado = 'Disponible'
+        WHERE id_ambiente = NEW.ambiente_id;
     END IF;
 END //
 
@@ -88,6 +90,7 @@ END //
 DELIMITER ;
 
 -- trigger para saber quien fue el que registro el incidente 
+
 DELIMITER $$
 
 CREATE TRIGGER responsable_registro_incidente
