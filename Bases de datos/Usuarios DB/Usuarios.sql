@@ -171,3 +171,12 @@ GRANT SELECT, INSERT, UPDATE ON mydb.coordinacion TO 'javier.pineda21'@'localhos
 GRANT SELECT, INSERT, UPDATE ON mydb.programas TO 'javier.pineda21'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.recursos TO 'javier.pineda21'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.rol TO 'javier.pineda21'@'localhost';
+
+-- Privilegios de Juan (GUARDA DE SEGURIDAD)
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.recursos TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.tipo_recurso TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'jtavarez92'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.rol TO 'jtavarez92'@'localhost';
