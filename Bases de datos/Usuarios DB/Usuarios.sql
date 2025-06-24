@@ -183,3 +183,16 @@ GRANT SELECT, INSERT, UPDATE ON mydb.rol TO 'jtavarez92'@'localhost';
 
 -- Privilegios de Rosita (ADMINISTRADORA)
 GRANT ALL PRIVILEGES ON mydb.* TO 'rositarpelea100'@'localhost';
+
+-- Privilegios de Pedro (COORDINADOR)
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.ambiente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.aprendiz TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.instructor TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.coordinacion TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.jornada TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.programas TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.recursos TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.registro_asistencia TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.registro_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.tipo_incidente TO 'PedritoGomez64'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.rol TO 'PedritoGomez64'@'localhost';
