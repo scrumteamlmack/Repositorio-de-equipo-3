@@ -133,3 +133,12 @@ INSERT INTO rol (id_rol, nombre_rol) VALUES
 (3, 'GUARDA DE SEGURIDAD'),
 (4, 'ADMINISTRADOR'),
 (5, 'COORDINADOR');
+
+-- Insertar usuarios en la tabla principal 'Usuario'
+INSERT INTO Usuario (p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento, num_documento, correo, contraseña)
+VALUES 
+('Santiago', NULL, 'Cruz', NULL, 'CC', 109874321, 'santiago.cruz@sena.edu.co', 'Aprz#2025xy!'),
+('Javier', NULL, 'Pineda', 'Uribe', 'CC', 1089347652, 'jpinedau@sena.edu.co', 'Instruc@321!'),
+('Juan', NULL, 'Tavarez', NULL, 'CC', 1000100010, 'jtavarez@sena.edu.co', 'VgS3cuR@9!'),
+('Rosita', NULL, 'Ropelea', NULL, 'CC', 123456789, 'rositar@sena.edu.co', 'Adm!nR0!X@8'),
+('Pedro', NULL, 'Gomez', NULL, 'CC', 1122334455, 'pedrogomez@sena.edu.co', 'Coordimez#0039');
