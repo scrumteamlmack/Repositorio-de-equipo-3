@@ -142,3 +142,11 @@ VALUES
 ('Juan', NULL, 'Tavarez', NULL, 'CC', 1000100010, 'jtavarez@sena.edu.co', 'VgS3cuR@9!'),
 ('Rosita', NULL, 'Ropelea', NULL, 'CC', 123456789, 'rositar@sena.edu.co', 'Adm!nR0!X@8'),
 ('Pedro', NULL, 'Gomez', NULL, 'CC', 1122334455, 'pedrogomez@sena.edu.co', 'Coordimez#0039');
+
+-- Asignar roles (relacion entre Usuario y Rol)
+INSERT INTO user_rol (id_usuario, id_rol) VALUES
+(1, 1), -- Santiago -> Aprendiz
+(2, 2), -- Javier -> Instructor
+(3, 3), -- Juan -> Guarda de seguridad
+(4, 4), -- Rosita -> Administrador
+(5, 5); -- Pedro -> Coordinador
