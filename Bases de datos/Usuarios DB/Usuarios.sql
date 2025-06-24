@@ -124,3 +124,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON rol TO 'PedritoGomez64'@'localhost';
 
 -- Aplicar cambios
 FLUSH PRIVILEGES;
+
+-- correccion usuarios nueva scrit
+-- Insertar roles
+INSERT INTO rol (id_rol, nombre_rol) VALUES
+(1, 'APRENDIZ'),
+(2, 'INSTRUCTOR'),
+(3, 'GUARDA DE SEGURIDAD'),
+(4, 'ADMINISTRADOR'),
+(5, 'COORDINADOR');
