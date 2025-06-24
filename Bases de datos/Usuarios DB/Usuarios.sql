@@ -150,3 +150,12 @@ INSERT INTO user_rol (id_usuario, id_rol) VALUES
 (3, 3), -- Juan -> Guarda de seguridad
 (4, 4), -- Rosita -> Administrador
 (5, 5); -- Pedro -> Coordinador
+
+-- Privilegios de Santiago
+GRANT SELECT ON mydb.aprendiz TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON mydb.ambiente TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON mydb.user_rol TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON mydb.modalidad TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON mydb.coordinacion TO 'santiago.cruzuwu25'@'localhost';
+GRANT SELECT ON mydb.instructor TO 'santiago.cruzuwu25'@'localhost';
+GRANT UPDATE ON mydb.aprendiz TO 'santiago.cruzuwu25'@'localhost';
