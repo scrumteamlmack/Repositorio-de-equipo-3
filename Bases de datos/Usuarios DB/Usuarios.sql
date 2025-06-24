@@ -196,6 +196,3 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.registro_asistencia TO 'PedritoGome
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.registro_incidente TO 'PedritoGomez64'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.tipo_incidente TO 'PedritoGomez64'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.rol TO 'PedritoGomez64'@'localhost';
-
--- Aplicar cambios
-FLUSH PRIVILEGES;
