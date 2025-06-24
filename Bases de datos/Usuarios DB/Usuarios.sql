@@ -159,3 +159,15 @@ GRANT SELECT ON mydb.modalidad TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON mydb.coordinacion TO 'santiago.cruzuwu25'@'localhost';
 GRANT SELECT ON mydb.instructor TO 'santiago.cruzuwu25'@'localhost';
 GRANT UPDATE ON mydb.aprendiz TO 'santiago.cruzuwu25'@'localhost';
+
+-- Privilegios de Javier (INSTRUCTOR)
+GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.modalidad TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.coordinacion TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.programas TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.recursos TO 'javier.pineda21'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.rol TO 'javier.pineda21'@'localhost';
