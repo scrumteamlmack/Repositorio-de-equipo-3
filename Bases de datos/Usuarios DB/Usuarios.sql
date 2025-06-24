@@ -180,3 +180,6 @@ GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'jtavarez92'@'localho
 GRANT SELECT, INSERT, UPDATE ON mydb.tipo_recurso TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'jtavarez92'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.rol TO 'jtavarez92'@'localhost';
+
+-- Privilegios de Rosita (ADMINISTRADORA)
+GRANT ALL PRIVILEGES ON mydb.* TO 'rositarpelea100'@'localhost';
