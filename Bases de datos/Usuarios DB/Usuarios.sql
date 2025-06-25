@@ -278,3 +278,38 @@ GRANT SELECT ON mydb.modalidad TO 'fernando.delgado'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'gloria.parra'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'gloria.parra'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'gloria.parra'@'localhost';
+
+-- guarda javier cardenas
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'javier.cardenas'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'javier.cardenas'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'javier.cardenas'@'localhost';
+
+-- guarda monica ospina
+
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'monica.ospina'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'monica.ospina'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'monica.ospina'@'localhost';
+-- guarda ricardo munoz 
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'ricardo.munoz'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'ricardo.munoz'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'ricardo.munoz'@'localhost';
+-- guarda beatriz castano
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'beatriz.castano'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'beatriz.castano'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'beatriz.castano'@'localhost';
+-- guarda sergio valencia
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'sergio.valencia'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'sergio.valencia'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'sergio.valencia'@'localhost';
+-- guarda liliana bedoya 
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'liliana.bedoya'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'liliana.bedoya'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'liliana.bedoya'@'localhost';
+-- guarda oscar henao
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'oscar.henao'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'oscar.henao'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'oscar.henao'@'localhost';
+-- guarda paola velez 
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'paola.velez'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'paola.velez'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'paola.velez'@'localhost';
