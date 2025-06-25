@@ -314,3 +314,5 @@ GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'paola.velez'@'localh
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'paola.velez'@'localhost';
 
 
+-- ADMINISTRADOR 
+GRANT ALL PRIVILEGES ON mydb.* TO 'martha.correa'@'localhost';
