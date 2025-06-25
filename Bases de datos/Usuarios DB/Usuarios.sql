@@ -341,7 +341,9 @@ GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'rosa.arango'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'rosa.arango'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'rosa.arango'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'rosa.arango'@'localhost';
--- instructor
 
-
--- instructor
+-- instructor alvaro zapata
+GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'alvaro.zapata'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'alvaro.zapata'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'alvaro.zapata'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'alvaro.zapata'@'localhost';
