@@ -316,3 +316,10 @@ GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'paola.velez'@'localhost';
 
 -- ADMINISTRADOR 
 GRANT ALL PRIVILEGES ON mydb.* TO 'martha.correa'@'localhost';
+
+-- INSTRUCTORES 
+-- instructor hernan mesa
+GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'hernan.mesa'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'hernan.mesa'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'hernan.mesa'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'hernan.mesa'@'localhost';
