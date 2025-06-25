@@ -285,7 +285,6 @@ GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'javier.cardenas'@'lo
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'javier.cardenas'@'localhost';
 
 -- guarda monica ospina
-
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'monica.ospina'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'monica.ospina'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'monica.ospina'@'localhost';
@@ -313,3 +312,5 @@ GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'oscar.henao'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'paola.velez'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'paola.velez'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'paola.velez'@'localhost';
+
+
