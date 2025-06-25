@@ -323,3 +323,18 @@ GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'hernan.mesa'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'hernan.mesa'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'hernan.mesa'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'hernan.mesa'@'localhost';
+
+-- instructor yolanda arbelaez
+GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'yolanda.arbelaez'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.instructor TO 'yolanda.arbelaez'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.jornada TO 'yolanda.arbelaez'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'yolanda.arbelaez'@'localhost';
+
+-- instructor
+
+-- instructor
+
+-- instructor
+
+
+-- instructor
