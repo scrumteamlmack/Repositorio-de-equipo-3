@@ -216,3 +216,9 @@ GRANT SELECT ON mydb.aprendiz TO 'patricia.morales'@'localhost';
 GRANT SELECT ON mydb.programas TO 'patricia.morales'@'localhost';
 GRANT SELECT ON mydb.jornada TO 'patricia.morales'@'localhost';
 GRANT SELECT ON mydb.modalidad TO 'patricia.morales'@'localhost';
+
+-- Aprendiz roberto sanchez
+GRANT SELECT ON mydb.aprendiz TO 'roberto.sanchez'@'localhost';
+GRANT SELECT ON mydb.programas TO 'roberto.sanchez'@'localhost';
+GRANT SELECT ON mydb.jornada TO 'roberto.sanchez'@'localhost';
+GRANT SELECT ON mydb.modalidad TO 'roberto.sanchez'@'localhost';
