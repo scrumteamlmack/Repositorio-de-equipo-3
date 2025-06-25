@@ -201,15 +201,21 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.rol TO 'PedritoGomez64'@'localhost'
 
 -- CORRECCIÓN 2 :/
 -- COORDINADORES 
+-- coordinador carlos garcia
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.* TO 'carlos.garcia'@'localhost';
-CREATE USER 'maria.rodriguez'@'localhost' IDENTIFIED BY 'Mariarodriguez#7230';
+
+-- coordinador maria.rodriguez
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.* TO 'maria.rodriguez'@'localhost';
-CREATE USER 'juan.hernandez'@'localhost' IDENTIFIED BY 'Juanhernandez#365f';
+
+-- coordinador juan.hernandez
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.* TO 'juan.hernandez'@'localhost';
-CREATE USER 'ana.jimenez'@'localhost' IDENTIFIED BY 'Anajimenez#ab65';
+
+-- coordinador ana.jimenez
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.* TO 'ana.jimenez'@'localhost';
-CREATE USER 'luis.vargas'@'localhost' IDENTIFIED BY 'Luisvargas#56a6';
+
+-- coordinador luis.vargas
 GRANT SELECT, INSERT, UPDATE, DELETE ON mydb.* TO 'luis.vargas'@'localhost';
+
 
 -- Aprendiz patricia morales
 GRANT SELECT ON mydb.aprendiz TO 'patricia.morales'@'localhost';
