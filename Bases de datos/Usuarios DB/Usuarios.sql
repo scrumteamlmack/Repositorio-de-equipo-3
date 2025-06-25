@@ -272,3 +272,9 @@ GRANT SELECT ON mydb.aprendiz TO 'fernando.delgado'@'localhost';
 GRANT SELECT ON mydb.programas TO 'fernando.delgado'@'localhost';
 GRANT SELECT ON mydb.jornada TO 'fernando.delgado'@'localhost';
 GRANT SELECT ON mydb.modalidad TO 'fernando.delgado'@'localhost';
+
+-- GUARDAS DE SEGURIDAD 
+-- guarda gloria parra
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_minuta TO 'gloria.parra'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'gloria.parra'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'gloria.parra'@'localhost';
