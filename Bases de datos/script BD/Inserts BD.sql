@@ -18,8 +18,8 @@ INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
 ('Sistemas de Información', 'sistemas@sena.edu.co'),
 ('Tecnologiía e innovación', 'tecnologia@sena.edu.co'),
 ('Administración de Empresas', 'administracion@sena.edu.co'),
-('Salud y Bienestar', 'salud@sena.edu.co');
-
+('Salud y Bienestar', 'salud@sena.edu.co'),
+('Coordinacion Academica', 'academica@sena.edu.co');
 
 -- Poblar tabla programas
 INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES
@@ -74,20 +74,20 @@ INSERT INTO rol (id_rol, nombre_rol) VALUES
 
 -- Poblar tabla user_rol
 INSERT INTO user_rol (id_usuario, id_rol) VALUES
-(1, 1), (2, 1), (3, 1), (4, 1), (5, 1),
-(6, 2), (7, 2), (8, 2), (9, 2), (10, 2),
-(11, 2), (12, 2), (13, 2), (14, 2), (15, 2),
-(16, 3), (17, 3), (18, 3), (19, 3), (20, 3),
-(21, 3), (22, 3), (23, 5), (24, 3), (25, 3),
-(26, 5), (27, 5), (28, 5), (29, 4);
+(1, 1), (2, 1), (3, 1), (4, 1), (5, 4), (5, 1),
+(6, 2), (7, 5), (8, 2), (9, 5), (10, 2),
+(11, 5), (12, 2), (13, 5), (14, 2), (15, 5),
+(16, 2), (17, 2), (18, 2), (19, 2), (20, 2),
+(21, 2), (22, 2), (23, 2), (24, 2), (25, 3),
+(26, 3), (27, 3), (28, 3), (29, 3), (30,3);
 
 -- Poblar tabla Coordinador
 INSERT INTO Coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
-(4, 4);
-
+(4, 4),
+(5, 5);
 -- Poblar tabla instructor
 INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, fichas_asignadas, estado, jornada_id_jornada, programas_id_programas) VALUES
 (7, 'instructor2@sena.edu.co', '3001234568', 'Técnico en Sistemas', '2567892', 'Activo', 2, 1002),
@@ -98,12 +98,20 @@ INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, ficha
 
 -- Poblar tabla guarda_seguridad
 INSERT INTO guarda_seguridad (Usuario_id_usuario, turno, fecha_ingreso, estado) VALUES
-(28, 'Mañana', '2024-01-15', 'Activo'),
-(29, 'Tarde', '2024-02-20', 'Activo'),
-(30, 'Noche', '2024-05-20', 'Activo');
+(25, 'Mañana', '2024-01-15', 'Activo'),
+(26, 'Tarde', '2024-02-20', 'Activo'),
+(27, 'Noche', '2024-05-20', 'Activo'),
+(28, 'Mañana', '2024-01-16', 'Activo'),
+(29, 'Tarde', '2024-02-21', 'Activo'),
+(30, 'Noche', '2024-05-22', 'Activo');
 
 -- Poblar tabla aprendiz
 INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jornada_id_jornada) VALUES
+(6, 2567890, 1001, 1),
+(8, 2567891, 1001, 1),
+(10, 2567892, 1002, 2),
+(12, 2567893, 1003, 1),
+(14, 2567894, 1003, 1),
 (16, 2567890, 1001, 1),
 (17, 2567891, 1001, 1),
 (18, 2567892, 1002, 2),
