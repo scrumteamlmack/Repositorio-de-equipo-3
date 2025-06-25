@@ -111,7 +111,7 @@ BEGIN
         NEW.ambiente_id,
         NEW.tipo_inc_id,
         NEW.descripcion,
-        NEW.guarda_seguridad_Usuario_id_usuario, -- se asume que cualquier rol usa este campo
+        NEW.id_usuario_registra, -- se asume que cualquier rol usa este campo
         NOW()
     );
 END$$
