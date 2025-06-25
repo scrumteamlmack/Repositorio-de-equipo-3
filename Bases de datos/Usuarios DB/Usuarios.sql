@@ -260,3 +260,9 @@ GRANT SELECT ON mydb.aprendiz TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.programas TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.jornada TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.modalidad TO 'andres.rojas'@'localhost';
+
+-- Aprendiz claudia aguilar 
+GRANT SELECT ON mydb.aprendiz TO 'claudia.aguilar'@'localhost';
+GRANT SELECT ON mydb.programas TO 'claudia.aguilar'@'localhost';
+GRANT SELECT ON mydb.jornada TO 'claudia.aguilar'@'localhost';
+GRANT SELECT ON mydb.modalidad TO 'claudia.aguilar'@'localhost';
