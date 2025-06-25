@@ -123,13 +123,14 @@ CREATE TABLE registro_incidente(
   `hora_incidente` TIME NOT NULL,
   `ambiente_id` INT NOT NULL,
   `tipo_inc_id` INT NOT NULL,
-  `guarda_seguridad_Usuario_id_usuario` INT NOT NULL,
+  `id_usuario_registra` INT NOT NULL,
   PRIMARY KEY (`id_incidente`),
     FOREIGN KEY (`ambiente_id`) REFERENCES ambiente(`id_ambiente`),
 
     FOREIGN KEY (`tipo_inc_id`) REFERENCES tipo_incidente(`id_tipo_inc`),
 
-    FOREIGN KEY (`guarda_seguridad_Usuario_id_usuario`) REFERENCES guarda_seguridad(`Usuario_id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION);
+    FOREIGN KEY (`id_usuario_registra`) REFERENCES Usuario(`id_usuario`)
+    );
 
 CREATE TABLE tipo_recurso (
   `id_tipo_recurso` INT NOT NULL,
