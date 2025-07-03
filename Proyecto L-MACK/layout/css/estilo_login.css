@@ -1,7 +1,7 @@
  *{margin:0;padding:0;box-sizing:border-box;}
   body {
     font-family: 'Poppins', sans-serif;
-    background: #f9fafb;
+    background: #F5F5DC;
     color: #374151;
     min-height: 100vh;
     display: flex;
@@ -31,7 +31,7 @@
   font-weight: 600;
   font-size: 1rem;
   color: white;
-  background-color: #059669; /* verde más oscuro */
+  background-color: #059669; 
   border-radius: 8px;
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -39,7 +39,7 @@
 
 nav a:hover,
 nav a:focus {
-  background-color: #047857; /* verde aún más oscuro al pasar el cursor */
+  background-color: #047857; 
   transform: scale(1.05);
 }
 
@@ -96,7 +96,7 @@ nav a:focus {
   }
   .btn:hover,
   .btn:focus {
-    background-color: #10b981; /* green-600 */
+    background-color: #10b981; 
     outline: none;
     transform: translateY(-2px);
     box-shadow:  0 0 0 4px #05835b,

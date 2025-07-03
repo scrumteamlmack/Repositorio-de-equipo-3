@@ -11,15 +11,20 @@
 </head>
 <body>
   <header>
-    <div class="logo"><img src="../resources/logo_L-MACK_FONDO1.png" alt="Logo L-MACK" id="logo" class="img"></div>
+    <div class="logo">
+      <!-- Asegúrate de que la ruta del logo sea correcta -->
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" id="logo" class="img">
+    </div>
     <nav aria-label="Navegación principal">
-     <a href="index.html">Inicio</a>
-  <a href="../html/login.html">Iniciar Sesión</a>
+      <a href="index.html">Inicio</a>
+      <a href="../html/login.html">Iniciar Sesión</a>
     </nav>
   </header>
+
   <main>
     <h2>Registro de Nuevo Usuario</h2>
-    <form onsubmit="event.preventDefault(); alert('Funcionalidad no implementada');">
+    <!-- Ahora el formulario redirige a error_500.html -->
+    <form action="error_500.html" method="get">
       <label for="name">Nombre Completo</label>
       <input 
         type="text" 
@@ -72,8 +77,10 @@
 
       <button type="submit" class="btn" aria-label="Registrar usuario">Registrarse</button>
     </form>
+
     <p class="login-link">¿Ya tienes cuenta? <a href="login.html" aria-label="Ir a iniciar sesión">Iniciar sesión aquí</a></p>
   </main>
+
   <footer>
     &copy; 2025 L-MACK
   </footer>
