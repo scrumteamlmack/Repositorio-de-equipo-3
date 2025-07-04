@@ -9,9 +9,9 @@ CREATE TABLE  Usuario(
   `p_apellido` VARCHAR(45) NOT NULL COMMENT 'Primer apellido.',
   `s_apellido` VARCHAR(45) COMMENT 'Segundo apellido.',
   `tipo_documento` ENUM('CC', 'TI', 'CE', 'OTRO') NOT NULL COMMENT 'Tipo de documento.',
-  `num_documento` INT NOT NULL COMMENT'Número de documento.',
-  `correo` VARCHAR(100) NOT NULL COMMENT'Correo institucional.',
-  `contraseña` VARCHAR(100) NOT NULL COMMENT'Contraseña cifrada.',
+  `num_documento` INT NOT NULL COMMENT 'Número de documento.',
+  `correo` VARCHAR(100) NOT NULL COMMENT 'Correo institucional.',
+  `contraseña` VARCHAR(100) NOT NULL COMMENT 'Contraseña cifrada.',
   PRIMARY KEY (`id_usuario`));
 
 CREATE TABLE coordinacion(
