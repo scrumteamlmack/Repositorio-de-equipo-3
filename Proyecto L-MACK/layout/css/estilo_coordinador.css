@@ -13,7 +13,8 @@ body {
   flex-direction: column;
 }
 
-header, footer {
+header,
+footer {
   background-color: #10b981;
   color: white;
   padding: 16px 32px;
@@ -47,6 +48,9 @@ nav a {
   background-color: #059669;
   border-radius: 8px;
   text-decoration: none;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -66,70 +70,38 @@ h2 {
   color: #10b981;
   margin-bottom: 36px;
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 
 .button-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 botones por fila */
-  gap: 32px;
-  padding-bottom: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
 }
 
 .action-btn {
-  background-color: #10b981;
-  border: none;
-  border-radius: 16px;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 24px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #10b981;
+  color: white;
   text-decoration: none;
-  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.action-btn .material-icons {
-  font-size: 48px;
-}
-
-.action-btn:hover,
-.action-btn:focus {
+.action-btn:hover {
   background-color: #059669;
-  transform: translateY(-4px);
-  outline: none;
+  transform: scale(1.05);
 }
 
-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  user-select: none;
-  margin-top: auto;
-}
-
-/* Responsive design */
-@media (max-width: 960px) {
-  .button-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 botones por fila */
-  }
-}
-
-@media (max-width: 640px) {
-  main {
-    margin: 32px 16px;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  .button-grid {
-    grid-template-columns: 1fr; /* 1 botón por fila */
-  }
+.material-icons {
+  font-size: 20px;
 }
