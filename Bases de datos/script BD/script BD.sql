@@ -1,4 +1,5 @@
-
+drop database if exists `mydb`;
+create database `mydb`;
 CREATE SCHEMA IF NOT EXISTS `mydb`;
 USE `mydb` ;
 
