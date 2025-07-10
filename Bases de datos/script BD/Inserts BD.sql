@@ -1,41 +1,5 @@
--- Script para poblar la base de datos con datos de prueba consistentes
--- Total de inserts: 50+ registros distribuidos en todas las tablas
 
--- Limpiar datos existentes para evitar conflictos
-DELETE FROM `mydb`.`alertas_inasistencia`;
-DELETE FROM `mydb`.`registro_asistencia`;
-DELETE FROM `mydb`.`registro_minuta`;
-DELETE FROM `mydb`.`recursos`;
-DELETE FROM `mydb`.`registro_incidente`;
-DELETE FROM `mydb`.`aprendiz`;
-DELETE FROM `mydb`.`user_rol`;
-DELETE FROM `mydb`.`guarda_seguridad`;
-DELETE FROM `mydb`.`instructor`;
-DELETE FROM `mydb`.`programas`;
-DELETE FROM `mydb`.`ambiente`;
-DELETE FROM `mydb`.`Usuario`;
-DELETE FROM `mydb`.`coordinacion`;
-DELETE FROM `mydb`.`tipo_recurso`;
-DELETE FROM `mydb`.`tipo_incidente`;
-DELETE FROM `mydb`.`rol`;
-DELETE FROM `mydb`.`modalidad`;
-DELETE FROM `mydb`.`jornada`;
-
--- Resetear AUTO_INCREMENT
-ALTER TABLE `mydb`.`Usuario` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`coordinacion` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`aprendiz` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`user_rol` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`registro_incidente` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`recursos` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`registro_minuta` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`registro_asistencia` AUTO_INCREMENT = 1;
-ALTER TABLE `mydb`.`alertas_inasistencia` AUTO_INCREMENT = 1;
-
--- =============================================
--- DATOS MAESTROS (Catálogos)
--- =============================================
-
+use mydb;
 -- Jornadas (3 registros)
 INSERT INTO `mydb`.`jornada` (`id_jornada`, `nombre_jornada`) VALUES
 (1, 'Mañana'),

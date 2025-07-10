@@ -112,6 +112,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`instructor` (
   `email` VARCHAR(100) NOT NULL COMMENT 'Correo electrónico institucional.\n',
   `telefono` VARCHAR(20) NOT NULL COMMENT 'Teléfono de contacto.\n',
   `coordinacion` VARCHAR(100) NOT NULL COMMENT 'Coordinación a la que pertenece.\n',
+  `fichas_asignadas` MEDIUMINT NOT NULL COMMENT 'fichas asignadas',
+  `especialidad` MEDIUMINT NOT NULL COMMENT 'fichas asignadas',
+  `fecha_ingreso` MEDIUMINT NOT NULL COMMENT 'fecha en la que ingresa',
   `estado` ENUM('Activo', 'Inactivo') NOT NULL COMMENT 'Estado laboral (activo, inactivo).\n',
   PRIMARY KEY (`Usuario_id_usuario`),
 
