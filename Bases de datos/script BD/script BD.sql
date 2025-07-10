@@ -196,9 +196,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`guarda_seguridad` (
   `Usuario_id_usuario` INT(11) NOT NULL COMMENT 'Clave primaria y foránea. Usuario que cumple funciones de guarda de seguridad.\n',
   `turno` ENUM('Mañana', 'Tarde', 'Noche') NOT NULL COMMENT 'Turno del guarda(ej. mañana, tarde, etc...)',
   `fecha_ingreso` DATE NOT NULL COMMENT 'Fecha de ingreso laboral del guarda.\n',
-  `
-
-estado` ENUM('Activo', 'Inactivo') NOT NULL COMMENT 'Estado laboral del guarda (activo/inactivo).\n\n',
+  `estado` ENUM('Activo', 'Inactivo') NOT NULL COMMENT 'Estado laboral del guarda (activo/inactivo).\n\n',
   PRIMARY KEY (`Usuario_id_usuario`),
  
     FOREIGN KEY (`Usuario_id_usuario`)
