@@ -16,23 +16,20 @@ GROUP BY f.Num_ficha, p.nombre_programa, j.nombre_jornada, m.nombre_modalidad
 ORDER BY cantidad_aprendices DESC;
 
 
-
-
 -- 2. Ambientes con recursos disponibles y responsables de minuta
 
 SELECT 
     a.num_ambiente,
     a.tipo_ambiente,
-    COUNT(r.id_recurso) AS total_recursos_disponibles,
     CONCAT(u.p_nombre, ' ', u.p_apellido) AS responsable_minuta,
     MAX(rm.fecha_hora_recibo) AS ultima_fecha_minuta
 FROM ambiente a
-JOIN traslado_recurso tr ON tr.ambiente_destino = CONCAT('Ambiente ', a.num_ambiente)
-JOIN recursos r ON r.id_recurso = tr.recurso_id
 JOIN registro_minuta rm ON rm.ambiente_id = a.id_ambiente
 JOIN usuario u ON u.id_usuario = rm.responsable_id
-WHERE r.estado = 'Disponible'
-GROUP BY a.num_ambiente, a.tipo_ambiente, u.p_nombre, u.p_apellido;
+WHERE a.estado = 'Disponible'
+GROUP BY a.id_ambiente, a.num_ambiente, a.tipo_ambiente, u.p_nombre, u.p_apellido;
+
+
 
 
 --  3. Cantidad de incidentes registrados por ambiente
@@ -56,23 +53,15 @@ ORDER BY total_incidentes DESC;
 
 SELECT 
     p.nombre_programa, 
-    tr.ambiente_destino AS nombre_ambiente,
-    r.serial_recurso,
-    r.nombre_recurso,
-    r.estado
-FROM aprendiz ap
-JOIN ficha f ON ap.ficha_idficha = f.idficha
-JOIN programas p ON ap.programas_id_programas = p.id_programas
-JOIN instructor i ON f.instructor_Usuario_id_usuario = i.Usuario_id_usuario
+    j.nombre_jornada,
+    f.Num_ficha,
+    GROUP_CONCAT(DISTINCT r.nombre_recurso SEPARATOR ', ') AS recursos_disponibles
+FROM aprendiz a
+JOIN programas p ON a.programas_id_programas = p.id_programas
+JOIN jornada j ON a.jornada_id_jornada = j.id_jornada
+JOIN ficha f ON a.ficha_idficha = f.idficha
 JOIN recursos r ON r.estado = 'Disponible'
-JOIN traslado_recurso tr ON tr.recurso_id = r.id_recurso
-WHERE tr.fecha_traslado = (
-    SELECT MAX(t2.fecha_traslado)
-    FROM traslado_recurso t2
-    WHERE t2.recurso_id = tr.recurso_id
-)
-GROUP BY p.nombre_programa, tr.ambiente_destino, r.serial_recurso, r.nombre_recurso, r.estado;
-
+GROUP BY p.nombre_programa, j.nombre_jornada, f.Num_ficha;
 
 
 
