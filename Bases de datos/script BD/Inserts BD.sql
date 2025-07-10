@@ -1,250 +1,426 @@
--- Script para poblar la base de datos mydb con datos de prueba
-USE `mydb`;
+-- Script para poblar la base de datos con datos de prueba consistentes
+-- Total de inserts: 50+ registros distribuidos en todas las tablas
 
--- Poblar tabla jornada (debe ir primero por las dependencias)
-INSERT INTO jornada (id_jornada, nombre_jornada) VALUES
+-- Limpiar datos existentes para evitar conflictos
+DELETE FROM `mydb`.`alertas_inasistencia`;
+DELETE FROM `mydb`.`registro_asistencia`;
+DELETE FROM `mydb`.`registro_minuta`;
+DELETE FROM `mydb`.`recursos`;
+DELETE FROM `mydb`.`registro_incidente`;
+DELETE FROM `mydb`.`aprendiz`;
+DELETE FROM `mydb`.`user_rol`;
+DELETE FROM `mydb`.`guarda_seguridad`;
+DELETE FROM `mydb`.`instructor`;
+DELETE FROM `mydb`.`programas`;
+DELETE FROM `mydb`.`ambiente`;
+DELETE FROM `mydb`.`Usuario`;
+DELETE FROM `mydb`.`coordinacion`;
+DELETE FROM `mydb`.`tipo_recurso`;
+DELETE FROM `mydb`.`tipo_incidente`;
+DELETE FROM `mydb`.`rol`;
+DELETE FROM `mydb`.`modalidad`;
+DELETE FROM `mydb`.`jornada`;
+
+-- Resetear AUTO_INCREMENT
+ALTER TABLE `mydb`.`Usuario` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`coordinacion` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`aprendiz` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`user_rol` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`registro_incidente` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`recursos` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`registro_minuta` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`registro_asistencia` AUTO_INCREMENT = 1;
+ALTER TABLE `mydb`.`alertas_inasistencia` AUTO_INCREMENT = 1;
+
+-- =============================================
+-- DATOS MAESTROS (Catálogos)
+-- =============================================
+
+-- Jornadas (3 registros)
+INSERT INTO `mydb`.`jornada` (`id_jornada`, `nombre_jornada`) VALUES
 (1, 'Mañana'),
 (2, 'Tarde'),
-(3, 'Noche'),
-(4, 'madrugada');
+(3, 'Noche');
 
--- Poblar tabla modalidad
-INSERT INTO modalidad (id_modalidad, nombre_modalidad) VALUES
+-- Modalidades (3 registros)
+INSERT INTO `mydb`.`modalidad` (`id_modalidad`, `nombre_modalidad`) VALUES
 (1, 'Presencial'),
-(2, 'sincronica');
+(2, 'Virtual'),
+(3, 'Mixta');
 
--- Poblar tabla coordinacion
-INSERT INTO coordinacion (nombre_coordinacion, correo_coordinacion) VALUES
-('Sistemas de Información', 'sistemas@sena.edu.co'),
-('Tecnologiía e innovación', 'tecnologia@sena.edu.co'),
-('Administración de Empresas', 'administracion@sena.edu.co'),
-('Salud y Bienestar', 'salud@sena.edu.co'),
-('Coordinacion Academica', 'academica@sena.edu.co');
+-- Roles (4 registros)
+INSERT INTO `mydb`.`rol` (`id_rol`, `nombre_rol`) VALUES
+(1, 'Administrador'),
+(2, 'Instructor'),
+(3, 'Aprendiz'),
+(4, 'Guarda de Seguridad');
 
--- Poblar tabla programas
-INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES
-(1001, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 1, 1),
-(1002, 'Técnico en Sistemas', 'Técnico', '18 meses', 2, 1, 1),
-(1003, 'Redes y Telecomunicaciones', 'Tecnólogo', '24 meses', 1, 2, 2),
-(1007, 'Administración de Empresas', 'Tecnólogo', '24 meses', 2, 2, 4),
-(1008, 'Contabilidad y Finanzas', 'Técnico', '18 meses', 1, 1, 4);
+-- Coordinaciones (5 registros)
+INSERT INTO `mydb`.`coordinacion` (`nombre_coordinacion`, `correo_coordinacion`) VALUES
+('Coordinación de Sistemas', 'sistemas@sena.edu.co'),
+('Coordinación de Diseño', 'diseno@sena.edu.co'),
+('Coordinación de Logística', 'logistica@sena.edu.co'),
+('Coordinación de Salud', 'salud@sena.edu.co'),
+('Coordinación de Industria', 'industria@sena.edu.co');
 
+-- Tipos de Incidente (6 registros)
+INSERT INTO `mydb`.`tipo_incidente` (`id_tipo_inc`, `tipo_incidente`, `observacion_inc`) VALUES
+(1, 'Falla Eléctrica', 'Problemas con el suministro de energía'),
+(2, 'Daño de Equipo', 'Equipo de cómputo defectuoso'),
+(3, 'Problema de Conectividad', 'Fallo en la red de internet'),
+(4, 'Falla de Mobiliario', 'Silla o mesa rota'),
+(5, 'Emergencia Médica', 'Situación de salud de un aprendiz o instructor'),
+(6, 'Problema de Seguridad', 'Incidentes relacionados con la seguridad del centro');
 
--- Poblar tabla Usuario (30 usuarios)
-INSERT INTO Usuario (p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento, num_documento, correo, contraseña) VALUES
-('Carlos', 'Andrés', 'García', 'López', 'CC', 1234567890, 'carlos.garcia@sena.edu.co', 'password123'),
-('María', 'Elena', 'Rodríguez', 'Martínez', 'CC', 1234567891, 'maria.rodriguez@sena.edu.co', 'password123'),
-('Juan', 'Pablo', 'Hernández', 'González', 'CC', 1234567892, 'juan.hernandez@sena.edu.co', 'password123'),
-('Ana', 'Sofía', 'Jiménez', 'Torres', 'CC', 1234567893, 'ana.jimenez@sena.edu.co', 'password123'),
-('Luis', 'Fernando', 'Vargas', 'Ruiz', 'CC', 1234567894, 'luis.vargas@sena.edu.co', 'password123'),
-('Patricia', 'Isabel', 'Morales', 'Castro', 'CC', 1234567895, 'patricia.morales@sena.edu.co', 'password123'),
-('Roberto', 'José', 'Sánchez', 'Díaz', 'CC', 1234567896, 'roberto.sanchez@sena.edu.co', 'password123'),
-('Carmen', 'Lucía', 'Ramírez', 'Peña', 'CC', 1234567897, 'carmen.ramirez@sena.edu.co', 'password123'),
-('Miguel', 'Ángel', 'Flores', 'Vega', 'CC', 1234567898, 'miguel.flores@sena.edu.co', 'password123'),
-('Laura', 'Cristina', 'Mendoza', 'Silva', 'CC', 1234567899, 'laura.mendoza@sena.edu.co', 'password123'),
-('Diego', 'Alejandro', 'Ortega', 'Ramos', 'CC', 1234567800, 'diego.ortega@sena.edu.co', 'password123'),
-('Sandra', 'Milena', 'Guerrero', 'Herrera', 'CC', 1234567801, 'sandra.guerrero@sena.edu.co', 'password123'),
-('Andrés', 'Felipe', 'Rojas', 'Medina', 'CC', 1234567802, 'andres.rojas@sena.edu.co', 'password123'),
-('Claudia', 'Patricia', 'Aguilar', 'Cortés', 'CC', 1234567803, 'claudia.aguilar@sena.edu.co', 'password123'),
-('Fernando', 'Antonio', 'Delgado', 'Paredes', 'CC', 1234567804, 'fernando.delgado@sena.edu.co', 'password123'),
-('Gloria', 'Esperanza', 'Parra', 'Bautista', 'CC', 1234567805, 'gloria.parra@sena.edu.co', 'password123'),
-('Javier', 'Enrique', 'Cárdenas', 'Molina', 'CC', 1234567806, 'javier.cardenas@sena.edu.co', 'password123'),
-('Mónica', 'Alejandra', 'Ospina', 'Restrepo', 'CC', 1234567807, 'monica.ospina@sena.edu.co', 'password123'),
-('Ricardo', 'Javier', 'Muñoz', 'Salazar', 'CC', 1234567808, 'ricardo.munoz@sena.edu.co', 'password123'),
-('Beatriz', 'Elena', 'Castaño', 'Giraldo', 'CC', 1234567809, 'beatriz.castano@sena.edu.co', 'password123'),
-('Sergio', 'Iván', 'Valencia', 'Quintero', 'CC', 1234567810, 'sergio.valencia@sena.edu.co', 'password123'),
-('Liliana', 'María', 'Bedoya', 'Alzate', 'CC', 1234567811, 'liliana.bedoya@sena.edu.co', 'password123'),
-('Óscar', 'David', 'Henao', 'Cardona', 'CC', 1234567812, 'oscar.henao@sena.edu.co', 'password123'),
-('Paola', 'Andrea', 'Vélez', 'Jaramillo', 'CC', 1234567813, 'paola.velez@sena.edu.co', 'password123'),
-('Hernán', 'Darío', 'Mesa', 'Londoño', 'CC', 1234567814, 'hernan.mesa@sena.edu.co', 'password123'),
-('Yolanda', 'Rocío', 'Arbeláez', 'Gómez', 'CC', 1234567815, 'yolanda.arbelaez@sena.edu.co', 'password123'),
-('Germán', 'Alberto', 'Escobar', 'Ríos', 'CC', 1234567816, 'german.escobar@sena.edu.co', 'password123'),
-('Rosa', 'María', 'Arango', 'Franco', 'CC', 1234567817, 'rosa.arango@sena.edu.co', 'password123'),
-('Álvaro', 'Hernando', 'Zapata', 'Mejía', 'CC', 1234567818, 'alvaro.zapata@sena.edu.co', 'password123'),
-('Martha', 'Cecilia', 'Correa', 'Montoya', 'CC', 1234567819, 'martha.correa@sena.edu.co', 'password123');
+-- Tipos de Recurso (7 registros)
+INSERT INTO `mydb`.`tipo_recurso` (`id_tipo_recurso`, `recurso_tipo`, `descripcion_tipo`) VALUES
+(1, 'Computador', 'Equipo informático de escritorio'),
+(2, 'Proyector', 'Equipo para proyección de imágenes'),
+(3, 'Impresora', 'Dispositivo para imprimir documentos'),
+(4, 'Mobiliario', 'Sillas, mesas, armarios'),
+(5, 'Herramienta', 'Herramientas manuales o eléctricas'),
+(6, 'Audio/Video', 'Equipos de sonido y video'),
+(7, 'Red', 'Equipos de networking y comunicaciones');
 
--- Poblar tabla rol
-INSERT INTO rol (id_rol, nombre_rol) VALUES
-(1, 'Coordinador'),
-(2, 'Aprendiz'),
-(3, 'Guarda de Seguridad'),
-(4, 'Administrador'),
-(5, 'Instructor');
+-- =============================================
+-- USUARIOS (20 registros)
+-- =============================================
 
+INSERT INTO `mydb`.`Usuario` (`p_nombre`, `s_nombre`, `p_apellido`, `s_apellido`, `tipo_documento`, `num_documento`, `correo`, `contraseña`) VALUES
+-- Administradores
+('Carlos', 'Alberto', 'Rodriguez', 'Peña', 'CC', 1012345001, 'carlos.rodriguez@sena.edu.co', MD5('admin123')),
+('Ana', 'Maria', 'Gonzalez', 'Lopez', 'CC', 1012345002, 'ana.gonzalez@sena.edu.co', MD5('admin456')),
 
--- Poblar tabla user_rol
-INSERT INTO user_rol (id_usuario, id_rol) VALUES
-(1, 1), (2, 1), (3, 1), (4, 1), (5, 4), (5, 1),
-(6, 2), (7, 5), (8, 2), (9, 5), (10, 2),
-(11, 5), (12, 2), (13, 5), (14, 2), (15, 5),
-(16, 2), (17, 2), (18, 2), (19, 2), (20, 2),
-(21, 2), (22, 2), (23, 2), (24, 2), (25, 3),
-(26, 3), (27, 3), (28, 3), (29, 3), (30,3);
+-- Instructores
+('Juan', 'Carlos', 'Perez', 'Gomez', 'CC', 1012345003, 'juan.perez@sena.edu.co', MD5('inst123')),
+('Maria', 'Alejandra', 'Lopez', 'Diaz', 'CC', 1012345004, 'maria.lopez@sena.edu.co', MD5('inst456')),
+('Pedro', 'Luis', 'Martinez', 'Silva', 'CC', 1012345005, 'pedro.martinez@sena.edu.co', MD5('inst789')),
+('Laura', 'Sofia', 'Torres', 'Vargas', 'CC', 1012345006, 'laura.torres@sena.edu.co', MD5('inst012')),
+('Diego', 'Andres', 'Ramirez', 'Castro', 'CC', 1012345007, 'diego.ramirez@sena.edu.co', MD5('inst345')),
 
--- Poblar tabla Coordinador
-INSERT INTO Coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
--- Poblar tabla instructor
-INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion, fichas_asignadas, estado, jornada_id_jornada, programas_id_programas) VALUES
-(7, 'instructor2@sena.edu.co', '3001234568', 'Técnico en Sistemas', '2567892', 'Activo', 2, 1002),
-(9, 'instructor4@sena.edu.co', '3001234570', 'Redes y Telecomunicaciones', '2567895', 'Activo', 3, 1003),
-(11, 'instructor6@sena.edu.co', '3001234572', 'Mecánica Industrial', '2567898', 'Activo', 2, 1007),
-(13, 'instructor8@sena.edu.co', '3001234574', 'Administración de Empresas', '2567900', 'Activo', 1, 1008),
-(15, 'instructor10@sena.edu.co', '3001234576', 'Salud y Bienestar', '2567902', 'Activo', 2, 1002);
+-- Guardas de Seguridad
+('Roberto', 'Antonio', 'Morales', 'Ruiz', 'CC', 1012345008, 'roberto.morales@sena.edu.co', MD5('guard123')),
+('Carmen', 'Isabel', 'Jimenez', 'Herrera', 'CC', 1012345009, 'carmen.jimenez@sena.edu.co', MD5('guard456')),
+('Fernando', 'Jose', 'Gutierrez', 'Sanchez', 'CC', 1012345010, 'fernando.gutierrez@sena.edu.co', MD5('guard789')),
 
--- Poblar tabla guarda_seguridad
-INSERT INTO guarda_seguridad (Usuario_id_usuario, turno, fecha_ingreso, estado) VALUES
-(25, 'Mañana', '2024-01-15', 'Activo'),
-(26, 'Tarde', '2024-02-20', 'Activo'),
-(27, 'Noche', '2024-05-20', 'Activo'),
-(28, 'Mañana', '2024-01-16', 'Activo'),
-(29, 'Tarde', '2024-02-21', 'Activo'),
-(30, 'Noche', '2024-05-22', 'Activo');
+-- Aprendices
+('Alejandro', 'David', 'Moreno', 'Ortega', 'TI', 1012345011, 'alejandro.moreno@misena.edu.co', MD5('apren123')),
+('Valentina', 'Camila', 'Diaz', 'Suarez', 'TI', 1012345012, 'valentina.diaz@misena.edu.co', MD5('apren456')),
+('Sebastian', 'Nicolas', 'Vargas', 'Mendez', 'TI', 1012345013, 'sebastian.vargas@misena.edu.co', MD5('apren789')),
+('Isabella', 'Andrea', 'Rojas', 'Pineda', 'TI', 1012345014, 'isabella.rojas@misena.edu.co', MD5('apren012')),
+('Mateo', 'Alejandro', 'Castillo', 'Vega', 'TI', 1012345015, 'mateo.castillo@misena.edu.co', MD5('apren345')),
+('Sophia', 'Valentina', 'Hernandez', 'Molina', 'TI', 1012345016, 'sophia.hernandez@misena.edu.co', MD5('apren678')),
+('Daniel', 'Santiago', 'Florez', 'Rios', 'TI', 1012345017, 'daniel.florez@misena.edu.co', MD5('apren901')),
+('Camila', 'Alejandra', 'Acosta', 'Guerrero', 'TI', 1012345018, 'camila.acosta@misena.edu.co', MD5('apren234')),
+('Andres', 'Felipe', 'Ospina', 'Cardenas', 'TI', 1012345019, 'andres.ospina@misena.edu.co', MD5('apren567')),
+('Mariana', 'Juliana', 'Parra', 'Aguilar', 'TI', 1012345020, 'mariana.parra@misena.edu.co', MD5('apren890'));
 
--- Poblar tabla aprendiz
-INSERT INTO aprendiz (Usuario_id_usuario, Num_ficha, programas_id_programas, jornada_id_jornada) VALUES
-(6, 2567890, 1001, 1),
-(8, 2567891, 1001, 1),
-(10, 2567892, 1002, 2),
-(12, 2567893, 1003, 1),
-(14, 2567894, 1003, 1),
-(16, 2567890, 1001, 1),
-(17, 2567891, 1001, 1),
-(18, 2567892, 1002, 2),
-(19, 2567893, 1003, 1),
-(20, 2567894, 1003, 1),
-(21, 2567895, 1007, 3),
-(22, 2567896, 1008, 1),
-(23, 2567897, 1007, 1),
-(24, 2567898, 1008, 2);
+-- =============================================
+-- ROLES DE USUARIO (20 registros)
+-- =============================================
 
+INSERT INTO `mydb`.`user_rol` (`id_usuario`, `id_rol`) VALUES
+-- Administradores
+(1, 1), (2, 1),
+-- Instructores
+(3, 2), (4, 2), (5, 2), (6, 2), (7, 2),
+-- Guardas
+(8, 4), (9, 4), (10, 4),
+-- Aprendices
+(11, 3), (12, 3), (13, 3), (14, 3), (15, 3),
+(16, 3), (17, 3), (18, 3), (19, 3), (20, 3);
 
--- Poblar tabla ambiente
-INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado, coordinacion_id) VALUES
-(101, 101, 30, 'Aula de Sistemas', 'Disponible', 1),
-(102, 102, 25, 'Laboratorio de Programación', 'Disponible', 1),
-(201, 201, 20, 'Laboratorio de Electrónica', 'Disponible', 2),
-(202, 202, 25, 'Taller de Telecomunicaciones', 'Disponible', 2),
-(401, 401, 40, 'Aula de Administración', 'Disponible', 3),
-(501, 501, 25, 'Laboratorio de Enfermería', 'Disponible', 4),
-(601, 601, 30, 'Aula de deportes', 'Disponible', 4);
+-- =============================================
+-- PROGRAMAS FORMATIVOS (8 registros)
+-- =============================================
 
--- Poblar tabla tipo_incidente
-INSERT INTO tipo_incidente (id_tipo_inc, tipo_incidente, observacion_inc) VALUES
-(1, 'Daño de Equipo', 'Equipos dañados o averiados'),
-(2, 'Emergencia Médica', 'Situaciones médicas de emergencia');
+INSERT INTO `mydb`.`programas` (`id_programas`, `nombre_programa`, `nivel_formacion`, `duracion`, `jornada_id`, `modalidad_id`, `coordinacion_id`) VALUES
+(2271021, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 2, 1),
+(2271022, 'Diseño Gráfico Publicitario', 'Técnico', '18 meses', 2, 1, 2),
+(2271023, 'Gestión Logística', 'Tecnólogo', '24 meses', 3, 3, 3),
+(2271024, 'Contabilidad y Finanzas', 'Tecnólogo', '24 meses', 1, 1, 1),
+(2271025, 'Multimedia', 'Técnico', '18 meses', 2, 2, 2),
+(2271026, 'Auxiliar en Enfermería', 'Técnico', '18 meses', 1, 1, 4),
+(2271027, 'Mecánica Industrial', 'Tecnólogo', '24 meses', 2, 1, 5),
+(2271028, 'Desarrollo Web', 'Especialización', '6 meses', 3, 2, 1);
 
+-- =============================================
+-- INSTRUCTORES (5 registros)
+-- =============================================
 
--- Poblar tabla registro_incidente
-INSERT INTO registro_incidente (descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, id_usuario_registra) VALUES
-('Computador presenta fallas en el arranque', '2024-03-15', '10:30:00', 101, 1, 28),
-('Falta un mouse en ambiente ', '2024-03-25', '08:45:00', 102, 1, 28),
-('Estudiante dañó equipo', '2024-04-05', '11:30:00', 501, 1, 28);
+INSERT INTO `mydb`.`instructor` (`Usuario_id_usuario`, `email`, `telefono`, `coordinacion`, `fichas_asignadas`, `especialidad`, `fecha_ingreso`, `estado`) VALUES
+(3, 'juan.perez@sena.edu.co', '3001112233', 'Coordinación de Sistemas', '2271021-1, 2271028-1', 'Desarrollo de Software', '2022-01-15', 'Activo'),
+(4, 'maria.lopez@sena.edu.co', '3012223344', 'Coordinación de Diseño', '2271022-1, 2271025-1', 'Diseño Gráfico', '2021-05-20', 'Activo'),
+(5, 'pedro.martinez@sena.edu.co', '3023334455', 'Coordinación de Logística', '2271023-1', 'Gestión de Cadena de Suministro', '2023-03-10', 'Activo'),
+(6, 'laura.torres@sena.edu.co', '3034445566', 'Coordinación de Salud', '2271026-1', 'Auxiliar en Enfermería', '2022-08-01', 'Activo'),
+(7, 'diego.ramirez@sena.edu.co', '3045556677', 'Coordinación de Industria', '2271027-1', 'Mecánica Industrial', '2021-11-15', 'Activo');
 
--- Poblar tabla tipo_recurso
-INSERT INTO tipo_recurso (id_tipo_recurso, recurso_tipo, descripcion_tipo) VALUES
-(1, 'Computador', 'Equipos de cómputo'),
-(2, 'Proyector', 'Equipos de proyección'),
-(3, 'Televidor','herramienta visual');
+-- =============================================
+-- GUARDAS DE SEGURIDAD (3 registros)
+-- =============================================
 
--- Poblar tabla recursos
-INSERT INTO recursos (serial_recurso, num_recurso, nombre_recurso, tipo_recurso, estado, observacion, ambiente_id) VALUES
-('PC001', 1, 'Computador Dell Optiplex', 1, 'Disponible', 'Estado: Bueno', 101),
-('PC002', 2, 'Computador HP Pavilion', 1, 'En mantenimiento', 'Estado: Regular', 101),
-('PC003', 3, 'Computador Lenovo ThinkCentre', 1, 'Dañado', 'Estado: Bueno', 102),
-('PROY001', 1, 'Proyector Epson', 2, 'Disponible', 'Estado: Excelente', 101),
-('PROY002', 2, 'Proyector Sony', 2, 'Disponible', 'Estado: Bueno', 401);
+INSERT INTO `mydb`.`guarda_seguridad` (`Usuario_id_usuario`, `turno`, `fecha_ingreso`, `estado`) VALUES
+(8, 'Mañana', '2020-07-01', 'Activo'),
+(9, 'Tarde', '2019-11-01', 'Activo'),
+(10, 'Noche', '2021-02-15', 'Activo');
 
--- Poblar tabla registro_minuta
-INSERT INTO registro_minuta (fecha_hora_recibo, fecha_hora_entrega, novedad, responsable, descripcion_min, estado, ambiente_id, Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario) VALUES
-('2024-06-01 07:00:00', '2024-06-01 18:00:00', 'Todo en orden', 'Carlos García', 'Entrega normal del ambiente', 'Ocupado',  101, 1, 28),
-('2024-06-02 07:00:00', '2024-06-02 18:00:00', 'Proyector con fallas', 'María Rodríguez', 'Proyector presenta intermitencias', 'Ocupado', 102, 2, 28),
-('2024-06-03 07:00:00', '2024-06-03 18:00:00', 'Sin novedades', 'Juan Hernández', 'Ambiente en perfecto estado', 'Ocupado', 201, 3, 29);
+-- =============================================
+-- AMBIENTES (10 registros)
+-- =============================================
 
--- Poblar tabla registro_asistencia (múltiples registros por aprendiz)
-INSERT INTO registro_asistencia (fecha_asistencia, estado_asistencia, jornada_id, aprendiz_Usuario_id_usuario) VALUES
--- Aprendiz 16
+INSERT INTO `mydb`.`ambiente` (`id_ambiente`, `num_ambiente`, `capacidad`, `tipo_ambiente`, `estado`, `coordinacion_id`) VALUES
+(101, 101, 30, 'Aula de Clases', 'Disponible', 1),
+(102, 102, 25, 'Laboratorio de Cómputo', 'En Uso', 1),
+(103, 103, 30, 'Aula de Clases', 'Disponible', 1),
+(201, 201, 20, 'Taller de Diseño', 'Disponible', 2),
+(202, 202, 18, 'Laboratorio de Multimedia', 'En Uso', 2),
+(301, 301, 40, 'Salón Multipropósito', 'Mantenimiento', 3),
+(401, 401, 15, 'Laboratorio de Enfermería', 'Disponible', 4),
+(402, 402, 12, 'Consultorio de Práctica', 'Disponible', 4),
+(501, 501, 35, 'Taller de Mecánica', 'En Uso', 5),
+(502, 502, 25, 'Laboratorio de Soldadura', 'Disponible', 5);
 
-('2024-06-02', 'S', 1, 16),
-('2024-06-03', 'R', 1, 16),
-('2024-06-04', 'S', 1, 16),
-('2024-06-05', 'N', 1, 16),
+-- =============================================
+-- APRENDICES (10 registros)
+-- =============================================
 
--- Aprendiz 17
+INSERT INTO `mydb`.`aprendiz` (`Usuario_id_usuario`, `Num_ficha`, `programa_id`, `programas_id_programas`) VALUES
+(11, 2271021, 2271021, 2271021),
+(12, 2271021, 2271021, 2271021),
+(13, 2271022, 2271022, 2271022),
+(14, 2271022, 2271022, 2271022),
+(15, 2271023, 2271023, 2271023),
+(16, 2271026, 2271026, 2271026),
+(17, 2271026, 2271026, 2271026),
+(18, 2271027, 2271027, 2271027),
+(19, 2271028, 2271028, 2271028),
+(20, 2271025, 2271025, 2271025);
 
-('2024-06-02', 'S', 1, 17),
-('2024-06-03', 'S', 1, 17),
-('2024-06-04', 'R', 1, 17),
-('2024-06-05', 'S', 1, 17),
--- Aprendiz 18
-('2024-06-01', 'S', 2, 18),
-('2024-06-02', 'N', 2, 18),
-('2024-06-03', 'N', 2, 18),
-('2024-06-05', 'S', 2, 18),
--- Aprendiz 19
-('2024-06-01', 'S', 1, 19),
-('2024-06-03', 'S', 1, 19),
-('2024-06-04', 'N', 1, 19),
-('2024-06-05', 'S', 1, 19),
--- Aprendiz 20
-('2024-06-01', 'S', 1, 20),
-('2024-06-02', 'S', 1, 20),
-('2024-06-04', 'S', 1, 20),
-('2024-06-05', 'S', 1, 20),
--- Aprendiz 21
-('2024-06-01', 'S', 3, 21),
-('2024-06-02', 'S', 3, 21),
-('2024-06-04', 'S', 3, 21),
-('2024-06-05', 'N', 3, 21),
--- Más registros para otros aprendices
-('2024-06-01', 'S', 1, 22),
-('2024-06-02', 'N', 1, 22),
-('2024-06-03', 'N', 1, 22),
-('2024-06-02', 'S', 1, 23),
-('2024-06-01', 'S', 2, 24),
-('2024-06-02', 'R', 2, 24);
+-- =============================================
+-- RECURSOS (15 registros)
+-- =============================================
 
+INSERT INTO `mydb`.`recursos` (`serial_recurso`, `num_recurso`, `nombre_recurso`, `tipo_recurso`, `observacion`, `ambiente_id`) VALUES
+('PC-LAB-001', 1, 'Computador Dell OptiPlex 1', 1, 'Funcionando correctamente', 102),
+('PC-LAB-002', 2, 'Computador Dell OptiPlex 2', 1, 'Funcionando correctamente', 102),
+('PC-LAB-003', 3, 'Computador Dell OptiPlex 3', 1, 'Necesita mantenimiento', 102),
+('PROY-AUL-001', 1, 'Proyector Epson PowerLite', 2, 'Funcionando correctamente', 101),
+('PROY-AUL-002', 2, 'Proyector BenQ MS524', 2, 'Lámpara por cambiar', 201),
+('IMPR-ADM-001', 1, 'Impresora HP LaserJet Pro', 3, 'Funcionando correctamente', 101),
+('IMPR-ADM-002', 2, 'Impresora Canon Pixma', 3, 'Necesita tinta', 201),
+('SILLA-101-01', 1, 'Silla Ergonómica Azul', 4, 'Buen estado', 101),
+('MESA-101-01', 1, 'Mesa de Trabajo Madera', 4, 'Rayones menores', 101),
+('MART-501-01', 1, 'Martillo de Carpintero', 5, 'Buen estado', 501),
+('SOLD-502-01', 1, 'Soldador Eléctrico 110V', 5, 'Funcionando correctamente', 502),
+('SPEAK-201-01', 1, 'Parlantes Logitech Z313', 6, 'Funcionando correctamente', 201),
+('MIC-201-01', 1, 'Micrófono Audio-Technica', 6, 'Cable defectuoso', 201),
+('SWITCH-102-01', 1, 'Switch Cisco 24 puertos', 7, 'Funcionando correctamente', 102),
+('ROUTER-ADM-01', 1, 'Router TP-Link AC1750', 7, 'Funcionando correctamente', 101);
 
--- Verificar el conteo total de registros
-SELECT 'Total de registros insertados:' as Info;
-SELECT 'Usuario' as Tabla, COUNT(*) as Registros FROM Usuario
+-- =============================================
+-- REGISTRO DE INCIDENTES (8 registros)
+-- =============================================
+
+INSERT INTO `mydb`.`registro_incidente` (`descripcion`, `fecha_incidente`, `hora_incidente`, `ambiente_id`, `tipo_inc_id`) VALUES
+('Cortocircuito en tomacorriente principal del laboratorio', '2024-06-10', '09:30:00', 102, 1),
+('Monitor del computador PC-LAB-003 no enciende', '2024-06-11', '14:00:00', 102, 2),
+('Fallo total de internet en el taller de diseño', '2024-06-12', '10:15:00', 201, 3),
+('Pata de silla SILLA-101-01 presenta grieta', '2024-06-13', '11:45:00', 101, 4),
+('Estudiante presentó desmayo durante práctica', '2024-06-14', '08:00:00', 401, 5),
+('Acceso no autorizado detectado en laboratorio', '2024-06-15', '22:30:00', 102, 6),
+('Proyector PROY-AUL-002 se apaga automáticamente', '2024-06-16', '15:20:00', 201, 2),
+('Fuga de agua en el taller de soldadura', '2024-06-17', '07:45:00', 502, 1);
+
+-- =============================================
+-- REGISTRO DE MINUTAS (6 registros)
+-- =============================================
+
+INSERT INTO `mydb`.`registro_minuta` (`fecha_hora_recibo`, `fecha_hora_entrega`, `novedad`, `responsable`, `descripcion_min`, `ambiente_id`, `Usuario_id_usuario`) VALUES
+('2024-06-15 07:00:00', '2024-06-15 13:00:00', 'Entrega normal del ambiente, sin novedades', 'Roberto Morales', 'Recibo y entrega de ambiente 101 sin incidentes', 101, 8),
+('2024-06-15 13:00:00', '2024-06-15 19:00:00', 'Se reporta problema de conectividad en diseño', 'Carmen Jimenez', 'Ambiente 201 presenta fallas de red intermitentes', 201, 9),
+('2024-06-15 19:00:00', '2024-06-16 07:00:00', 'Ronda nocturna sin incidentes', 'Fernando Gutierrez', 'Verificación de seguridad en todos los ambientes', 102, 10),
+('2024-06-16 07:00:00', '2024-06-16 13:00:00', 'Reporte de equipo dañado en laboratorio', 'Roberto Morales', 'PC-LAB-003 presenta falla en monitor', 102, 8),
+('2024-06-16 13:00:00', '2024-06-16 19:00:00', 'Mantenimiento preventivo realizado', 'Carmen Jimenez', 'Limpieza y verificación de equipos en taller mecánica', 501, 9),
+('2024-06-17 07:00:00', '2024-06-17 13:00:00', 'Emergencia médica atendida satisfactoriamente', 'Roberto Morales', 'Estudiante atendido por desmayo, trasladado a enfermería', 401, 8);
+
+-- =============================================
+-- REGISTRO DE ASISTENCIA (10 registros)
+-- =============================================
+
+INSERT INTO `mydb`.`registro_asistencia` (`fecha_asistencia`, `estado_asistencia`, `jornada_id`, `aprendiz_id`) VALUES
+('2024-06-10', 'E', 1, 1),
+('2024-06-10', 'E', 1, 2),
+('2024-06-10', 'F', 2, 3),
+('2024-06-10', 'E', 2, 4),
+('2024-06-10', 'E', 3, 5),
+('2024-06-11', 'E', 1, 1),
+('2024-06-11', 'F', 1, 2),
+('2024-06-11', 'E', 2, 3),
+('2024-06-11', 'E', 2, 4),
+('2024-06-11', 'I', 3, 5);
+
+-- =============================================
+-- ALERTAS DE INASISTENCIA (3 registros)
+-- =============================================
+
+INSERT INTO `mydb`.`alertas_inasistencia` (`aprendiz_id`, `cantidad_fallas`, `fecha_alerta`, `mensaje`, `coordinacion_id`) VALUES
+(3, 1, '2024-06-11 08:00:00', 'El aprendiz del programa de Diseño Gráfico ha acumulado 1 falla. Se requiere seguimiento.', 2),
+(2, 1, '2024-06-12 08:00:00', 'El aprendiz del programa de Análisis y Desarrollo de Software ha acumulado 1 falla.', 1),
+(5, 1, '2024-06-12 08:30:00', 'El aprendiz del programa de Gestión Logística presentó inasistencia injustificada.', 3);
+
+-- =============================================
+-- TRIGGER PARA CONTAR INASISTENCIAS
+-- =============================================
+
+-- Eliminar trigger si existe
+DROP TRIGGER IF EXISTS `mydb`.`contar_inasistencias_aprendiz`;
+
+DELIMITER $
+CREATE TRIGGER `mydb`.`contar_inasistencias_aprendiz` 
+AFTER INSERT ON `mydb`.`registro_asistencia` 
+FOR EACH ROW 
+BEGIN   
+    DECLARE total_fallas INT;
+    DECLARE coordinacion_aprendiz INT;
+    
+    -- Contar cuántas faltas ('F') tiene el aprendiz
+    SELECT COUNT(*) INTO total_fallas   
+    FROM `mydb`.`registro_asistencia`   
+    WHERE aprendiz_id = NEW.aprendiz_id AND estado_asistencia = 'F';
+    
+    -- Obtener la coordinación del aprendiz a través de su programa
+    SELECT p.coordinacion_id INTO coordinacion_aprendiz
+    FROM `mydb`.`aprendiz` a
+    INNER JOIN `mydb`.`programas` p ON a.programas_id_programas = p.id_programas
+    WHERE a.id_aprendiz = NEW.aprendiz_id;
+    
+    -- Si tiene 5 o más faltas, gestionar la alerta
+    IF total_fallas >= 5 THEN     
+        -- Verificar si ya existe una alerta para este aprendiz
+        IF EXISTS (       
+            SELECT 1 FROM `mydb`.`alertas_inasistencia`       
+            WHERE aprendiz_id = NEW.aprendiz_id     
+        ) THEN       
+            -- Actualizar la alerta existente
+            UPDATE `mydb`.`alertas_inasistencia`       
+            SET cantidad_fallas = total_fallas,           
+                fecha_alerta = NOW(),           
+                mensaje = CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.')       
+            WHERE aprendiz_id = NEW.aprendiz_id;      
+        ELSE       
+            -- Crear nueva alerta
+            INSERT INTO `mydb`.`alertas_inasistencia` (
+                aprendiz_id, 
+                cantidad_fallas, 
+                fecha_alerta,
+                mensaje,
+                coordinacion_id
+            )       
+            VALUES (         
+                NEW.aprendiz_id,         
+                total_fallas,
+                NOW(),         
+                CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.'),
+                IFNULL(coordinacion_aprendiz, 1)
+            );     
+        END IF;
+        
+    -- Si tiene 3 o 4 faltas, crear/actualizar alerta de advertencia
+    ELSEIF total_fallas >= 3 THEN
+        IF EXISTS (       
+            SELECT 1 FROM `mydb`.`alertas_inasistencia`       
+            WHERE aprendiz_id = NEW.aprendiz_id     
+        ) THEN       
+            -- Actualizar la alerta existente
+            UPDATE `mydb`.`alertas_inasistencia`       
+            SET cantidad_fallas = total_fallas,           
+                fecha_alerta = NOW(),           
+                mensaje = CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.')       
+            WHERE aprendiz_id = NEW.aprendiz_id;      
+        ELSE       
+            -- Crear nueva alerta de advertencia
+            INSERT INTO `mydb`.`alertas_inasistencia` (
+                aprendiz_id, 
+                cantidad_fallas, 
+                fecha_alerta,
+                mensaje,
+                coordinacion_id
+            )       
+            VALUES (         
+                NEW.aprendiz_id,         
+                total_fallas,
+                NOW(),         
+                CONCAT('⚠️ ADVERTENCIA: El aprendiz con ID ', NEW.aprendiz_id, ' tiene ', total_fallas, ' inasistencias. Realizar seguimiento y citación.'),
+                IFNULL(coordinacion_aprendiz, 1)
+            );     
+        END IF;
+    END IF;   
+END$  
+DELIMITER ;
+
+-- =============================================
+-- DATOS DE PRUEBA ADICIONALES PARA EL TRIGGER
+-- =============================================
+
+-- Agregar más registros de asistencia para probar el trigger
+INSERT INTO `mydb`.`registro_asistencia` (`fecha_asistencia`, `estado_asistencia`, `jornada_id`, `aprendiz_id`) VALUES
+-- Aprendiz 1 - Generará alerta crítica (5 faltas)
+('2024-06-12', 'F', 1, 1),
+('2024-06-13', 'F', 1, 1),
+('2024-06-14', 'F', 1, 1),
+('2024-06-15', 'F', 1, 1),
+('2024-06-16', 'F', 1, 1), -- Esta será la 5ta falta que activará el trigger
+
+-- Aprendiz 2 - Generará alerta de advertencia (3 faltas)
+('2024-06-12', 'F', 1, 2),
+('2024-06-13', 'F', 1, 2),
+('2024-06-14', 'F', 1, 2), -- Esta será la 3ra falta que activará advertencia
+
+-- Aprendiz 3 - Asistencias normales
+('2024-06-12', 'E', 2, 3),
+('2024-06-13', 'E', 2, 3),
+('2024-06-14', 'E', 2, 3);
+
+-- =============================================
+-- VERIFICACIÓN DE DATOS INSERTADOS Y TRIGGER
+-- =============================================
+
+-- Mostrar resumen de registros por tabla
+SELECT 'Usuario' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`Usuario`
 UNION ALL
-SELECT 'coordinacion', COUNT(*) FROM coordinacion
+SELECT 'instructor' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`instructor`
 UNION ALL
-SELECT 'Coordinador', COUNT(*) FROM Coordinador
+SELECT 'guarda_seguridad' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`guarda_seguridad`
 UNION ALL
-SELECT 'jornada', COUNT(*) FROM jornada
+SELECT 'programas' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`programas`
 UNION ALL
-SELECT 'modalidad', COUNT(*) FROM modalidad
+SELECT 'aprendiz' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`aprendiz`
 UNION ALL
-SELECT 'programas', COUNT(*) FROM programas
+SELECT 'ambiente' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`ambiente`
 UNION ALL
-SELECT 'instructor', COUNT(*) FROM instructor
+SELECT 'recursos' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`recursos`
 UNION ALL
-SELECT 'guarda_seguridad', COUNT(*) FROM guarda_seguridad
+SELECT 'registro_incidente' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`registro_incidente`
 UNION ALL
-SELECT 'aprendiz', COUNT(*) FROM aprendiz
+SELECT 'registro_minuta' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`registro_minuta`
 UNION ALL
-SELECT 'rol', COUNT(*) FROM rol
+SELECT 'registro_asistencia' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`registro_asistencia`
 UNION ALL
-SELECT 'user_rol', COUNT(*) FROM user_rol
+SELECT 'alertas_inasistencia' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`alertas_inasistencia`
 UNION ALL
-SELECT 'ambiente', COUNT(*) FROM ambiente
-UNION ALL
-SELECT 'tipo_incidente', COUNT(*) FROM tipo_incidente
-UNION ALL
-SELECT 'registro_incidente', COUNT(*) FROM registro_incidente
-UNION ALL
-SELECT 'tipo_recurso', COUNT(*) FROM tipo_recurso
-UNION ALL
-SELECT 'recursos', COUNT(*) FROM recursos
-UNION ALL
-SELECT 'registro_minuta', COUNT(*) FROM registro_minuta
-UNION ALL
-SELECT 'registro_asistencia', COUNT(*) FROM registro_asistencia
-UNION ALL
-SELECT 'alertas_inasistencia', COUNT(*) FROM alertas_inasistencia;
+SELECT 'user_rol' as Tabla, COUNT(*) as Total_Registros FROM `mydb`.`user_rol`;
+
+-- Verificar que el trigger funcionó correctamente
+SELECT 
+    a.id_alerta,
+    a.aprendiz_id,
+    CONCAT(u.p_nombre, ' ', u.p_apellido) as nombre_aprendiz,
+    a.cantidad_fallas,
+    a.fecha_alerta,
+    a.mensaje,
+    c.nombre_coordinacion
+FROM `mydb`.`alertas_inasistencia` a
+INNER JOIN `mydb`.`aprendiz` ap ON a.aprendiz_id = ap.id_aprendiz
+INNER JOIN `mydb`.`Usuario` u ON ap.Usuario_id_usuario = u.id_usuario
+LEFT JOIN `mydb`.`coordinacion` c ON a.coordinacion_id = c.id_coordinacion
+ORDER BY a.fecha_alerta DESC;
