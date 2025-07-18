@@ -193,41 +193,36 @@ INSERT INTO `mydb`.`ficha` (`idficha`, `Num_ficha`, `instructor_Usuario_id_usuar
 (2271028, 2271028, 3); -- Juan Perez
 
 -- Ahora sí puedes insertar en aprendiz
-INSERT INTO `mydb`.`aprendiz` (`Usuario_id_usuario`, `ficha_idficha`, `programas_id_programas`, `jornada_id_jornada`) VALUES
-(11, 2271021, 2271021, 1),
-(12, 2271021, 2271021, 1),
-(13, 2271022, 2271022, 2),
-(14, 2271022, 2271022, 2),
-(15, 2271023, 2271023, 3),
-(16, 2271026, 2271026, 1),
-(17, 2271026, 2271026, 1),
-(18, 2271027, 2271027, 2),
-(19, 2271028, 2271028, 3),
-(20, 2271025, 2271025, 2);
+INSERT INTO `mydb`.`aprendiz` (`Usuario_id_usuario`, `ficha_idficha`, `programas_id_programas`) VALUES
+(11, 2271021, 2271021),
+(12, 2271021, 2271021),
+(13, 2271022, 2271022),
+(14, 2271022, 2271022),
+(15, 2271023, 2271023),
+(16, 2271026, 2271026),
+(17, 2271026, 2271026),
+(18, 2271027, 2271027),
+(19, 2271028, 2271028),
+(20, 2271025, 2271025);
 
-
-
-
-
--- Inserciones corregidas SIN ambiente_id
 INSERT INTO `mydb`.`recursos` 
-(`serial_recurso`, `num_recurso`, `nombre_recurso`, `tipo_recurso`, `estado`, `observacion`)
+(`serial_recurso`, `num_recurso`, `nombre_recurso`, `tipo_recurso`, `estado`, `observacion`,`ambiente_id` )
 VALUES
-('PC-LAB-001', 1, 'Computador Dell OptiPlex 1', 1, 'Disponible', 'Funcionando correctamente'),
-('PC-LAB-002', 2, 'Computador Dell OptiPlex 2', 1, 'Disponible', 'Funcionando correctamente'),
-('PC-LAB-003', 3, 'Computador Dell OptiPlex 3', 1, 'Dañado', 'Necesita mantenimiento'),
-('PROY-AUL-001', 1, 'Proyector Epson PowerLite', 2, 'Disponible', 'Funcionando correctamente'),
-('PROY-AUL-002', 2, 'Proyector BenQ MS524', 2, 'En mantenimiento', 'Lámpara por cambiar'),
-('IMPR-ADM-001', 1, 'Impresora HP LaserJet Pro', 3, 'Disponible', 'Funcionando correctamente'),
-('IMPR-ADM-002', 2, 'Impresora Canon Pixma', 3, 'Dañado', 'Necesita tinta'),
-('SILLA-101-01', 1, 'Silla Ergonómica Azul', 4, 'Disponible', 'Buen estado'),
-('MESA-101-01', 1, 'Mesa de Trabajo Madera', 4, 'Disponible', 'Rayones menores'),
-('MART-501-01', 1, 'Martillo de Carpintero', 5, 'Disponible', 'Buen estado'),
-('SOLD-502-01', 1, 'Soldador Eléctrico 110V', 5, 'Disponible', 'Funcionando correctamente'),
-('SPEAK-201-01', 1, 'Parlantes Logitech Z313', 6, 'Disponible', 'Funcionando correctamente'),
-('MIC-201-01', 1, 'Micrófono Audio-Technica', 6, 'Dañado', 'Cable defectuoso'),
-('SWITCH-102-01', 1, 'Switch Cisco 24 puertos', 7, 'Disponible', 'Funcionando correctamente'),
-('ROUTER-ADM-01', 1, 'Router TP-Link AC1750', 7, 'Disponible', 'Funcionando correctamente');
+('PC-LAB-001', 1, 'Computador Dell OptiPlex 1', 1, 'Disponible', 'Funcionando correctamente',101),
+('PC-LAB-002', 2, 'Computador Dell OptiPlex 2', 1, 'Disponible', 'Funcionando correctamente',102),
+('PC-LAB-003', 3, 'Computador Dell OptiPlex 3', 1, 'Dañado', 'Necesita mantenimiento',103),
+('PROY-AUL-001', 1, 'Proyector Epson PowerLite', 2, 'Disponible', 'Funcionando correctamente',201),
+('PROY-AUL-002', 2, 'Proyector BenQ MS524', 2, 'En mantenimiento', 'Lámpara por cambiar',202),
+('IMPR-ADM-001', 1, 'Impresora HP LaserJet Pro', 3, 'Disponible', 'Funcionando correctamente',301),
+('IMPR-ADM-002', 2, 'Impresora Canon Pixma', 3, 'Dañado', 'Necesita tinta',401),
+('SILLA-101-01', 1, 'Silla Ergonómica Azul', 4, 'Disponible', 'Buen estado',402),
+('MESA-101-01', 1, 'Mesa de Trabajo Madera', 4, 'Disponible', 'Rayones menores',501),
+('MART-501-01', 1, 'Martillo de Carpintero', 5, 'Disponible', 'Buen estado',502),
+('SOLD-502-01', 1, 'Soldador Eléctrico 110V', 5, 'Disponible', 'Funcionando correctamente',101),
+('SPEAK-201-01', 1, 'Parlantes Logitech Z313', 6, 'Disponible', 'Funcionando correctamente',102),
+('MIC-201-01', 1, 'Micrófono Audio-Technica', 6, 'Dañado', 'Cable defectuoso',101),
+('SWITCH-102-01', 1, 'Switch Cisco 24 puertos', 7, 'Disponible', 'Funcionando correctamente',102),
+('ROUTER-ADM-01', 1, 'Router TP-Link AC1750', 7, 'Disponible', 'Funcionando correctamente',103);
 
 INSERT INTO `mydb`.`registro_incidente`
 (`descripcion`, `fecha_incidente`, `hora_incidente`, `ambiente_id`, `tipo_inc_id`, `usuario_id_usuario`)
@@ -245,12 +240,12 @@ VALUES
 INSERT INTO `mydb`.`registro_minuta`
 (`fecha_hora_recibo`, `fecha_hora_entrega`, `novedad`, `descripcion_min`, `estado`, `ambiente_id`, `guarda_seguridad_Usuario_id_usuario`, `responsable_id`, `registro_minutacol`)
 VALUES
-('2024-06-15 07:00:00', '2024-06-15 13:00:00', 'Entrega normal del ambiente, sin novedades', 'Recibo y entrega de ambiente 101 sin incidentes', 'Ocupado', 101, 8, 1, NULL),
-('2024-06-15 13:00:00', '2024-06-15 19:00:00', 'Se reporta problema de conectividad en diseño', 'Ambiente 201 presenta fallas de red intermitentes', 'Ocupado', 201, 9, 2, NULL),
-('2024-06-15 19:00:00', '2024-06-16 07:00:00', 'Ronda nocturna sin incidentes', 'Verificación de seguridad en todos los ambientes', 'Ocupado', 102, 10, 1, NULL),
-('2024-06-16 07:00:00', '2024-06-16 13:00:00', 'Reporte de equipo dañado en laboratorio', 'PC-LAB-003 presenta falla en monitor', 'Ocupado', 102, 8, 3, NULL),
-('2024-06-16 13:00:00', '2024-06-16 19:00:00', 'Mantenimiento preventivo realizado', 'Limpieza y verificación de equipos en taller mecánica', 'Ocupado', 501, 9, 4, NULL),
-('2024-06-17 07:00:00', '2024-06-17 13:00:00', 'Emergencia médica atendida satisfactoriamente', 'Estudiante atendido por desmayo, trasladado a enfermería', 'Ocupado', 401, 8, 5, NULL);
+('2024-06-15 07:00:00', '2024-06-15 13:00:00', 'Entrega normal del ambiente, sin novedades', 'Recibo y entrega de ambiente 101 sin incidentes', 'Ocupado', 101, 8, 3, NULL),
+('2024-06-15 13:00:00', '2024-06-15 19:00:00', 'Se reporta problema de conectividad en diseño', 'Ambiente 201 presenta fallas de red intermitentes', 'Ocupado', 201, 9, 4, NULL),
+('2024-06-15 19:00:00', '2024-06-16 07:00:00', 'Ronda nocturna sin incidentes', 'Verificación de seguridad en todos los ambientes', 'Ocupado', 102, 10, 5, NULL),
+('2024-06-16 07:00:00', '2024-06-16 13:00:00', 'Reporte de equipo dañado en laboratorio', 'PC-LAB-003 presenta falla en monitor', 'Ocupado', 102, 8, 6, NULL),
+('2024-06-16 13:00:00', '2024-06-16 19:00:00', 'Mantenimiento preventivo realizado', 'Limpieza y verificación de equipos en taller mecánica', 'Ocupado', 501, 9, 7, NULL),
+('2024-06-17 07:00:00', '2024-06-17 13:00:00', 'Emergencia médica atendida satisfactoriamente', 'Estudiante atendido por desmayo, trasladado a enfermería', 'Ocupado', 401, 8, 3, NULL);
 
 -- =============================================
 -- REGISTRO DE INASISTENCIA (10 registros)
@@ -258,11 +253,11 @@ VALUES
 INSERT INTO `mydb`.`registro_inasistencia` (`fecha_inasistencia`, `estado_inasistencia`, `jornada_id`, `aprendiz_Usuario_id_usuario`, `instructor_Usuario_id_usuario`) VALUES
 ('2024-06-10', 'S', 1, 11, 3),
 ('2024-06-10', 'S', 1, 12, 3),
-('2024-06-10', 'F', 2, 13, 4),
+('2024-06-10', 'R', 2, 13, 4),
 ('2024-06-10', 'S', 2, 14, 4),
 ('2024-06-10', 'S', 3, 15, 5),
 ('2024-06-11', 'S', 1, 11, 3),
-('2024-06-11', 'F', 1, 12, 3),
+('2024-06-11', 'R', 1, 12, 3),
 ('2024-06-11', 'S', 2, 13, 4),
 ('2024-06-11', 'S', 2, 14, 4),
 ('2024-06-11', 'N', 3, 15, 5);

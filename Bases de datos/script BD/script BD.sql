@@ -144,7 +144,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ficha` (
 CREATE TABLE IF NOT EXISTS `mydb`.`aprendiz` (
   `Usuario_id_usuario` INT(11) NOT NULL COMMENT 'Llave primaria y foránea. Identificador del aprendiz (usuario base).\n',
   `programas_id_programas` INT(11) NOT NULL COMMENT 'Llave foránea. Programa de formación del aprendiz.\n',
-  `jornada_id_jornada` INT(11) NOT NULL COMMENT 'Jornada en la que está inscrito el aprendiz.\n\n',
   `ficha_idficha` INT NOT NULL,
   PRIMARY KEY (`Usuario_id_usuario`),
  
@@ -158,10 +157,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`aprendiz` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
  
-    FOREIGN KEY (`jornada_id_jornada`)
-    REFERENCES `mydb`.`jornada` (`id_jornada`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   
     FOREIGN KEY (`ficha_idficha`)
     REFERENCES `mydb`.`ficha` (`idficha`)
@@ -287,11 +282,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`recursos` (
   `tipo_recurso` INT(11) NOT NULL COMMENT 'Llave foránea. Tipo de recurso.\n',
   `estado` ENUM('Disponible', 'En mantenimiento', 'Dañado') NULL DEFAULT NULL COMMENT 'Estado del recurso (operativo, dañado, en mantenimiento).\n',
   `observacion` TEXT NULL DEFAULT NULL COMMENT 'Observacion hacia algun recurso.',
+  `ambiente_id` INT NOT NULL COMMENT 'Llave foranea, Ambiente al que pertenece.',
   PRIMARY KEY (`id_recurso`),
   
     FOREIGN KEY (`tipo_recurso`)
-    REFERENCES `mydb`.`tipo_recurso` (`id_tipo_recurso`))
+    REFERENCES `mydb`.`tipo_recurso` (`id_tipo_recurso`),
+    
+    FOREIGN KEY (`ambiente_id`)
+    REFERENCES `mydb`.`ambiente` (`id_ambiente`))
 ;
+
 
 
 -- -----------------------------------------------------
@@ -346,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`registro_minuta` (
     ON UPDATE NO ACTION,
 
     FOREIGN KEY (`responsable_id`)
-    REFERENCES `mydb`.`usuario` (`id_usuario`)
+    REFERENCES `mydb`.`instructor` (`Usuario_id_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ;
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`traslado_recurso` (
   `id_traslado` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave primaria. Identificador del traslado.\n',
   `recurso_id` INT(11) NOT NULL COMMENT 'Recurso trasladado.\n',
   `ambiente_origen_id` INT(11) NOT NULL COMMENT 'Ambiente de origen.\n',
-  `ambiente_destino` VARCHAR(45) NOT NULL,
+  `ambiente_destino` INT(11) NOT NULL COMMENT 'Ambiente de destino.\n',
   `fecha_traslado` DATETIME NOT NULL COMMENT 'Fecha del traslado.\n',
   `observacion` TEXT NULL COMMENT 'Observaciones del traslado.\n\n',
   PRIMARY KEY (`id_traslado`),
