@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`recursos` (
 CREATE TABLE IF NOT EXISTS `mydb`.`registro_inasistencia` (
   `id_inasistencia` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave primaria. Identificador del registro.\n',
   `fecha_inasistencia` DATE NOT NULL COMMENT 'Fecha del registro de asistencia.\n',
-  `estado_inasistencia` ENUM('S', 'R', 'N') NOT NULL COMMENT 'Estado: A (asistió), R (retraso), N (no aplica).\n',
+  `estado_inasistencia` ENUM('S', 'R', 'N') NOT NULL COMMENT 'Estado: S (asistió), R (retraso), N (no asistio).\n',
   `jornada_id` INT(11) NOT NULL COMMENT 'Jornada del aprendiz.\n',
   `aprendiz_Usuario_id_usuario` INT(11) NOT NULL COMMENT 'Llave foránea al aprendiz.\n\n',
   `instructor_Usuario_id_usuario` INT(11) NOT NULL,
