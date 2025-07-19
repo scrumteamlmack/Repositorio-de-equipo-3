@@ -135,14 +135,14 @@ INSERT INTO `mydb`.`user_rol` (`id_usuario`, `id_rol`) VALUES
 -- =============================================
 
 INSERT INTO `mydb`.`programas` (`id_programas`, `nombre_programa`, `nivel_formacion`, `duracion`, `jornada_id`, `modalidad_id`, `coordinacion_id`) VALUES
-(2271021, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 2, 1),
-(2271022, 'Diseño Gráfico Publicitario', 'Técnico', '18 meses', 2, 1, 2),
-(2271023, 'Gestión Logística', 'Tecnólogo', '24 meses', 3, 2, 3),
-(2271024, 'Contabilidad y Finanzas', 'Tecnólogo', '24 meses', 1, 1, 1),
-(2271025, 'Multimedia', 'Técnico', '18 meses', 2, 2, 2),
-(2271026, 'Auxiliar en Enfermería', 'Técnico', '18 meses', 1, 1, 4),
-(2271027, 'Mecánica Industrial', 'Tecnólogo', '24 meses', 2, 1, 5),
-(2271028, 'Desarrollo Web', 'Especialización', '6 meses', 3, 2, 1);
+(1, 'Análisis y Desarrollo de Software', 'Tecnólogo', '24 meses', 1, 2, 1),
+(2, 'Diseño Gráfico Publicitario', 'Técnico', '18 meses', 2, 1, 2),
+(3, 'Gestión Logística', 'Tecnólogo', '24 meses', 3, 2, 3),
+(4, 'Contabilidad y Finanzas', 'Tecnólogo', '24 meses', 1, 1, 1),
+(5, 'Multimedia', 'Técnico', '18 meses', 2, 2, 2),
+(6, 'Auxiliar en Enfermería', 'Técnico', '18 meses', 1, 1, 4),
+(7, 'Mecánica Industrial', 'Tecnólogo', '24 meses', 2, 1, 5),
+(8, 'Desarrollo Web', 'Especialización', '6 meses', 3, 2, 1);
 
 -- =============================================
 -- INSTRUCTORES (5 registros corregidos)
@@ -184,26 +184,26 @@ INSERT INTO `mydb`.`ambiente`
 -- FICHAS (7 registros)
 -- =============================================
 INSERT INTO `mydb`.`ficha` (`idficha`, `Num_ficha`, `instructor_Usuario_id_usuario`) VALUES
-(2271021, 2271021, 3), -- Juan Perez
-(2271022, 2271022, 4), -- Maria Lopez
-(2271023, 2271023, 5), -- Pedro Martinez
-(2271025, 2271025, 4), -- Maria Lopez
-(2271026, 2271026, 6), -- Laura Torres
-(2271027, 2271027, 7), -- Diego Ramirez
-(2271028, 2271028, 3); -- Juan Perez
+(1, 2271021, 3), -- Juan Perez
+(2, 2271022, 4), -- Maria Lopez
+(3, 2271023, 5), -- Pedro Martinez
+(4, 2271025, 4), -- Maria Lopez
+(5, 2271026, 6), -- Laura Torres
+(6, 2271027, 7), -- Diego Ramirez
+(7, 2271028, 3); -- Juan Perez
 
 -- Ahora sí puedes insertar en aprendiz
 INSERT INTO `mydb`.`aprendiz` (`Usuario_id_usuario`, `ficha_idficha`, `programas_id_programas`) VALUES
-(11, 2271021, 2271021),
-(12, 2271021, 2271021),
-(13, 2271022, 2271022),
-(14, 2271022, 2271022),
-(15, 2271023, 2271023),
-(16, 2271026, 2271026),
-(17, 2271026, 2271026),
-(18, 2271027, 2271027),
-(19, 2271028, 2271028),
-(20, 2271025, 2271025);
+(11, 1, 1),
+(12, 1, 1),
+(13, 2, 2),
+(14, 2, 2),
+(15, 3, 3),
+(16, 5, 5),
+(17, 5, 5),
+(18, 6, 6),
+(19, 7, 7),
+(20, 4, 4);
 
 INSERT INTO `mydb`.`recursos` 
 (`serial_recurso`, `num_recurso`, `nombre_recurso`, `tipo_recurso`, `estado`, `observacion`,`ambiente_id` )

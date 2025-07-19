@@ -24,7 +24,7 @@ DELIMITER ;
 
 -- Función 3: obtener incidentes por ambiente
 DELIMITER //
-CREATE FUNCTION contar_incidentes_ambiente(id INT)
+CREATE FUNCTION contar_incidentes_ambiente(id_ambiente INT)
 RETURNS INT
 READS SQL DATA
 BEGIN
