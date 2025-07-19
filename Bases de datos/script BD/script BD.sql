@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`rol` (
 CREATE TABLE IF NOT EXISTS `mydb`.`traslado_recurso` (
   `id_traslado` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave primaria. Identificador del traslado.\n',
   `recurso_id` INT(11) NOT NULL COMMENT 'Recurso trasladado.\n',
-  `ambiente_origen_id` INT(11) NOT NULL COMMENT 'Ambiente de origen.\n',
+  `ambiente_origen` INT(11) NOT NULL COMMENT 'Ambiente de origen.\n',
   `ambiente_destino` INT(11) NOT NULL COMMENT 'Ambiente de destino.\n',
   `fecha_traslado` DATETIME NOT NULL COMMENT 'Fecha del traslado.\n',
   `observacion` TEXT NULL COMMENT 'Observaciones del traslado.\n\n',
@@ -377,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`traslado_recurso` (
     FOREIGN KEY (`recurso_id`)
     REFERENCES `mydb`.`recursos` (`id_recurso`),
  
-    FOREIGN KEY (`ambiente_origen_id`)
+    FOREIGN KEY (`ambiente_origen`)
     REFERENCES `mydb`.`ambiente` (`id_ambiente`))
 ;
 
