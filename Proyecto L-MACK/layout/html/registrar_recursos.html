@@ -3,29 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrar Recursos</title>
+  <title>Registrar Recursos - L-MACK</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/estilo_coordinador.css" />
+  <link rel="stylesheet" href="../css/registrar_recursos.css" />
   <link rel="shortcut icon" href="../resources/fondo oscuro N L-MACK.png" type="image/x-icon">
 </head>
 <body>
+
   <header>
     <div class="logo">
-      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" id="logo" class="img">
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" class="img">
     </div>
     <nav>
       <a href="../index.html">Inicio</a>
-      <a href="../html/login.html">Cerrar Sesión</a>
+      <a href="../html/login.html">Inicio de Sesión</a>
     </nav>
   </header>
+
   <main>
     <h2>Registrar Recursos</h2>
-    <p>Página en construcción para la funcionalidad: <strong>Registrar Recursos</strong>.</p>
-    <span class="material-icons" style="font-size: 60px; color: #10b981;">devices</span>
+    <form action="#" method="post">
+
+      <label for="nombre">id</label>
+      <input type="number" id="nombre" name="nombre" placeholder="Ej: 1, 2, 3..." required>
+
+      <label for="nombre">Nombre del Recurso</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Ej: Proyector, Extensión, Altavoz" required>
+
+      <label for="cantidad">Cantidad</label>
+      <input type="number" id="cantidad" name="cantidad" placeholder="Ej: 3" min="1" required>
+
+      <label for="ubicacion">Ambiente</label>
+      <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Bodega, Sala 202" required>
+
+      <label for="estado">Estado</label>
+      <input type="text" id="estado" name="estado" placeholder="Ej: Disponible, En uso, Dañado" required>
+
+      <button type="submit" class="btn">Registrar Recurso</button>
+    </form>
   </main>
+
   <footer>
-    &copy; 2024 Sistema Gestión
+    &copy; 2025 L-MACK - Registro de Recursos
   </footer>
+
 </body>
 </html>
