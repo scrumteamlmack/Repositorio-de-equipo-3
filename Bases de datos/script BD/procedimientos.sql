@@ -1,56 +1,51 @@
+-- 1. Consultar inasistencias del aprendiz (estado 'N' o más de una 'R')
 DELIMITER //
-
-CREATE PROCEDURE control_minuta(
-    IN fecha_recibido DATETIME,
-    IN fecha_entrega DATETIME,
-    IN novedad TEXT,
-    IN responsable VARCHAR(250),
-    IN descripcion TEXT,
-    IN ambiente_id INT,
-    IN documento_usuario INT,
-    IN id_guardia INT
-)
-BEGIN
-    INSERT INTO registro_minuta(
-        fecha_hora_recibo, fecha_hora_entrega, novedad,
-        responsable, descripcion_min, ambiente_id,
-        Usuario_id_usuario, guarda_seguridad_Usuario_id_usuario
-    )
-    VALUES (
-        fecha_recibido, fecha_entrega, novedad,
-        responsable, descripcion, ambiente_id,
-        documento_usuario, id_guardia
-    );
-END //
-
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE consultar_asistencia_aprendiz(
+CREATE PROCEDURE ver_inasistencias_aprendiz(
     IN id_aprendiz INT
 )
 BEGIN
-    SELECT fecha_asistencia, estado_asistencia
-    FROM registro_asistencia
-    WHERE aprendiz_Usuario_id_usuario = id_aprendiz;
+    DECLARE total_faltas INT;
+
+    -- Contar cuántas inasistencias no justificadas tiene
+    SELECT COUNT(*) INTO total_faltas
+    FROM registro_inasistencia
+    WHERE aprendiz_Usuario_id_usuario = id_aprendiz AND estado_inasistencia = 'N';
+
+    -- Si tiene al menos una, mostrar la lista
+    IF total_faltas > 0 THEN
+        SELECT 
+            u.p_nombre AS nombre,
+            u.p_apellido AS apellido,
+            ri.fecha_inasistencia,
+            ri.estado_inasistencia
+        FROM registro_inasistencia ri
+        INNER JOIN usuario u ON u.id_usuario = ri.aprendiz_Usuario_id_usuario
+        WHERE ri.aprendiz_Usuario_id_usuario = id_aprendiz
+          AND ri.estado_inasistencia = 'N';
+    ELSE
+        SELECT 'El aprendiz no ha faltado a ninguna formación.' AS mensaje;
+    END IF;
 END //
 DELIMITER ;
 
+
+
+-- 2. Eliminar un incidente
 DELIMITER //
 CREATE PROCEDURE eliminar_incidente(
-    IN incidente_id INT
+    IN id_inc INT
 )
 BEGIN
     DELETE FROM registro_incidente
-    WHERE id_incidente = incidente_id;	
+    WHERE id_incidente = id_inc;
 END //
 DELIMITER ;
 
+-- 3. Actualizar estado de un recurso
 DELIMITER //
 CREATE PROCEDURE actualizar_estado_recurso(
     IN recurso_id INT,
-    IN nuevo_estado VARCHAR(20)
+    IN nuevo_estado VARCHAR(50)
 )
 BEGIN
     UPDATE recursos
@@ -59,33 +54,20 @@ BEGIN
 END //
 DELIMITER ;
 
+-- 4. Consultar recursos de un ambiente
 DELIMITER //
 CREATE PROCEDURE consultar_recursos_ambiente(
     IN id_ambiente INT
 )
 BEGIN
-    SELECT r.serial_recurso, r.nombre_recurso, tr.recurso_tipo, r.estado, r.observacion
+    SELECT r.id_recurso, r.nombre_recurso, r.estado, tr.recurso_tipo
     FROM recursos r
-    JOIN tipo_recurso tr ON r.tipo_recurso = tr.id_tipo_recurso
+    INNER JOIN tipo_recurso tr ON r.tipo_recurso = tr.id_tipo_recurso
     WHERE r.ambiente_id = id_ambiente;
 END //
 DELIMITER ;
 
-
-DELIMITER //
-CREATE PROCEDURE actualizar_responsable_minuta(
-    IN id_min INT,
-    IN nuevo_responsable VARCHAR(30),
-    IN nuevo_id_usuario INT
-)
-BEGIN
-    UPDATE registro_minuta
-    SET responsable = nuevo_responsable,
-        Usuario_id_usuario = nuevo_id_usuario
-    WHERE id_minuta = id_min;
-END //
-DELIMITER ;
-
+-- 5. Eliminar recurso (opcional si prefieres desactivar con estado)
 DELIMITER //
 CREATE PROCEDURE eliminar_recurso(
     IN recurso_id INT
@@ -96,8 +78,36 @@ BEGIN
 END //
 DELIMITER ;
 
+-- 6. Registrar minuta de control
 DELIMITER //
+CREATE PROCEDURE control_minuta(
+    IN fecha_recibido DATETIME,
+    IN fecha_entrega DATETIME,
+    IN novedad TEXT,
+    IN descripcion TEXT,
+    IN ambiente_id INT,
+    IN id_guardia INT,
+    IN id_responsable INT
+    
+)
+BEGIN
+    INSERT INTO registro_minuta(
+        fecha_hora_recibo, fecha_hora_entrega, novedad,
+        descripcion_min, ambiente_id,
+        guarda_seguridad_Usuario_id_usuario, responsable_id
+    )
+    VALUES (
+        fecha_recibido, fecha_entrega, novedad,
+        descripcion, ambiente_id,
+        id_guardia, id_responsable
+    );
+END //
+DELIMITER ;
 
+
+
+-- 7. Monitorear traslado de recurso (incluye inserción y actualización del recurso)
+DELIMITER //
 CREATE PROCEDURE monitorear_traslado_recurso(
     IN recurso_id INT,
     IN ambiente_origen INT,
@@ -106,7 +116,7 @@ CREATE PROCEDURE monitorear_traslado_recurso(
 )
 BEGIN
     INSERT INTO traslado_recurso (
-        recurso_id, ambiente_origen_id, ambiente_destino_id,
+        recurso_id, ambiente_origen, ambiente_destino,
         fecha_traslado, observacion
     )
     VALUES (
@@ -118,6 +128,4 @@ BEGIN
     SET ambiente_id = ambiente_destino
     WHERE id_recurso = recurso_id;
 END //
-
 DELIMITER ;
-
