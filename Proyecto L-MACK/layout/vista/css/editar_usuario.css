@@ -1,4 +1,4 @@
-/* registrar_usuario.css - Estilo coherente con L-MACK */
+/* editar_usuario.css - Estilo coherente con L-MACK */
 
 * {
   margin: 0;
@@ -100,11 +100,12 @@ input:focus {
 }
 
 
+
 .btn {
   background-color: #10b981;
   color: white;
   border: none;
-  padding: 14px 40px;
+  padding: 14px 80px;
   border-radius: 12px;
   font-weight: 600;
   font-size: 1.1rem;
