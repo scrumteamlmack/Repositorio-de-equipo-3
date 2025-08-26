@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
   `tipo_documento` ENUM('CC', 'TI', 'CE', 'OTRO') NOT NULL COMMENT 'Tipo de documento.\n',
   `num_documento` INT(11) NOT NULL COMMENT 'Número de documento.\n',
   `correo` VARCHAR(100) NOT NULL COMMENT 'Correo institucional.\n',
-  `contraseña` VARCHAR(300) NOT NULL COMMENT 'Contraseña cifrada.\n\n',
+  `contraseña` VARCHAR(100) NOT NULL COMMENT 'Contraseña cifrada.\n\n',
   PRIMARY KEY (`id_usuario`))
 ;
 
