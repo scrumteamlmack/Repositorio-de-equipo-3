@@ -84,6 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <form method="POST">
       <input type="hidden" name="id" value="<?= htmlspecialchars($usuario['id_usuario']) ?>">
 
+   <label>Tipo Documento:</label>
+      <select name="tipo_documento"  
+      required>
+      <option value="<?= htmlspecialchars($usuario['tipo_documento']) ?>">Seleccione tipo de documento</option>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="TI">Tarjeta de identidad</option>
+                <option value="CE">Cédula de extranjería</option>
+            </select><br>
+
+       <label>Documento:</label>
+      <input type="text" name="num_documento" value="<?= htmlspecialchars($usuario['num_documento']) ?>" required><br>
+
+   
       <label>Primer Nombre:</label>
       <input type="text" name="p_nombre" value="<?= htmlspecialchars($usuario['p_nombre']) ?>" required><br>
 
@@ -95,12 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label>Segundo Apellido:</label>
       <input type="text" name="s_apellido" value="<?= htmlspecialchars($usuario['s_apellido']) ?>"><br>
-
-      <label>Documento:</label>
-      <input type="text" name="num_documento" value="<?= htmlspecialchars($usuario['num_documento']) ?>" required><br>
-
-      <label>Tipo Documento:</label>
-      <input type="text" name="tipo_documento" value="<?= htmlspecialchars($usuario['tipo_documento']) ?>" required><br>
 
       <label>Correo:</label>
       <input type="email" name="correo" value="<?= htmlspecialchars($usuario['correo']) ?>" required><br>

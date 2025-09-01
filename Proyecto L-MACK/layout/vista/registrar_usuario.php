@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registrar Usuario - L-MACK</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/registrar_usuario.css" />
-    <link rel="shortcut icon" href="../resources/fondo oscuro N L-MACK.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/registrar_usuario.css" />
+    <link rel="shortcut icon" href="resources/fondo oscuro N L-MACK.png" type="image/x-icon">
     <style>
         select {
             width: 100%;
@@ -26,11 +26,11 @@
 
     <header>
         <div class="logo">
-            <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" class="img">
+            <img src="resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" class="img">
         </div>
         <nav>
-            <a href="../index.html">Inicio</a>
-            <a href="../html/login.html">Cerrar Sesion</a>
+            <a href="index.html">Inicio</a>
+            <a href="html/login.html">Cerrar Sesion</a>
         </nav>
     </header>
 

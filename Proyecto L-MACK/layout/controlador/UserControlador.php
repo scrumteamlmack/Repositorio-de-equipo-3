@@ -29,7 +29,7 @@ if(isset($_POST['btnRegistrar'])){
 
     $UserDAO = new UserDAO() ;
     $mensaje = $UserDAO->registrarPersona($UserDTO);
-    echo "<script>window.location.replace('../registro.php');</script>";
+    echo "<script>window.location.replace('../vista/consultar_usuarios.php');</script>";
 
 
 // pasas la variable a la vista

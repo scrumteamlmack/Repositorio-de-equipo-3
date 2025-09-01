@@ -45,8 +45,9 @@ nav a:hover {
 main {
   flex: 1;
   padding: 2rem;
-  max-width: 1100px;
+  max-width: 2000px;
   margin: 0 auto;
+  font-size: 12px;
 }
 
 main h2 {
@@ -54,6 +55,24 @@ main h2 {
   margin-bottom: 2rem;
   font-size: 2rem;
   color: #1b263b;
+}
+
+main .table{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+}
+.edit{
+    width: 3em;
+    height: 3em;
+    margin-left: 20px;
+}
+
+.eliminar{
+    width: 3em;
+    height: 3em;
+    margin-left: 5px;
 }
 
 table {
