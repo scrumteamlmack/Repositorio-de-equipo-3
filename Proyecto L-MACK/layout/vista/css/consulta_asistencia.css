@@ -58,6 +58,9 @@ main {
   max-width: 1100px;
   margin: 0 auto;
 }
+img{
+  width: 100px;
+}
 
 h2 {
   text-align: center;
@@ -66,11 +69,16 @@ h2 {
   color: #10b981;
 }
 
-.description {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #6b7280;
-  font-size: 1rem;
+.edit{
+    width: 3em;
+    height: 3em;
+    margin-left: 20px;
+}
+
+.eliminar{
+    width: 3em;
+    height: 3em;
+    margin-left: 5px;
 }
 
 table {
@@ -105,6 +113,5 @@ footer {
   text-align: center;
   padding: 16px;
   font-size: 0.9rem;
-  user-select: none;
   margin-top: 40px;
 }
