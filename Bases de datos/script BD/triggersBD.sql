@@ -1,6 +1,20 @@
+-- ==========================================================
+-- RESETEO DE TRIGGERS Y EVENTOS EXISTENTES
+-- ==========================================================
+DROP TRIGGER IF EXISTS contar_inasistencias_aprendiz;
+DROP TRIGGER IF EXISTS tr_asignar_estado_minuta;
+DROP TRIGGER IF EXISTS responsable_registro_incidente;
+DROP EVENT IF EXISTS actualizar_minutas_a_disponible;
+
+-- ==========================================================
+-- CREACIÓN DE TRIGGERS Y EVENTOS CORREGIDOS
+-- ==========================================================
+
 DELIMITER $$
+
+-- TRIGGER 1: Contar inasistencias de aprendiz y generar alerta
 CREATE TRIGGER contar_inasistencias_aprendiz
-AFTER INSERT ON registro_asistencia
+AFTER INSERT ON registro_inasistencia
 FOR EACH ROW
 BEGIN
     DECLARE total_fallas INT;
@@ -8,9 +22,9 @@ BEGIN
 
     -- Contar cuántas inasistencias ('N') tiene el aprendiz
     SELECT COUNT(*) INTO total_fallas
-    FROM registro_asistencia
+    FROM registro_inasistencia
     WHERE aprendiz_Usuario_id_usuario = NEW.aprendiz_Usuario_id_usuario
-      AND estado_asistencia = 'N';
+      AND estado_inasistencia = 'N';
 
     -- Obtener la coordinación del aprendiz a través de su programa
     SELECT p.coordinacion_id INTO coordinacion_aprendiz
@@ -27,11 +41,11 @@ BEGIN
             UPDATE alertas_inasistencia
             SET cantidad_fallas = total_fallas,
                 fecha_alerta = NOW(),
-                mensaje = CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.')
+                mensaje = CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, 
+                                 ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica.')
             WHERE aprendiz_id = NEW.aprendiz_Usuario_id_usuario;
         ELSE
             INSERT INTO alertas_inasistencia (
-                id_alerta,
                 aprendiz_id,
                 cantidad_fallas,
                 fecha_alerta,
@@ -39,25 +53,19 @@ BEGIN
                 coordinacion_id
             )
             VALUES (
-                NULL,
                 NEW.aprendiz_Usuario_id_usuario,
                 total_fallas,
                 NOW(),
-                CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica según reglamento SENA.'),
+                CONCAT('⚠️ ALERTA CRÍTICA: El aprendiz con ID ', NEW.aprendiz_Usuario_id_usuario, 
+                       ' tiene ', total_fallas, ' inasistencias. Se debe iniciar proceso de deserción académica.'),
                 IFNULL(coordinacion_aprendiz, 1)
             );
         END IF;
     END IF;
 END$$
 
-DELIMITER ;
 
--- segundo trigger que pone la minuta en ocupado 
-
-DELIMITER //
-
-DELIMITER //
-
+-- TRIGGER 2: Cambiar estado del ambiente según la minuta
 CREATE TRIGGER tr_asignar_estado_minuta
 BEFORE INSERT ON registro_minuta
 FOR EACH ROW
@@ -70,30 +78,10 @@ BEGIN
     ELSE
         SET NEW.estado = 'Disponible';
     END IF;
-END //
-
-DELIMITER ;
+END$$
 
 
-DELIMITER //
-
-CREATE EVENT IF NOT EXISTS actualizar_minutas_a_disponible
-ON SCHEDULE EVERY 1 MINUTE
-DO
-BEGIN
-    UPDATE registro_minuta
-    SET estado = 'Disponible'
-    WHERE estado = 'Ocupado'
-      AND NOW() > fecha_hora_entrega;
-END //
-
-DELIMITER ;
-
-
--- trigger para saber quien fue el que registro el incidente 
-
-DELIMITER $$
-
+-- TRIGGER 3: Guardar histórico de incidentes
 CREATE TRIGGER responsable_registro_incidente
 AFTER INSERT ON registro_incidente
 FOR EACH ROW
@@ -103,7 +91,6 @@ BEGIN
         ambiente_id,
         tipo_incidente_id,
         descripcion,
-        usuario_registra_id,
         fecha_registro
     )
     VALUES (
@@ -111,7 +98,6 @@ BEGIN
         NEW.ambiente_id,
         NEW.tipo_inc_id,
         NEW.descripcion,
-        NEW.id_usuario_registra, -- se asume que cualquier rol usa este campo
         NOW()
     );
 END$$
@@ -119,5 +105,14 @@ END$$
 DELIMITER ;
 
 
-
-
+-- EVENTO: Actualizar automáticamente minutas vencidas a Disponible
+DELIMITER //
+CREATE EVENT IF NOT EXISTS actualizar_minutas_a_disponible
+ON SCHEDULE EVERY 1 MINUTE
+DO
+    UPDATE registro_minuta
+    SET estado = 'Disponible'
+    WHERE estado = 'Ocupado'
+      AND NOW() > fecha_hora_entrega;
+//
+DELIMITER ;

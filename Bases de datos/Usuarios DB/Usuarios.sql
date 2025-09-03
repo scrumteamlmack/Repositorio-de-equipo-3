@@ -9,7 +9,7 @@ GRANT ALL PRIVILEGES ON mydb.* TO 'luis.vargas'@'localhost' WITH GRANT OPTION;
 DROP USER IF EXISTS 'carlos.garcia'@'localhost';
 CREATE USER 'carlos.garcia'@'localhost' IDENTIFIED BY 'C@rlosC0ord#25';
 GRANT SELECT, INSERT, UPDATE ON mydb.aprendiz TO 'carlos.garcia'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'carlos.garcia'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_inasistencia TO 'carlos.garcia'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.programas TO 'carlos.garcia'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.registro_incidente TO 'carlos.garcia'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON mydb.ambiente TO 'carlos.garcia'@'localhost';
@@ -21,7 +21,7 @@ GRANT SELECT, INSERT, UPDATE ON mydb.modalidad TO 'carlos.garcia'@'localhost';
 DROP USER IF EXISTS 'gloria.parra'@'localhost';
 CREATE USER 'gloria.parra'@'localhost' IDENTIFIED BY 'M@hilyK2025!';
 GRANT SELECT, UPDATE ON mydb.aprendiz TO 'gloria.parra'@'localhost';
-GRANT SELECT ON mydb.registro_asistencia TO 'gloria.parra'@'localhost';
+GRANT SELECT ON mydb.registro_inasistencia TO 'gloria.parra'@'localhost';
 GRANT SELECT ON mydb.programas TO 'gloria.parra'@'localhost';
 
 --  4. ROSA ARANGO - Guarda de Seguridad (ID: 28)
@@ -39,7 +39,7 @@ GRANT SELECT ON mydb.aprendiz TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.ambiente TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.registro_minuta TO 'andres.rojas'@'localhost';
 GRANT SELECT, UPDATE ON mydb.registro_incidente TO 'andres.rojas'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON mydb.registro_asistencia TO 'andres.rojas'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON mydb.registro_inasistencia TO 'andres.rojas'@'localhost';
 GRANT SELECT ON mydb.recursos TO 'andres.rojas'@'localhost';
 
 FLUSH PRIVILEGES;
