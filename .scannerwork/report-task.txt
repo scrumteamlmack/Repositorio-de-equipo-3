@@ -2,5 +2,5 @@ projectKey=lmack
 serverUrl=http://localhost:9000
 serverVersion=25.7.0.110598
 dashboardUrl=http://localhost:9000/dashboard?id=lmack
-ceTaskId=f5906d1b-72a9-4b99-92d8-f04cf6dd65d1
-ceTaskUrl=http://localhost:9000/api/ce/task?id=f5906d1b-72a9-4b99-92d8-f04cf6dd65d1
+ceTaskId=8cf5e58a-ab42-4ac2-8493-43b126a6856b
+ceTaskUrl=http://localhost:9000/api/ce/task?id=8cf5e58a-ab42-4ac2-8493-43b126a6856b
