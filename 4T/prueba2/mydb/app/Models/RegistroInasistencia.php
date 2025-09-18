@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class RegistroInasistencium
+ * Class RegistroInasistencia
  * 
  * @property int $id_inasistencia
  * @property Carbon $fecha_inasistencia
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class RegistroInasistencium extends Model
+class RegistroInasistencia extends Model
 {
 	protected $table = 'registro_inasistencia';
 	protected $primaryKey = 'id_inasistencia';
@@ -48,12 +48,12 @@ class RegistroInasistencium extends Model
 
 	public function jornada()
 	{
-		return $this->belongsTo(Jornada::class);
+		return $this->belongsTo(Jornada::class, 'jornada_id');
 	}
 
 	public function aprendiz()
 	{
-		return $this->belongsTo(Aprendiz::class, 'aprendiz_Usuario_id_usuario');
+		return $this->belongsTo(Aprendiz::class, 'aprendiz_Usuario_id_usuario', 'Usuario_id_usuario');
 	}
 
 	public function instructor()
