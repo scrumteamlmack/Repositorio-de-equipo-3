@@ -48,26 +48,28 @@ class AsistenciasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'aprendiz_id' => 'required|exists:aprendiz,id_aprendiz',
-            'fecha_inasistencia' => 'required|date',
-            'motivo' => 'nullable|string|max:255',
-            'estado' => 'required|in:Presente,Ausente']);
+   public function store(Request $request)
+{
+    $request->validate([
+        'fecha_inasistencia' => 'required|date',
+        'estado_inasistencia' => 'required|in:S,N,R', // aquí metemos R también
+        'jornada_id' => 'required|integer',
+        'aprendiz_Usuario_id_usuario' => 'required|integer',
+        'instructor_Usuario_id_usuario' => 'required|integer',
+    ]);
 
-            RegistroInasistencia::create([
-    'aprendiz_Usuario_id_usuario' => $validated['aprendiz_Usuario_id_usuario'],
-    'fecha_inasistencia' => $validated['fecha_inasistencia'],
-    'motivo' => $validated['motivo'] ?? null,
-    'estado_inasistencia' => $validated['estado'],
-    'jornada_id' => $validated['jornada_id'] ?? 1, 
-    'instructor_Usuario_id_usuario' => auth()->user()->id_usuario, 
-]);
+    RegistroInasistencia::create([
+        'fecha_inasistencia' => $request->fecha_inasistencia,
+        'estado_inasistencia' => $request->estado_inasistencia, // ahora acepta R
+        'jornada_id' => $request->jornada_id,
+        'aprendiz_Usuario_id_usuario' => $request->aprendiz_Usuario_id_usuario,
+        'instructor_Usuario_id_usuario' => $request->instructor_Usuario_id_usuario,
+    ]);
+
+    return redirect()->route('inasistencias.index')->with('success', 'Registro creado correctamente.');
+}
 
 
-            return redirect()->route('registro_inasistencia.index')->with('success', 'registro creado correctamente');
-    }
 
     /**
      * Display the specified resource.
@@ -81,37 +83,65 @@ class AsistenciasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $registro = RegistroInasistencia::findOrFail($id);
-        $aprendices = Aprendiz:: with('usuario')->get()->sortBy(function($a){
+public function edit(string $id)
+{
+    // Trae el registro junto con las relaciones
+    $registro = RegistroInasistencia::with(['aprendiz.usuario', 'instructor.usuario', 'jornada'])
+        ->findOrFail($id);
+
+    // Trae los aprendices con su usuario, ordenados por nombre
+    $aprendices = Aprendiz::with('usuario')
+        ->get()
+        ->sortBy(function ($a) {
             return $a->usuario->p_nombre ?? '';
         });
-        return view('registro_inasistencia.edit',compact('registro', 'aprendices'));
-    }
+
+    // Trae los instructores con su usuario, ordenados por nombre
+    $instructores = Instructor::with('usuario')
+        ->get()
+        ->sortBy(function ($i) {
+            return $i->usuario->p_nombre ?? '';
+        });
+
+    // Trae todas las jornadas
+    $jornadas = Jornada::orderBy('nombre_jornada')->get();
+
+    return view('registro_inasistencia.edit', compact('registro', 'aprendices', 'instructores', 'jornadas'));
+}
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $validated = $request->validate([
-              'aprendiz_id' => 'required|exists:aprendiz,id_aprendiz',
-            'fecha_inasistencia' => 'required|date',
-            'motivo' => 'nullable|string|max:255',
-            'estado' => 'required|in:Presente,Ausente'
-        ]);
-         $registro = RegistroInasistencia::findOrFail($id);
+  public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'aprendiz_Usuario_id_usuario' => 'required|exists:aprendiz,Usuario_id_usuario',
+        'fecha_inasistencia' => 'required|date',
+        'estado_inasistencia' => 'required|in:S,N,R',
+        'jornada_id' => 'required|exists:jornada,id_jornada',
+        'instructor_Usuario_id_usuario' => 'required|exists:instructor,Usuario_id_usuario',
+    ],
+    [], // mensajes personalizados (opcional)
+    [
+      'aprendiz_Usuario_id_usuario' => 'aprendiz id',
+      'estado_inasistencia' => 'estado',
+      'instructor_Usuario_id_usuario' => 'instructor id',
+      'jornada_id' => 'jornada id',
+    ]);
 
-        $registro->update([
-              'aprendiz_Usuario_id_usuario' => $validated['aprendiz_id'],
-            'fecha_inasistencia' => $validated['fecha_inasistencia'],
-            'motivo' => $validated['motivo'] ?? null,
-            'estado' => $validated['estado'],
-        ]);
+    $registro = RegistroInasistencia::findOrFail($id);
 
-        return redirect() ->route('registro_inasistencia.index')->with('success','Registro actualizado correctamente');
-    }
+    $registro->update([
+        'aprendiz_Usuario_id_usuario' => $validated['aprendiz_Usuario_id_usuario'],
+        'fecha_inasistencia' => $validated['fecha_inasistencia'],
+        'estado_inasistencia' => $validated['estado_inasistencia'],
+        'jornada_id' => $validated['jornada_id'],
+        'instructor_Usuario_id_usuario' => $validated['instructor_Usuario_id_usuario'],
+    ]);
+
+    return redirect()->route('registro_inasistencia.index')->with('success', 'Registro actualizado correctamente.');
+}
 
     /**
      * Remove the specified resource from storage.
