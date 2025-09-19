@@ -99,6 +99,14 @@ tbody tr:hover {
   background-color: #f9fafb;
 }
 
+table th.ambiente,
+table td.ambiente {
+  max-width: 120px;         /* Ajusta el ancho según necesites */
+  white-space: nowrap;       /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;          /* Oculta el contenido que se desborda */
+  text-overflow: ellipsis;   /* Agrega "..." si el texto es muy largo */
+}
+
 .btn {
   padding: 8px 16px;
   border-radius: 8px;
@@ -140,6 +148,7 @@ tbody tr:hover {
 .eliminar:hover {
   background-color: #dc2626;
 }
+ 
 
 .acciones-fila {
   display: flex;

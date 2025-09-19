@@ -32,40 +32,34 @@
     <div class="tabla-contenedor">
       <table>
         <thead>
-          <tr>
-            <th>Nombre del Aprendiz</th>
-            <th>Documento</th>
-            <th>Fecha</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Juan Pérez</td>
-            <td>1234567890</td>
-            <td>2025-09-16</td>
-            <td>Incidente en el aula de sistemas.</td>
-            <td>
-              <div class="acciones-fila">
-                <button class="btn editar">Editar</button>
-                <button class="btn eliminar">Eliminar</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>María Gómez</td>
-            <td>987654321</td>
-            <td>2025-09-15</td>
-            <td>Retraso en la entrega del proyecto.</td>
-            <td>
-              <div class="acciones-fila">
-                <button class="btn editar">Editar</button>
-                <button class="btn eliminar">Eliminar</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+  <tr>
+    <th>Id del incidente</th>
+    <th>Descripcion</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th class="ambiente">Ambiente</th>
+    <th>Tipo</th>
+    <th>id del Instructor</th>
+    <th>Acciones</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>Incidente en el aula de sistemas.</td>
+    <td>2025-09-16</td>
+    <td>5:30am</td>
+    <td class="ambiente">701</td>
+    <td>ambientes</td>
+    <td>1021672531</td>
+    <td>
+      <div class="acciones-fila">
+        <button class="btn editar" id="btn">Editar</button>
+        <button class="btn eliminar"id="btn">Eliminar</button>
+      </div>
+    </td>
+  </tr>
+</tbody>
       </table>
     </div>
   </main>
@@ -75,27 +69,53 @@
   </footer>
 
   <!-- Modal (ventana emergente) -->
-  <div id="modal" class="modal">
-    <div class="modal-contenido">
-      <span class="cerrar" id="btnCerrarModal">&times;</span>
-      <h3>Registrar Incidente</h3>
-      <form id="formIncidente">
-        <label for="nombre">Nombre del Aprendiz</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Escribe el nombre completo" required>
+  <!-- Modal (ventana emergente) -->
+<div id="modal" class="modal">
+  <div class="modal-contenido">
+    <span class="cerrar" id="btnCerrarModal">&times;</span>
+    <h3>Registrar Incidente</h3>
+    <form id="formIncidente">
 
-        <label for="documento">Número de Documento</label>
-        <input type="text" id="documento" name="documento" placeholder="Ej: 1234567890" required>
+      <label for="descripcion">Descripción del Incidente</label>
+      <textarea id="descripcion" name="descripcion" rows="5" placeholder="Describe el incidente con detalle" required></textarea>
 
-        <label for="fecha">Fecha del Incidente</label>
-        <input type="date" id="fecha" name="fecha" required>
+      <label for="ambiente">Ambiente del incidente</label>
+      <select name="ambiente" id="ambiente" required>
+        <option value="">Seleccione una opción</option>
+        <option value="701">701</option>
+        <option value="805">805</option>
+        <option value="402">402</option>
+        <option value="Biblioteca">Biblioteca</option>
+      </select>
 
-        <label for="descripcion">Descripción del Incidente</label>
-        <textarea id="descripcion" name="descripcion" rows="5" placeholder="Describe el incidente con detalle" required></textarea>
+      <label for="fecha">Fecha del incidente</label>
+      <input type="date" id="fecha" name="fecha" required>
 
-        <button type="submit" class="btn agregar">Registrar</button>
-      </form>
-    </div>
+      <label for="hora_incidente">Hora del incidente</label>
+      <input type="time" name="hora_incidente" id="hora_incidente" required>
+
+      <label for="nom_instructor">Nombre del instructor</label>
+      <select name="nom_instructor" id="nom_instructor" required>
+        <option value="">Seleccione una opción</option>
+        <option value="Javier Leonardo Pineda">Javier Leonardo Pineda</option>
+        <option value="Martha Patricia Cuervo">Martha Patricia Cuervo</option>
+        <option value="Maria Angelica Triviño">Maria Angelica Triviño</option>
+        <option value="Nelson Hernan Rodriguez">Nelson Hernan Rodriguez</option>
+      </select>     
+
+      <label for="tipo_incidente">Tipo de incidente</label>
+      <select name="tipo_incidente" id="tipo_incidente" required>
+        <option value="">Seleccione una opción</option>
+        <option value="Accidente">Accidente</option>
+        <option value="Falla técnica">Falla técnica</option>
+        <option value="Robo">Robo</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <button type="submit" class="btn agregar">Registrar</button>
+    </form>
   </div>
+</div>
 
   <script>
     // Modal
