@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Programa $programa
  * @property Usuario $usuario
  * @property Ficha $ficha
- * @property Collection|RegistroInasistencium[] $registro_inasistencia
+ * @property Collection|RegistroInasistencia[] $registro_inasistencia
  *
  * @package App\Models
  */
@@ -58,6 +58,6 @@ class Aprendiz extends Model
 
 	public function registro_inasistencia()
 	{
-		return $this->hasMany(RegistroInasistencium::class, 'aprendiz_Usuario_id_usuario');
+		return $this->hasMany(RegistroInasistencia::class, 'aprendiz_Usuario_id_usuario');
 	}
 }

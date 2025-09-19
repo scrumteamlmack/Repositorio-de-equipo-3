@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nombre_jornada
  * 
  * @property Collection|Programa[] $programas
- * @property Collection|RegistroInasistencium[] $registro_inasistencia
+ * @property Collection|RegistroInasistencia[] $registro_inasistencia
  *
  * @package App\Models
  */
@@ -42,6 +42,6 @@ class Jornada extends Model
 
 	public function registro_inasistencia()
 	{
-		return $this->hasMany(RegistroInasistencium::class);
+		return $this->hasMany(RegistroInasistencia::class);
 	}
 }
