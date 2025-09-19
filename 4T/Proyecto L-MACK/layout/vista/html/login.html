@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar Sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/estilo_login.css">
+<link rel="shortcut icon" href="../resources/fondo oscuro N L-MACK.png" type="image/x-icon">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" id="logo" class="img">
+    </div>
+    <nav aria-label="Navegación principal">
+  <a href="../index.html">Inicio</a>
+  <a href="registro.html">Registrarse</a>
+</nav>
+  </header>
+
+  <main>
+    <h2>Iniciar Sesión</h2>
+    <form onsubmit="return validar_form();">
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" name="correo" placeholder="Email" required aria-required="true" />
+      
+      <label for="pas">Contraseña</label>
+      <input type="password" id="pas" name="pas" placeholder="Contraseña" required aria-required="true" />
+      
+      <button type="submit" class="btn" aria-label="Iniciar sesión">Entrar</button>
+    </form>
+    <p class="register-link">¿No tienes cuenta? <a href="registro.html" aria-label="Ir a registro">Regístrate aquí</a></p>
+  </main>
+
+  <script>
+    const usuarios = {
+      "administrador@gmail.com": { clave: "administrador123", pagina: "../html/administrador.html" },
+      "aprendiz@gmail.com":     { clave: "aprendiz123",     pagina: "../html/aprendiz.html" },
+      "coordinador@gmail.com":  { clave: "coordinador123",  pagina: "../html/coordinador.html" },
+      "guarda@gmail.com":       { clave: "guarda123",       pagina: "../html/guarda.html" },
+      "instructor@gmail.com":   { clave: "instructor123",   pagina: "../html/instructor.html" }
+    };
+
+    function validar_form() {
+      if (!validar_mail() || !validar_pas()) {
+        return false;
+      }
+
+      const correo = document.getElementById("correo").value;
+      const contrasena = document.getElementById("pas").value;
+
+      if (usuarios[correo] && usuarios[correo].clave === contrasena) {
+        window.location.href = usuarios[correo].pagina;
+        return false; // Prevenir envío del formulario
+      } else {
+        alert("Correo y/o Contraseña no válidos");
+        return false;
+      }
+    }
+
+    function validar_mail() {
+      const obj = document.getElementById("correo");
+      const cor = obj.value;
+      let arroba = 0;
+      let punto = false;
+
+      for (let i = 0; i < cor.length; i++) {
+        if (cor.charAt(i) === '@') arroba++;
+        if (arroba > 0 && cor.charAt(i) === '.') punto = true;
+      }
+
+      if (arroba === 1 && punto) {
+        return true;
+      } else {
+        alert("El Correo NO es válido");
+        obj.focus();
+        return false;
+      }
+    }
+
+    function validar_pas() {
+      const obj = document.getElementById("pas");
+      const pas = obj.value;
+
+      if (pas.length < 8 || pas.length > 20) {
+        alert("La Contraseña no es válida (mínimo 8, máximo 20 caracteres)");
+        obj.focus();
+        return false;
+      } else {
+        return true;
+      }
+    }
+  </script>
+
+  <footer>
+    &copy; 2025 L-MACK
+  </footer>
+</body>
+</html>

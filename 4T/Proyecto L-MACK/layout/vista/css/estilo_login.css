@@ -1,0 +1,110 @@
+ *{margin:0;padding:0;box-sizing:border-box;}
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #F5F5DC;
+    color: #374151;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header, footer {
+    background-color: #10b981;
+    color: white;
+    padding: 16px 32px;
+  }
+  header {
+    position: sticky;
+    top: 0;z-index: 1000;
+    display: flex;align-items: center;justify-content: space-between;
+  }
+  .logo {
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+  .img {
+  width: 125px;
+  height: auto;
+}
+  nav a {
+  margin-left: 16px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  background-color: #059669; 
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: #047857; 
+  transform: scale(1.05);
+}
+
+  main {
+    flex-grow: 1;
+    max-width: 400px;
+    margin: 64px auto;
+    padding: 0 20px;
+  }
+  h2 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 32px;
+    color: #10b981;
+  }
+  form {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgb(16 185 129 / 0.15);
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    color:#374151;
+  }
+  input[type="email"],
+  input[type="password"]{
+    width: 100%;
+    padding: 14px 12px;
+    margin-bottom: 24px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #10b981;
+    outline: none;
+  }
+  .btn {
+    width: 100%;
+    background-color: #10b981;
+    border: none;
+    color: white;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover,
+  .btn:focus {
+    background-color: #10b981; 
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow:  0 0 0 4px #05835b,
+    0 0 0 0; 
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    user-select: none;
+  }
