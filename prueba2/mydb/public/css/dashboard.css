@@ -1,0 +1,100 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 40px;
+}
+
+.welcome {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    opacity: 0.15;
+}
+
+.card.asistencia::before { background: #007bff; }
+.card.programa::before { background: #28a745; }
+.card.ficha::before { background: #ff9800; }
+.card.perfil::before { background: #9c27b0; }
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.card h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #0056b3, #0086c9);
+    transform: scale(1.05);
+}
