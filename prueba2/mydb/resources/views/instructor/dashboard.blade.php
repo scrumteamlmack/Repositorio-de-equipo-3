@@ -1,3 +1,4 @@
+{{-- resources/views/instructor/dashboard.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,14 +25,26 @@
                     <ul>
                         <!-- Inicio -->
                         <li>
-                            <a href="{{ route('instructor.dashboard') }}" class="btnInicio"><span>Inicio</span></a>
+                            <a href="{{ route('instructor.dashboard') }}" class="btnInicio">
+                                <span>Inicio</span>
+                            </a>
                         </li>
 
                         <!-- Perfil -->
                         <li onclick="toggleSubmenu(this)">
                             <span>Mi Perfil</span>
                             <ul class="submenu">
-                                <li><a href="#">Ver / Editar Perfil</a></li>
+                                <li><a href="{{ route('instructor.perfil') }}">Ver Perfil</a></li>
+                                <li><a href="{{ route('instructor.edit') }}">Editar Perfil</a></li>
+</ul>
+                        </li>
+
+                        <!-- Fichas -->
+                        <li onclick="toggleSubmenu(this)">
+                            <span>Fichas</span>
+                            <ul class="submenu">
+                                <li><a href="{{ route('instructor.fichas') }}">Mis Fichas</a></li>
+                                <li><a href="{{ route('instructor.aprendices') }}">Ver Aprendices</a></li>
                             </ul>
                         </li>
 
@@ -47,7 +60,7 @@
                         <li onclick="toggleSubmenu(this)">
                             <span>Minutas</span>
                             <ul class="submenu">
-                                <li><a href="#">Ver Minutas</a></li>
+                                <li><a href="{{ route('minutas.index') }}">Ver Minutas</a></li>
                             </ul>
                         </li>
 
@@ -57,6 +70,8 @@
                             <ul class="submenu">
                                 <li><a href="{{ route('incidentes.create') }}">Registrar Incidente</a></li>
                                 <li><a href="{{ route('incidentes.index') }}">Mis Incidentes</a></li>
+                            <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
+                            
                             </ul>
                         </li>
                     </ul>
@@ -73,7 +88,9 @@
         <!-- Contenido -->
         <main class="content">
             <h2>Bienvenido {{ Auth::user()->p_nombre }} {{ Auth::user()->p_apellido }}</h2>
-            <p>Aquí puedes gestionar tu perfil, consultar ambientes, revisar minutas y registrar incidentes.</p>
+            <p>
+                Aquí puedes gestionar tu perfil, consultar fichas y aprendices, ambientes, revisar minutas y registrar incidentes.
+            </p>
             @yield('content')
         </main>
     </div>

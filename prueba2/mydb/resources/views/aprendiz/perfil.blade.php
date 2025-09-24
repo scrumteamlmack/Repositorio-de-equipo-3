@@ -14,7 +14,7 @@
         <p><strong>Documento:</strong> {{ $aprendiz->usuario->num_documento }}</p>
         <p><strong>Email:</strong> {{ $aprendiz->usuario->correo }}</p>
     </div>
-    <a href="{{ route('aprendiz.edit') }}" class="btn btn-warning">Editar Perfil</a>
-    <a href="{{ route('aprendiz.asistencias') }}" class="btn btn-info">Ver Asistencias</a>
+    <a href="{{ ('aprendiz.edit') }}" class="btn btn-warning">Editar Perfil</a>
+    <a href="{{ ('aprendiz.asistencias') }}" class="btn btn-info">Ver Asistencias</a>
 </div>
 @endsection

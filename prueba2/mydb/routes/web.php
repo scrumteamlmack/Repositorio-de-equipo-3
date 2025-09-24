@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/admin/dashboard', fn() => view('administrador.dashboard'))->name('admin.dashboard');
     Route::get('/aprendiz/dashboard', fn() => view('aprendiz.dashboard'))->name('aprendiz.dashboard');
-    Route::get('/instructor/dashboard', fn() => view('instructor.dashboard'))->name('instructor.dashboard');
+    Route::get('/instructor/dashboard', [InstructorController::class, 'dashboard'])->name('instructor.dashboard');
     Route::get('/guarda/dashboard', fn() => view('guarda.dashboard'))->name('guarda.dashboard');
 
     /*
@@ -75,6 +75,20 @@ Route::middleware(['auth'])->group(function () {
     // Instructor
     Route::get('/instructor/create/{id_usuario}', [InstructorController::class, 'create'])->name('instructor.create');
     Route::post('/instructor/store', [InstructorController::class, 'store'])->name('instructor.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Perfil Instructor
+    |--------------------------------------------------------------------------
+    */
+  Route::prefix('instructor')->name('instructor.')->middleware(['auth'])->group(function () {
+    Route::get('/perfil', [InstructorController::class, 'perfil'])->name('perfil');
+    Route::get('/perfil/editar', [InstructorController::class, 'editPerfil'])->name('perfil.edit');
+    Route::post('/perfil/actualizar', [InstructorController::class, 'updatePerfil'])->name('perfil.update');
+    Route::get('/fichas', [InstructorController::class, 'fichas'])->name('fichas');
+    Route::get('/aprendices', [InstructorController::class, 'aprendices'])->name('aprendices');
+});
+
 
     // Guarda
     Route::get('/guarda/create/{id_usuario}', [GuardaController::class, 'create'])->name('guarda.create');
@@ -112,12 +126,8 @@ Route::middleware(['auth'])->group(function () {
     | Minutas
     |--------------------------------------------------------------------------
     */
-    
-    Route::get('/minutas/historial', [App\Http\Controllers\MinutaController::class, 'historial'])
-    ->name('minutas.historial');
-
+    Route::get('/minutas/historial', [MinutaController::class, 'historial'])->name('minutas.historial');
     Route::resource('minutas', MinutaController::class);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -135,49 +145,56 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
 /*
-    |--------------------------------------------------------------------------
-    | Traslado Recursos
-    |--------------------------------------------------------------------------
-    */
-
-
+|--------------------------------------------------------------------------
+| Traslado Recursos
+|--------------------------------------------------------------------------
+*/
 Route::resource('traslados', TrasladoController::class);
 
 /*
-    |--------------------------------------------------------------------------
-    | Historico Incidentes
-    |--------------------------------------------------------------------------
-    */
-
+|--------------------------------------------------------------------------
+| Historico Incidentes
+|--------------------------------------------------------------------------
+*/
 Route::get('/historico-incidentes', [HistoricoIncidenteController::class, 'index'])
      ->name('historico_incidentes.index');
+
 /*
-    |--------------------------------------------------------------------------
-    | Perfil aprendiz
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| Perfil Aprendiz
+|--------------------------------------------------------------------------
+*/
+Route::prefix('aprendiz')->name('aprendiz.')->middleware(['auth'])->group(function () {
+    Route::get('/perfil', [AprendizController::class, 'perfil'])->name('perfil'); // aprendiz.perfil
+    Route::get('/perfil/show', [AprendizController::class, 'show'])->name('show'); // aprendiz.show
+    Route::get('/perfil/edit', [AprendizController::class, 'editarPerfil'])->name('edit'); // aprendiz.edit
+    Route::post('/perfil/actualizar', [AprendizController::class, 'actualizarPerfil'])->name('actualizar'); // aprendiz.actualizar
 
-// Perfil
-Route::get('/aprendiz/perfil', [AprendizController::class, 'show'])
-    ->name('aprendiz.perfil');
-Route::get('/aprendiz/editar', [AprendizController::class, 'edit'])
-    ->name('aprendiz.editar');
+    // Programa
+    Route::get('/programa', [AprendizController::class, 'programa'])->name('programa');
 
-// Programa
-Route::get('/aprendiz/programa', [AprendizController::class, 'programa'])
-    ->name('aprendiz.programa');
+    // Ficha
+    Route::get('/ficha', [AprendizController::class, 'ficha'])->name('ficha');
 
-// Ficha
-Route::get('/aprendiz/ficha', [AprendizController::class, 'ficha'])
-    ->name('aprendiz.ficha');
-
-// Asistencias
-
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/aprendiz/perfil', [AprendizController::class, 'perfil'])->name('aprendiz.perfil');
-    Route::get('/aprendiz/perfil/show', [AprendizController::class, 'show'])->name('aprendiz.show');
-    Route::get('/aprendiz/perfil/edit', [AprendizController::class, 'editarPerfil'])->name('aprendiz.edit');
-    Route::post('/aprendiz/perfil/actualizar', [AprendizController::class, 'actualizarPerfil'])->name('aprendiz.actualizar');
-    Route::get('/aprendiz/asistencias', [AprendizController::class, 'asistencias'])->name('aprendiz.asistencias');
+    // Asistencias
+    Route::get('/asistencias', [AprendizController::class, 'asistencias'])->name('asistencias');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Perfil Instructor
+|--------------------------------------------------------------------------
+*/
+Route::prefix('instructor')->name('instructor.')->group(function () {
+    // Perfil
+    Route::get('/perfil', [InstructorController::class, 'perfil'])->name('perfil'); // instructor.perfil
+    Route::get('/perfil/editar', [InstructorController::class, 'editPerfil'])->name('edit');// instructor.editarPerfil
+    Route::post('/perfil/{id}/actualizar', [InstructorController::class, 'updatePerfil'])->name('perfil.update');
+    // Fichas y aprendices
+    Route::get('/fichas', [InstructorController::class, 'fichas'])->name('fichas');
+    Route::get('/aprendices', [InstructorController::class, 'aprendices'])->name('aprendices');
+});
+
