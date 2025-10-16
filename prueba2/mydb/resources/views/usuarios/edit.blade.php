@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+<head>
+    <link rel="stylesheet" href="{{ asset('css/edit_usuario.css') }}">
+</head>
 <div class="container">
     <h2>Editar Usuario</h2>
 
