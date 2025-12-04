@@ -32,6 +32,9 @@
                     <p:menuitem value="Minutas"
                                 icon="pi pi-file"
                                 outcome="/pages/minutas/list.xhtml"/>
+                    <p:menuitem value="Incidentes"
+                                icon="pi pi-exclamation-triangle"
+                                outcome="/pages/instructor/listarIncidentes.xhtml"/>
                 </p:menuButton>
                 <p:commandButton value="Mi Perfil"
                                  icon="pi pi-user"
@@ -94,6 +97,18 @@
                     <div class="dashboard-card-desc">Gestiona el registro de minutas de ambientes</div>
                     <p:commandButton value="Ver Minutas"
                                      action="/pages/minutas/list.xhtml?faces-redirect=true"
+                                     icon="pi pi-arrow-right"
+                                     styleClass="btn btn-primary"
+                                     style="width: 100%; margin-top: 15px;"
+                                     ajax="false"/>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-icon">⚠️</div>
+                    <div class="dashboard-card-title">Registro de Incidentes</div>
+                    <div class="dashboard-card-desc">Registra y gestiona incidentes en los ambientes</div>
+                    <p:commandButton value="Ver Incidentes"
+                                     action="/pages/instructor/listarIncidentes.xhtml?faces-redirect=true"
                                      icon="pi pi-arrow-right"
                                      styleClass="btn btn-primary"
                                      style="width: 100%; margin-top: 15px;"

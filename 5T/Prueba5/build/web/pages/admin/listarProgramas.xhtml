@@ -2,11 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Listar Fichas - L-MACK</title>
+    <title>Listar Programas - L-MACK</title>
     <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </h:head>
@@ -46,57 +45,69 @@
         <!-- CONTENIDO -->
         <div class="content">
             <div class="form-header">
-                <h2><i class="pi pi-file" style="margin-right: 10px;"></i>Lista de Fichas</h2>
+                <h2><i class="pi pi-book" style="margin-right: 10px;"></i>Lista de Programas</h2>
             </div>
 
             <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
 
             <div style="margin-bottom: 20px;">
-                <p:commandButton value="➕ Nueva Ficha"
-                                 action="#{fichaBean.prepararNuevo}"
-                                 icon="pi pi-plus"
-                                 styleClass="btn btn-primary"
-                                 ajax="false"/>
+                <h:link value="➕ Nuevo Programa"
+                        outcome="/pages/admin/formPrograma.xhtml"
+                        styleClass="btn btn-primary"
+                        style="text-decoration: none; display: inline-block; padding: 8px 16px;">
+                    <i class="pi pi-plus" style="margin-right: 5px;"></i>
+                </h:link>
             </div>
 
             <div class="table-container">
-                <p:dataTable value="#{fichaBean.fichasAgrupadas}" var="f" 
-                             emptyMessage="No hay fichas registradas"
+                <p:dataTable value="#{programaBean.programas}" var="prog" 
+                             emptyMessage="No hay programas registrados"
                              paginator="true" rows="10"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              rowsPerPageTemplate="5,10,15,20"
                              styleClass="table table-striped table-hover">
 
-                    <p:column headerText="Número de Ficha" style="width: 150px;">
-                        <h:outputText value="#{f.numFicha}" />
+                    <p:column headerText="ID" style="width: 60px;">
+                        <h:outputText value="#{prog.idProgramas}" />
                     </p:column>
 
-                    <p:column headerText="Instructores Asignados">
-                        <h:panelGroup>
-                            <h:outputText value="#{fichaBean.getNombreInstructor(fichaBean.getInstructoresDeFicha(f.numFicha).get(0))}" rendered="#{fichaBean.getInstructoresDeFicha(f.numFicha).size() > 0}"/>
-                            <h:outputText value=", " rendered="#{fichaBean.getInstructoresDeFicha(f.numFicha).size() > 1}"/>
-                            <h:outputText value="#{fichaBean.getNombreInstructor(fichaBean.getInstructoresDeFicha(f.numFicha).get(1))}" rendered="#{fichaBean.getInstructoresDeFicha(f.numFicha).size() > 1}"/>
-                            <h:outputText value=" y #{fichaBean.getInstructoresDeFicha(f.numFicha).size() - 2} más" rendered="#{fichaBean.getInstructoresDeFicha(f.numFicha).size() > 2}"/>
-                        </h:panelGroup>
+                    <p:column headerText="Nombre del Programa">
+                        <h:outputText value="#{prog.nombrePrograma}" />
                     </p:column>
 
-                    <p:column headerText="Cantidad Instructores" style="width: 150px;">
-                        <h:outputText value="#{fichaBean.getInstructoresDeFicha(f.numFicha).size()}" />
+                    <p:column headerText="Nivel de Formación">
+                        <h:outputText value="#{prog.nivelFormacion}" />
+                    </p:column>
+
+                    <p:column headerText="Duración">
+                        <h:outputText value="#{prog.duracion}" />
+                    </p:column>
+
+                    <p:column headerText="Jornada">
+                        <h:outputText value="#{programaBean.getNombreJornada(prog.jornadaId)}" />
+                    </p:column>
+
+                    <p:column headerText="Modalidad">
+                        <h:outputText value="#{programaBean.getNombreModalidad(prog.modalidadId)}" />
+                    </p:column>
+
+                    <p:column headerText="Coordinación">
+                        <h:outputText value="#{programaBean.getNombreCoordinacion(prog.coordinacionId)}" />
                     </p:column>
 
                     <p:column headerText="Acciones" style="width: 150px;">
                         <div style="display: flex; gap: 5px;">
                             <p:commandButton icon="pi pi-pencil"
                                              title="Editar"
-                                             action="#{fichaBean.editar(f.idFicha)}"
+                                             action="#{programaBean.editar(prog.idProgramas)}"
                                              ajax="false"
                                              styleClass="btn btn-sm btn-secondary"/>
                             <p:commandButton icon="pi pi-trash"
                                              title="Eliminar"
-                                             actionListener="#{fichaBean.eliminar(f.idFicha)}"
+                                             actionListener="#{programaBean.eliminar(prog.idProgramas)}"
                                              update="@form"
                                              styleClass="btn btn-sm btn-danger"
-                                             onclick="return confirm('¿Está seguro de eliminar esta ficha?');"/>
+                                             onclick="return confirm('¿Está seguro de eliminar este programa?');"/>
                         </div>
                     </p:column>
 

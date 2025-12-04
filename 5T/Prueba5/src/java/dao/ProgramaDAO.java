@@ -16,7 +16,7 @@ public class ProgramaDAO {
     public List<Programa> listar() {
         System.out.println("🔍 ProgramaDAO.listar: Iniciando consulta de programas");
         List<Programa> lista = new ArrayList<>();
-        String sql = BASE_SELECT + " ORDER BY nombre_programa ASC";
+        String sql = BASE_SELECT + " ORDER BY id_programas ASC";
         System.out.println("   - SQL: " + sql);
 
         try (Connection con = ConnBD.conectar()) {
@@ -80,33 +80,63 @@ public class ProgramaDAO {
     }
 
     public int guardar(Programa programa) {
-        String sql = "INSERT INTO programas (nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES (?, ?, ?, ?, ?, ?)";
+        // Obtener el siguiente ID disponible
+        int siguienteId = obtenerSiguienteId();
+        if (siguienteId <= 0) {
+            System.err.println("❌ ProgramaDAO.guardar: No se pudo obtener el siguiente ID");
+            return 0;
+        }
+
+        String sql = "INSERT INTO programas (id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = ConnBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, programa.getNombrePrograma());
-            ps.setString(2, programa.getNivelFormacion());
-            ps.setString(3, programa.getDuracion());
-            ps.setInt(4, programa.getJornadaId());
-            ps.setInt(5, programa.getModalidadId());
-            ps.setInt(6, programa.getCoordinacionId());
+            ps.setInt(1, siguienteId);
+            ps.setString(2, programa.getNombrePrograma());
+            ps.setString(3, programa.getNivelFormacion());
+            ps.setString(4, programa.getDuracion());
+            ps.setInt(5, programa.getJornadaId());
+            ps.setInt(6, programa.getModalidadId());
+            ps.setInt(7, programa.getCoordinacionId());
 
             int filas = ps.executeUpdate();
 
             if (filas > 0) {
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        return rs.getInt(1);
-                    }
-                }
+                System.out.println("✅ ProgramaDAO.guardar: Programa guardado con ID: " + siguienteId);
+                return siguienteId;
+            } else {
+                System.err.println("❌ ProgramaDAO.guardar: No se insertaron filas");
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.guardar: Error: " + e.getMessage());
+            System.err.println("❌ ProgramaDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("   - SQL State: " + e.getSQLState());
+            System.err.println("   - Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
 
+        return 0;
+    }
+
+    private int obtenerSiguienteId() {
+        String sql = "SELECT COALESCE(MAX(id_programas), 0) + 1 AS siguiente_id FROM programas";
+        
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            if (rs.next()) {
+                int siguienteId = rs.getInt("siguiente_id");
+                System.out.println("🔍 ProgramaDAO.obtenerSiguienteId: Siguiente ID: " + siguienteId);
+                return siguienteId;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("❌ ProgramaDAO.obtenerSiguienteId: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         return 0;
     }
 

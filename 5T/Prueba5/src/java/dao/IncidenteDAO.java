@@ -18,8 +18,8 @@ public class IncidenteDAO {
     public List<Incidente> listar() {
         System.out.println("🔍 IncidenteDAO.listar: Iniciando consulta de incidentes");
         List<Incidente> incidentes = new ArrayList<>();
-        String sql = "SELECT id_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario, descripcion, fecha_incidente, hora_incidente "
-                + "FROM registro_incidente ORDER BY fecha_incidente DESC, hora_incidente DESC";
+        String sql = "SELECT id_incidente, descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario "
+                + "FROM registro_incidente ORDER BY fecha_incidente ASC, hora_incidente ASC";
         System.out.println("   - SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
@@ -35,13 +35,28 @@ public class IncidenteDAO {
                 System.out.println("   - Ejecutando consulta...");
                 int contador = 0;
                 while (rs.next()) {
-                    Incidente inc = mapRow(rs);
-                    incidentes.add(inc);
                     contador++;
-                    System.out.println("   - Incidente encontrado: ID=" + inc.getIdIncidente() + 
-                        ", Desc=" + (inc.getDescripcion() != null ? inc.getDescripcion().substring(0, Math.min(30, inc.getDescripcion().length())) : "Sin descripción"));
+                    System.out.println("   - Procesando registro #" + contador);
+                    System.out.println("      - ID desde BD: " + rs.getInt("id_incidente"));
+                    System.out.println("      - Ambiente desde BD: " + rs.getInt("ambiente_id"));
+                    System.out.println("      - Tipo desde BD: " + rs.getInt("tipo_inc_id"));
+                    System.out.println("      - Usuario desde BD: " + rs.getInt("usuario_id_usuario"));
+                    System.out.println("      - Descripción desde BD: " + (rs.getString("descripcion") != null ? rs.getString("descripcion") : "NULL"));
+                    System.out.println("      - Fecha desde BD: " + (rs.getDate("fecha_incidente") != null ? rs.getDate("fecha_incidente").toString() : "NULL"));
+                    System.out.println("      - Hora desde BD: " + (rs.getTime("hora_incidente") != null ? rs.getTime("hora_incidente").toString() : "NULL"));
+                    
+                    Incidente inc = mapRow(rs);
+                    System.out.println("      - Incidente mapeado - ID: " + inc.getIdIncidente() + 
+                        ", Ambiente: " + inc.getIdAmbiente() +
+                        ", Tipo: " + inc.getIdTipoIncidente() +
+                        ", Usuario: " + inc.getIdReportador() +
+                        ", Fecha: " + inc.getFecha() +
+                        ", Hora: " + inc.getHora() +
+                        ", Desc: " + (inc.getDescripcion() != null ? inc.getDescripcion().substring(0, Math.min(50, inc.getDescripcion().length())) : "NULL"));
+                    
+                    incidentes.add(inc);
                 }
-                System.out.println("✅ IncidenteDAO.listar: Total de incidentes encontrados: " + contador);
+                System.out.println("✅ IncidenteDAO.listar: Total de incidentes encontrados y agregados: " + contador);
             }
         } catch (SQLException e) {
             System.err.println("❌ IncidenteDAO.listar: Error SQL: " + e.getMessage());
@@ -107,7 +122,7 @@ public class IncidenteDAO {
     }
 
     public Incidente buscarPorId(int id) {
-        String sql = "SELECT id_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario, descripcion, fecha_incidente, hora_incidente "
+        String sql = "SELECT id_incidente, descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario "
                 + "FROM registro_incidente WHERE id_incidente=?";
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -137,7 +152,7 @@ public class IncidenteDAO {
 
     public List<Incidente> filtrar(ReportFilter filtro) {
         List<Incidente> incidentes = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT id_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario, descripcion, fecha_incidente, hora_incidente "
+        StringBuilder sql = new StringBuilder("SELECT id_incidente, descripcion, fecha_incidente, hora_incidente, ambiente_id, tipo_inc_id, usuario_id_usuario "
                 + "FROM registro_incidente WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -162,7 +177,7 @@ public class IncidenteDAO {
             params.add(java.sql.Date.valueOf(filtro.getFechaHasta()));
         }
 
-        sql.append(" ORDER BY fecha_incidente DESC, hora_incidente DESC");
+        sql.append(" ORDER BY fecha_incidente ASC, hora_incidente ASC");
 
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql.toString())) {
@@ -182,19 +197,65 @@ public class IncidenteDAO {
 
     private Incidente mapRow(ResultSet rs) throws SQLException {
         Incidente incidente = new Incidente();
-        incidente.setIdIncidente(rs.getInt("id_incidente"));
-        incidente.setIdAmbiente(rs.getInt("ambiente_id"));
-        incidente.setIdTipoIncidente(rs.getInt("tipo_inc_id"));
-        incidente.setIdReportador(rs.getInt("usuario_id_usuario"));
-        incidente.setDescripcion(rs.getString("descripcion"));
-        java.sql.Date f = rs.getDate("fecha_incidente");
-        if (f != null) {
-            incidente.setFecha(f.toLocalDate());
+        try {
+            incidente.setIdIncidente(rs.getInt("id_incidente"));
+            System.out.println("      [mapRow] ID establecido: " + incidente.getIdIncidente());
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener id_incidente: " + e.getMessage());
         }
-        java.sql.Time t = rs.getTime("hora_incidente");
-        if (t != null) {
-            incidente.setHora(t.toLocalTime());
+        
+        try {
+            incidente.setIdAmbiente(rs.getInt("ambiente_id"));
+            System.out.println("      [mapRow] Ambiente establecido: " + incidente.getIdAmbiente());
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener ambiente_id: " + e.getMessage());
         }
+        
+        try {
+            incidente.setIdTipoIncidente(rs.getInt("tipo_inc_id"));
+            System.out.println("      [mapRow] Tipo establecido: " + incidente.getIdTipoIncidente());
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener tipo_inc_id: " + e.getMessage());
+        }
+        
+        try {
+            incidente.setIdReportador(rs.getInt("usuario_id_usuario"));
+            System.out.println("      [mapRow] Reportador establecido: " + incidente.getIdReportador());
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener usuario_id_usuario: " + e.getMessage());
+        }
+        
+        try {
+            incidente.setDescripcion(rs.getString("descripcion"));
+            System.out.println("      [mapRow] Descripción establecida: " + (incidente.getDescripcion() != null ? incidente.getDescripcion().substring(0, Math.min(30, incidente.getDescripcion().length())) : "NULL"));
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener descripcion: " + e.getMessage());
+        }
+        
+        try {
+            java.sql.Date f = rs.getDate("fecha_incidente");
+            if (f != null) {
+                incidente.setFecha(f.toLocalDate());
+                System.out.println("      [mapRow] Fecha establecida: " + incidente.getFecha());
+            } else {
+                System.err.println("      [mapRow] fecha_incidente es NULL en la base de datos");
+            }
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener fecha_incidente: " + e.getMessage());
+        }
+        
+        try {
+            java.sql.Time t = rs.getTime("hora_incidente");
+            if (t != null) {
+                incidente.setHora(t.toLocalTime());
+                System.out.println("      [mapRow] Hora establecida: " + incidente.getHora());
+            } else {
+                System.err.println("      [mapRow] hora_incidente es NULL en la base de datos");
+            }
+        } catch (Exception e) {
+            System.err.println("      [mapRow] Error al obtener hora_incidente: " + e.getMessage());
+        }
+        
         return incidente;
     }
 }
