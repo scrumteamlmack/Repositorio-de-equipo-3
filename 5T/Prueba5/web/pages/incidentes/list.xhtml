@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Incidentes - L-MACK</ui:define>
+    <ui:define name="moduleTitle">Gestión de Incidentes</ui:define>
+
+    <ui:define name="content">
+        <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/incidentes.css"/>
+        
+        <div class="incidente-container">
+            <h2>📋 Lista de Incidentes</h2>
+            
+            <h:form id="frmIncidentes" styleClass="ui-fluid">
+                <p:commandButton value="➕ Nuevo Incidente"
+                                 styleClass="btn btn-primary"
+                                 actionListener="#{incidenteBean.prepararNuevo}"
+                                 update="dialogIncidente"
+                                 oncomplete="PF('dlgIncidente').show()"
+                                 ajax="false"/>
+
+                <div class="tabla-container">
+                    <p:dataTable id="tablaIncidentes" value="#{incidenteBean.incidentes}" var="inc" 
+                                 paginator="true" rows="10"
+                                 emptyMessage="⚠️ No hay incidentes registrados."
+                                 styleClass="table table-striped table-hover"
+                                 style="margin-top:1rem;">
+                        <p:column headerText="ID" style="width:80px;">#{inc.idIncidente}</p:column>
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{inc.descripcion != null ? inc.descripcion : 'Sin descripción'}"/>
+                        </p:column>
+                        <p:column headerText="Fecha" style="width:120px;">
+                            <h:outputText value="#{inc.fecha}">
+                                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Hora" style="width:100px;">
+                            <h:outputText value="#{inc.hora}">
+                                <f:convertDateTime pattern="HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Ambiente" style="width:100px;">#{inc.idAmbiente}</p:column>
+                        <p:column headerText="Tipo" style="width:120px;">#{inc.idTipoIncidente}</p:column>
+                        <p:column headerText="Instructor" style="width:150px;">
+                            <h:outputText value="#{inc.idReportador}"/>
+                        </p:column>
+                        <p:column headerText="Acciones" style="width:200px;">
+                            <div style="display: flex; gap: 5px;">
+                                <p:commandButton value="Editar"
+                                                 styleClass="btn btn-sm btn-warning"
+                                                 actionListener="#{incidenteBean.editar(inc.idIncidente)}"
+                                                 update="dialogIncidente"
+                                                 oncomplete="PF('dlgIncidente').show()"
+                                                 ajax="false"/>
+                                <p:commandButton value="Eliminar"
+                                                 styleClass="btn btn-sm btn-danger"
+                                                 actionListener="#{incidenteBean.eliminar(inc.idIncidente)}"
+                                                 update="tablaIncidentes"
+                                                 onclick="return confirm('¿Eliminar este incidente?');"
+                                                 ajax="false"/>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+
+            <p:dialog widgetVar="dlgIncidente" header="Registro de Incidente" modal="true" width="650"
+                      resizable="false" id="dialogIncidente">
+                <h:form styleClass="ui-fluid">
+                    <p:panelGrid columns="2" columnClasses="col, col">
+                        <p:outputLabel value="Descripción"/>
+                        <p:inputTextarea value="#{incidenteBean.incidente.descripcion}" autoResize="false"/>
+
+                        <p:outputLabel value="Fecha" required="true"/>
+                        <p:datePicker value="#{incidenteBean.incidente.fecha}" showIcon="true"
+                                      pattern="dd/MM/yyyy" required="true"/>
+
+                        <p:outputLabel value="Hora" required="true"/>
+                        <p:inputText value="#{incidenteBean.incidente.hora}" required="true" 
+                                     placeholder="HH:mm (ej: 14:30)" style="width:100%;"/>
+
+                        <p:outputLabel value="Ambiente" required="true"/>
+                        <p:selectOneMenu value="#{incidenteBean.incidente.idAmbiente}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{incidenteBean.ambientes}" var="amb"
+                                           itemLabel="#{amb.numero} - #{amb.tipo}"
+                                           itemValue="#{amb.idAmbiente}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Tipo de Incidente" required="true"/>
+                        <p:selectOneMenu value="#{incidenteBean.incidente.idTipoIncidente}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{incidenteBean.tiposIncidente}" var="tipo"
+                                           itemLabel="#{tipo.nombre}"
+                                           itemValue="#{tipo.idTipoIncidente}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Instructor" required="true"/>
+                        <p:selectOneMenu value="#{incidenteBean.incidente.idReportador}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{incidenteBean.instructores}" var="inst"
+                                           itemLabel="#{inst.nombre}"
+                                           itemValue="#{inst.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+
+                    <p:commandButton value="Guardar" actionListener="#{incidenteBean.guardar}"
+                                     update=":frmIncidentes:tablaIncidentes"
+                                     oncomplete="PF('dlgIncidente').hide()"
+                                     styleClass="btn-registrar"
+                                     ajax="false"/>
+                    <p:commandButton value="Cancelar" onclick="PF('dlgIncidente').hide()"
+                                     styleClass="btn-secondary"/>
+                </h:form>
+            </p:dialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

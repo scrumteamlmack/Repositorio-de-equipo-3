@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Listar Usuarios - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .search-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <h:form id="formListar">
+
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="title">L-MACK</div>
+            <div class="menu">
+                <p:commandButton value="Inicio"
+                                 icon="pi pi-home"
+                                 action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                                 styleClass="btn-secondary"
+                                 ajax="false"/>
+                <p:menuButton value="Usuarios" icon="pi pi-users">
+                    <p:menuitem value="Crear Usuario"
+                                icon="pi pi-plus"
+                                outcome="/pages/admin/formUsuario.xhtml"/>
+                    <p:menuitem value="Listar Usuarios"
+                                icon="pi pi-list"
+                                outcome="/pages/admin/listarUsuarios.xhtml"/>
+                </p:menuButton>
+                <p:commandButton value="Cerrar sesión"
+                                 icon="pi pi-sign-out"
+                                 action="#{loginBean.cerrarSesion}"
+                                 styleClass="btn-secondary"
+                                 ajax="false"/>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content">
+            <div class="form-header">
+                <h2><i class="pi pi-users" style="margin-right: 10px;"></i>Lista de Usuarios</h2>
+            </div>
+
+            <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+            <div class="search-section">
+                <div style="display: flex; gap: 10px; align-items: end;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Buscar:</label>
+                        <p:inputText value="#{usuarioBean.textoBusqueda}" 
+                                     placeholder="Nombre, apellido o documento"
+                                     style="width: 100%;"/>
+                    </div>
+                    <div>
+                        <p:commandButton value="Buscar"
+                                         actionListener="#{usuarioBean.filtrar}"
+                                         icon="pi pi-search"
+                                         styleClass="btn btn-primary"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3 style="color: var(--primary-green); margin-bottom: 20px; font-weight: 600;">Usuarios Registrados</h3>
+                <p:dataTable value="#{usuarioBean.usuarios}" var="u" 
+                             emptyMessage="No hay usuarios registrados"
+                             paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15,20"
+                             styleClass="table table-striped table-hover">
+
+                    <p:column headerText="ID" style="width: 60px;">
+                        <h:outputText value="#{u.idUsuario}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre Completo">
+                        <h:outputText value="#{u.PNombre} #{u.PApellido}" />
+                    </p:column>
+
+                    <p:column headerText="Documento">
+                        <h:outputText value="#{u.tipoDocumento} #{u.numDocumento}" />
+                    </p:column>
+
+                    <p:column headerText="Correo">
+                        <h:outputText value="#{u.correo}" />
+                    </p:column>
+
+                    <p:column headerText="Rol">
+                        <h:outputText value="#{usuarioBean.obtenerNombreRol(u.idUsuario)}" />
+                    </p:column>
+
+                    <p:column headerText="Acciones" style="width: 150px;">
+                        <div style="display: flex; gap: 5px;">
+                            <p:commandButton icon="pi pi-pencil"
+                                             title="Editar"
+                                             action="#{usuarioBean.editar(u.idUsuario)}"
+                                             ajax="false"
+                                             styleClass="btn btn-sm btn-secondary"/>
+                            <p:commandButton icon="pi pi-trash"
+                                             title="Eliminar"
+                                             actionListener="#{usuarioBean.eliminar(u.idUsuario)}"
+                                             update="@form"
+                                             styleClass="btn btn-sm btn-danger"
+                                             onclick="return confirm('¿Está seguro de eliminar este usuario?');"/>
+                        </div>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+
+        </div>
+
+    </h:form>
+
+</h:body>
+</html>

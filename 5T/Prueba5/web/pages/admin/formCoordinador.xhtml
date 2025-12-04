@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registrar Coordinador - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+
+<h:form id="formCoordinador">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">L-MACK</div>
+        <div class="menu">
+            <p:commandButton value="Inicio"
+                             icon="pi pi-home"
+                             action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+            <p:menuButton value="Usuarios" icon="pi pi-users">
+                <p:menuitem value="Crear Usuario"
+                            icon="pi pi-plus"
+                            outcome="/pages/admin/formUsuario.xhtml"/>
+                <p:menuitem value="Listar Usuarios"
+                            icon="pi pi-list"
+                            outcome="/pages/admin/listarUsuarios.xhtml"/>
+            </p:menuButton>
+            <p:commandButton value="Cerrar sesión"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.cerrarSesion}"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{coordinadorBean.idUsuario}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+            <f:event type="preRenderView" listener="#{coordinadorBean.init}" />
+        </f:metadata>
+
+        <div class="form-header">
+            <h2><i class="pi pi-briefcase" style="margin-right: 10px;"></i>Registrar Coordinador</h2>
+        </div>
+
+        <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+        <p:panel header="Datos del Coordinador">
+            <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+                
+                <h:outputLabel value="Coordinación:" for="coordinacion" />
+                <p:selectOneMenu id="coordinacion" 
+                                 value="#{coordinadorBean.coordinador.coordinacionId}" 
+                                 required="true"
+                                 requiredMessage="Debe seleccionar una coordinación">
+                    <f:selectItem itemLabel="Seleccione una coordinación" itemValue="0" />
+                    <f:selectItems value="#{coordinadorBean.coordinaciones}" 
+                                  var="c"
+                                  itemLabel="#{c.nombreCoordinacion}" 
+                                  itemValue="#{c.idCoordinacion}" />
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+
+            <div class="form-actions">
+                <p:commandButton value="Guardar Coordinador"
+                                 action="#{coordinadorBean.guardar}"
+                                 icon="pi pi-save"
+                                 ajax="false"
+                                 styleClass="btn-primary"/>
+            </div>
+
+        </p:panel>
+    </div>
+
+</h:form>
+
+</h:body>
+</html>

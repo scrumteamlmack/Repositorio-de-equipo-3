@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Panel Aprendiz - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form>
+
+        <!-- NAVBAR SUPERIOR -->
+        <div class="navbar">
+            <div class="title">L-MACK</div>
+            <div class="menu">
+                <p:commandButton value="Inicio"
+                                 icon="pi pi-home"
+                                 action="index.xhtml?faces-redirect=true"
+                                 styleClass="btn-secondary"/>
+                <p:commandButton value="Mi Perfil"
+                                 icon="pi pi-user"
+                                 action="/pages/perfil.xhtml?faces-redirect=true"
+                                 styleClass="btn-secondary"
+                                 ajax="false"/>
+                <p:commandButton value="Cerrar sesión"
+                                 icon="pi pi-sign-out"
+                                 action="#{loginBean.cerrarSesion}"
+                                 styleClass="btn-secondary"/>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="content">
+            <div class="form-header">
+                <h2>Panel del Aprendiz</h2>
+            </div>
+            
+            <!-- MENSAJE DE BIENVENIDA -->
+            <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 20px; border-radius: 8px;">
+                <h3 style="margin: 0; color: white;">
+                    <i class="pi pi-user" style="margin-right: 10px;"></i>
+                    Bienvenido, #{loginBean.usuarioAutenticado.nombre}
+                </h3>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Aquí podrás gestionar tus actividades y consultar información relevante</p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3 style="color: var(--primary-green); margin-bottom: 15px;">Información del Aprendiz</h3>
+                <p style="color: #6c757d; line-height: 1.6;">Aquí podrás gestionar tus actividades y consultar información relevante.</p>
+            </div>
+        </div>
+
+    </h:form>
+
+</h:body>
+</html>

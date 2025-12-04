@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registrar Guarda de Seguridad - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+
+<h:form id="formGuarda">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">L-MACK</div>
+        <div class="menu">
+            <p:commandButton value="Inicio"
+                             icon="pi pi-home"
+                             action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+            <p:menuButton value="Usuarios" icon="pi pi-users">
+                <p:menuitem value="Crear Usuario"
+                            icon="pi pi-plus"
+                            outcome="/pages/admin/formUsuario.xhtml"/>
+                <p:menuitem value="Listar Usuarios"
+                            icon="pi pi-list"
+                            outcome="/pages/admin/listarUsuarios.xhtml"/>
+            </p:menuButton>
+            <p:commandButton value="Cerrar sesión"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.cerrarSesion}"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{guardaSeguridadBean.idUsuario}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+            <f:event type="preRenderView" listener="#{guardaSeguridadBean.init}" />
+        </f:metadata>
+
+        <div class="form-header">
+            <h2><i class="pi pi-shield" style="margin-right: 10px;"></i>Registrar Guarda de Seguridad</h2>
+        </div>
+
+        <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+        <p:panel header="Datos del Guarda de Seguridad">
+            <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+                
+                <h:outputLabel value="Turno:" for="turno" />
+                <p:selectOneMenu id="turno" 
+                                 value="#{guardaSeguridadBean.guardaSeguridad.turno}" 
+                                 required="true"
+                                 requiredMessage="Debe seleccionar un turno">
+                    <f:selectItem itemLabel="Seleccione un turno" itemValue="" />
+                    <f:selectItems value="#{guardaSeguridadBean.turnos}" />
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Fecha de Ingreso:" for="fechaIngreso" />
+                <p:calendar id="fechaIngreso" 
+                            value="#{guardaSeguridadBean.guardaSeguridad.fechaIngreso}" 
+                            required="true"
+                            requiredMessage="Debe seleccionar una fecha de ingreso"
+                            pattern="dd/MM/yyyy"
+                            showOn="button"
+                            navigator="true"/>
+
+                <h:outputLabel value="Estado:" for="estado" />
+                <p:selectOneMenu id="estado" 
+                                 value="#{guardaSeguridadBean.guardaSeguridad.estado}" 
+                                 required="true">
+                    <f:selectItem itemLabel="Activo" itemValue="Activo" />
+                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+
+            <div class="form-actions">
+                <p:commandButton value="Guardar Guarda de Seguridad"
+                                 action="#{guardaSeguridadBean.guardar}"
+                                 icon="pi pi-save"
+                                 ajax="false"
+                                 styleClass="btn-primary"/>
+            </div>
+
+        </p:panel>
+    </div>
+
+</h:form>
+
+</h:body>
+</html>

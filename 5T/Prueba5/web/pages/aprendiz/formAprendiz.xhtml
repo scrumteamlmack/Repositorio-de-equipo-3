@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Registrar Aprendiz - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+
+<h:form id="formAprendiz">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">L-MACK</div>
+        <div class="menu">
+            <p:commandButton value="Inicio"
+                             icon="pi pi-home"
+                             action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                             styleClass="btn-secondary"/>
+            <p:menuButton value="Usuarios" icon="pi pi-users">
+                <p:menuitem value="Crear Usuario"
+                            icon="pi pi-plus"
+                            url="/pages/admin/formUsuario.xhtml"/>
+                <p:menuitem value="Listar Usuarios"
+                            icon="pi pi-list"
+                            url="/pages/admin/listarUsuarios.xhtml"/>
+            </p:menuButton>
+            <p:commandButton value="Cerrar sesión"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.cerrarSesion}"
+                             styleClass="btn-secondary"/>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{aprendizBean.idUsuario}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+        </f:metadata>
+
+        <div class="form-header">
+            <h2><i class="pi pi-graduation-cap" style="margin-right: 10px;"></i>Registrar Aprendiz</h2>
+        </div>
+
+        <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+        <p:panel header="Datos del Aprendiz">
+            <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+
+                <h:outputLabel value="Programa:" for="programa" />
+                <p:selectOneMenu id="programa" 
+                                 value="#{aprendizBean.aprendiz.programaId}" 
+                                 required="true" 
+                                 requiredMessage="Debe seleccionar un programa">
+                    <f:selectItem itemLabel="Seleccione un programa" itemValue="0" />
+                    <f:selectItems value="#{aprendizBean.programas}" 
+                                  var="p"
+                                  itemLabel="#{p.nombrePrograma}" 
+                                  itemValue="#{p.idProgramas}" />
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Ficha:" for="ficha" />
+                <p:selectOneMenu id="ficha" 
+                                 value="#{aprendizBean.aprendiz.fichaId}" 
+                                 required="true" 
+                                 requiredMessage="Debe seleccionar una ficha">
+                    <f:selectItem itemLabel="Seleccione una ficha" itemValue="0" />
+                    <f:selectItems value="#{aprendizBean.fichas}"
+                                  var="f"
+                                  itemLabel="#{f.numFicha}" 
+                                  itemValue="#{f.idFicha}" />
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+
+            <div class="form-actions">
+                <p:commandButton value="Guardar Aprendiz"
+                                 action="#{aprendizBean.guardar}"
+                                 icon="pi pi-save"
+                                 ajax="false"
+                                 styleClass="btn-primary"/>
+            </div>
+
+        </p:panel>
+    </div>
+
+</h:form>
+
+</h:body>
+</html>
