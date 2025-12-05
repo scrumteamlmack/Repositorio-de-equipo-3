@@ -3,8 +3,8 @@ package dao;
 import modelo.TrasladoRecurso;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -86,7 +86,7 @@ public class TrasladoRecursoDAO {
                 ps.setInt(1, traslado.getRecursoId());
                 ps.setInt(2, traslado.getAmbienteOrigenId());
                 ps.setInt(3, traslado.getAmbienteDestinoId());
-                ps.setTimestamp(4, Timestamp.valueOf(traslado.getFechaTraslado()));
+                ps.setTimestamp(4, new Timestamp(traslado.getFechaTraslado() != null ? traslado.getFechaTraslado().getTime() : new Date().getTime()));
                 ps.setString(5, traslado.getObservacion());
                 ps.executeUpdate();
                 
@@ -180,7 +180,7 @@ public class TrasladoRecursoDAO {
         
         Timestamp ts = rs.getTimestamp("fecha_traslado");
         if (ts != null) {
-            traslado.setFechaTraslado(ts.toLocalDateTime());
+            traslado.setFechaTraslado(new Date(ts.getTime()));
         }
         
         traslado.setObservacion(rs.getString("observacion"));

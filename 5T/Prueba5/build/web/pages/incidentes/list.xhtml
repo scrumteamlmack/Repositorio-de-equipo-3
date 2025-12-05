@@ -26,6 +26,7 @@
                 <div class="tabla-container">
                     <p:dataTable id="tablaIncidentes" value="#{incidenteBean.incidentes}" var="inc" 
                                  paginator="true" rows="10"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                  emptyMessage="⚠️ No hay incidentes registrados."
                                  styleClass="table table-striped table-hover"
                                  style="margin-top:1rem;">
@@ -48,16 +49,16 @@
                         <p:column headerText="Instructor" style="width:150px;">
                             <h:outputText value="#{inc.idReportador}"/>
                         </p:column>
-                        <p:column headerText="Acciones" style="width:200px;">
-                            <div style="display: flex; gap: 5px;">
+                        <p:column headerText="Acciones" style="width: 200px; text-align: center;">
+                            <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
                                 <p:commandButton value="Editar"
-                                                 styleClass="btn btn-sm btn-warning"
+                                                 style="background: #ffc107; color: #333; border: none; padding: 6px 12px; border-radius: 5px; font-weight: 500; font-size: 13px;"
                                                  actionListener="#{incidenteBean.editar(inc.idIncidente)}"
                                                  update="dialogIncidente"
                                                  oncomplete="PF('dlgIncidente').show()"
                                                  ajax="false"/>
                                 <p:commandButton value="Eliminar"
-                                                 styleClass="btn btn-sm btn-danger"
+                                                 style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; font-weight: 500; font-size: 13px;"
                                                  actionListener="#{incidenteBean.eliminar(inc.idIncidente)}"
                                                  update="tablaIncidentes"
                                                  onclick="return confirm('¿Eliminar este incidente?');"
@@ -75,8 +76,8 @@
                         <p:inputTextarea value="#{incidenteBean.incidente.descripcion}" autoResize="false"/>
 
                         <p:outputLabel value="Fecha" required="true"/>
-                        <p:datePicker value="#{incidenteBean.incidente.fecha}" showIcon="true"
-                                      pattern="dd/MM/yyyy" required="true"/>
+                        <p:calendar value="#{incidenteBean.incidente.fecha}" showOn="button"
+                                   pattern="dd/MM/yyyy" navigator="true" required="true"/>
 
                         <p:outputLabel value="Hora" required="true"/>
                         <p:inputText value="#{incidenteBean.incidente.hora}" required="true" 

@@ -13,8 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class TrasladoRecursoBean implements Serializable {
     public void prepararNuevo() {
         System.out.println("🔍 TrasladoRecursoBean.prepararNuevo: Preparando nuevo traslado");
         traslado = new TrasladoRecurso();
-        traslado.setFechaTraslado(LocalDateTime.now());
+        traslado.setFechaTraslado(new Date());
         fechaDate = new Date();
         idTrasladoEditar = null;
     }
@@ -100,7 +99,7 @@ public class TrasladoRecursoBean implements Serializable {
 
         // Establecer fecha
         if (fechaDate != null) {
-            traslado.setFechaTraslado(LocalDateTime.now());
+            traslado.setFechaTraslado(new Date());
         }
 
         int idGenerado = trasladoDAO.guardar(traslado);
@@ -137,11 +136,12 @@ public class TrasladoRecursoBean implements Serializable {
     }
 
     // Métodos auxiliares para formatear
-    public String formatearFecha(LocalDateTime fecha) {
+    public String formatearFecha(Date fecha) {
         if (fecha == null) {
             return "-";
         }
-        return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return sdf.format(fecha);
     }
 
     public String getNombreAmbiente(int idAmbiente) {

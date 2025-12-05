@@ -10,6 +10,12 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="id" value="#{guardaSeguridadBean.idUsuario}">
+            <f:converter converterId="javax.faces.Integer" />
+        </f:viewParam>
+        <f:event type="preRenderView" listener="#{guardaSeguridadBean.init}" />
+    </f:metadata>
 
 <h:form id="formGuarda">
 
@@ -40,13 +46,6 @@
 
     <!-- CONTENIDO -->
     <div class="content">
-        <f:metadata>
-            <f:viewParam name="id" value="#{guardaSeguridadBean.idUsuario}">
-                <f:converter converterId="javax.faces.Integer" />
-            </f:viewParam>
-            <f:event type="preRenderView" listener="#{guardaSeguridadBean.init}" />
-        </f:metadata>
-
         <div class="form-header">
             <h2><i class="pi pi-shield" style="margin-right: 10px;"></i>Registrar Guarda de Seguridad</h2>
         </div>

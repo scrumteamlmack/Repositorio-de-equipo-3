@@ -136,77 +136,95 @@
             color: white;
             border-color: var(--primary-green);
         }
+        /* Estilos para paginador */
+        .ui-paginator {
+            background: transparent !important;
+            border: none !important;
+            padding: 15px 0 !important;
+        }
+        .ui-paginator .ui-paginator-page,
+        .ui-paginator .ui-paginator-first,
+        .ui-paginator .ui-paginator-prev,
+        .ui-paginator .ui-paginator-next,
+        .ui-paginator .ui-paginator-last {
+            background: #f8f9fa !important;
+            border: 1px solid #dee2e6 !important;
+            color: #495057 !important;
+            min-width: 2.5rem !important;
+            height: 2.5rem !important;
+            border-radius: 6px !important;
+            margin: 0 2px !important;
+        }
+        .ui-paginator .ui-paginator-page.ui-state-active {
+            background: var(--primary-green) !important;
+            border-color: var(--primary-green) !important;
+            color: white !important;
+        }
+        .ui-paginator .ui-paginator-page:hover,
+        .ui-paginator .ui-paginator-first:hover,
+        .ui-paginator .ui-paginator-prev:hover,
+        .ui-paginator .ui-paginator-next:hover,
+        .ui-paginator .ui-paginator-last:hover {
+            background: #e9ecef !important;
+        }
+        .ui-paginator-rpp-options {
+            border: 1px solid #dee2e6 !important;
+            border-radius: 6px !important;
+            padding: 5px 10px !important;
+        }
     </style>
 </h:head>
 
 <h:body>
     <f:metadata>
-        <f:event type="preRenderView" listener="#{loginBean.verificarSesion(2)}"/>
+        <f:viewAction action="#{loginBean.verificarSesionInstructor()}"/>
+        <f:viewAction action="#{ambienteBean.init()}"/>
     </f:metadata>
 
-    <h:form id="mainForm">
-        <!-- NAVBAR SUPERIOR -->
-        <div class="navbar">
-            <div class="title">L-MACK</div>
-            <div class="menu">
-                <p:commandButton value="Inicio"
-                                 icon="pi pi-home"
-                                 action="/pages/instructor/index.xhtml?faces-redirect=true"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
-                <p:menuButton value="Módulos" icon="pi pi-th-large" styleClass="btn btn-secondary">
-                    <p:menuitem value="Mis Fichas" icon="pi pi-file" outcome="/pages/instructor/misFichas.xhtml"/>
-                    <p:menuitem value="Asistencia" icon="pi pi-check-circle" outcome="/pages/asistencia/list.xhtml"/>
-                    <p:menuitem value="Minutas" icon="pi pi-file" outcome="/pages/minutas/list.xhtml"/>
-                    <p:menuitem value="Incidentes" icon="pi pi-exclamation-triangle" outcome="/pages/instructor/listarIncidentes.xhtml"/>
-                    <p:menuitem value="Traslados" icon="pi pi-sync" outcome="/pages/traslados/list.xhtml"/>
-                </p:menuButton>
-                <p:commandButton value="Cerrar sesión"
-                                 icon="pi pi-sign-out"
-                                 action="#{loginBean.cerrarSesion}"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
+    <div class="dashboard-container" style="display: flex; min-height: 100vh;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" style="width: 260px; background: linear-gradient(180deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; position: fixed; height: 100vh; overflow-y: auto;">
+            <div class="sidebar-header" style="padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <h2 style="margin: 0; font-size: 24px; color: white;">🎓 L-MACK</h2>
+                <p style="margin: 5px 0 0; font-size: 12px; opacity: 0.8;">Panel Instructor</p>
             </div>
-        </div>
+            <nav style="padding: 15px 0;">
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Principal</p>
+                <h:link outcome="/pages/instructor/index.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">🏠 Inicio</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Gestión Académica</p>
+                <h:link outcome="/pages/instructor/misFichas.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📁 Mis Fichas</h:link>
+                <h:link outcome="/pages/asistencia/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📋 Asistencia</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Ambientes y Recursos</p>
+                <h:link outcome="/pages/instructor/ambientes.xhtml" style="display: block; color: white; text-decoration: none; padding: 12px 25px; border-left: 3px solid white; font-size: 14px; background: rgba(255,255,255,0.15);">🏢 Ambientes</h:link>
+                <h:link outcome="/pages/minutas/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📝 Minutas</h:link>
+                <h:link outcome="/pages/traslados/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📦 Traslados</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Incidentes</p>
+                <h:link outcome="/pages/instructor/formIncidente.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">⚠️ Registrar</h:link>
+                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📋 Mis Incidentes</h:link>
+            </nav>
+            <div style="position: absolute; bottom: 20px; left: 0; right: 0; padding: 0 20px;">
+                <h:form>
+                    <p:commandButton value="🚪 Cerrar Sesión" 
+                                     action="#{loginBean.cerrarSesion}"
+                                     style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; cursor: pointer;"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
 
-        <div class="content ambiente-container">
+        <!-- MAIN CONTENT -->
+        <main style="flex: 1; margin-left: 260px; padding: 20px; background: var(--cream-bg);">
+            <h:form id="mainForm">
+                <div class="ambiente-container">
             <div class="form-header">
                 <h2>🏢 Ambientes de Formación</h2>
                 <p style="color: #666;">Consulta la disponibilidad y estado de los ambientes</p>
             </div>
 
             <p:messages id="msgs" showSummary="true" closable="true" severity="info,error,warn"/>
-
-            <!-- FILTROS -->
-            <div class="filter-section">
-                <h4>🔎 Filtros de Búsqueda</h4>
-                <div class="row">
-                    <div class="col-md-3">
-                        <label style="font-weight: 600; margin-bottom: 5px; display: block;">Número:</label>
-                        <p:inputText id="filtroNumero" 
-                                     placeholder="Buscar por número..."
-                                     styleClass="filter-input"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label style="font-weight: 600; margin-bottom: 5px; display: block;">Capacidad:</label>
-                        <p:inputText id="filtroCapacidad" 
-                                     placeholder="Buscar por capacidad..."
-                                     styleClass="filter-input"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label style="font-weight: 600; margin-bottom: 5px; display: block;">Tipo:</label>
-                        <p:inputText id="filtroTipo" 
-                                     placeholder="Buscar por tipo..."
-                                     styleClass="filter-input"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label style="font-weight: 600; margin-bottom: 5px; display: block;">Estado:</label>
-                        <p:inputText id="filtroEstado" 
-                                     placeholder="Buscar por estado..."
-                                     styleClass="filter-input"/>
-                    </div>
-                </div>
-            </div>
 
             <!-- TABLA DE AMBIENTES -->
             <div class="table-section">
@@ -218,12 +236,12 @@
                              paginator="true" 
                              rows="10"
                              rowsPerPageTemplate="5,10,15,20"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              emptyMessage="No hay ambientes registrados"
                              styleClass="table table-striped table-hover"
-                             filteredValue="#{ambienteBean.ambientesFiltrados}"
                              widgetVar="tablaAmbientesWidget">
                     
-                    <p:column headerText="ID" style="width: 60px; text-align: center;">
+                    <p:column headerText="ID" filterBy="#{amb.idAmbiente}" filterMatchMode="exact" style="width: 60px; text-align: center;">
                         <h:outputText value="#{amb.idAmbiente}"/>
                     </p:column>
                     
@@ -245,8 +263,8 @@
                     </p:column>
                     
                     <p:column headerText="Estado" filterBy="#{amb.estado}" filterMatchMode="contains">
-                        <p:tag severity="#{amb.estado eq 'Disponible' ? 'success' : (amb.estado eq 'Ocupado' ? 'warning' : 'danger')}"
-                               value="#{amb.estado}"/>
+                        <h:outputText value="#{amb.estado}"
+                                      style="padding:4px 12px; border-radius:12px; font-weight:600; color:white; background:#{amb.estado eq 'Disponible' ? '#28a745' : (amb.estado eq 'En Uso' or amb.estado eq 'Ocupado' ? '#ffc107' : '#dc3545')};"/>
                     </p:column>
                 </p:dataTable>
             </div>
@@ -278,8 +296,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </h:form>
+            </div>
+            </h:form>
+        </main>
+    </div>
 </h:body>
 </html>
 

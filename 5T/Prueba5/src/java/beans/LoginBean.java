@@ -129,6 +129,23 @@ public class LoginBean implements Serializable {
         return roles != null && roles.contains(roleId);
     }
 
+    // Métodos para verificar rol específico (útiles en vistas)
+    public boolean isEsAdmin() {
+        return hasRol(1);
+    }
+
+    public boolean isEsInstructor() {
+        return hasRol(2);
+    }
+
+    public boolean isEsAprendiz() {
+        return hasRol(3);
+    }
+
+    public boolean isEsGuarda() {
+        return hasRol(4);
+    }
+
     public void verificarSesion(int... rolesPermitidos) {
         if (!isAutenticado()) {
             FacesUtils.redirect("/faces/login.xhtml");
@@ -142,6 +159,31 @@ public class LoginBean implements Serializable {
             }
             FacesUtils.redirect("/faces/sinacceso.xhtml");
         }
+    }
+
+    // Métodos específicos para verificación de sesión por rol
+    public void verificarSesionInstructor() {
+        verificarSesion(2); // Rol 2 = Instructor
+    }
+
+    public void verificarSesionAdmin() {
+        verificarSesion(1); // Rol 1 = Administrador
+    }
+
+    public void verificarSesionAprendiz() {
+        verificarSesion(3); // Rol 3 = Aprendiz
+    }
+
+    public void verificarSesionGuarda() {
+        verificarSesion(4); // Rol 4 = Guarda de Seguridad
+    }
+
+    public void verificarSesionAdminInstructor() {
+        verificarSesion(1, 2); // Rol 1 = Admin, Rol 2 = Instructor
+    }
+
+    public void verificarSesionAdminGuarda() {
+        verificarSesion(1, 4); // Rol 1 = Admin, Rol 4 = Guarda
     }
 
     public String cerrarSesion() {

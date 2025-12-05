@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Minuta implements Serializable {
 
@@ -9,8 +9,8 @@ public class Minuta implements Serializable {
     private int ambienteId;
     private int guardaId;
     private int responsableId;
-    private LocalDateTime fechaRecibo;
-    private LocalDateTime fechaEntrega;
+    private Date fechaRecibo;
+    private Date fechaEntrega;
     private String novedad;
     private String descripcion;
     private String estado;
@@ -47,19 +47,19 @@ public class Minuta implements Serializable {
         this.responsableId = responsableId;
     }
 
-    public LocalDateTime getFechaRecibo() {
+    public Date getFechaRecibo() {
         return fechaRecibo;
     }
 
-    public void setFechaRecibo(LocalDateTime fechaRecibo) {
+    public void setFechaRecibo(Date fechaRecibo) {
         this.fechaRecibo = fechaRecibo;
     }
 
-    public LocalDateTime getFechaEntrega() {
+    public Date getFechaEntrega() {
         return fechaEntrega;
     }
 
-    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+    public void setFechaEntrega(Date fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
     }
 

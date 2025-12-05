@@ -8,9 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class IncidenteDAO {
@@ -78,8 +77,8 @@ public class IncidenteDAO {
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, incidente.getDescripcion());
-            ps.setDate(2, java.sql.Date.valueOf(incidente.getFecha() != null ? incidente.getFecha() : LocalDate.now()));
-            ps.setTime(3, java.sql.Time.valueOf(incidente.getHora() != null ? incidente.getHora() : LocalTime.now()));
+            ps.setDate(2, new java.sql.Date(incidente.getFecha() != null ? incidente.getFecha().getTime() : new Date().getTime()));
+            ps.setString(3, incidente.getHora() != null ? incidente.getHora() : "00:00");
             ps.setInt(4, incidente.getIdAmbiente());
             ps.setInt(5, incidente.getIdTipoIncidente());
             ps.setInt(6, incidente.getIdReportador());
@@ -102,15 +101,11 @@ public class IncidenteDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, incidente.getDescripcion());
             if (incidente.getFecha() != null) {
-                ps.setDate(2, java.sql.Date.valueOf(incidente.getFecha()));
+                ps.setDate(2, new java.sql.Date(incidente.getFecha().getTime()));
             } else {
-                ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                ps.setDate(2, new java.sql.Date(new Date().getTime()));
             }
-            if (incidente.getHora() != null) {
-                ps.setTime(3, java.sql.Time.valueOf(incidente.getHora()));
-            } else {
-                ps.setTime(3, java.sql.Time.valueOf(LocalTime.now()));
-            }
+            ps.setString(3, incidente.getHora() != null ? incidente.getHora() : "00:00");
             ps.setInt(4, incidente.getIdAmbiente());
             ps.setInt(5, incidente.getIdTipoIncidente());
             ps.setInt(6, incidente.getIdIncidente());
@@ -170,11 +165,11 @@ public class IncidenteDAO {
         }
         if (filtro.getFechaDesde() != null) {
             sql.append(" AND fecha_incidente >= ?");
-            params.add(java.sql.Date.valueOf(filtro.getFechaDesde()));
+            params.add(new java.sql.Date(filtro.getFechaDesde().getTime()));
         }
         if (filtro.getFechaHasta() != null) {
             sql.append(" AND fecha_incidente <= ?");
-            params.add(java.sql.Date.valueOf(filtro.getFechaHasta()));
+            params.add(new java.sql.Date(filtro.getFechaHasta().getTime()));
         }
 
         sql.append(" ORDER BY fecha_incidente ASC, hora_incidente ASC");
@@ -235,7 +230,7 @@ public class IncidenteDAO {
         try {
             java.sql.Date f = rs.getDate("fecha_incidente");
             if (f != null) {
-                incidente.setFecha(f.toLocalDate());
+                incidente.setFecha(new Date(f.getTime()));
                 System.out.println("      [mapRow] Fecha establecida: " + incidente.getFecha());
             } else {
                 System.err.println("      [mapRow] fecha_incidente es NULL en la base de datos");
@@ -247,7 +242,7 @@ public class IncidenteDAO {
         try {
             java.sql.Time t = rs.getTime("hora_incidente");
             if (t != null) {
-                incidente.setHora(t.toLocalTime());
+                incidente.setHora(t.toString());
                 System.out.println("      [mapRow] Hora establecida: " + incidente.getHora());
             } else {
                 System.err.println("      [mapRow] hora_incidente es NULL en la base de datos");

@@ -10,8 +10,11 @@
     <ui:define name="moduleTitle">Consultas y reportes</ui:define>
 
     <ui:define name="content">
+        <f:metadata>
+            <f:viewAction action="#{loginBean.verificarSesionAdmin()}"/>
+        </f:metadata>
+        
         <h:form id="frmReportes" styleClass="ui-fluid">
-            <f:event type="preRenderView" listener="#{loginBean.verificarSesion(1)}"/>
 
             <p:panel header="Filtros multicriterio">
                 <div class="ui-g">
@@ -45,10 +48,10 @@
                         </p:selectOneMenu>
                     </div>
                     <div class="ui-g-12 ui-md-3">
-                        <p:datePicker value="#{reporteBean.filtro.fechaDesde}" showIcon="true" placeholder="Desde"/>
+                        <p:calendar value="#{reporteBean.filtro.fechaDesde}" showOn="button" pattern="dd/MM/yyyy" navigator="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-3">
-                        <p:datePicker value="#{reporteBean.filtro.fechaHasta}" showIcon="true" placeholder="Hasta"/>
+                        <p:calendar value="#{reporteBean.filtro.fechaHasta}" showOn="button" pattern="dd/MM/yyyy" navigator="true"/>
                     </div>
                 </div>
                 <p:commandButton value="Filtrar"
@@ -62,7 +65,8 @@
             </p:panel>
 
             <p:panel id="panelIncidentes" header="Incidentes" style="margin-top:1.5rem;">
-                <p:dataTable value="#{reporteBean.incidentesFiltrados}" var="inc" paginator="true" rows="10">
+                <p:dataTable value="#{reporteBean.incidentesFiltrados}" var="inc" paginator="true" rows="10"
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="Fecha">
                         <h:outputText value="#{inc.fecha}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
@@ -82,12 +86,14 @@
             </p:panel>
 
             <p:panel id="panelRecursos" header="Recursos" style="margin-top:1.5rem;">
-                <p:dataTable value="#{reporteBean.recursosFiltrados}" var="rec" paginator="true" rows="10">
+                <p:dataTable value="#{reporteBean.recursosFiltrados}" var="rec" paginator="true" rows="10"
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="Nombre">#{rec.nombre}</p:column>
                     <p:column headerText="Tipo">#{rec.idTipoRecurso}</p:column>
                     <p:column headerText="Ambiente">#{rec.idAmbiente}</p:column>
                     <p:column headerText="Estado">
-                        <p:tag value="#{rec.estado}" severity="#{rec.estado eq 'Operativo' ? 'success' : 'warning'}"/>
+                        <h:outputText value="#{rec.estado}"
+                                      style="padding:4px 10px; border-radius:12px; font-weight:600; color:white; background:#{rec.estado eq 'Operativo' ? '#28a745' : '#ffc107'};"/>
                     </p:column>
                     <p:column headerText="Marca/Serial">#{rec.marca} / #{rec.serial}</p:column>
                 </p:dataTable>

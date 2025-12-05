@@ -8,8 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MinutaDAO {
@@ -35,8 +35,8 @@ public class MinutaDAO {
                 + "VALUES (?,?,?,?,?,?,?,?)";
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setTimestamp(1, Timestamp.valueOf(minuta.getFechaRecibo() != null ? minuta.getFechaRecibo() : LocalDateTime.now()));
-            ps.setTimestamp(2, Timestamp.valueOf(minuta.getFechaEntrega() != null ? minuta.getFechaEntrega() : LocalDateTime.now()));
+            ps.setTimestamp(1, new Timestamp(minuta.getFechaRecibo() != null ? minuta.getFechaRecibo().getTime() : new Date().getTime()));
+            ps.setTimestamp(2, new Timestamp(minuta.getFechaEntrega() != null ? minuta.getFechaEntrega().getTime() : new Date().getTime()));
             ps.setString(3, minuta.getNovedad());
             ps.setString(4, minuta.getDescripcion());
             ps.setString(5, minuta.getEstado());
@@ -61,14 +61,14 @@ public class MinutaDAO {
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
             if (minuta.getFechaRecibo() != null) {
-                ps.setTimestamp(1, Timestamp.valueOf(minuta.getFechaRecibo()));
+                ps.setTimestamp(1, new Timestamp(minuta.getFechaRecibo().getTime()));
             } else {
-                ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setTimestamp(1, new Timestamp(new Date().getTime()));
             }
             if (minuta.getFechaEntrega() != null) {
-                ps.setTimestamp(2, Timestamp.valueOf(minuta.getFechaEntrega()));
+                ps.setTimestamp(2, new Timestamp(minuta.getFechaEntrega().getTime()));
             } else {
-                ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setTimestamp(2, new Timestamp(new Date().getTime()));
             }
             ps.setString(3, minuta.getNovedad());
             ps.setString(4, minuta.getDescripcion());
@@ -118,11 +118,11 @@ public class MinutaDAO {
         minuta.setIdMinuta(rs.getInt("id_minuta"));
         Timestamp recibo = rs.getTimestamp("fecha_hora_recibo");
         if (recibo != null) {
-            minuta.setFechaRecibo(recibo.toLocalDateTime());
+            minuta.setFechaRecibo(new Date(recibo.getTime()));
         }
         Timestamp entrega = rs.getTimestamp("fecha_hora_entrega");
         if (entrega != null) {
-            minuta.setFechaEntrega(entrega.toLocalDateTime());
+            minuta.setFechaEntrega(new Date(entrega.getTime()));
         }
         minuta.setNovedad(rs.getString("novedad"));
         minuta.setDescripcion(rs.getString("descripcion_min"));

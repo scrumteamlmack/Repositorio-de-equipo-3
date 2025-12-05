@@ -1,9 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Date;
 
 public class Incidente implements Serializable {
 
@@ -12,8 +10,8 @@ public class Incidente implements Serializable {
     private int idTipoIncidente;
     private int idReportador;
     private String descripcion;
-    private LocalDate fecha;
-    private LocalTime hora;
+    private Date fecha;
+    private String hora;
 
     public int getIdIncidente() {
         return idIncidente;
@@ -55,19 +53,19 @@ public class Incidente implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
-    public LocalTime getHora() {
+    public String getHora() {
         return hora;
     }
 
-    public void setHora(LocalTime hora) {
+    public void setHora(String hora) {
         this.hora = hora;
     }
 }

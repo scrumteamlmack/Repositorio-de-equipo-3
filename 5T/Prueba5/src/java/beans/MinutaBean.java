@@ -15,7 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @ManagedBean(name = "minutaBean")
@@ -42,14 +42,14 @@ public class MinutaBean implements Serializable {
         guardas = guardaDAO.listar();
         instructores = instructorDAO.listar();
         ambientes = ambienteDAO.listar();
-        minuta.setFechaRecibo(LocalDateTime.now());
-        minuta.setFechaEntrega(LocalDateTime.now());
+        minuta.setFechaRecibo(new Date());
+        minuta.setFechaEntrega(new Date());
     }
 
     public void prepararNuevo() {
         minuta = new Minuta();
-        minuta.setFechaRecibo(LocalDateTime.now());
-        minuta.setFechaEntrega(LocalDateTime.now());
+        minuta.setFechaRecibo(new Date());
+        minuta.setFechaEntrega(new Date());
         minuta.setEstado("Normal");
         if (loginBean != null && loginBean.isAutenticado()) {
             minuta.setGuardaId(loginBean.getUsuarioAutenticado().getIdUsuario());

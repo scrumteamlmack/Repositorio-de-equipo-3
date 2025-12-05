@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Asistencia implements Serializable {
 
@@ -9,7 +9,7 @@ public class Asistencia implements Serializable {
     private int aprendizUsuarioId;
     private int instructorUsuarioId;
     private int jornadaId;
-    private LocalDate fecha;
+    private Date fecha;
     private String estado;
 
     public int getIdAsistencia() {
@@ -44,11 +44,11 @@ public class Asistencia implements Serializable {
         this.jornadaId = jornadaId;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

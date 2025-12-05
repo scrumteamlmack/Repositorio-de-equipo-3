@@ -3,13 +3,12 @@ package dao;
 import modelo.Asistencia;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AsistenciaDAO {
@@ -39,7 +38,7 @@ public class AsistenciaDAO {
             ps.setInt(2, asistencia.getInstructorUsuarioId());
             ps.setInt(3, asistencia.getJornadaId());
             ps.setString(4, asistencia.getEstado());
-            ps.setDate(5, Date.valueOf(asistencia.getFecha() != null ? asistencia.getFecha() : LocalDate.now()));
+            ps.setDate(5, new java.sql.Date(asistencia.getFecha() != null ? asistencia.getFecha().getTime() : new Date().getTime()));
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -62,9 +61,9 @@ public class AsistenciaDAO {
             ps.setInt(3, asistencia.getJornadaId());
             ps.setString(4, asistencia.getEstado());
             if (asistencia.getFecha() != null) {
-                ps.setDate(5, Date.valueOf(asistencia.getFecha()));
+                ps.setDate(5, new java.sql.Date(asistencia.getFecha().getTime()));
             } else {
-                ps.setDate(5, Date.valueOf(LocalDate.now()));
+                ps.setDate(5, new java.sql.Date(new Date().getTime()));
             }
             ps.setInt(6, asistencia.getIdAsistencia());
             return ps.executeUpdate() > 0;
@@ -109,9 +108,9 @@ public class AsistenciaDAO {
         asistencia.setAprendizUsuarioId(rs.getInt("aprendiz_Usuario_id_usuario"));
         asistencia.setInstructorUsuarioId(rs.getInt("instructor_Usuario_id_usuario"));
         asistencia.setJornadaId(rs.getInt("jornada_id"));
-        Date fecha = rs.getDate("fecha_inasistencia");
+        java.sql.Date fecha = rs.getDate("fecha_inasistencia");
         if (fecha != null) {
-            asistencia.setFecha(fecha.toLocalDate());
+            asistencia.setFecha(new Date(fecha.getTime()));
         }
         asistencia.setEstado(rs.getString("estado_inasistencia"));
         return asistencia;

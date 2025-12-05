@@ -80,6 +80,12 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="id" value="#{usuarioBean.idUsuarioEditar}">
+            <f:converter converterId="javax.faces.Integer" />
+        </f:viewParam>
+        <f:event type="preRenderView" listener="#{usuarioBean.initForm}" />
+    </f:metadata>
 
 <h:form id="formUsuario">
 
@@ -110,13 +116,6 @@
 
     <!-- CONTENIDO -->
     <div class="content">
-        <f:metadata>
-            <f:viewParam name="id" value="#{usuarioBean.idUsuarioEditar}">
-                <f:converter converterId="javax.faces.Integer" />
-            </f:viewParam>
-            <f:event type="preRenderView" listener="#{usuarioBean.initForm}" />
-        </f:metadata>
-        
         <div class="form-container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="mb-0">

@@ -115,8 +115,8 @@
                         </p:selectOneMenu>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <p:datePicker value="#{usuarioBean.guardaSeguridad.fechaIngreso}" showIcon="true"
-                                      pattern="dd/MM/yyyy" label="Fecha ingreso" required="true"/>
+                        <p:calendar value="#{usuarioBean.guardaSeguridad.fechaIngreso}" showOn="button"
+                                   pattern="dd/MM/yyyy" navigator="true" required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-4">
                         <p:selectOneMenu value="#{usuarioBean.guardaSeguridad.estado}" required="true">

@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Modelo para el traslado de recursos entre ambientes
@@ -12,7 +12,7 @@ public class TrasladoRecurso implements Serializable {
     private int recursoId;
     private int ambienteOrigenId;
     private int ambienteDestinoId;
-    private LocalDateTime fechaTraslado;
+    private Date fechaTraslado;
     private String observacion;
     
     // Campos auxiliares para mostrar información relacionada
@@ -21,7 +21,7 @@ public class TrasladoRecurso implements Serializable {
     private String ambienteDestino;
 
     public TrasladoRecurso() {
-        this.fechaTraslado = LocalDateTime.now();
+        this.fechaTraslado = new Date();
     }
 
     // Getters y Setters
@@ -57,11 +57,11 @@ public class TrasladoRecurso implements Serializable {
         this.ambienteDestinoId = ambienteDestinoId;
     }
 
-    public LocalDateTime getFechaTraslado() {
+    public Date getFechaTraslado() {
         return fechaTraslado;
     }
 
-    public void setFechaTraslado(LocalDateTime fechaTraslado) {
+    public void setFechaTraslado(Date fechaTraslado) {
         this.fechaTraslado = fechaTraslado;
     }
 

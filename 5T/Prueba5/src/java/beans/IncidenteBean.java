@@ -15,10 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -133,16 +130,16 @@ public class IncidenteBean implements Serializable {
                 incidente = existente;
                 
                 if (incidente.getHora() != null) {
-                    horaString = incidente.getHora().format(DateTimeFormatter.ofPattern("HH:mm"));
-                    System.out.println("   - Hora convertida a String: " + horaString);
+                    horaString = incidente.getHora();
+                    System.out.println("   - Hora establecida: " + horaString);
                 } else {
                     System.err.println("   ⚠️ La hora del incidente es NULL");
                 }
                 
-                // Convertir LocalDate a Date para el formulario
+                // Establecer fecha para el formulario
                 if (incidente.getFecha() != null) {
-                    fechaDate = java.sql.Date.valueOf(incidente.getFecha());
-                    System.out.println("   - Fecha convertida para formulario: " + fechaDate);
+                    fechaDate = incidente.getFecha();
+                    System.out.println("   - Fecha establecida para formulario: " + fechaDate);
                 } else {
                     System.err.println("   ⚠️ La fecha del incidente es NULL");
                 }
@@ -176,10 +173,10 @@ public class IncidenteBean implements Serializable {
             return null;
         }
         
-        // Convertir Date a LocalDate si se seleccionó una fecha
+        // Establecer fecha si se seleccionó una
         if (fechaDate != null) {
-            incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            System.out.println("   - Fecha convertida de Date a LocalDate: " + incidente.getFecha());
+            incidente.setFecha(fechaDate);
+            System.out.println("   - Fecha establecida: " + incidente.getFecha());
         }
         
         if (incidente.getFecha() == null) {
@@ -194,16 +191,9 @@ public class IncidenteBean implements Serializable {
             return null;
         }
         
-        // Convertir horaString a LocalTime
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            incidente.setHora(LocalTime.parse(horaString, formatter));
-            System.out.println("   - Hora convertida: " + incidente.getHora());
-        } catch (Exception e) {
-            System.err.println("❌ IncidenteBean.guardar: Error al parsear hora: " + e.getMessage());
-            FacesUtils.addErrorMessage("Formato de hora inválido. Use HH:mm (ejemplo: 14:30).");
-            return null;
-        }
+        // Establecer hora
+        incidente.setHora(horaString);
+        System.out.println("   - Hora establecida: " + incidente.getHora());
         
         if (incidente.getIdAmbiente() == 0) {
             System.err.println("❌ IncidenteBean.guardar: ambiente no seleccionado");
@@ -308,30 +298,24 @@ public class IncidenteBean implements Serializable {
     }
 
     // Métodos helper para formatear fecha y hora como String
-    public String formatearFecha(LocalDate fecha) {
+    public String formatearFecha(Date fecha) {
         if (fecha == null) {
             return "-";
         }
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            return fecha.format(formatter);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            return sdf.format(fecha);
         } catch (Exception e) {
             System.err.println("Error al formatear fecha: " + e.getMessage());
             return fecha.toString();
         }
     }
 
-    public String formatearHora(LocalTime hora) {
-        if (hora == null) {
+    public String formatearHora(String hora) {
+        if (hora == null || hora.isEmpty()) {
             return "-";
         }
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            return hora.format(formatter);
-        } catch (Exception e) {
-            System.err.println("Error al formatear hora: " + e.getMessage());
-            return hora.toString();
-        }
+        return hora;
     }
 
     // GETTERS Y SETTERS
@@ -362,7 +346,7 @@ public class IncidenteBean implements Serializable {
 
     public String getHoraString() {
         if (horaString == null && incidente != null && incidente.getHora() != null) {
-            horaString = incidente.getHora().format(DateTimeFormatter.ofPattern("HH:mm"));
+            horaString = incidente.getHora();
         }
         return horaString;
     }
@@ -372,19 +356,17 @@ public class IncidenteBean implements Serializable {
     }
 
     public Date getFechaDate() {
-        // Si hay una fecha en LocalDate, convertirla a Date
         if (incidente != null && incidente.getFecha() != null && fechaDate == null) {
-            fechaDate = java.sql.Date.valueOf(incidente.getFecha());
+            fechaDate = incidente.getFecha();
         }
         return fechaDate;
     }
 
     public void setFechaDate(Date fechaDate) {
         this.fechaDate = fechaDate;
-        // Convertir Date a LocalDate cuando se establece
         if (fechaDate != null && incidente != null) {
-            incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            System.out.println("   - Fecha establecida desde Date: " + incidente.getFecha());
+            incidente.setFecha(fechaDate);
+            System.out.println("   - Fecha establecida: " + incidente.getFecha());
         }
     }
 

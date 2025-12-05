@@ -10,13 +10,16 @@
     <ui:define name="moduleTitle">Registro de minutas</ui:define>
 
     <ui:define name="content">
+        <f:metadata>
+            <f:viewAction action="#{loginBean.verificarSesionAdminGuarda()}"/>
+        </f:metadata>
+        
         <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/minuta.css"/>
         
         <div class="container">
             <h1>Listado de Minutas</h1>
             
             <h:form id="frmMinutas" styleClass="ui-fluid">
-                <f:event type="preRenderView" listener="#{loginBean.verificarSesion(1,4)}"/>
 
                 <p:commandButton value="Nueva Minuta"
                                  styleClass="btn btn-success"
@@ -55,15 +58,15 @@
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:outputLabel value="Fecha/hora recibo" required="true"/>
-                        <p:datePicker value="#{minutaBean.minuta.fechaRecibo}" showIcon="true"
-                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                      required="true"/>
+                        <p:calendar value="#{minutaBean.minuta.fechaRecibo}" showOn="button"
+                                   pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                   navigator="true" required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:outputLabel value="Fecha/hora entrega" required="true"/>
-                        <p:datePicker value="#{minutaBean.minuta.fechaEntrega}" showIcon="true"
-                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                      required="true"/>
+                        <p:calendar value="#{minutaBean.minuta.fechaEntrega}" showOn="button"
+                                   pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                   navigator="true" required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:inputTextarea value="#{minutaBean.minuta.novedad}" label="Novedad" autoResize="false"/>
@@ -91,6 +94,7 @@
 
                 <p:dataTable id="tablaMinutas" value="#{minutaBean.minutas}" var="min"
                              paginator="true" rows="10"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              styleClass="table table-striped table-hover"
                              style="margin-top:1rem;">
                     <p:column headerText="ID_minuta" style="width:100px;">#{min.idMinuta}</p:column>
@@ -164,14 +168,14 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha/hora recibo" required="true"/>
-                            <p:datePicker value="#{minutaBean.minuta.fechaRecibo}" showIcon="true"
-                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                          required="true"/>
+                            <p:calendar value="#{minutaBean.minuta.fechaRecibo}" showOn="button"
+                                       pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                       navigator="true" required="true"/>
 
                             <p:outputLabel value="Fecha/hora entrega" required="true"/>
-                            <p:datePicker value="#{minutaBean.minuta.fechaEntrega}" showIcon="true"
-                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                          required="true"/>
+                            <p:calendar value="#{minutaBean.minuta.fechaEntrega}" showOn="button"
+                                       pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                       navigator="true" required="true"/>
 
                             <p:outputLabel value="Novedad"/>
                             <p:inputTextarea value="#{minutaBean.minuta.novedad}" autoResize="false"/>

@@ -11,52 +11,51 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewAction action="#{loginBean.verificarSesionInstructor()}"/>
+        <f:viewParam name="idIncidenteEditar" value="#{incidenteBean.idIncidenteEditar}">
+            <f:converter converterId="javax.faces.Integer" />
+        </f:viewParam>
+    </f:metadata>
 
-    <h:form id="formIncidente">
-
-        <!-- NAVBAR -->
-        <div class="navbar">
-            <div class="title">L-MACK</div>
-            <div class="menu">
-                <p:commandButton value="Inicio"
-                                 icon="pi pi-home"
-                                 action="/pages/instructor/index.xhtml?faces-redirect=true"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
-                <p:menuButton value="Módulos" icon="pi pi-th-large" styleClass="btn btn-secondary">
-                    <p:menuitem value="Mis Fichas"
-                                icon="pi pi-file"
-                                outcome="/pages/instructor/misFichas.xhtml"/>
-                    <p:menuitem value="Asistencia"
-                                icon="pi pi-check-circle"
-                                outcome="/pages/asistencia/list.xhtml"/>
-                    <p:menuitem value="Minutas"
-                                icon="pi pi-file"
-                                outcome="/pages/minutas/list.xhtml"/>
-                    <p:menuitem value="Incidentes"
-                                icon="pi pi-exclamation-triangle"
-                                outcome="/pages/instructor/listarIncidentes.xhtml"/>
-                </p:menuButton>
-                <p:commandButton value="Mi Perfil"
-                                 icon="pi pi-user"
-                                 action="/pages/perfil.xhtml?faces-redirect=true"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
-                <p:commandButton value="Cerrar sesión"
-                                 icon="pi pi-sign-out"
-                                 action="#{loginBean.cerrarSesion}"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
+    <div class="dashboard-container" style="display: flex; min-height: 100vh;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" style="width: 260px; background: linear-gradient(180deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; position: fixed; height: 100vh; overflow-y: auto;">
+            <div class="sidebar-header" style="padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <h2 style="margin: 0; font-size: 24px; color: white;">🎓 L-MACK</h2>
+                <p style="margin: 5px 0 0; font-size: 12px; opacity: 0.8;">Panel Instructor</p>
             </div>
-        </div>
+            <nav style="padding: 15px 0;">
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Principal</p>
+                <h:link outcome="/pages/instructor/index.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">🏠 Inicio</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Gestión Académica</p>
+                <h:link outcome="/pages/instructor/misFichas.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📁 Mis Fichas</h:link>
+                <h:link outcome="/pages/asistencia/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📋 Asistencia</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Ambientes y Recursos</p>
+                <h:link outcome="/pages/instructor/ambientes.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">🏢 Ambientes</h:link>
+                <h:link outcome="/pages/minutas/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📝 Minutas</h:link>
+                <h:link outcome="/pages/traslados/list.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📦 Traslados</h:link>
+                
+                <p style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-top: 10px;">Incidentes</p>
+                <h:link outcome="/pages/instructor/formIncidente.xhtml" style="display: block; color: white; text-decoration: none; padding: 12px 25px; border-left: 3px solid white; font-size: 14px; background: rgba(255,255,255,0.15);">⚠️ Registrar</h:link>
+                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" style="display: block; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 25px; border-left: 3px solid transparent; font-size: 14px;">📋 Mis Incidentes</h:link>
+            </nav>
+            <div style="position: absolute; bottom: 20px; left: 0; right: 0; padding: 0 20px;">
+                <h:form>
+                    <p:commandButton value="🚪 Cerrar Sesión" 
+                                     action="#{loginBean.cerrarSesion}"
+                                     style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; cursor: pointer;"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
 
-        <!-- CONTENIDO -->
-        <div class="content">
-            <f:metadata>
-                <f:viewParam name="idIncidenteEditar" value="#{incidenteBean.idIncidenteEditar}">
-                    <f:converter converterId="javax.faces.Integer" />
-                </f:viewParam>
-            </f:metadata>
+        <!-- MAIN CONTENT -->
+        <main style="flex: 1; margin-left: 260px; padding: 20px; background: var(--cream-bg);">
+            <h:form id="formIncidente">
+                <div class="content" style="max-width: 1400px; margin: 0 auto;">
 
             <div class="form-header">
                 <h2>
@@ -155,10 +154,10 @@
                 </div>
 
             </p:panel>
-        </div>
-
-    </h:form>
-
+                </div>
+            </h:form>
+        </main>
+    </div>
 </h:body>
 </html>
 

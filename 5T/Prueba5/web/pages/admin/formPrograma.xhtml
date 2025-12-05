@@ -11,6 +11,11 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="idProgramaEditar" value="#{programaBean.idProgramaEditar}">
+            <f:converter converterId="javax.faces.Integer" />
+        </f:viewParam>
+    </f:metadata>
 
     <h:form id="formPrograma">
 
@@ -44,12 +49,6 @@
 
         <!-- CONTENIDO -->
         <div class="content">
-            <f:metadata>
-                <f:viewParam name="idProgramaEditar" value="#{programaBean.idProgramaEditar}">
-                    <f:converter converterId="javax.faces.Integer" />
-                </f:viewParam>
-            </f:metadata>
-
             <div class="form-header">
                 <h2>
                     <i class="pi pi-book" style="margin-right: 10px;"></i>

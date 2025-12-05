@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+
 public class Usuario implements Serializable {
     private int idUsuario;
     private String pNombre;
@@ -81,8 +81,4 @@ public class Usuario implements Serializable {
     // Compatibilidad con getPass/setPass usados en tus formularios antiguos
     public String getPass() { return this.contrasena; }
     public void setPass(String pass) { this.contrasena = pass; }
-
-    public void setFechaRegistro(LocalDateTime toLocalDateTime) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

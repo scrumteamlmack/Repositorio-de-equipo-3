@@ -10,6 +10,12 @@
 </h:head>
 
 <h:body>
+    <f:metadata>
+        <f:viewParam name="id" value="#{coordinadorBean.idUsuario}">
+            <f:converter converterId="javax.faces.Integer" />
+        </f:viewParam>
+        <f:event type="preRenderView" listener="#{coordinadorBean.init}" />
+    </f:metadata>
 
 <h:form id="formCoordinador">
 
@@ -40,13 +46,6 @@
 
     <!-- CONTENIDO -->
     <div class="content">
-        <f:metadata>
-            <f:viewParam name="id" value="#{coordinadorBean.idUsuario}">
-                <f:converter converterId="javax.faces.Integer" />
-            </f:viewParam>
-            <f:event type="preRenderView" listener="#{coordinadorBean.init}" />
-        </f:metadata>
-
         <div class="form-header">
             <h2><i class="pi pi-briefcase" style="margin-right: 10px;"></i>Registrar Coordinador</h2>
         </div>

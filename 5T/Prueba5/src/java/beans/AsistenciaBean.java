@@ -4,17 +4,19 @@ import dao.AprendizDAO;
 import dao.AsistenciaDAO;
 import dao.InstructorDAO;
 import dao.JornadaDAO;
+import dao.UsuarioDAO;
 import modelo.Aprendiz;
 import modelo.Asistencia;
 import modelo.Instructor;
 import modelo.Jornada;
+import modelo.Usuario;
 import util.FacesUtils;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @ManagedBean(name = "asistenciaBean")
@@ -25,6 +27,7 @@ public class AsistenciaBean implements Serializable {
     private final AprendizDAO aprendizDAO = new AprendizDAO();
     private final InstructorDAO instructorDAO = new InstructorDAO();
     private final JornadaDAO jornadaDAO = new JornadaDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     private Asistencia asistencia = new Asistencia();
     private List<Asistencia> asistencias;
@@ -38,12 +41,12 @@ public class AsistenciaBean implements Serializable {
         aprendices = aprendizDAO.listar();
         instructores = instructorDAO.listar();
         jornadas = jornadaDAO.listar();
-        asistencia.setFecha(LocalDate.now());
+        asistencia.setFecha(new Date());
     }
 
     public void prepararNuevo() {
         asistencia = new Asistencia();
-        asistencia.setFecha(LocalDate.now());
+        asistencia.setFecha(new Date());
     }
 
     public void guardar() {
@@ -99,5 +102,30 @@ public class AsistenciaBean implements Serializable {
         return jornadas;
     }
 
+    // Métodos auxiliares para mostrar nombres
+    public String getNombreAprendiz(int idUsuario) {
+        Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
+        if (usuario != null) {
+            return usuario.getPNombre() + " " + usuario.getPApellido();
+        }
+        return "Aprendiz " + idUsuario;
+    }
+
+    public String getNombreInstructor(int idUsuario) {
+        Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
+        if (usuario != null) {
+            return usuario.getPNombre() + " " + usuario.getPApellido();
+        }
+        return "Instructor " + idUsuario;
+    }
+
+    public String getNombreJornada(int idJornada) {
+        for (Jornada j : getJornadas()) {
+            if (j.getIdJornada() == idJornada) {
+                return j.getNombreJornada();
+            }
+        }
+        return "Jornada " + idJornada;
+    }
 }
 
