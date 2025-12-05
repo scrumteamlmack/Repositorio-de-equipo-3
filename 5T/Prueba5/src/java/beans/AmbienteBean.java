@@ -17,6 +17,7 @@ public class AmbienteBean implements Serializable {
     private final AmbienteDAO ambienteDAO = new AmbienteDAO();
     private Ambiente ambiente = new Ambiente();
     private List<Ambiente> ambientes;
+    private List<Ambiente> ambientesFiltrados;
 
     @PostConstruct
     public void init() {
@@ -66,6 +67,41 @@ public class AmbienteBean implements Serializable {
 
     public List<Ambiente> getAmbientes() {
         return ambientes;
+    }
+
+    public List<Ambiente> getAmbientesFiltrados() {
+        return ambientesFiltrados;
+    }
+
+    public void setAmbientesFiltrados(List<Ambiente> ambientesFiltrados) {
+        this.ambientesFiltrados = ambientesFiltrados;
+    }
+
+    // Métodos para estadísticas
+    public int contarDisponibles() {
+        if (ambientes == null) return 0;
+        int count = 0;
+        for (Ambiente a : ambientes) {
+            if ("Disponible".equalsIgnoreCase(a.getEstado())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int contarOcupados() {
+        if (ambientes == null) return 0;
+        int count = 0;
+        for (Ambiente a : ambientes) {
+            if ("Ocupado".equalsIgnoreCase(a.getEstado())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getTotalAmbientes() {
+        return ambientes != null ? ambientes.size() : 0;
     }
 }
 
