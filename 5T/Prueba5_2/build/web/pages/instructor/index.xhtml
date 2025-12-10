@@ -1,437 +1,221 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
     <title>Panel Instructor - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
     <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
-        .dashboard-container {
+        .layout-container {
             display: flex;
             min-height: 100vh;
+            background-color: var(--cream-bg);
         }
         
-        /* Sidebar */
         .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            width: 260px;
+            background-color: var(--primary-green);
             color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
         }
         
         .sidebar-header {
             padding: 25px 20px;
+            background-color: var(--dark-green);
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
         }
         
-        .sidebar-header h2 {
+        .sidebar-header h3 {
+            color: white;
             margin: 0;
             font-size: 24px;
-            font-weight: 700;
-            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .sidebar-header p {
-            margin: 5px 0 0;
-            font-size: 12px;
-            opacity: 0.8;
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
         }
         
         .sidebar-nav {
-            padding: 15px 0;
+            padding: 20px 0;
+            flex: 1;
         }
         
-        .nav-section {
-            padding: 10px 20px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 10px;
-        }
-        
-        .nav-item {
+        .sidebar-nav a {
             display: block;
-            color: rgba(255,255,255,0.85);
+            color: rgba(255,255,255,0.9);
             text-decoration: none;
-            padding: 12px 25px;
+            padding: 15px 25px;
             transition: all 0.3s;
             border-left: 3px solid transparent;
-            font-size: 14px;
+            font-size: 15px;
         }
         
-        .nav-item:hover {
+        .sidebar-nav a:hover {
             background: rgba(255,255,255,0.1);
             border-left-color: var(--light-green);
             color: white;
             padding-left: 30px;
         }
         
-        .nav-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
         }
         
-        .nav-item.active {
-            background: rgba(255,255,255,0.15);
-            border-left-color: white;
-            color: white;
-        }
-        
-        .submenu {
-            background: rgba(0,0,0,0.1);
-            display: none;
-        }
-        
-        .submenu .nav-item {
-            padding-left: 50px;
-            font-size: 13px;
-        }
-        
-        .submenu .nav-item:hover {
-            padding-left: 55px;
-        }
-        
-        .nav-toggle {
-            cursor: pointer;
-        }
-        
-        .nav-toggle::after {
-            content: "▼";
-            float: right;
-            font-size: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .nav-toggle.open::after {
-            transform: rotate(180deg);
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 30px;
-            background: var(--cream-bg);
-            min-height: 100vh;
-        }
-        
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,100,50,0.3);
-        }
-        
-        .welcome-banner h2 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-        
-        .welcome-banner p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 16px;
-        }
-        
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        
-        .dashboard-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #eee;
-        }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        }
-        
-        .dashboard-card-icon {
-            font-size: 45px;
-            margin-bottom: 15px;
-        }
-        
-        .dashboard-card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--dark-green);
-            margin-bottom: 10px;
-        }
-        
-        .dashboard-card-desc {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        
-        .logout-section {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            padding: 0 20px;
-        }
-        
-        .logout-btn {
+        .sidebar-footer .btn-logout {
             width: 100%;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
             color: white;
-            padding: 12px;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.2);
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
     </style>
-    <script>
-        function toggleSubmenu(element) {
-            var submenu = element.nextElementSibling;
-            if (submenu &amp;&amp; submenu.classList.contains('submenu')) {
-                if (submenu.style.display === 'block') {
-                    submenu.style.display = 'none';
-                    element.classList.remove('open');
-                } else {
-                    submenu.style.display = 'block';
-                    element.classList.add('open');
-                }
-            }
-        }
-    </script>
 </h:head>
 
 <h:body>
     <f:metadata>
-        <f:viewAction action="#{loginBean.verificarSesionInstructor()}"/>
+        <f:viewAction action="#{loginBean.verificarSesion(2)}"/>
     </f:metadata>
 
-    <div class="dashboard-container">
-        <!-- SIDEBAR -->
+    <div class="layout-container">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>🎓 L-MACK</h2>
-                <p>Panel Instructor</p>
+                <h3>L-MACK</h3>
             </div>
-            
             <nav class="sidebar-nav">
-                <div class="nav-section">Principal</div>
-                <h:link outcome="/pages/instructor/index.xhtml" styleClass="nav-item active">
-                    <i>🏠</i> Inicio
-                </h:link>
-                
-                <div class="nav-section">Mi Perfil</div>
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>👤</i> Perfil
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/perfil.xhtml" styleClass="nav-item">
-                        Ver Perfil
-                    </h:link>
-                </div>
-                
-                <div class="nav-section">Gestión Académica</div>
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>📁</i> Fichas
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/instructor/misFichas.xhtml" styleClass="nav-item">
-                        Mis Fichas
-                    </h:link>
-                </div>
-                
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>📋</i> Asistencias
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/asistencia/list.xhtml" styleClass="nav-item">
-                        Consultar Asistencia
-                    </h:link>
-                </div>
-                
-                <div class="nav-section">Ambientes y Recursos</div>
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>🏢</i> Ambientes
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/instructor/ambientes.xhtml" styleClass="nav-item">
-                        Ver Ambientes
-                    </h:link>
-                </div>
-                
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>📝</i> Minutas
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/minutas/list.xhtml" styleClass="nav-item">
-                        Ver Minutas
-                    </h:link>
-                </div>
-                
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>📦</i> Traslado Recursos
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/traslados/list.xhtml" styleClass="nav-item">
-                        Registrar Traslado
-                    </h:link>
-                    <h:link outcome="/pages/traslados/list.xhtml" styleClass="nav-item">
-                        Consultar Traslados
-                    </h:link>
-                </div>
-                
-                <div class="nav-section">Incidentes</div>
-                <a class="nav-item nav-toggle" onclick="toggleSubmenu(this)">
-                    <i>⚠️</i> Incidentes
-                </a>
-                <div class="submenu">
-                    <h:link outcome="/pages/instructor/formIncidente.xhtml" styleClass="nav-item">
-                        Registrar Incidente
-                    </h:link>
-                    <h:link outcome="/pages/instructor/listarIncidentes.xhtml" styleClass="nav-item">
-                        Mis Incidentes
-                    </h:link>
-                </div>
+                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/consultarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
             </nav>
-            
-            <div class="logout-section">
+            <div class="sidebar-footer">
                 <h:form>
-                    <p:commandButton value="🚪 Cerrar Sesión" 
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
                                      action="#{loginBean.cerrarSesion}"
-                                     styleClass="logout-btn"
+                                     styleClass="btn-logout"
                                      ajax="false"/>
                 </h:form>
             </div>
         </aside>
-
-        <!-- MAIN CONTENT -->
+        
         <main class="main-content">
-            <h:form>
-                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+            <div class="content-wrapper">
+                <div class="form-header">
+                    <h2>Panel del Instructor</h2>
+                </div>
                 
-                <!-- BANNER DE BIENVENIDA -->
-                <div class="welcome-banner">
-                    <h2>👋 Bienvenido, #{loginBean.usuarioAutenticado.nombre}</h2>
-                    <p>Aquí puedes gestionar tu perfil, consultar fichas y aprendices, ambientes, revisar minutas, registrar incidentes y traslados de recursos.</p>
+                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+                <!-- MENSAJE DE BIENVENIDA -->
+                <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin: 0; color: white;">
+                        <i class="pi pi-user" style="margin-right: 10px;"></i>
+                        Bienvenido, #{loginBean.usuarioAutenticado.nombre}
+                    </h3>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">Gestiona tus fichas, aprendices y actividades desde este panel</p>
                 </div>
 
-                <!-- GRID DE MÓDULOS -->
                 <div class="dashboard-grid">
-                    <!-- Mis Fichas -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-icon">📁</div>
                         <div class="dashboard-card-title">Mis Fichas</div>
-                        <div class="dashboard-card-desc">Consulta las fichas asignadas y los aprendices registrados en cada una.</div>
-                        <p:commandButton value="Ver Mis Fichas"
-                                         action="/pages/instructor/misFichas.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
+                        <div class="dashboard-card-desc">Consulta las fichas asignadas y los aprendices registrados</div>
+                        <h:link outcome="/pages/instructor/misFichas.xhtml" styleClass="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                            Ver Mis Fichas <i class="pi pi-arrow-right" style="margin-left: 5px;"></i>
+                        </h:link>
                     </div>
 
-                    <!-- Control de Asistencia -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-icon">📋</div>
                         <div class="dashboard-card-title">Control de Asistencia</div>
-                        <div class="dashboard-card-desc">Registra y consulta la asistencia de los aprendices de tus fichas.</div>
-                        <p:commandButton value="Ver Asistencia"
-                                         action="/pages/asistencia/list.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
+                        <div class="dashboard-card-desc">Registra y consulta la asistencia de los aprendices</div>
+                        <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" styleClass="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                            Ver Asistencia <i class="pi pi-arrow-right" style="margin-left: 5px;"></i>
+                        </h:link>
                     </div>
 
-                    <!-- Ambientes -->
-                    <div class="dashboard-card">
-                        <div class="dashboard-card-icon">🏢</div>
-                        <div class="dashboard-card-title">Ambientes</div>
-                        <div class="dashboard-card-desc">Consulta la disponibilidad y estado de los ambientes de formación.</div>
-                        <p:commandButton value="Ver Ambientes"
-                                         action="/pages/instructor/ambientes.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
-                    </div>
-
-                    <!-- Minutas -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-icon">📝</div>
                         <div class="dashboard-card-title">Registro de Minutas</div>
-                        <div class="dashboard-card-desc">Gestiona el registro de minutas de entrega y recibo de ambientes.</div>
-                        <p:commandButton value="Ver Minutas"
-                                         action="/pages/minutas/list.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
+                        <div class="dashboard-card-desc">Gestiona el registro de minutas de ambientes</div>
+                        <h:link outcome="/pages/instructor/consultarMinutas.xhtml" styleClass="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                            Ver Minutas <i class="pi pi-arrow-right" style="margin-left: 5px;"></i>
+                        </h:link>
                     </div>
 
-                    <!-- Traslado de Recursos -->
-                    <div class="dashboard-card">
-                        <div class="dashboard-card-icon">📦</div>
-                        <div class="dashboard-card-title">Traslado de Recursos</div>
-                        <div class="dashboard-card-desc">Registra y consulta traslados de recursos entre ambientes.</div>
-                        <p:commandButton value="Gestionar Traslados"
-                                         action="/pages/traslados/list.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
-                    </div>
-
-                    <!-- Incidentes -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-icon">⚠️</div>
                         <div class="dashboard-card-title">Registro de Incidentes</div>
-                        <div class="dashboard-card-desc">Registra y gestiona incidentes ocurridos en los ambientes.</div>
-                        <p:commandButton value="Ver Incidentes"
-                                         action="/pages/instructor/listarIncidentes.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
+                        <div class="dashboard-card-desc">Registra y gestiona incidentes en los ambientes</div>
+                        <h:link outcome="/pages/instructor/listarIncidentes.xhtml" styleClass="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                            Ver Incidentes <i class="pi pi-arrow-right" style="margin-left: 5px;"></i>
+                        </h:link>
                     </div>
 
-                    <!-- Mi Perfil -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-icon">👤</div>
                         <div class="dashboard-card-title">Mi Perfil</div>
-                        <div class="dashboard-card-desc">Consulta y edita tu información personal y de contacto.</div>
-                        <p:commandButton value="Ver Mi Perfil"
-                                         action="/pages/perfil.xhtml?faces-redirect=true"
-                                         icon="pi pi-arrow-right"
-                                         styleClass="btn btn-primary"
-                                         style="width: 100%;"
-                                         ajax="false"/>
+                        <div class="dashboard-card-desc">Consulta y edita tu información personal</div>
+                        <h:link outcome="/pages/perfil.xhtml" styleClass="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                            Ver Mi Perfil <i class="pi pi-arrow-right" style="margin-left: 5px;"></i>
+                        </h:link>
                     </div>
                 </div>
-            </h:form>
+            </div>
         </main>
     </div>
+
 </h:body>
 </html>

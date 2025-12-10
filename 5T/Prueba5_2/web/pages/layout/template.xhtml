@@ -100,43 +100,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             min-height: calc(100vh - 200px);
         }
-        
-        /* Estilos unificados para paginador */
-        .ui-paginator {
-            background: transparent !important;
-            border: none !important;
-            padding: 15px 0 !important;
-        }
-        .ui-paginator .ui-paginator-page,
-        .ui-paginator .ui-paginator-first,
-        .ui-paginator .ui-paginator-prev,
-        .ui-paginator .ui-paginator-next,
-        .ui-paginator .ui-paginator-last {
-            background: #f8f9fa !important;
-            border: 1px solid #dee2e6 !important;
-            color: #495057 !important;
-            min-width: 2.5rem !important;
-            height: 2.5rem !important;
-            border-radius: 6px !important;
-            margin: 0 2px !important;
-        }
-        .ui-paginator .ui-paginator-page.ui-state-active {
-            background: var(--primary-green) !important;
-            border-color: var(--primary-green) !important;
-            color: white !important;
-        }
-        .ui-paginator .ui-paginator-page:hover,
-        .ui-paginator .ui-paginator-first:hover,
-        .ui-paginator .ui-paginator-prev:hover,
-        .ui-paginator .ui-paginator-next:hover,
-        .ui-paginator .ui-paginator-last:hover {
-            background: #e9ecef !important;
-        }
-        .ui-paginator-rpp-options {
-            border: 1px solid #dee2e6 !important;
-            border-radius: 6px !important;
-            padding: 5px 10px !important;
-        }
     </style>
 </h:head>
 
@@ -147,36 +110,14 @@
                 <h3>L-MACK</h3>
             </div>
             <nav class="sidebar-nav">
-                <!-- Navegación según rol - Instructor -->
-                <h:panelGroup rendered="#{loginBean.esInstructor}">
-                    <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" style="display: block;"/>
-                    <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" style="display: block;"/>
-                    <h:link outcome="/pages/asistencia/list.xhtml" value="📋 Asistencia" style="display: block;"/>
-                    <h:link outcome="/pages/instructor/ambientes.xhtml" value="🏢 Ambientes" style="display: block;"/>
-                    <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" style="display: block;"/>
-                    <h:link outcome="/pages/traslados/list.xhtml" value="📦 Traslados" style="display: block;"/>
-                    <h:link outcome="/pages/instructor/formIncidente.xhtml" value="⚠️ Registrar Incidente" style="display: block;"/>
-                    <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="📋 Mis Incidentes" style="display: block;"/>
-                </h:panelGroup>
-                
-                <!-- Navegación según rol - Admin -->
-                <h:panelGroup rendered="#{loginBean.esAdmin}">
-                    <h:link outcome="/pages/admin/indexAdmin.xhtml" value="🏠 Inicio" style="display: block;"/>
-                    <h:link outcome="/pages/admin/listarUsuarios.xhtml" value="👥 Usuarios" style="display: block;"/>
-                    <h:link outcome="/pages/ambientes/list.xhtml" value="🏢 Ambientes" style="display: block;"/>
-                    <h:link outcome="/pages/incidentes/list.xhtml" value="⚠️ Incidentes" style="display: block;"/>
-                    <h:link outcome="/pages/recursos/list.xhtml" value="📦 Recursos" style="display: block;"/>
-                    <h:link outcome="/pages/asistencia/list.xhtml" value="📋 Asistencia" style="display: block;"/>
-                    <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" style="display: block;"/>
-                    <h:link outcome="/pages/reportes/index.xhtml" value="📊 Reportes" style="display: block;"/>
-                </h:panelGroup>
-                
-                <!-- Navegación según rol - Guarda -->
-                <h:panelGroup rendered="#{loginBean.esGuarda}">
-                    <h:link outcome="/pages/guarda/index.xhtml" value="🏠 Inicio" style="display: block;"/>
-                    <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" style="display: block;"/>
-                    <h:link outcome="/pages/incidentes/list.xhtml" value="⚠️ Incidentes" style="display: block;"/>
-                </h:panelGroup>
+                <h:link outcome="/pages/dashboard.xhtml" value="🏠 Inicio" style="display: block;"/>
+                <h:link outcome="/pages/usuarios/list.xhtml" value="👥 Usuarios" style="display: block;"/>
+                <h:link outcome="/pages/ambientes/list.xhtml" value="🏢 Ambientes" style="display: block;"/>
+                <h:link outcome="/pages/incidentes/list.xhtml" value="⚠️ Incidentes" style="display: block;"/>
+                <h:link outcome="/pages/recursos/list.xhtml" value="📦 Recursos" style="display: block;"/>
+                <h:link outcome="/pages/asistencia/list.xhtml" value="📋 Asistencia" style="display: block;"/>
+                <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" style="display: block;"/>
+                <h:link outcome="/pages/reportes/index.xhtml" value="📊 Reportes" style="display: block;"/>
             </nav>
         </aside>
         

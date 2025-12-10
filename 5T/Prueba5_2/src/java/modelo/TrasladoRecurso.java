@@ -1,30 +1,25 @@
 package modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-/**
- * Modelo para el traslado de recursos entre ambientes
- */
 public class TrasladoRecurso implements Serializable {
 
     private int idTraslado;
     private int recursoId;
-    private int ambienteOrigenId;
-    private int ambienteDestinoId;
-    private Date fechaTraslado;
+    private int ambienteOrigen;
+    private int ambienteDestino;
+    private LocalDateTime fechaTraslado;
     private String observacion;
     
-    // Campos auxiliares para mostrar información relacionada
-    private String nombreRecurso;
-    private String ambienteOrigen;
-    private String ambienteDestino;
+    // Campos para mostrar nombres en la vista
+    private String recursoNombre;
+    private String ambienteOrigenNombre;
+    private String ambienteDestinoNombre;
 
     public TrasladoRecurso() {
-        this.fechaTraslado = new Date();
     }
 
-    // Getters y Setters
     public int getIdTraslado() {
         return idTraslado;
     }
@@ -41,27 +36,27 @@ public class TrasladoRecurso implements Serializable {
         this.recursoId = recursoId;
     }
 
-    public int getAmbienteOrigenId() {
-        return ambienteOrigenId;
+    public int getAmbienteOrigen() {
+        return ambienteOrigen;
     }
 
-    public void setAmbienteOrigenId(int ambienteOrigenId) {
-        this.ambienteOrigenId = ambienteOrigenId;
+    public void setAmbienteOrigen(int ambienteOrigen) {
+        this.ambienteOrigen = ambienteOrigen;
     }
 
-    public int getAmbienteDestinoId() {
-        return ambienteDestinoId;
+    public int getAmbienteDestino() {
+        return ambienteDestino;
     }
 
-    public void setAmbienteDestinoId(int ambienteDestinoId) {
-        this.ambienteDestinoId = ambienteDestinoId;
+    public void setAmbienteDestino(int ambienteDestino) {
+        this.ambienteDestino = ambienteDestino;
     }
 
-    public Date getFechaTraslado() {
+    public LocalDateTime getFechaTraslado() {
         return fechaTraslado;
     }
 
-    public void setFechaTraslado(Date fechaTraslado) {
+    public void setFechaTraslado(LocalDateTime fechaTraslado) {
         this.fechaTraslado = fechaTraslado;
     }
 
@@ -73,28 +68,28 @@ public class TrasladoRecurso implements Serializable {
         this.observacion = observacion;
     }
 
-    public String getNombreRecurso() {
-        return nombreRecurso;
+    public String getRecursoNombre() {
+        return recursoNombre;
     }
 
-    public void setNombreRecurso(String nombreRecurso) {
-        this.nombreRecurso = nombreRecurso;
+    public void setRecursoNombre(String recursoNombre) {
+        this.recursoNombre = recursoNombre;
     }
 
-    public String getAmbienteOrigen() {
-        return ambienteOrigen;
+    public String getAmbienteOrigenNombre() {
+        return ambienteOrigenNombre;
     }
 
-    public void setAmbienteOrigen(String ambienteOrigen) {
-        this.ambienteOrigen = ambienteOrigen;
+    public void setAmbienteOrigenNombre(String ambienteOrigenNombre) {
+        this.ambienteOrigenNombre = ambienteOrigenNombre;
     }
 
-    public String getAmbienteDestino() {
-        return ambienteDestino;
+    public String getAmbienteDestinoNombre() {
+        return ambienteDestinoNombre;
     }
 
-    public void setAmbienteDestino(String ambienteDestino) {
-        this.ambienteDestino = ambienteDestino;
+    public void setAmbienteDestinoNombre(String ambienteDestinoNombre) {
+        this.ambienteDestinoNombre = ambienteDestinoNombre;
     }
 }
 

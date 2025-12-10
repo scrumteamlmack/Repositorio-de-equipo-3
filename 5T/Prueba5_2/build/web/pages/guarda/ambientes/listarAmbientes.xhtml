@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Consultar Ambientes - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
+        .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
+        .badge.bg-danger { background: #fee2e2 !important; color: #b91c1c !important; }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:viewAction action="#{loginBean.verificarSesionGuarda}"/>
+    </f:metadata>
+
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <h:link outcome="/pages/guarda/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/guarda/minutas/listarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/guarda/traslados/listarTraslados.xhtml" value="📦 Traslados" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/guarda/incidentes/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/guarda/ambientes/listarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
+            </nav>
+            <div class="sidebar-footer">
+                <h:form>
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
+                                     action="#{loginBean.cerrarSesion}"
+                                     styleClass="btn-logout"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="form-header">
+                    <h2><i class="pi pi-building" style="margin-right: 10px;"></i>Consultar Ambientes</h2>
+                </div>
+                
+                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+                <h:form id="formAmbientes">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="📄 Exportar PDF"
+                                             icon="pi pi-file-pdf"
+                                             styleClass="btn-primary"
+                                             ajax="false"
+                                             onclick="PF('tablaAmbientes').exportToPdf();"/>
+                            <p:commandButton value="📊 Exportar Excel"
+                                             icon="pi pi-file-excel"
+                                             styleClass="btn-success"
+                                             ajax="false"
+                                             onclick="PF('tablaAmbientes').exportToXls();"/>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <p:dataTable id="tablaAmbientes" 
+                                 value="#{ambienteBean.ambientes}" 
+                                 var="amb"
+                                 filteredValue="#{ambienteBean.ambientesFiltrados}"
+                                 emptyMessage="No hay ambientes registrados"
+                                 paginator="true" 
+                                 rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 rowsPerPageTemplate="5,10,15,20"
+                                 styleClass="table table-striped table-hover"
+                                 exportable="true">
+
+                        <p:column headerText="ID" 
+                                 filterBy="#{amb.idAmbiente}" 
+                                 filterMatchMode="exact"
+                                 style="width: 80px;">
+                            <h:outputText value="#{amb.idAmbiente}" />
+                        </p:column>
+
+                        <p:column headerText="Número" 
+                                 filterBy="#{amb.numero}" 
+                                 filterMatchMode="contains"
+                                 style="width: 120px;">
+                            <h:outputText value="#{amb.numero}" />
+                        </p:column>
+
+                        <p:column headerText="Capacidad" 
+                                 filterBy="#{amb.capacidad}" 
+                                 filterMatchMode="contains"
+                                 style="width: 120px;">
+                            <h:outputText value="#{amb.capacidad}" />
+                        </p:column>
+
+                        <p:column headerText="Tipo" 
+                                 filterBy="#{amb.tipo}" 
+                                 filterMatchMode="contains">
+                            <h:outputText value="#{amb.tipo}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" 
+                                 filterBy="#{amb.estado}" 
+                                 filterMatchMode="contains"
+                                 style="width: 150px;">
+                            <span class="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}">
+                                #{amb.estado}
+                            </span>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+            </div>
+        </main>
+    </div>
+</h:body>
+</html>
+

@@ -39,12 +39,6 @@
 </h:head>
 
 <h:body>
-    <f:metadata>
-        <f:viewParam name="id" value="#{fichaBean.idFichaEditar}">
-            <f:converter converterId="javax.faces.Integer" />
-        </f:viewParam>
-        <f:event type="preRenderView" listener="#{fichaBean.init}" />
-    </f:metadata>
 
 <h:form id="formFicha">
 
@@ -72,6 +66,13 @@
 
     <!-- CONTENIDO -->
     <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{fichaBean.idFichaEditar}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+            <f:event type="preRenderView" listener="#{fichaBean.init}" />
+        </f:metadata>
+        
         <div class="form-container">
             <div style="margin-bottom: 25px;">
                 <h2 style="color: var(--primary-green); font-size: 28px; font-weight: 600; margin: 0;">

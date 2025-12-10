@@ -18,14 +18,10 @@ public class AmbienteBean implements Serializable {
     private Ambiente ambiente = new Ambiente();
     private List<Ambiente> ambientes;
     private List<Ambiente> ambientesFiltrados;
-    private boolean inicializado = false;
 
     @PostConstruct
     public void init() {
-        if (!inicializado) {
-            ambientes = ambienteDAO.listar();
-            inicializado = true;
-        }
+        ambientes = ambienteDAO.listar();
     }
 
     public void prepararNuevo() {
@@ -73,6 +69,9 @@ public class AmbienteBean implements Serializable {
         if (ambientes == null) {
             ambientes = ambienteDAO.listar();
         }
+        if (ambientesFiltrados != null && !ambientesFiltrados.isEmpty()) {
+            return ambientesFiltrados;
+        }
         return ambientes;
     }
 
@@ -82,33 +81,6 @@ public class AmbienteBean implements Serializable {
 
     public void setAmbientesFiltrados(List<Ambiente> ambientesFiltrados) {
         this.ambientesFiltrados = ambientesFiltrados;
-    }
-
-    // Métodos para estadísticas
-    public int contarDisponibles() {
-        if (ambientes == null) return 0;
-        int count = 0;
-        for (Ambiente a : ambientes) {
-            if ("Disponible".equalsIgnoreCase(a.getEstado())) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int contarOcupados() {
-        if (ambientes == null) return 0;
-        int count = 0;
-        for (Ambiente a : ambientes) {
-            if ("Ocupado".equalsIgnoreCase(a.getEstado()) || "En Uso".equalsIgnoreCase(a.getEstado())) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int getTotalAmbientes() {
-        return ambientes != null ? ambientes.size() : 0;
     }
 }
 

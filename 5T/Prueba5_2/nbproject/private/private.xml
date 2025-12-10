@@ -37,6 +37,14 @@
             <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/index.xhtml</file>
             <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/perfil.xhtml</file>
             <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/JornadaDAO.java</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/listarIncidentes.xhtml</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/IncidenteDAO.java</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/IncidenteBean.java</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/modelo/Incidente.java</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/consultarAmbientes.xhtml</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/consultarMinutas.xhtml</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarRecursos.xhtml</file>
+            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarAmbientes.xhtml</file>
         </group>
     </open-files>
 </project-private>

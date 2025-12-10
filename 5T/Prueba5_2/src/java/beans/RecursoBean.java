@@ -24,6 +24,7 @@ public class RecursoBean implements Serializable {
 
     private Recurso recurso = new Recurso();
     private List<Recurso> recursos;
+    private List<Recurso> recursosFiltrados;
     private List<TipoRecurso> tipos;
     private List<Ambiente> ambientes;
 
@@ -76,7 +77,17 @@ public class RecursoBean implements Serializable {
     }
 
     public List<Recurso> getRecursos() {
+        if (recursos == null) {
+            recursos = recursoDAO.listar();
+        }
+        if (recursosFiltrados != null && !recursosFiltrados.isEmpty()) {
+            return recursosFiltrados;
+        }
         return recursos;
+    }
+
+    public void setRecursosFiltrados(List<Recurso> recursosFiltrados) {
+        this.recursosFiltrados = recursosFiltrados;
     }
 
     public List<TipoRecurso> getTipos() {

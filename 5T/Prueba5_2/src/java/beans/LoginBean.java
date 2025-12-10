@@ -129,69 +129,96 @@ public class LoginBean implements Serializable {
         return roles != null && roles.contains(roleId);
     }
 
-    // Métodos para verificar rol específico (útiles en vistas)
-    public boolean isEsAdmin() {
-        return hasRol(1);
-    }
-
-    public boolean isEsInstructor() {
-        return hasRol(2);
-    }
-
-    public boolean isEsAprendiz() {
-        return hasRol(3);
-    }
-
-    public boolean isEsGuarda() {
-        return hasRol(4);
-    }
-
     public void verificarSesion(int... rolesPermitidos) {
+        // Verificar si hay sesión activa
         if (!isAutenticado()) {
-            FacesUtils.redirect("/faces/login.xhtml");
+            System.out.println("⚠️ LoginBean.verificarSesion: Usuario no autenticado, redirigiendo al aviso de logout");
+            FacesUtils.redirect("/faces/aviso-logout.xhtml");
             return;
         }
+        
+        // Verificar roles si se especificaron
         if (rolesPermitidos != null && rolesPermitidos.length > 0) {
+            boolean tieneRol = false;
             for (int rol : rolesPermitidos) {
                 if (hasRol(rol)) {
-                    return;
+                    tieneRol = true;
+                    break;
                 }
             }
-            FacesUtils.redirect("/faces/sinacceso.xhtml");
+            if (!tieneRol) {
+                System.out.println("⚠️ LoginBean.verificarSesion: Usuario no tiene rol permitido, redirigiendo");
+                FacesUtils.redirect("/faces/sinacceso.xhtml");
+            }
         }
     }
-
-    // Métodos específicos para verificación de sesión por rol
-    public void verificarSesionInstructor() {
-        verificarSesion(2); // Rol 2 = Instructor
+    
+    // Método wrapper para verificar sesión sin restricciones de rol (para perfil)
+    public String verificarSesionCualquiera() {
+        if (!isAutenticado()) {
+            System.out.println("⚠️ LoginBean.verificarSesionCualquiera: Usuario no autenticado, redirigiendo al aviso de logout");
+            FacesUtils.redirect("/faces/aviso-logout.xhtml");
+            return null;
+        }
+        return null;
     }
-
-    public void verificarSesionAdmin() {
-        verificarSesion(1); // Rol 1 = Administrador
+    
+    // Métodos wrapper para f:viewAction que retornan String
+    public String verificarSesionAdmin() {
+        verificarSesion(1);
+        return null;
     }
-
-    public void verificarSesionAprendiz() {
-        verificarSesion(3); // Rol 3 = Aprendiz
+    
+    public String verificarSesionInstructor() {
+        verificarSesion(2);
+        return null;
     }
-
-    public void verificarSesionGuarda() {
-        verificarSesion(4); // Rol 4 = Guarda de Seguridad
+    
+    public String verificarSesionAprendiz() {
+        verificarSesion(3);
+        return null;
     }
-
-    public void verificarSesionAdminInstructor() {
-        verificarSesion(1, 2); // Rol 1 = Admin, Rol 2 = Instructor
+    
+    public String verificarSesionGuarda() {
+        verificarSesion(4);
+        return null;
     }
-
-    public void verificarSesionAdminGuarda() {
-        verificarSesion(1, 4); // Rol 1 = Admin, Rol 4 = Guarda
+    
+    public String verificarSesionAdminInstructor() {
+        verificarSesion(1, 2);
+        return null;
+    }
+    
+    public String verificarSesionAdminGuarda() {
+        verificarSesion(1, 4);
+        return null;
     }
 
     public String cerrarSesion() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.getSessionMap().clear();
-        usuarioAutenticado = null;
-        roles.clear();
-        credenciales = new Usuario();
-        return "/login.xhtml?faces-redirect=true";
+        try {
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            
+            // Limpiar todas las variables de sesión
+            externalContext.getSessionMap().clear();
+            usuarioAutenticado = null;
+            roles.clear();
+            credenciales = new Usuario();
+            
+            // Invalidar la sesión HTTP completamente
+            javax.servlet.http.HttpSession session = (javax.servlet.http.HttpSession) externalContext.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            
+            System.out.println("✅ LoginBean.cerrarSesion: Sesión cerrada e invalidada correctamente");
+            
+            // Redirigir al formulario de inicio de sesión
+            return "/login.xhtml?faces-redirect=true";
+        } catch (Exception e) {
+            System.err.println("❌ LoginBean.cerrarSesion: Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
+            // Aún así redirigir al login
+            return "/login.xhtml?faces-redirect=true";
+        }
     }
 }

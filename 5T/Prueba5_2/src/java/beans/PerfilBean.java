@@ -307,5 +307,74 @@ public class PerfilBean implements Serializable {
         }
         return "No asignada";
     }
+
+    /**
+     * Verifica si el usuario tiene un rol específico
+     */
+    public boolean esRol(int rol) {
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            if (facesContext == null) {
+                return false;
+            }
+            
+            List<Integer> roles = (List<Integer>) facesContext.getExternalContext().getSessionMap().get("roles");
+            if (roles == null || roles.isEmpty()) {
+                return false;
+            }
+            
+            return roles.contains(rol);
+        } catch (Exception e) {
+            System.err.println("❌ PerfilBean.esRol: Error al verificar rol: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Redirige al panel correspondiente según el rol del usuario
+     */
+    public String volverAlPanel() {
+        System.out.println("🔍 PerfilBean.volverAlPanel: Redirigiendo al panel según rol");
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext == null) {
+            System.err.println("❌ PerfilBean.volverAlPanel: FacesContext es null");
+            return "/pages/admin/indexAdmin.xhtml?faces-redirect=true"; // Por defecto
+        }
+        
+        try {
+            // Obtener los roles del usuario desde la sesión
+            List<Integer> roles = (List<Integer>) facesContext.getExternalContext().getSessionMap().get("roles");
+            
+            if (roles == null || roles.isEmpty()) {
+                System.err.println("⚠️ PerfilBean.volverAlPanel: No se encontraron roles, redirigiendo a Admin por defecto");
+                return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
+            }
+            
+            System.out.println("🔍 PerfilBean.volverAlPanel: Roles del usuario: " + roles);
+            
+            // Determinar el panel según el rol (misma lógica que LoginBean)
+            if (roles.contains(1)) { // Administrador/Coordinador
+                System.out.println("   → Redirigiendo a Admin");
+                return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
+            } else if (roles.contains(2)) { // Instructor
+                System.out.println("   → Redirigiendo a Instructor");
+                return "/pages/instructor/index.xhtml?faces-redirect=true";
+            } else if (roles.contains(3)) { // Aprendiz
+                System.out.println("   → Redirigiendo a Aprendiz");
+                return "/pages/aprendiz/index.xhtml?faces-redirect=true";
+            } else if (roles.contains(4)) { // Guarda de Seguridad
+                System.out.println("   → Redirigiendo a Guarda");
+                return "/pages/guarda/index.xhtml?faces-redirect=true";
+            } else {
+                System.out.println("   ⚠️ No se encontró rol válido, redirigiendo a Admin por defecto");
+                return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
+            }
+        } catch (Exception e) {
+            System.err.println("❌ PerfilBean.volverAlPanel: Error al determinar el panel: " + e.getMessage());
+            e.printStackTrace();
+            return "/pages/admin/indexAdmin.xhtml?faces-redirect=true"; // Por defecto
+        }
+    }
 }
 

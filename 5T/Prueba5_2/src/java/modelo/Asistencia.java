@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Asistencia implements Serializable {
 
@@ -9,8 +9,13 @@ public class Asistencia implements Serializable {
     private int aprendizUsuarioId;
     private int instructorUsuarioId;
     private int jornadaId;
-    private Date fecha;
+    private LocalDate fecha;
     private String estado;
+    
+    // Campos adicionales para mostrar nombres en la vista
+    private String aprendizNombre;
+    private String instructorNombre;
+    private String jornadaNombre;
 
     public int getIdAsistencia() {
         return idAsistencia;
@@ -44,11 +49,11 @@ public class Asistencia implements Serializable {
         this.jornadaId = jornadaId;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
@@ -58,6 +63,30 @@ public class Asistencia implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getInstructorNombre() {
+        return instructorNombre;
+    }
+
+    public void setInstructorNombre(String instructorNombre) {
+        this.instructorNombre = instructorNombre;
+    }
+
+    public String getJornadaNombre() {
+        return jornadaNombre;
+    }
+
+    public void setJornadaNombre(String jornadaNombre) {
+        this.jornadaNombre = jornadaNombre;
+    }
+    
+    public String getAprendizNombre() {
+        return aprendizNombre;
+    }
+    
+    public void setAprendizNombre(String aprendizNombre) {
+        this.aprendizNombre = aprendizNombre;
     }
 }
 

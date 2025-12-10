@@ -2,35 +2,34 @@ package dao;
 
 import modelo.TrasladoRecurso;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-/**
- * DAO para gestionar los traslados de recursos entre ambientes
- */
 public class TrasladoRecursoDAO {
 
-    /**
-     * Lista todos los traslados con información de recursos y ambientes
-     */
     public List<TrasladoRecurso> listar() {
         List<TrasladoRecurso> traslados = new ArrayList<>();
-        String sql = "SELECT t.id_traslado, t.recurso_id, t.ambiente_origen, t.ambiente_destino, "
-                   + "t.fecha_traslado, t.observacion, r.nombre_recurso, "
-                   + "ao.num_ambiente AS num_origen, ad.num_ambiente AS num_destino "
-                   + "FROM traslado_recurso t "
-                   + "INNER JOIN recursos r ON t.recurso_id = r.id_recurso "
-                   + "INNER JOIN ambiente ao ON t.ambiente_origen = ao.id_ambiente "
-                   + "INNER JOIN ambiente ad ON t.ambiente_destino = ad.id_ambiente "
-                   + "ORDER BY t.fecha_traslado DESC";
-        
+        String sql = "SELECT tr.id_traslado, tr.recurso_id, tr.ambiente_origen, tr.ambiente_destino, tr.fecha_traslado, tr.observacion, "
+                + "r.nombre_recurso AS recurso_nombre, "
+                + "CONCAT(ao.num_ambiente, ' - ', ao.tipo_ambiente) AS ambiente_origen_nombre, "
+                + "CONCAT(ad.num_ambiente, ' - ', ad.tipo_ambiente) AS ambiente_destino_nombre "
+                + "FROM traslado_recurso tr "
+                + "LEFT JOIN recursos r ON tr.recurso_id = r.id_recurso "
+                + "LEFT JOIN ambiente ao ON tr.ambiente_origen = ao.id_ambiente "
+                + "LEFT JOIN ambiente ad ON tr.ambiente_destino = ad.id_ambiente "
+                + "ORDER BY tr.id_traslado ASC";
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                traslados.add(mapRow(rs));
+                traslados.add(mapRowWithNames(rs));
             }
         } catch (SQLException e) {
             System.err.println("❌ TrasladoRecursoDAO.listar: Error: " + e.getMessage());
@@ -39,25 +38,99 @@ public class TrasladoRecursoDAO {
         return traslados;
     }
 
-    /**
-     * Busca un traslado por su ID
-     */
-    public TrasladoRecurso buscarPorId(int id) {
-        String sql = "SELECT t.id_traslado, t.recurso_id, t.ambiente_origen, t.ambiente_destino, "
-                   + "t.fecha_traslado, t.observacion, r.nombre_recurso, "
-                   + "ao.num_ambiente AS num_origen, ad.num_ambiente AS num_destino "
-                   + "FROM traslado_recurso t "
-                   + "INNER JOIN recursos r ON t.recurso_id = r.id_recurso "
-                   + "INNER JOIN ambiente ao ON t.ambiente_origen = ao.id_ambiente "
-                   + "INNER JOIN ambiente ad ON t.ambiente_destino = ad.id_ambiente "
-                   + "WHERE t.id_traslado = ?";
-        
+    public int guardar(TrasladoRecurso traslado) {
+        String sql = "INSERT INTO traslado_recurso (recurso_id, ambiente_origen, ambiente_destino, fecha_traslado, observacion) "
+                + "VALUES (?,?,?,?,?)";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, traslado.getRecursoId());
+            ps.setInt(2, traslado.getAmbienteOrigen());
+            ps.setInt(3, traslado.getAmbienteDestino());
+            ps.setTimestamp(4, Timestamp.valueOf(traslado.getFechaTraslado() != null ? traslado.getFechaTraslado() : LocalDateTime.now()));
+            ps.setString(5, traslado.getObservacion());
+            ps.executeUpdate();
+            
+            // Actualizar el ambiente del recurso al destino
+            String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
+            try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
+                psUpdate.setInt(1, traslado.getAmbienteDestino());
+                psUpdate.setInt(2, traslado.getRecursoId());
+                psUpdate.executeUpdate();
+            }
+            
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean actualizar(TrasladoRecurso traslado) {
+        String sql = "UPDATE traslado_recurso SET recurso_id=?, ambiente_origen=?, ambiente_destino=?, fecha_traslado=?, observacion=? "
+                + "WHERE id_traslado=?";
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setInt(1, traslado.getRecursoId());
+            ps.setInt(2, traslado.getAmbienteOrigen());
+            ps.setInt(3, traslado.getAmbienteDestino());
+            ps.setTimestamp(4, Timestamp.valueOf(traslado.getFechaTraslado() != null ? traslado.getFechaTraslado() : LocalDateTime.now()));
+            ps.setString(5, traslado.getObservacion());
+            ps.setInt(6, traslado.getIdTraslado());
+            
+            int rows = ps.executeUpdate();
+            
+            // Actualizar el ambiente del recurso al destino
+            if (rows > 0) {
+                String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
+                try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
+                    psUpdate.setInt(1, traslado.getAmbienteDestino());
+                    psUpdate.setInt(2, traslado.getRecursoId());
+                    psUpdate.executeUpdate();
+                }
+            }
+            
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ TrasladoRecursoDAO.actualizar: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean eliminar(int idTraslado) {
+        String sql = "DELETE FROM traslado_recurso WHERE id_traslado=?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idTraslado);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public TrasladoRecurso buscarPorId(int idTraslado) {
+        String sql = "SELECT tr.id_traslado, tr.recurso_id, tr.ambiente_origen, tr.ambiente_destino, tr.fecha_traslado, tr.observacion, "
+                + "r.nombre_recurso AS recurso_nombre, "
+                + "CONCAT(ao.num_ambiente, ' - ', ao.tipo_ambiente) AS ambiente_origen_nombre, "
+                + "CONCAT(ad.num_ambiente, ' - ', ad.tipo_ambiente) AS ambiente_destino_nombre "
+                + "FROM traslado_recurso tr "
+                + "LEFT JOIN recursos r ON tr.recurso_id = r.id_recurso "
+                + "LEFT JOIN ambiente ao ON tr.ambiente_origen = ao.id_ambiente "
+                + "LEFT JOIN ambiente ad ON tr.ambiente_destino = ad.id_ambiente "
+                + "WHERE tr.id_traslado=?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idTraslado);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapRow(rs);
+                    return mapRowWithNames(rs);
                 }
             }
         } catch (SQLException e) {
@@ -67,127 +140,20 @@ public class TrasladoRecursoDAO {
         return null;
     }
 
-    /**
-     * Guarda un nuevo traslado y actualiza el ambiente del recurso
-     */
-    public int guardar(TrasladoRecurso traslado) {
-        String sqlTraslado = "INSERT INTO traslado_recurso (recurso_id, ambiente_origen, ambiente_destino, fecha_traslado, observacion) "
-                           + "VALUES (?, ?, ?, ?, ?)";
-        String sqlActualizarRecurso = "UPDATE recursos SET ambiente_id = ? WHERE id_recurso = ?";
-        
-        Connection con = null;
-        try {
-            con = ConnBD.conectar();
-            con.setAutoCommit(false);
-            
-            // Insertar traslado
-            int idGenerado = -1;
-            try (PreparedStatement ps = con.prepareStatement(sqlTraslado, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setInt(1, traslado.getRecursoId());
-                ps.setInt(2, traslado.getAmbienteOrigenId());
-                ps.setInt(3, traslado.getAmbienteDestinoId());
-                ps.setTimestamp(4, new Timestamp(traslado.getFechaTraslado() != null ? traslado.getFechaTraslado().getTime() : new Date().getTime()));
-                ps.setString(5, traslado.getObservacion());
-                ps.executeUpdate();
-                
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (keys.next()) {
-                        idGenerado = keys.getInt(1);
-                    }
-                }
-            }
-            
-            // Actualizar ambiente del recurso
-            try (PreparedStatement ps = con.prepareStatement(sqlActualizarRecurso)) {
-                ps.setInt(1, traslado.getAmbienteDestinoId());
-                ps.setInt(2, traslado.getRecursoId());
-                ps.executeUpdate();
-            }
-            
-            con.commit();
-            System.out.println("✅ TrasladoRecursoDAO.guardar: Traslado guardado con ID: " + idGenerado);
-            return idGenerado;
-            
-        } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
-            e.printStackTrace();
-            if (con != null) {
-                try {
-                    con.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        } finally {
-            if (con != null) {
-                try {
-                    con.setAutoCommit(true);
-                    con.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Elimina un traslado (solo el registro, no revierte el cambio de ambiente)
-     */
-    public boolean eliminar(int id) {
-        String sql = "DELETE FROM traslado_recurso WHERE id_traslado = ?";
-        try (Connection con = ConnBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            boolean eliminado = ps.executeUpdate() > 0;
-            if (eliminado) {
-                System.out.println("✅ TrasladoRecursoDAO.eliminar: Traslado eliminado ID: " + id);
-            }
-            return eliminado;
-        } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * Obtiene el ambiente actual de un recurso
-     */
-    public int obtenerAmbienteActualRecurso(int recursoId) {
-        String sql = "SELECT ambiente_id FROM recursos WHERE id_recurso = ?";
-        try (Connection con = ConnBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, recursoId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("ambiente_id");
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.obtenerAmbienteActualRecurso: Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    private TrasladoRecurso mapRow(ResultSet rs) throws SQLException {
+    private TrasladoRecurso mapRowWithNames(ResultSet rs) throws SQLException {
         TrasladoRecurso traslado = new TrasladoRecurso();
         traslado.setIdTraslado(rs.getInt("id_traslado"));
         traslado.setRecursoId(rs.getInt("recurso_id"));
-        traslado.setAmbienteOrigenId(rs.getInt("ambiente_origen"));
-        traslado.setAmbienteDestinoId(rs.getInt("ambiente_destino"));
-        
+        traslado.setAmbienteOrigen(rs.getInt("ambiente_origen"));
+        traslado.setAmbienteDestino(rs.getInt("ambiente_destino"));
         Timestamp ts = rs.getTimestamp("fecha_traslado");
         if (ts != null) {
-            traslado.setFechaTraslado(new Date(ts.getTime()));
+            traslado.setFechaTraslado(ts.toLocalDateTime());
         }
-        
         traslado.setObservacion(rs.getString("observacion"));
-        traslado.setNombreRecurso(rs.getString("nombre_recurso"));
-        traslado.setAmbienteOrigen("Ambiente " + rs.getInt("num_origen"));
-        traslado.setAmbienteDestino("Ambiente " + rs.getInt("num_destino"));
-        
+        traslado.setRecursoNombre(rs.getString("recurso_nombre"));
+        traslado.setAmbienteOrigenNombre(rs.getString("ambiente_origen_nombre"));
+        traslado.setAmbienteDestinoNombre(rs.getString("ambiente_destino_nombre"));
         return traslado;
     }
 }

@@ -1,7 +1,7 @@
 package util;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Objeto de transporte para filtros de reportes multicriterio.
@@ -12,8 +12,8 @@ public class ReportFilter implements Serializable {
     private Integer tipoIncidenteId;
     private Integer tipoRecursoId;
     private Integer usuarioId;
-    private Date fechaDesde;
-    private Date fechaHasta;
+    private LocalDate fechaDesde;
+    private LocalDate fechaHasta;
 
     public Integer getAmbienteId() {
         return ambienteId;
@@ -47,19 +47,19 @@ public class ReportFilter implements Serializable {
         this.usuarioId = usuarioId;
     }
 
-    public Date getFechaDesde() {
+    public LocalDate getFechaDesde() {
         return fechaDesde;
     }
 
-    public void setFechaDesde(Date fechaDesde) {
+    public void setFechaDesde(LocalDate fechaDesde) {
         this.fechaDesde = fechaDesde;
     }
 
-    public Date getFechaHasta() {
+    public LocalDate getFechaHasta() {
         return fechaHasta;
     }
 
-    public void setFechaHasta(Date fechaHasta) {
+    public void setFechaHasta(LocalDate fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
 }

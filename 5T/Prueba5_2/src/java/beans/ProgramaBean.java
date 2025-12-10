@@ -31,6 +31,7 @@ public class ProgramaBean implements Serializable {
     private boolean inicializado = false;
 
     private List<Programa> programas;
+    private List<Programa> programasFiltrados;
     private List<Jornada> jornadas;
     private List<Modalidad> modalidades;
     private List<Coordinacion> coordinaciones;
@@ -282,8 +283,16 @@ public class ProgramaBean implements Serializable {
         programas = programaDAO.listar();
         System.out.println("   - Programas cargados: " + (programas != null ? programas.size() : 0));
         
+        if (programasFiltrados != null && !programasFiltrados.isEmpty()) {
+            return programasFiltrados;
+        }
+        
         System.out.println("   - Retornando " + (programas != null ? programas.size() : 0) + " programas");
         return programas != null ? programas : new java.util.ArrayList<>();
+    }
+
+    public void setProgramasFiltrados(List<Programa> programasFiltrados) {
+        this.programasFiltrados = programasFiltrados;
     }
 
     public List<Jornada> getJornadas() {

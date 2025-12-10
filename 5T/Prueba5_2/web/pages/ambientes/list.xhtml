@@ -12,15 +12,13 @@
         <h:form id="frmAmbientes">
             <p:dataTable value="#{ambienteBean.ambientes}" var="amb"
                          id="tablaAmbientes"
-                         paginator="true" rows="10" 
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                         styleClass="table table-striped table-hover">
+                         paginator="true" rows="10" styleClass="table table-striped table-hover">
                 <p:column headerText="Número">#{amb.numero}</p:column>
                 <p:column headerText="Capacidad">#{amb.capacidad}</p:column>
                 <p:column headerText="Tipo">#{amb.tipo}</p:column>
                 <p:column headerText="Estado">
-                    <h:outputText value="#{amb.estado}"
-                                  style="padding:4px 10px; border-radius:12px; font-weight:600; color:white; background:#{amb.estado eq 'Disponible' ? '#28a745' : '#ffc107'};"/>
+                    <p:tag severity="#{amb.estado eq 'Disponible' ? 'success' : 'warning'}"
+                           value="#{amb.estado}"/>
                 </p:column>
                 <p:column headerText="Acciones" style="width:150px;">
                     <div style="display: flex; gap: 5px;">

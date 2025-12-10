@@ -10,16 +10,13 @@
     <ui:define name="moduleTitle">Inventario de recursos</ui:define>
 
     <ui:define name="content">
-        <f:metadata>
-            <f:viewAction action="#{loginBean.verificarSesionAdminInstructor()}"/>
-        </f:metadata>
-        
         <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/recursos.css"/>
         
         <div class="container">
             <h1 class="titulo-lista">💻 Lista de Recursos</h1>
             
             <h:form id="frmRecursos" styleClass="ui-fluid">
+                <f:event type="preRenderView" listener="#{loginBean.verificarSesion(1,2)}"/>
 
                 <p:commandButton value="➕ Nuevo Recurso"
                                  styleClass="btn btn-primary"
@@ -31,7 +28,6 @@
                 <div class="table-container">
                     <p:dataTable id="tablaRecursos" value="#{recursoBean.recursos}" var="rec"
                                  paginator="true" rows="10"
-                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                  styleClass="table table-striped table-hover"
                                  style="margin-top:1rem;">
                         <p:column headerText="ID" style="width:80px;">#{rec.idRecurso}</p:column>

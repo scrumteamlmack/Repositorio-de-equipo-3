@@ -6,49 +6,164 @@
 
 <h:head>
     <title>Registrar Programa - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
     <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    </style>
 </h:head>
 
 <h:body>
     <f:metadata>
-        <f:viewParam name="idProgramaEditar" value="#{programaBean.idProgramaEditar}">
-            <f:converter converterId="javax.faces.Integer" />
-        </f:viewParam>
+        <f:viewAction action="#{loginBean.verificarSesionAdmin}"/>
     </f:metadata>
 
-    <h:form id="formPrograma">
-
-        <!-- NAVBAR -->
-        <div class="navbar">
-            <div class="title">L-MACK</div>
-            <div class="menu">
-                <p:commandButton value="Inicio"
-                                 icon="pi pi-home"
-                                 action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
-                <p:menuButton value="Administración" icon="pi pi-cog" styleClass="btn btn-secondary">
-                    <p:menuitem value="Usuarios"
-                                icon="pi pi-users"
-                                outcome="/pages/admin/listarUsuarios.xhtml"/>
-                    <p:menuitem value="Fichas"
-                                icon="pi pi-file"
-                                outcome="/pages/admin/listarFichas.xhtml"/>
-                    <p:menuitem value="Programas"
-                                icon="pi pi-book"
-                                outcome="/pages/admin/listarProgramas.xhtml"/>
-                </p:menuButton>
-                <p:commandButton value="Cerrar sesión"
-                                 icon="pi pi-sign-out"
-                                 action="#{loginBean.cerrarSesion}"
-                                 styleClass="btn btn-secondary"
-                                 ajax="false"/>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
             </div>
-        </div>
+            <nav class="sidebar-nav">
+                <h:link outcome="/pages/admin/indexAdmin.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/listarUsuarios.xhtml" value="👥 Usuarios" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/formUsuario.xhtml" value="➕ Crear Usuario" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/listarFichas.xhtml" value="📁 Fichas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/listarProgramas.xhtml" value="📚 Programas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/listarRecursos.xhtml" value="💻 Recursos" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/admin/listarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
+            </nav>
+            <div class="sidebar-footer">
+                <h:form>
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
+                                     action="#{loginBean.cerrarSesion}"
+                                     styleClass="btn-logout"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h:form id="formPrograma">
+                    <f:metadata>
+                        <f:viewParam name="idProgramaEditar" value="#{programaBean.idProgramaEditar}">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </f:viewParam>
+                    </f:metadata>
+            <f:metadata>
+                <f:viewParam name="idProgramaEditar" value="#{programaBean.idProgramaEditar}">
+                    <f:converter converterId="javax.faces.Integer" />
+                </f:viewParam>
+            </f:metadata>
 
-        <!-- CONTENIDO -->
-        <div class="content">
             <div class="form-header">
                 <h2>
                     <i class="pi pi-book" style="margin-right: 10px;"></i>
@@ -141,11 +256,11 @@
                                      styleClass="btn-secondary"/>
                 </div>
 
-            </p:panel>
-        </div>
-
-    </h:form>
-
+                    </p:panel>
+                </h:form>
+            </div>
+        </main>
+    </div>
 </h:body>
 </html>
 

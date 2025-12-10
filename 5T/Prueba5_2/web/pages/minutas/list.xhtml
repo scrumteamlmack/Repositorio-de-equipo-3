@@ -10,16 +10,15 @@
     <ui:define name="moduleTitle">Registro de minutas</ui:define>
 
     <ui:define name="content">
-        <f:metadata>
-            <f:viewAction action="#{loginBean.verificarSesionAdminGuarda()}"/>
-        </f:metadata>
-        
         <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/minuta.css"/>
         
         <div class="container">
             <h1>Listado de Minutas</h1>
             
             <h:form id="frmMinutas" styleClass="ui-fluid">
+                <f:metadata>
+                    <f:viewAction action="#{loginBean.verificarSesionAdminGuarda}"/>
+                </f:metadata>
 
                 <p:commandButton value="Nueva Minuta"
                                  styleClass="btn btn-success"
@@ -58,15 +57,15 @@
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:outputLabel value="Fecha/hora recibo" required="true"/>
-                        <p:calendar value="#{minutaBean.minuta.fechaRecibo}" showOn="button"
-                                   pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                   navigator="true" required="true"/>
+                        <p:calendar value="#{minutaBean.fechaReciboDate}" showIcon="true"
+                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                      required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:outputLabel value="Fecha/hora entrega" required="true"/>
-                        <p:calendar value="#{minutaBean.minuta.fechaEntrega}" showOn="button"
-                                   pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                   navigator="true" required="true"/>
+                        <p:calendar value="#{minutaBean.fechaEntregaDate}" showIcon="true"
+                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                      required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-3">
                         <p:inputTextarea value="#{minutaBean.minuta.novedad}" label="Novedad" autoResize="false"/>
@@ -94,7 +93,6 @@
 
                 <p:dataTable id="tablaMinutas" value="#{minutaBean.minutas}" var="min"
                              paginator="true" rows="10"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              styleClass="table table-striped table-hover"
                              style="margin-top:1rem;">
                     <p:column headerText="ID_minuta" style="width:100px;">#{min.idMinuta}</p:column>
@@ -121,20 +119,28 @@
                         <div style="display: flex; gap: 5px;">
                             <p:commandButton value="Ver"
                                              styleClass="btn btn-sm btn-info"
-                                             action="/pages/minutas/show.xhtml?faces-redirect=true&amp;id=#{min.idMinuta}"
-                                             ajax="false"/>
-                            <p:commandButton value="Editar"
-                                             styleClass="btn btn-sm btn-primary"
-                                             actionListener="#{minutaBean.editar(min.idMinuta)}"
+                                             actionListener="#{minutaBean.editar()}"
                                              update="dialogMinuta"
                                              oncomplete="PF('dlgMinuta').show()"
-                                             ajax="false"/>
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
+                            <p:commandButton value="Editar"
+                                             styleClass="btn btn-sm btn-primary"
+                                             actionListener="#{minutaBean.editar()}"
+                                             update="dialogMinuta"
+                                             oncomplete="PF('dlgMinuta').show()"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
                             <p:commandButton value="Eliminar"
                                              styleClass="btn btn-sm btn-danger"
-                                             actionListener="#{minutaBean.eliminar(min.idMinuta)}"
+                                             actionListener="#{minutaBean.eliminar()}"
                                              update="tablaMinutas"
                                              onclick="return confirm('¿Eliminar minuta?');"
-                                             ajax="false"/>
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
                         </div>
                     </p:column>
                 </p:dataTable>
@@ -168,14 +174,14 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel value="Fecha/hora recibo" required="true"/>
-                            <p:calendar value="#{minutaBean.minuta.fechaRecibo}" showOn="button"
-                                       pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                       navigator="true" required="true"/>
+                            <p:calendar value="#{minutaBean.fechaReciboDate}" showIcon="true"
+                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                          required="true"/>
 
                             <p:outputLabel value="Fecha/hora entrega" required="true"/>
-                            <p:calendar value="#{minutaBean.minuta.fechaEntrega}" showOn="button"
-                                       pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
-                                       navigator="true" required="true"/>
+                            <p:calendar value="#{minutaBean.fechaEntregaDate}" showIcon="true"
+                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                          required="true"/>
 
                             <p:outputLabel value="Novedad"/>
                             <p:inputTextarea value="#{minutaBean.minuta.novedad}" autoResize="false"/>

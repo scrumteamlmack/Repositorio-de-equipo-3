@@ -1,7 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Minuta implements Serializable {
 
@@ -9,11 +9,16 @@ public class Minuta implements Serializable {
     private int ambienteId;
     private int guardaId;
     private int responsableId;
-    private Date fechaRecibo;
-    private Date fechaEntrega;
+    private LocalDateTime fechaRecibo;
+    private LocalDateTime fechaEntrega;
     private String novedad;
     private String descripcion;
     private String estado;
+    
+    // Campos adicionales para mostrar nombres en la vista
+    private String ambienteNombre;
+    private String guardaNombre;
+    private String responsableNombre;
 
     public int getIdMinuta() {
         return idMinuta;
@@ -47,19 +52,19 @@ public class Minuta implements Serializable {
         this.responsableId = responsableId;
     }
 
-    public Date getFechaRecibo() {
+    public LocalDateTime getFechaRecibo() {
         return fechaRecibo;
     }
 
-    public void setFechaRecibo(Date fechaRecibo) {
+    public void setFechaRecibo(LocalDateTime fechaRecibo) {
         this.fechaRecibo = fechaRecibo;
     }
 
-    public Date getFechaEntrega() {
+    public LocalDateTime getFechaEntrega() {
         return fechaEntrega;
     }
 
-    public void setFechaEntrega(Date fechaEntrega) {
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
     }
 
@@ -85,6 +90,30 @@ public class Minuta implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getAmbienteNombre() {
+        return ambienteNombre;
+    }
+
+    public void setAmbienteNombre(String ambienteNombre) {
+        this.ambienteNombre = ambienteNombre;
+    }
+
+    public String getGuardaNombre() {
+        return guardaNombre;
+    }
+
+    public void setGuardaNombre(String guardaNombre) {
+        this.guardaNombre = guardaNombre;
+    }
+
+    public String getResponsableNombre() {
+        return responsableNombre;
+    }
+
+    public void setResponsableNombre(String responsableNombre) {
+        this.responsableNombre = responsableNombre;
     }
 }
 
