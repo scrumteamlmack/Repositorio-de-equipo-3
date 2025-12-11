@@ -1,0 +1,125 @@
+/* Fondo general */
+body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F5DC;
+            color: #374151;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+.ambiente-container {
+    font-family: 'Poppins', sans-serif;
+    color: #374151;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px;
+}
+
+/* Título */
+.ambiente-container h1 {
+    text-align: center;
+    color: #10b981;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+/* Alertas de error */
+.alert-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Formulario */
+.form-ambiente {
+    background-color: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(16,185,129,0.15);
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Campos */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    width: 95%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1
+}
+.form-group input,
+.form-group select {
+    width: 95%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+/* Efecto al enfocar */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #10b981;
+    outline: none;
+}
+
+/* Botones */
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.form-actions button {
+    background-color: #10b981;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+}
+
+.form-actions button:hover {
+    background-color: #059669;
+}
+
+.form-actions a {
+    background-color: #059669;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.form-actions a:hover {
+    background-color: #047857;
+}

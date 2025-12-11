@@ -1,0 +1,111 @@
+/* Fondo general */
+body {
+    background-color: #f7f9e9; /* tono pastel claro */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor del formulario de incidentes */
+.container {
+    max-width: 600px; /* un poco más ancho por campos adicionales */
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px 35px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.container h1 {
+    text-align: center;
+    color: #009879;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* Labels */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+/* Inputs, textareas y selects */
+.form-control {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    background-color: #fdfdfd;
+    margin-bottom: 15px; /* espacio entre campos */
+}
+
+.form-control:focus {
+    border-color: #009879;
+    box-shadow: 0 0 6px rgba(0, 152, 121, 0.4);
+    outline: none;
+}
+
+/* Textarea específico para descripción */
+textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Botones */
+.btn-success {
+    display: block;
+    width: 100%;
+    background-color: #009879;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-success:hover {
+    background-color: #007d63;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    display: block;
+    width: 96%;
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background-color: #565e64;
+    cursor: pointer;
+    
+}
+
+/* Mensajes de error */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+/* Ajuste para selects con más opciones */
+select.form-control {
+    cursor: pointer;
+}
