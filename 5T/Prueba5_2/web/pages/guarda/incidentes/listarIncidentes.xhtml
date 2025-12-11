@@ -162,13 +162,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaIncidentes').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaIncidentes').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 

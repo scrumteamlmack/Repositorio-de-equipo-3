@@ -172,53 +172,95 @@
 
             <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
 
-            <div class="search-section">
-                <div style="display: flex; gap: 10px; align-items: end;">
-                    <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Buscar:</label>
-                        <p:inputText value="#{usuarioBean.textoBusqueda}" 
-                                     placeholder="Nombre, apellido o documento"
-                                     style="width: 100%;"/>
-                    </div>
-                    <div>
-                        <p:commandButton value="Buscar"
-                                         actionListener="#{usuarioBean.filtrar}"
-                                         icon="pi pi-search"
-                                         styleClass="btn btn-primary"/>
-                    </div>
-                </div>
-            </div>
 
             <div class="table-container">
-                <h3 style="color: var(--primary-green); margin-bottom: 20px; font-weight: 600;">Usuarios Registrados</h3>
-                <p:dataTable value="#{usuarioBean.usuarios}" var="u" 
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color: var(--primary-green); margin: 0; font-weight: 600;">Usuarios Registrados</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <p:commandButton value="📄 Exportar PDF"
+                                         icon="pi pi-file-pdf"
+                                         styleClass="btn btn-primary"
+                                         ajax="false">
+                            <p:dataExporter type="pdf" target="tablaUsuarios" fileName="usuarios"/>
+                        </p:commandButton>
+                        <p:commandButton value="📊 Exportar Excel"
+                                         icon="pi pi-file-excel"
+                                         styleClass="btn btn-success"
+                                         ajax="false">
+                            <p:dataExporter type="xls" target="tablaUsuarios" fileName="usuarios"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+                <p:dataTable id="tablaUsuarios"
+                             value="#{usuarioBean.usuarios}" 
+                             var="u"
+                             filteredValue="#{usuarioBean.usuariosFiltrados}"
                              emptyMessage="No hay usuarios registrados"
                              paginator="true" rows="10"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              rowsPerPageTemplate="5,10,15,20"
-                             styleClass="table table-striped table-hover">
+                             styleClass="table table-striped table-hover"
+                             lazy="false">
 
-                    <p:column headerText="ID" style="width: 60px;">
+                    <p:column headerText="ID" 
+                             filterBy="#{u.idUsuario}" 
+                             filterMatchMode="exact"
+                             style="width: 60px;">
                         <h:outputText value="#{u.idUsuario}" />
                     </p:column>
 
-                    <p:column headerText="Nombre Completo">
-                        <h:outputText value="#{u.PNombre} #{u.PApellido}" />
+                    <p:column headerText="Primer Nombre"
+                             filterBy="#{u.PNombre}" 
+                             filterMatchMode="contains">
+                        <h:outputText value="#{u.PNombre}" />
                     </p:column>
 
-                    <p:column headerText="Documento">
-                        <h:outputText value="#{u.tipoDocumento} #{u.numDocumento}" />
+                    <p:column headerText="Segundo Nombre"
+                             filterBy="#{u.SNombre}" 
+                             filterMatchMode="contains">
+                        <h:outputText value="#{u.SNombre != null ? u.SNombre : '—'}" />
                     </p:column>
 
-                    <p:column headerText="Correo">
+                    <p:column headerText="Primer Apellido"
+                             filterBy="#{u.PApellido}" 
+                             filterMatchMode="contains">
+                        <h:outputText value="#{u.PApellido}" />
+                    </p:column>
+
+                    <p:column headerText="Segundo Apellido"
+                             filterBy="#{u.SApellido}" 
+                             filterMatchMode="contains">
+                        <h:outputText value="#{u.SApellido != null ? u.SApellido : '—'}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo Documento"
+                             filterBy="#{u.tipoDocumento}" 
+                             filterMatchMode="exact">
+                        <h:outputText value="#{u.tipoDocumento}" />
+                    </p:column>
+
+                    <p:column headerText="Número Documento"
+                             filterBy="#{u.numDocumento}" 
+                             filterMatchMode="contains">
+                        <h:outputText value="#{u.numDocumento}" />
+                    </p:column>
+
+                    <p:column headerText="Correo"
+                             filterBy="#{u.correo}" 
+                             filterMatchMode="contains">
                         <h:outputText value="#{u.correo}" />
                     </p:column>
 
-                    <p:column headerText="Rol">
+                    <p:column headerText="Rol"
+                             filterBy="#{usuarioBean.obtenerNombreRol(u.idUsuario)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{usuarioBean.obtenerNombreRol(u.idUsuario)}">
                         <h:outputText value="#{usuarioBean.obtenerNombreRol(u.idUsuario)}" />
                     </p:column>
 
-                    <p:column headerText="Acciones" style="width: 150px;">
+                    <p:column headerText="Acciones" 
+                             style="width: 150px;"
+                             exportable="false">
                         <div style="display: flex; gap: 5px;">
                             <p:commandButton icon="pi pi-pencil"
                                              title="Editar"

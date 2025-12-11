@@ -172,13 +172,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaMinutas').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaMinutas" fileName="minutas"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaMinutas').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaMinutas" fileName="minutas"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -202,29 +204,38 @@
                         </p:column>
 
                         <p:column headerText="Ambiente" 
-                                 filterBy="#{min.ambienteNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{minutaBean.getTextoAmbiente(min)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{minutaBean.getTextoAmbiente(min)}">
                             <h:outputText value="#{min.ambienteNombre != null ? min.ambienteNombre : 'Ambiente ' + min.ambienteId}" />
                         </p:column>
 
                         <p:column headerText="Guarda de Seguridad" 
-                                 filterBy="#{min.guardaNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{minutaBean.getTextoGuarda(min)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{minutaBean.getTextoGuarda(min)}">
                             <h:outputText value="#{min.guardaNombre != null ? min.guardaNombre : 'Guarda ' + min.guardaId}" />
                         </p:column>
 
                         <p:column headerText="Instructor Responsable" 
-                                 filterBy="#{min.responsableNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{minutaBean.getTextoResponsable(min)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{minutaBean.getTextoResponsable(min)}">
                             <h:outputText value="#{min.responsableNombre != null ? min.responsableNombre : 'Instructor ' + min.responsableId}" />
                         </p:column>
 
                         <p:column headerText="Fecha Recibo" 
+                                 filterBy="#{minutaBean.formatearFecha(min.fechaRecibo)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{minutaBean.formatearFecha(min.fechaRecibo)}"
                                  style="width: 150px;">
                             <h:outputText value="#{minutaBean.formatearFecha(min.fechaRecibo)}" rendered="#{min.fechaRecibo != null}" />
                         </p:column>
 
                         <p:column headerText="Fecha Entrega" 
+                                 filterBy="#{minutaBean.formatearFecha(min.fechaEntrega)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{minutaBean.formatearFecha(min.fechaEntrega)}"
                                  style="width: 150px;">
                             <h:outputText value="#{minutaBean.formatearFecha(min.fechaEntrega)}" rendered="#{min.fechaEntrega != null}" />
                         </p:column>
@@ -233,9 +244,8 @@
                                  filterBy="#{min.estado}" 
                                  filterMatchMode="contains"
                                  style="width: 120px;">
-                            <span class="badge #{min.estado eq 'Entregado' or min.estado eq 'Normal' or min.estado eq 'Disponible' ? 'bg-success' : 'bg-warning'}">
-                                #{min.estado}
-                            </span>
+                            <h:outputText value="#{min.estado}" 
+                                         styleClass="badge #{min.estado eq 'Entregado' or min.estado eq 'Normal' or min.estado eq 'Disponible' ? 'bg-success' : 'bg-warning'}"/>
                         </p:column>
 
                         <p:column headerText="Novedad" 

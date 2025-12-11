@@ -8,17 +8,13 @@ public class ConnBD {
 
     private static final String URL = "jdbc:mysql://localhost:3306/mydb?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASS = ""; // SIN CONTRASEÑA
+    private static final String PASS = "";
 
     public static Connection conectar() {
         Connection conn = null;
 
         try {
-            // *** Cargar el driver de MySQL (OBLIGATORIO en GlassFish) ***
-            // Usar el driver original que funcionaba antes
             Class.forName("com.mysql.jdbc.Driver");
-
-            // Intentar la conexión
             conn = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("✔️ ConnBD: Conexión establecida correctamente");
 

@@ -49,6 +49,7 @@ public class TrasladoRecursoBean implements Serializable {
             System.out.println("🔍 TrasladoRecursoBean.cargarDatos: Iniciando carga de datos");
             
             traslados = trasladoDAO.listar();
+            trasladosFiltrados = null;
             System.out.println("   - Traslados cargados: " + (traslados != null ? traslados.size() : 0));
             
             recursos = recursoDAO.listar();
@@ -221,6 +222,19 @@ public class TrasladoRecursoBean implements Serializable {
         return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
     
+    // Métodos helper para filtros - aseguran que siempre haya un valor para filtrar
+    public String getTextoRecurso(TrasladoRecurso tras) {
+        return tras.getRecursoNombre() != null ? tras.getRecursoNombre() : "Recurso " + tras.getRecursoId();
+    }
+    
+    public String getTextoAmbienteOrigen(TrasladoRecurso tras) {
+        return tras.getAmbienteOrigenNombre() != null ? tras.getAmbienteOrigenNombre() : "Ambiente " + tras.getAmbienteOrigen();
+    }
+    
+    public String getTextoAmbienteDestino(TrasladoRecurso tras) {
+        return tras.getAmbienteDestinoNombre() != null ? tras.getAmbienteDestinoNombre() : "Ambiente " + tras.getAmbienteDestino();
+    }
+    
     // Getter y Setter para propiedad Date
     public Date getFechaTrasladoDate() {
         if (fechaTrasladoDate == null && traslado.getFechaTraslado() != null) {
@@ -252,10 +266,11 @@ public class TrasladoRecursoBean implements Serializable {
         if (traslados == null) {
             traslados = trasladoDAO.listar();
         }
-        if (trasladosFiltrados != null && !trasladosFiltrados.isEmpty()) {
-            return trasladosFiltrados;
-        }
         return traslados;
+    }
+
+    public List<TrasladoRecurso> getTrasladosFiltrados() {
+        return trasladosFiltrados;
     }
 
     public void setTrasladosFiltrados(List<TrasladoRecurso> trasladosFiltrados) {

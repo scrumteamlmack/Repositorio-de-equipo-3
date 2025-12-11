@@ -234,6 +234,25 @@ public class FichaDAO {
 
         return false;
     }
+    
+    public boolean eliminarPorInstructor(int instructorId) {
+        String sql = "DELETE FROM ficha WHERE instructor_Usuario_id_usuario = ?";
+        
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, instructorId);
+            int filas = ps.executeUpdate();
+            System.out.println("✅ FichaDAO.eliminarPorInstructor: Eliminadas " + filas + " fichas del instructor ID: " + instructorId);
+            return true;
+            
+        } catch (SQLException e) {
+            System.err.println("❌ FichaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
 
     private Ficha mapRow(ResultSet rs) throws SQLException {
         Ficha f = new Ficha();

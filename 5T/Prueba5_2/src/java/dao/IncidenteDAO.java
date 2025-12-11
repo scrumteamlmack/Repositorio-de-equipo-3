@@ -149,6 +149,21 @@ public class IncidenteDAO {
         }
         return false;
     }
+    
+    public boolean eliminarPorUsuario(int usuarioId) {
+        String sql = "DELETE FROM registro_incidente WHERE usuario_id_usuario = ?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, usuarioId);
+            int filas = ps.executeUpdate();
+            System.out.println("✅ IncidenteDAO.eliminarPorUsuario: Eliminados " + filas + " incidentes del usuario ID: " + usuarioId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("❌ IncidenteDAO.eliminarPorUsuario: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public List<Incidente> filtrar(ReportFilter filtro) {
         List<Incidente> incidentes = new ArrayList<>();

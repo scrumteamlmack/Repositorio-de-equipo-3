@@ -56,6 +56,7 @@ public class IncidenteBean implements Serializable {
             System.out.println("🔍 IncidenteBean.cargarDatos: Iniciando carga de datos");
             
             incidentes = incidenteDAO.listar();
+            incidentesFiltrados = null;
             System.out.println("   - Incidentes cargados: " + (incidentes != null ? incidentes.size() : 0));
             
             ambientes = ambienteDAO.listar();
@@ -390,36 +391,10 @@ public class IncidenteBean implements Serializable {
     }
 
     public List<Incidente> getIncidentes() {
-        System.out.println("🔍 IncidenteBean.getIncidentes: Getter llamado");
-        System.out.println("   - inicializado: " + inicializado);
-        System.out.println("   - incidentes es null: " + (incidentes == null));
-        
-        if (!inicializado) {
-            System.out.println("   ⚠️ Bean no inicializado, ejecutando init()...");
-            init();
+        if (incidentes == null) {
+            incidentes = incidenteDAO.listar();
         }
-        
-        // Siempre recargar desde el DAO para asegurar que tenemos todos los datos actualizados
-        System.out.println("   - Recargando incidentes desde el DAO...");
-        incidentes = incidenteDAO.listar();
-        System.out.println("   - Incidentes cargados: " + (incidentes != null ? incidentes.size() : 0));
-        
-        if (incidentes != null && !incidentes.isEmpty()) {
-            for (Incidente inc : incidentes) {
-                System.out.println("      - Incidente ID: " + inc.getIdIncidente() + 
-                    ", Desc: " + (inc.getDescripcion() != null ? inc.getDescripcion().substring(0, Math.min(30, inc.getDescripcion().length())) : "Sin descripción") +
-                    ", Fecha: " + inc.getFecha() +
-                    ", Ambiente: " + inc.getIdAmbiente() +
-                    ", Tipo: " + inc.getIdTipoIncidente());
-            }
-        }
-        
-        if (incidentesFiltrados != null && !incidentesFiltrados.isEmpty()) {
-            return incidentesFiltrados;
-        }
-        
-        System.out.println("   - Retornando " + (incidentes != null ? incidentes.size() : 0) + " incidentes");
-        return incidentes != null ? incidentes : new java.util.ArrayList<>();
+        return incidentes;
     }
 
     public List<Incidente> getIncidentesFiltrados() {

@@ -280,12 +280,18 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label">Tipo de Documento</label>
-                                    <p:inputText id="tipoDoc" 
-                                                 value="#{usuarioBean.usuario.tipoDocumento}" 
-                                                 required="#{!usuarioBean.isModoEdicion()}"
-                                                 requiredMessage="El tipo de documento es obligatorio"
-                                                 placeholder="CC, TI, CE, etc."
-                                                 styleClass="form-control"/>
+                                    <p:selectOneMenu id="tipoDoc" 
+                                                     value="#{usuarioBean.usuario.tipoDocumento}" 
+                                                     required="#{!usuarioBean.isModoEdicion()}"
+                                                     requiredMessage="El tipo de documento es obligatorio"
+                                                     styleClass="form-select"
+                                                     style="width: 100%;">
+                                        <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                        <f:selectItem itemLabel="CC" itemValue="CC"/>
+                                        <f:selectItem itemLabel="TI" itemValue="TI"/>
+                                        <f:selectItem itemLabel="CE" itemValue="CE"/>
+                                        <f:selectItem itemLabel="OTRO" itemValue="OTRO"/>
+                                    </p:selectOneMenu>
                                 </div>
 
                                 <div class="col-md-6">

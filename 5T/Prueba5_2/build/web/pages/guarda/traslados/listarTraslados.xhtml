@@ -172,39 +172,78 @@
                 </h:link>
             </div>
 
+            <p:toolbar style="margin-bottom: 10px;">
+                <f:facet name="left">
+                    <p:commandButton value="📄 Exportar PDF"
+                                     icon="pi pi-file-pdf"
+                                     styleClass="btn-primary"
+                                     ajax="false">
+                        <p:dataExporter type="pdf" target="tablaTraslados" fileName="traslados"/>
+                    </p:commandButton>
+                    <p:commandButton value="📊 Exportar Excel"
+                                     icon="pi pi-file-excel"
+                                     styleClass="btn-success"
+                                     ajax="false">
+                        <p:dataExporter type="xls" target="tablaTraslados" fileName="traslados"/>
+                    </p:commandButton>
+                </f:facet>
+            </p:toolbar>
+
             <div class="table-container">
-                <p:dataTable value="#{trasladoRecursoBean.traslados}" var="tras" 
+                <p:dataTable id="tablaTraslados"
+                             value="#{trasladoRecursoBean.traslados}" 
+                             var="tras"
+                             filteredValue="#{trasladoRecursoBean.trasladosFiltrados}"
                              emptyMessage="No hay traslados registrados"
                              paginator="true" rows="10"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              rowsPerPageTemplate="5,10,15,20"
                              styleClass="table table-striped table-hover">
 
-                    <p:column headerText="ID" style="width: 60px;">
+                    <p:column headerText="ID" 
+                             filterBy="#{tras.idTraslado}" 
+                             filterMatchMode="exact"
+                             style="width: 60px;">
                         <h:outputText value="#{tras.idTraslado}" />
                     </p:column>
 
-                    <p:column headerText="Recurso">
+                    <p:column headerText="Recurso"
+                             filterBy="#{trasladoRecursoBean.getTextoRecurso(tras)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{trasladoRecursoBean.getTextoRecurso(tras)}">
                         <h:outputText value="#{tras.recursoNombre != null ? tras.recursoNombre : 'Recurso ' + tras.recursoId}" />
                     </p:column>
 
-                    <p:column headerText="Ambiente Origen">
+                    <p:column headerText="Ambiente Origen"
+                             filterBy="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}">
                         <h:outputText value="#{tras.ambienteOrigenNombre != null ? tras.ambienteOrigenNombre : 'Ambiente ' + tras.ambienteOrigen}" />
                     </p:column>
 
-                    <p:column headerText="Ambiente Destino">
+                    <p:column headerText="Ambiente Destino"
+                             filterBy="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}">
                         <h:outputText value="#{tras.ambienteDestinoNombre != null ? tras.ambienteDestinoNombre : 'Ambiente ' + tras.ambienteDestino}" />
                     </p:column>
 
-                    <p:column headerText="Fecha Traslado">
+                    <p:column headerText="Fecha Traslado"
+                             filterBy="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}">
                         <h:outputText value="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" rendered="#{tras.fechaTraslado != null}" />
                     </p:column>
 
-                    <p:column headerText="Observación">
+                    <p:column headerText="Observación"
+                             filterBy="#{tras.observacion}" 
+                             filterMatchMode="contains">
                         <h:outputText value="#{tras.observacion != null ? tras.observacion : '—'}" />
                     </p:column>
 
-                    <p:column headerText="Acciones" style="width: 150px;">
+                    <p:column headerText="Acciones" 
+                             style="width: 150px;"
+                             exportable="false">
                         <p:commandButton value="✏️ Editar" 
                                          action="#{trasladoRecursoBean.editar(tras.idTraslado)}"
                                          icon="pi pi-pencil"

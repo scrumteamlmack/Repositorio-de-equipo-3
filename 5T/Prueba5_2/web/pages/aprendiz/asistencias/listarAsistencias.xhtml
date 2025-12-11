@@ -170,13 +170,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencias').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaAsistencias" fileName="asistencias"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencias').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaAsistencias" fileName="asistencias"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -211,9 +213,8 @@
                                  filterBy="#{asistenciaAprendizBean.getEstadoTexto(asis.estado)}" 
                                  filterMatchMode="contains"
                                  style="width: 120px;text-align:center;">
-                            <span class="badge #{asis.estado == 'S' ? 'bg-success' : asis.estado == 'R' ? 'bg-warning' : 'bg-danger'}">
-                                #{asistenciaAprendizBean.getEstadoTexto(asis.estado)}
-                            </span>
+                            <h:outputText value="#{asistenciaAprendizBean.getEstadoTexto(asis.estado)}" 
+                                         styleClass="badge #{asis.estado == 'S' ? 'bg-success' : asis.estado == 'R' ? 'bg-warning' : 'bg-danger'}"/>
                         </p:column>
 
                         <p:column headerText="Instructor" 

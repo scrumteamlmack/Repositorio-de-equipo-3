@@ -15,7 +15,7 @@ public class RecursoDAO {
     public List<Recurso> listar() {
         List<Recurso> recursos = new ArrayList<>();
         String sql = "SELECT id_recurso, tipo_recurso, ambiente_id, nombre_recurso, serial_recurso, num_recurso, estado, observacion "
-                + "FROM recursos ORDER BY nombre_recurso";
+                + "FROM recursos ORDER BY id_recurso ASC";
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

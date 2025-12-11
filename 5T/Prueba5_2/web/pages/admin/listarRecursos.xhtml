@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
@@ -170,9 +170,7 @@
                     <div style="margin-bottom: 20px;">
                         <p:commandButton value="➕ Nuevo Recurso"
                                          styleClass="btn btn-primary"
-                                         actionListener="#{recursoBean.prepararNuevo}"
-                                         update="dialogRecurso"
-                                         oncomplete="PF('dlgRecurso').show()"
+                                         action="/pages/admin/formRecurso.xhtml?faces-redirect=true"
                                          ajax="false"/>
                     </div>
 
@@ -181,27 +179,28 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaRecursos').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaRecursos" fileName="recursos"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaRecursos').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaRecursos" fileName="recursos"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
                     <p:dataTable id="tablaRecursos" 
                                  value="#{recursoBean.recursos}" 
                                  var="rec"
-                                 filteredValue="#{recursoBean.recursosFiltrados}"
+                                 filteredValue="#{recursoBean.recursosFiltrados}" 
                                  emptyMessage="No hay recursos registrados"
                                  paginator="true" 
                                  rows="10"
                                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                  rowsPerPageTemplate="5,10,15,20"
-                                 styleClass="table table-striped table-hover"
-                                 exportable="true">
+                                 styleClass="table table-striped table-hover">
 
                         <p:column headerText="ID" 
                                  filterBy="#{rec.idRecurso}" 
@@ -242,9 +241,8 @@
                                  filterBy="#{rec.estado}" 
                                  filterMatchMode="contains"
                                  style="width: 150px;">
-                            <span class="badge #{rec.estado == 'Disponible' or rec.estado == 'Operativo' ? 'bg-success' : rec.estado == 'Dañado' ? 'bg-danger' : 'bg-warning'}">
-                                #{rec.estado}
-                            </span>
+                            <h:outputText value="#{rec.estado}" 
+                                         styleClass="badge #{rec.estado == 'Disponible' or rec.estado == 'Operativo' ? 'bg-success' : rec.estado == 'Dañado' ? 'bg-danger' : 'bg-warning'}"/>
                         </p:column>
 
                         <p:column headerText="Ambiente" 
@@ -267,9 +265,7 @@
                             <div style="display: flex; gap: 5px;">
                                 <p:commandButton value="Editar"
                                                  styleClass="btn btn-sm btn-primary"
-                                                 actionListener="#{recursoBean.editar(rec.idRecurso)}"
-                                                 update="dialogRecurso"
-                                                 oncomplete="PF('dlgRecurso').show()"
+                                                 action="#{recursoBean.editar(rec.idRecurso)}"
                                                  ajax="false"/>
                                 <p:commandButton value="Eliminar"
                                                  styleClass="btn btn-sm btn-danger"
@@ -282,53 +278,6 @@
 
                     </p:dataTable>
                 </h:form>
-
-                <p:dialog widgetVar="dlgRecurso" header="Recurso" modal="true" width="650"
-                          resizable="false" id="dialogRecurso">
-                    <h:form styleClass="ui-fluid">
-                        <p:panelGrid columns="2" columnClasses="col, col">
-                            <p:outputLabel value="Nombre"/>
-                            <p:inputText value="#{recursoBean.recurso.nombre}" required="true"/>
-
-                            <p:outputLabel value="Tipo de recurso"/>
-                            <p:selectOneMenu value="#{recursoBean.recurso.idTipoRecurso}" required="true" filter="true">
-                                <f:selectItems value="#{recursoBean.tipos}" var="tipo"
-                                               itemLabel="#{tipo.nombre}" itemValue="#{tipo.idTipoRecurso}"/>
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Ambiente"/>
-                            <p:selectOneMenu value="#{recursoBean.recurso.idAmbiente}" filter="true" required="true">
-                                <f:selectItems value="#{recursoBean.ambientes}" var="amb"
-                                               itemLabel="#{amb.numero} - #{amb.tipo}"
-                                               itemValue="#{amb.idAmbiente}"/>
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Número"/>
-                            <p:inputNumber value="#{recursoBean.recurso.numero}" required="true"/>
-
-                            <p:outputLabel value="Serial"/>
-                            <p:inputText value="#{recursoBean.recurso.serial}" required="true"/>
-
-                            <p:outputLabel value="Estado"/>
-                            <p:selectOneMenu value="#{recursoBean.recurso.estado}" required="true">
-                                <f:selectItem itemLabel="Disponible" itemValue="Disponible"/>
-                                <f:selectItem itemLabel="En mantenimiento" itemValue="En mantenimiento"/>
-                                <f:selectItem itemLabel="Dañado" itemValue="Dañado"/>
-                            </p:selectOneMenu>
-
-                            <p:outputLabel value="Observación"/>
-                            <p:inputTextarea value="#{recursoBean.recurso.observacion}" autoResize="false"/>
-                        </p:panelGrid>
-
-                        <p:commandButton value="Guardar" actionListener="#{recursoBean.guardar}"
-                                         update=":formRecursos"
-                                         oncomplete="PF('dlgRecurso').hide()"
-                                         styleClass="ui-button-success"
-                                         ajax="false"/>
-                        <p:commandButton value="Cancelar" onclick="PF('dlgRecurso').hide()"
-                                         styleClass="btn-secondary"/>
-                    </h:form>
-                </p:dialog>
             </div>
         </main>
     </div>

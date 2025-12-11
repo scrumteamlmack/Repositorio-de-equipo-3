@@ -86,7 +86,7 @@
                     <p:column headerText="Nombre">#{rec.nombre}</p:column>
                     <p:column headerText="Tipo">#{rec.idTipoRecurso}</p:column>
                     <p:column headerText="Ambiente">#{rec.idAmbiente}</p:column>
-                    <p:column headerText="Estado">
+                    <p:column headerText="Estado" exportValue="#{rec.estado}">
                         <span class="badge #{rec.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}">
                             #{rec.estado}
                         </span>

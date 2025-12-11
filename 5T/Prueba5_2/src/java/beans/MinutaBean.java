@@ -4,10 +4,12 @@ import dao.AmbienteDAO;
 import dao.GuardaSeguridadDAO;
 import dao.InstructorDAO;
 import dao.MinutaDAO;
+import dao.UsuarioDAO;
 import modelo.Ambiente;
 import modelo.GuardaSeguridad;
 import modelo.Instructor;
 import modelo.Minuta;
+import modelo.Usuario;
 import util.FacesUtils;
 
 import javax.annotation.PostConstruct;
@@ -30,6 +32,7 @@ public class MinutaBean implements Serializable {
     private final GuardaSeguridadDAO guardaDAO = new GuardaSeguridadDAO();
     private final InstructorDAO instructorDAO = new InstructorDAO();
     private final AmbienteDAO ambienteDAO = new AmbienteDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @ManagedProperty(value = "#{loginBean}")
     private LoginBean loginBean;
@@ -49,12 +52,15 @@ public class MinutaBean implements Serializable {
     private List<GuardaSeguridad> guardas;
     private List<Instructor> instructores;
     private List<Ambiente> ambientes;
+    private List<Usuario> guardasUsuarios;
+    private List<Usuario> instructoresUsuarios;
 
     private void cargarDatos() {
         try {
             System.out.println("🔍 MinutaBean.cargarDatos: Iniciando carga de datos");
             
             minutas = minutaDAO.listar();
+            minutasFiltradas = null;
             System.out.println("   - Minutas cargadas: " + (minutas != null ? minutas.size() : 0));
             
             guardas = guardaDAO.listar();
@@ -65,6 +71,25 @@ public class MinutaBean implements Serializable {
             
             ambientes = ambienteDAO.listar();
             System.out.println("   - Ambientes cargados: " + (ambientes != null ? ambientes.size() : 0));
+            
+            // Cargar usuarios completos para mostrar nombres y apellidos
+            guardasUsuarios = new java.util.ArrayList<>();
+            for (GuardaSeguridad g : guardas) {
+                Usuario u = usuarioDAO.buscarPorId(g.getIdUsuario());
+                if (u != null) {
+                    guardasUsuarios.add(u);
+                }
+            }
+            System.out.println("   - Guardas usuarios cargados: " + (guardasUsuarios != null ? guardasUsuarios.size() : 0));
+            
+            instructoresUsuarios = new java.util.ArrayList<>();
+            for (Instructor i : instructores) {
+                Usuario u = usuarioDAO.buscarPorId(i.getIdUsuario());
+                if (u != null) {
+                    instructoresUsuarios.add(u);
+                }
+            }
+            System.out.println("   - Instructores usuarios cargados: " + (instructoresUsuarios != null ? instructoresUsuarios.size() : 0));
         } catch (Exception e) {
             System.err.println("❌ MinutaBean.cargarDatos: Error al cargar datos: " + e.getMessage());
             e.printStackTrace();
@@ -137,7 +162,7 @@ public class MinutaBean implements Serializable {
         idMinutaEditar = null;
     }
 
-    public void guardar() {
+    public String guardar() {
         try {
             // Convertir Date a LocalDateTime antes de guardar
             if (fechaReciboDate != null) {
@@ -150,47 +175,117 @@ public class MinutaBean implements Serializable {
             // Validar campos requeridos
             if (minuta.getAmbienteId() == 0) {
                 FacesUtils.addErrorMessage("⚠️ Debe seleccionar un ambiente");
-                return;
+                return null;
             }
             if (minuta.getGuardaId() == 0) {
                 FacesUtils.addErrorMessage("⚠️ Debe seleccionar un guarda de seguridad");
-                return;
+                return null;
             }
             if (minuta.getResponsableId() == 0) {
                 FacesUtils.addErrorMessage("⚠️ Debe seleccionar un instructor responsable");
-                return;
+                return null;
             }
             
-            String mensaje;
             if (minuta.getIdMinuta() == 0) {
                 int id = minutaDAO.guardar(minuta);
                 if (id > 0) {
-                    mensaje = "✅ Minuta registrada correctamente";
+                    FacesUtils.addInfoMessage("✅ Minuta registrada correctamente");
                 } else {
                     FacesUtils.addErrorMessage("❌ No se pudo registrar la minuta");
-                    return;
+                    return null;
                 }
             } else {
                 boolean exito = minutaDAO.actualizar(minuta);
                 if (exito) {
-                    mensaje = "✅ Minuta actualizada correctamente";
+                    FacesUtils.addInfoMessage("✅ Minuta actualizada correctamente");
                 } else {
                     FacesUtils.addErrorMessage("❌ No se pudo actualizar la minuta");
-                    return;
+                    return null;
                 }
             }
             
             minutas = minutaDAO.listar();
             prepararNuevo();
             
-            // Guardar mensaje en Flash para que sobreviva la redirección
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("mensaje", mensaje);
-            FacesUtils.redirect("/faces/pages/guarda/minutas/listarMinutas.xhtml");
+            return "/pages/guarda/minutas/listarMinutas.xhtml?faces-redirect=true";
         } catch (Exception e) {
             FacesUtils.addErrorMessage("Error al guardar la minuta: " + e.getMessage());
             System.err.println("❌ MinutaBean.guardar: Error: " + e.getMessage());
             e.printStackTrace();
+            return null;
         }
+    }
+    
+    public String cargarMinutaParaEditar() {
+        System.out.println("═══════════════════════════════════════════════════════");
+        System.out.println("🔍 MinutaBean.cargarMinutaParaEditar: INICIO");
+        System.out.println("   - idMinutaEditar desde viewParam: " + idMinutaEditar);
+        
+        if (idMinutaEditar == null || idMinutaEditar == 0) {
+            try {
+                javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+                if (facesContext != null) {
+                    String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
+                    if (idParam == null || idParam.isEmpty()) {
+                        idParam = facesContext.getExternalContext().getRequestParameterMap().get("idMinutaEditar");
+                    }
+                    System.out.println("   - Parámetro 'id' obtenido de URL: " + idParam);
+                    if (idParam != null && !idParam.isEmpty()) {
+                        idMinutaEditar = Integer.parseInt(idParam);
+                        System.out.println("   ✅ idMinutaEditar parseado desde URL: " + idMinutaEditar);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("⚠️ MinutaBean.cargarMinutaParaEditar: Error al obtener idMinutaEditar de URL: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        
+        if (idMinutaEditar != null && idMinutaEditar > 0) {
+            System.out.println("   - Llamando a minutaDAO.buscarPorId(" + idMinutaEditar + ")");
+            Minuta encontrada = minutaDAO.buscarPorId(idMinutaEditar);
+            
+            if (encontrada != null) {
+                System.out.println("   ✅ Minuta encontrada en BD:");
+                System.out.println("      * ID: " + encontrada.getIdMinuta());
+                System.out.println("      * Ambiente ID: " + encontrada.getAmbienteId());
+                System.out.println("      * Guarda ID: " + encontrada.getGuardaId());
+                System.out.println("      * Responsable ID: " + encontrada.getResponsableId());
+                System.out.println("      * Estado: " + encontrada.getEstado());
+                
+                if (minuta == null) {
+                    minuta = new Minuta();
+                }
+                minuta.setIdMinuta(encontrada.getIdMinuta());
+                minuta.setAmbienteId(encontrada.getAmbienteId());
+                minuta.setGuardaId(encontrada.getGuardaId());
+                minuta.setResponsableId(encontrada.getResponsableId());
+                minuta.setFechaRecibo(encontrada.getFechaRecibo());
+                minuta.setFechaEntrega(encontrada.getFechaEntrega());
+                minuta.setNovedad(encontrada.getNovedad());
+                minuta.setDescripcion(encontrada.getDescripcion());
+                minuta.setEstado(encontrada.getEstado());
+                
+                // Convertir LocalDateTime a Date para los calendarios
+                if (minuta.getFechaRecibo() != null) {
+                    fechaReciboDate = Date.from(minuta.getFechaRecibo().atZone(ZoneId.systemDefault()).toInstant());
+                }
+                if (minuta.getFechaEntrega() != null) {
+                    fechaEntregaDate = Date.from(minuta.getFechaEntrega().atZone(ZoneId.systemDefault()).toInstant());
+                }
+                
+                System.out.println("   ✅ Datos asignados al bean minuta");
+                System.out.println("═══════════════════════════════════════════════════════");
+            } else {
+                System.err.println("   ❌ Minuta NO encontrada en BD con ID: " + idMinutaEditar);
+                FacesUtils.addErrorMessage("Minuta no encontrada con ID: " + idMinutaEditar);
+            }
+        } else {
+            System.err.println("   ❌ idMinutaEditar es null o 0 - No se puede cargar minuta");
+            FacesUtils.addErrorMessage("No se proporcionó ID de minuta válido para editar.");
+        }
+        
+        return null;
     }
 
     public String editar(int idMinuta) {
@@ -251,6 +346,19 @@ public class MinutaBean implements Serializable {
         return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
     
+    // Métodos helper para filtros - aseguran que siempre haya un valor para filtrar
+    public String getTextoAmbiente(Minuta min) {
+        return min.getAmbienteNombre() != null ? min.getAmbienteNombre() : "Ambiente " + min.getAmbienteId();
+    }
+    
+    public String getTextoGuarda(Minuta min) {
+        return min.getGuardaNombre() != null ? min.getGuardaNombre() : "Guarda " + min.getGuardaId();
+    }
+    
+    public String getTextoResponsable(Minuta min) {
+        return min.getResponsableNombre() != null ? min.getResponsableNombre() : "Instructor " + min.getResponsableId();
+    }
+    
     // Getters y Setters para propiedades Date
     public Date getFechaReciboDate() {
         if (fechaReciboDate == null && minuta.getFechaRecibo() != null) {
@@ -296,10 +404,11 @@ public class MinutaBean implements Serializable {
         if (minutas == null) {
             minutas = minutaDAO.listar();
         }
-        if (minutasFiltradas != null && !minutasFiltradas.isEmpty()) {
-            return minutasFiltradas;
-        }
         return minutas;
+    }
+
+    public List<Minuta> getMinutasFiltradas() {
+        return minutasFiltradas;
     }
 
     public void setMinutasFiltradas(List<Minuta> minutasFiltradas) {
@@ -318,6 +427,20 @@ public class MinutaBean implements Serializable {
             instructores = instructorDAO.listar();
         }
         return instructores;
+    }
+    
+    public List<Usuario> getGuardasUsuarios() {
+        if (guardasUsuarios == null) {
+            cargarDatos();
+        }
+        return guardasUsuarios;
+    }
+    
+    public List<Usuario> getInstructoresUsuarios() {
+        if (instructoresUsuarios == null) {
+            cargarDatos();
+        }
+        return instructoresUsuarios;
     }
 
     public List<Ambiente> getAmbientes() {

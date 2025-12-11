@@ -173,13 +173,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaAmbientes').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaAmbientes" fileName="ambientes"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaAmbientes').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaAmbientes" fileName="ambientes"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -226,9 +228,8 @@
                                  filterBy="#{amb.estado}" 
                                  filterMatchMode="contains"
                                  style="width: 150px;">
-                            <span class="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}">
-                                #{amb.estado}
-                            </span>
+                            <h:outputText value="#{amb.estado}" 
+                                         styleClass="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}"/>
                         </p:column>
 
                     </p:dataTable>

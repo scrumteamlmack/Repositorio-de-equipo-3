@@ -173,9 +173,7 @@
                     <div style="text-align:center;margin-bottom:16px;">
                         <p:commandButton value="➕ Nuevo registro"
                                          styleClass="btn btn-primary"
-                                         actionListener="#{asistenciaBean.prepararNuevo}"
-                                         update="dialogAsistencia"
-                                         oncomplete="PF('dlgAsistencia').show()"
+                                         action="/pages/instructor/asistencias/formAsistencia.xhtml?faces-redirect=true"
                                          ajax="false"/>
                     </div>
 
@@ -184,13 +182,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencia').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaAsistencia" fileName="asistencias"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencia').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaAsistencia" fileName="asistencias"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -228,9 +228,8 @@
                                  filterBy="#{asistenciaBean.getEstadoTexto(asis.estado)}" 
                                  filterMatchMode="contains"
                                  style="width:120px;text-align:center;">
-                            <span class="badge #{asis.estado == 'S' ? 'bg-success' : asis.estado == 'R' ? 'bg-warning' : 'bg-danger'}">
-                                #{asistenciaBean.getEstadoTexto(asis.estado)}
-                            </span>
+                            <h:outputText value="#{asistenciaBean.getEstadoTexto(asis.estado)}" 
+                                         styleClass="badge #{asis.estado == 'S' ? 'bg-success' : asis.estado == 'R' ? 'bg-warning' : 'bg-danger'}"/>
                         </p:column>
                         <p:column headerText="Instructor" 
                                  filterBy="#{asis.instructorNombre != null ? asis.instructorNombre : 'Instructor ' + asis.instructorUsuarioId}" 
@@ -250,75 +249,17 @@
                             <div style="display: flex; gap: 5px; justify-content: center;">
                                 <p:commandButton value="Editar"
                                                  styleClass="btn btn-sm btn-warning"
-                                                 actionListener="#{asistenciaBean.editar()}"
-                                                 update="dialogAsistencia"
-                                                 oncomplete="PF('dlgAsistencia').show()"
-                                                 ajax="false">
-                                    <f:setPropertyActionListener target="#{asistenciaBean.idAsistenciaSeleccionada}" value="#{asis.idAsistencia}"/>
-                                </p:commandButton>
+                                                 action="#{asistenciaBean.editar(asis.idAsistencia)}"
+                                                 ajax="false"/>
                                 <p:commandButton value="Eliminar"
                                                  styleClass="btn btn-sm btn-danger"
-                                                 actionListener="#{asistenciaBean.eliminar()}"
+                                                 actionListener="#{asistenciaBean.eliminar(asis.idAsistencia)}"
                                                  update="tablaAsistencia"
                                                  onclick="return confirm('¿Eliminar registro?');"
-                                                 ajax="false">
-                                    <f:setPropertyActionListener target="#{asistenciaBean.idAsistenciaSeleccionada}" value="#{asis.idAsistencia}"/>
-                                </p:commandButton>
+                                                 ajax="false"/>
                             </div>
                         </p:column>
                     </p:dataTable>
-
-                    <p:dialog widgetVar="dlgAsistencia" header="Registro de Inasistencia" modal="true" width="650"
-                              resizable="false" id="dialogAsistencia">
-                        <h:form styleClass="ui-fluid">
-                            <p:panelGrid columns="2" columnClasses="col, col">
-                                <p:outputLabel value="Aprendiz" required="true"/>
-                                <p:selectOneMenu value="#{asistenciaBean.asistencia.aprendizUsuarioId}" required="true" filter="true">
-                                    <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
-                                    <f:selectItems value="#{asistenciaBean.aprendicesUsuarios}" var="usuario"
-                                                   itemLabel="#{usuario.nombre}"
-                                                   itemValue="#{usuario.idUsuario}"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Instructor" required="true"/>
-                                <p:selectOneMenu value="#{asistenciaBean.asistencia.instructorUsuarioId}" required="true" filter="true">
-                                    <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
-                                    <f:selectItems value="#{asistenciaBean.instructoresUsuarios}" var="usuario"
-                                                   itemLabel="#{usuario.nombre}"
-                                                   itemValue="#{usuario.idUsuario}"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Jornada" required="true"/>
-                                <p:selectOneMenu value="#{asistenciaBean.asistencia.jornadaId}" required="true" filter="true">
-                                    <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
-                                    <f:selectItems value="#{asistenciaBean.jornadas}" var="jornada"
-                                                   itemLabel="#{jornada.nombreJornada}"
-                                                   itemValue="#{jornada.idJornada}"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Estado" required="true"/>
-                                <p:selectOneMenu value="#{asistenciaBean.asistencia.estado}" required="true">
-                                    <f:selectItem itemLabel="Seleccione..." itemValue=""/>
-                                    <f:selectItem itemLabel="Asistió (S)" itemValue="S"/>
-                                    <f:selectItem itemLabel="Retraso (R)" itemValue="R"/>
-                                    <f:selectItem itemLabel="No asistió (N)" itemValue="N"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Fecha" required="true"/>
-                                <p:calendar value="#{asistenciaBean.fechaDate}"
-                                              showIcon="true" pattern="dd/MM/yyyy"
-                                              required="true"/>
-                            </p:panelGrid>
-
-                            <p:commandButton value="Guardar" actionListener="#{asistenciaBean.guardar}"
-                                             update=":frmAsistencia"
-                                             oncomplete="PF('dlgAsistencia').hide()"
-                                             style="display:inline-block;padding:12px 20px;background:#10b981;color:white;border-radius:10px;text-decoration:none;font-weight:600;border:none;cursor:pointer;"
-                                             ajax="false"/>
-                            <p:commandButton value="Cancelar" onclick="PF('dlgAsistencia').hide()"
-                                             styleClass="btn-secondary"/>
-                        </h:form>
-                    </p:dialog>
                 </h:form>
             </div>
         </main>

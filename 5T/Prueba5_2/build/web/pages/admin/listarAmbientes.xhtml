@@ -170,9 +170,7 @@
                     <div style="margin-bottom: 20px;">
                         <p:commandButton value="➕ Nuevo Ambiente"
                                          styleClass="btn btn-primary"
-                                         actionListener="#{ambienteBean.prepararNuevo}"
-                                         update="dialogAmbiente"
-                                         oncomplete="PF('dlgAmbiente').show()"
+                                         action="/pages/admin/formAmbiente.xhtml?faces-redirect=true"
                                          ajax="false"/>
                     </div>
 
@@ -181,13 +179,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaAmbientes').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaAmbientes" fileName="ambientes"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaAmbientes').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaAmbientes" fileName="ambientes"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -234,9 +234,8 @@
                                  filterBy="#{amb.estado}" 
                                  filterMatchMode="contains"
                                  style="width: 150px;">
-                            <span class="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}">
-                                #{amb.estado}
-                            </span>
+                            <h:outputText value="#{amb.estado}" 
+                                         styleClass="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}"/>
                         </p:column>
 
                         <p:column headerText="Acciones" 
@@ -245,9 +244,7 @@
                             <div style="display: flex; gap: 5px;">
                                 <p:commandButton value="Editar"
                                                  styleClass="btn btn-sm btn-info"
-                                                 actionListener="#{ambienteBean.editar(amb.idAmbiente)}"
-                                                 update="dialogAmbiente"
-                                                 oncomplete="PF('dlgAmbiente').show()"
+                                                 action="#{ambienteBean.editar(amb.idAmbiente)}"
                                                  ajax="false"/>
                                 <p:commandButton value="Eliminar"
                                                  styleClass="btn btn-sm btn-danger"
@@ -260,34 +257,6 @@
 
                     </p:dataTable>
                 </h:form>
-
-                <p:dialog widgetVar="dlgAmbiente" header="Ambiente"
-                          modal="true" width="500" id="dialogAmbiente">
-                    <h:form>
-                        <p:panelGrid columns="2" columnClasses="col-1,col-2" styleClass="ui-fluid">
-                            <p:outputLabel value="Número ambiente"/>
-                            <p:inputNumber value="#{ambienteBean.ambiente.numero}" required="true"/>
-
-                            <p:outputLabel value="Capacidad"/>
-                            <p:inputNumber value="#{ambienteBean.ambiente.capacidad}" required="true"/>
-
-                            <p:outputLabel value="Tipo"/>
-                            <p:inputText value="#{ambienteBean.ambiente.tipo}" required="true"/>
-
-                            <p:outputLabel value="Estado"/>
-                            <p:inputText value="#{ambienteBean.ambiente.estado}" required="true"/>
-                        </p:panelGrid>
-
-                        <p:commandButton value="Guardar"
-                                         actionListener="#{ambienteBean.guardar}"
-                                         update=":formAmbientes:tablaAmbientes"
-                                         oncomplete="PF('dlgAmbiente').hide()"
-                                         styleClass="ui-button-success"
-                                         ajax="false"/>
-                        <p:commandButton value="Cancelar" onclick="PF('dlgAmbiente').hide()"
-                                         styleClass="btn-secondary"/>
-                    </h:form>
-                </p:dialog>
             </div>
         </main>
     </div>

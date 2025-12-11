@@ -120,6 +120,21 @@ public class MinutaDAO {
         }
         return false;
     }
+    
+    public boolean eliminarPorInstructor(int instructorId) {
+        String sql = "DELETE FROM registro_minuta WHERE responsable_id = ?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, instructorId);
+            int filas = ps.executeUpdate();
+            System.out.println("✅ MinutaDAO.eliminarPorInstructor: Eliminadas " + filas + " minutas del instructor ID: " + instructorId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("❌ MinutaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     private Minuta mapRow(ResultSet rs) throws SQLException {
         Minuta minuta = new Minuta();
