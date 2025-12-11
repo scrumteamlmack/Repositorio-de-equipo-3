@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>L-MACK - Iniciar Sesión</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+    <!-- HEADER -->
+    <div class="landing-header">
+        <div class="landing-logo">
+            <span>👤</span>
+            <span>L-MACK</span>
+        </div>
+        <div class="landing-header-buttons">
+            <h:link outcome="faces/index.xhtml" styleClass="landing-header-btn" value="Inicio"/>
+            <h:link outcome="faces/login.xhtml" styleClass="landing-header-btn" value="Registrarse"/>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Iniciar Sesión</h2>
+            </div>
+            
+            <h:form id="loginForm">
+                <p:messages showSummary="true" closable="true" severity="error,warn"/>
+                
+                <div class="login-form-group">
+                    <label>Correo electrónico</label>
+                    <p:inputText id="doc"
+                                 value="#{loginBean.credenciales.doc}"
+                                 required="true"
+                                 requiredMessage="Ingresa tu documento"
+                                 placeholder="Email"
+                                 style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;"/>
+                </div>
+                
+                <div class="login-form-group">
+                    <label>Contraseña</label>
+                    <p:password id="pass"
+                               value="#{loginBean.credenciales.pass}"
+                               required="true"
+                               requiredMessage="Ingresa tu contraseña"
+                               placeholder="Contraseña"
+                               feedback="false"
+                               style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;"/>
+                </div>
+                
+                <p:commandButton value="Entrar"
+                                 action="#{loginBean.autenticar}"
+                                 icon="pi pi-sign-in"
+                                 ajax="false"
+                                 styleClass="btn-primary"
+                                 style="width: 100%; margin-top: 10px;"/>
+            </h:form>
+            
+            
+        </div>
+    </div>
+</h:body>
+</html>

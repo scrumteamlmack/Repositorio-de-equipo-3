@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Recursos</ui:define>
+    <ui:define name="moduleTitle">Inventario de recursos</ui:define>
+
+    <ui:define name="content">
+        <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/recursos.css"/>
+        
+        <div class="container">
+            <h1 class="titulo-lista">💻 Lista de Recursos</h1>
+            
+            <h:form id="frmRecursos" styleClass="ui-fluid">
+                <f:event type="preRenderView" listener="#{loginBean.verificarSesion(1,2)}"/>
+
+                <p:commandButton value="➕ Nuevo Recurso"
+                                 styleClass="btn btn-primary"
+                                 actionListener="#{recursoBean.prepararNuevo}"
+                                 update="dialogRecurso"
+                                 oncomplete="PF('dlgRecurso').show()"
+                                 ajax="false"/>
+
+                <div class="table-container">
+                    <p:dataTable id="tablaRecursos" value="#{recursoBean.recursos}" var="rec"
+                                 paginator="true" rows="10"
+                                 styleClass="table table-striped table-hover"
+                                 style="margin-top:1rem;">
+                        <p:column headerText="ID" style="width:80px;">#{rec.idRecurso}</p:column>
+                        <p:column headerText="Serial" style="width:150px;">#{rec.serial}</p:column>
+                        <p:column headerText="Número" style="width:100px;">#{rec.numero}</p:column>
+                        <p:column headerText="Nombre" style="width:200px;">#{rec.nombre}</p:column>
+                        <p:column headerText="Tipo" style="width:120px;">#{rec.idTipoRecurso}</p:column>
+                        <p:column headerText="Estado" style="width:150px;">
+                            <span class="badge #{rec.estado == 'Disponible' ? 'badge-success' : rec.estado == 'Dañado' ? 'badge-danger' : 'badge-warning'}">
+                                #{rec.estado}
+                            </span>
+                        </p:column>
+                        <p:column headerText="Observación" style="width:200px;">
+                            <h:outputText value="#{rec.observacion != null ? rec.observacion : '—'}"/>
+                        </p:column>
+                        <p:column headerText="Ambiente" style="width:100px;">#{rec.idAmbiente}</p:column>
+                        <p:column headerText="Acciones" style="width:250px;">
+                            <div style="display: flex; gap: 5px;">
+                                <p:commandButton value="Ver"
+                                                 styleClass="btn btn-sm btn-info"
+                                                 action="/pages/recursos/show.xhtml?faces-redirect=true&amp;id=#{rec.idRecurso}"
+                                                 ajax="false"/>
+                                <p:commandButton value="Editar"
+                                                 styleClass="btn btn-sm btn-primary"
+                                                 actionListener="#{recursoBean.editar(rec.idRecurso)}"
+                                                 update="dialogRecurso"
+                                                 oncomplete="PF('dlgRecurso').show()"
+                                                 ajax="false"/>
+                                <p:commandButton value="Eliminar"
+                                                 styleClass="btn btn-sm btn-danger"
+                                                 actionListener="#{recursoBean.eliminar(rec.idRecurso)}"
+                                                 update="tablaRecursos"
+                                                 onclick="return confirm('¿Seguro que deseas eliminar este recurso?');"
+                                                 ajax="false"/>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+
+        <p:dialog widgetVar="dlgRecurso" header="Recurso" modal="true" width="650"
+                  resizable="false" id="dialogRecurso">
+            <h:form styleClass="ui-fluid">
+                <p:panelGrid columns="2" columnClasses="col, col">
+                    <p:outputLabel value="Nombre"/>
+                    <p:inputText value="#{recursoBean.recurso.nombre}" required="true"/>
+
+                    <p:outputLabel value="Tipo de recurso"/>
+                    <p:selectOneMenu value="#{recursoBean.recurso.idTipoRecurso}" required="true" filter="true">
+                        <f:selectItems value="#{recursoBean.tipos}" var="tipo"
+                                       itemLabel="#{tipo.nombre}" itemValue="#{tipo.idTipoRecurso}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Ambiente"/>
+                    <p:selectOneMenu value="#{recursoBean.recurso.idAmbiente}" filter="true" required="true">
+                        <f:selectItems value="#{recursoBean.ambientes}" var="amb"
+                                       itemLabel="#{amb.numero} - #{amb.tipo}"
+                                       itemValue="#{amb.idAmbiente}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Número"/>
+                    <p:inputNumber value="#{recursoBean.recurso.numero}" required="true"/>
+
+                    <p:outputLabel value="Serial"/>
+                    <p:inputText value="#{recursoBean.recurso.serial}" required="true"/>
+
+                    <p:outputLabel value="Estado"/>
+                    <p:selectOneMenu value="#{recursoBean.recurso.estado}" required="true">
+                        <f:selectItem itemLabel="Disponible" itemValue="Disponible"/>
+                        <f:selectItem itemLabel="En mantenimiento" itemValue="En mantenimiento"/>
+                        <f:selectItem itemLabel="Dañado" itemValue="Dañado"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Observación"/>
+                    <p:inputTextarea value="#{recursoBean.recurso.observacion}" autoResize="false"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Guardar" actionListener="#{recursoBean.guardar}"
+                                 update=":frmRecursos"
+                                 oncomplete="PF('dlgRecurso').hide()"
+                                 styleClass="btn-nuevo"
+                                 ajax="false"/>
+                <p:commandButton value="Cancelar" onclick="PF('dlgRecurso').hide()"
+                                 styleClass="btn-secondary"/>
+            </h:form>
+        </p:dialog>
+        </div>
+    </ui:define>
+</ui:composition>
+

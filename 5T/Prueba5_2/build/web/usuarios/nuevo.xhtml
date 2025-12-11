@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Nuevo Usuario - EMAC</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+    <h:form>
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="title">EMAC</div>
+            <div class="menu">
+                <p:commandButton value="Volver"
+                                 icon="pi pi-arrow-left"
+                                 action="index"
+                                 styleClass="btn-secondary"/>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content">
+            <div class="form-header">
+                <h2>Nuevo Usuario</h2>
+            </div>
+
+            <p:messages showSummary="true" closable="true" severity="error"/>
+
+            <p:panel header="Datos del Usuario">
+                <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+                    <h:outputLabel value="Documento:" for="doc" />
+                    <p:inputText id="doc" 
+                                 value="#{usuarioBean.usuario.doc}" 
+                                 required="true"
+                                 requiredMessage="Debe especificar un Documento"
+                                 placeholder="Número de documento"/>
+
+                    <h:outputLabel value="Nombre del Usuario:" for="nom" />
+                    <p:inputText id="nom" 
+                                 value="#{usuarioBean.usuario.nombre}" 
+                                 required="true"
+                                 requiredMessage="Debe especificar un Nombre"
+                                 placeholder="Nombre completo"/>
+
+                    <h:outputLabel value="Correo:" for="cor" />
+                    <p:inputText id="cor" 
+                                 value="#{usuarioBean.usuario.correo}"
+                                 placeholder="correo@ejemplo.com"/>
+
+                    <h:outputLabel value="Contraseña:" for="pas" />
+                    <p:password id="pas" 
+                                value="#{usuarioBean.usuario.pass}"
+                                required="true"
+                                requiredMessage="Debe especificar una Contraseña"
+                                placeholder="Contraseña"
+                                feedback="false"/>
+
+                    <h:outputLabel value="Tipo de Usuario:" for="tipo" />
+                    <p:selectOneMenu id="tipo" 
+                                     value="#{usuarioBean.usuario.tipo}">
+                        <f:selectItem itemValue="A" itemLabel="Administrador" />
+                        <f:selectItem itemValue="C" itemLabel="Cliente" />
+                        <f:selectItem itemValue="V" itemLabel="Vendedor" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <div class="form-actions">
+                    <p:commandButton value="Guardar"
+                                     actionListener="#{usuarioBean.guardar()}"
+                                     action="index"
+                                     icon="pi pi-save"
+                                     styleClass="btn-primary"/>
+                    <p:commandButton value="Cancelar"
+                                     action="index"
+                                     icon="pi pi-times"
+                                     styleClass="btn-secondary"
+                                     immediate="true"/>
+                </div>
+            </p:panel>
+        </div>
+    </h:form>
+</h:body>
+</html>

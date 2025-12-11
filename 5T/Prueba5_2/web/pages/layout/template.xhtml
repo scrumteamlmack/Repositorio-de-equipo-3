@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title><ui:insert name="title">L-MACK - Sistema de Gestión</ui:insert></title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .top-bar {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-bar h2 {
+            margin: 0;
+            color: var(--primary-green);
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: calc(100vh - 200px);
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <h:link outcome="/pages/dashboard.xhtml" value="🏠 Inicio" style="display: block;"/>
+                <h:link outcome="/pages/usuarios/list.xhtml" value="👥 Usuarios" style="display: block;"/>
+                <h:link outcome="/pages/ambientes/list.xhtml" value="🏢 Ambientes" style="display: block;"/>
+                <h:link outcome="/pages/incidentes/list.xhtml" value="⚠️ Incidentes" style="display: block;"/>
+                <h:link outcome="/pages/recursos/list.xhtml" value="📦 Recursos" style="display: block;"/>
+                <h:link outcome="/pages/asistencia/list.xhtml" value="📋 Asistencia" style="display: block;"/>
+                <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" style="display: block;"/>
+                <h:link outcome="/pages/reportes/index.xhtml" value="📊 Reportes" style="display: block;"/>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="top-bar">
+                <h2><ui:insert name="moduleTitle">Módulo</ui:insert></h2>
+                <h:form>
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
+                                     action="#{loginBean.cerrarSesion}"
+                                     styleClass="btn-secondary"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+            
+            <div class="content-wrapper">
+                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+                <ui:insert name="content"/>
+            </div>
+        </main>
+    </div>
+</h:body>
+</html>

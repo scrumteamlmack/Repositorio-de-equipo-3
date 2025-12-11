@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Sin Acceso - EMAC</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #f5576c;
+        }
+        
+        .error-title {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="error-container">
+        <div class="error-icon">🔒</div>
+        <h1 class="error-title">Acceso Restringido</h1>
+        <p class="error-message">Debe iniciar sesión para acceder a este contenido.</p>
+        
+        <h:form>
+            <p:commandButton value="Iniciar Sesión" 
+                             action="login.xhtml?faces-redirect=true"
+                             icon="pi pi-sign-in"
+                             styleClass="btn-primary"/>
+        </h:form>
+    </div>
+</h:body>
+</html>

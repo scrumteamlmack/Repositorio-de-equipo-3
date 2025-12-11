@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Usuarios</ui:define>
+    <ui:define name="moduleTitle">Gestión de usuarios</ui:define>
+
+    <ui:define name="content">
+        <p:panel header="Búsqueda rápida">
+            <h:form>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:inputText value="#{usuarioBean.textoBusqueda}" placeholder="Nombre o documento"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:commandButton value="Filtrar" actionListener="#{usuarioBean.filtrar}" update="tablaUsuarios"/>
+                        <p:commandButton value="Limpiar" actionListener="#{usuarioBean.refrescar}"
+                                         update="tablaUsuarios" styleClass="ui-button-secondary"/>
+                    </div>
+                </div>
+            </h:form>
+        </p:panel>
+
+        <p:dataTable id="tablaUsuarios"
+                     value="#{usuarioBean.usuarios}"
+                     var="u"
+                     paginator="true"
+                     rows="10"
+                     responsiveLayout="scroll"
+                     style="margin-top:1rem;">
+            <p:column headerText="Nombre">
+                #{u.nombre}
+            </p:column>
+            <p:column headerText="Documento">
+                #{u.numDocumento}
+            </p:column>
+            <p:column headerText="Correo">
+                #{u.correo}
+            </p:column>
+            <p:column headerText="Acciones" style="width:180px;">
+                <p:commandButton value="Editar"
+                                 actionListener="#{usuarioBean.editar(u.idUsuario)}"
+                                 update=":dlgUsuario"
+                                 oncomplete="PF('dlgUsuario').show()"
+                                 styleClass="ui-button-info"/>
+                <p:commandButton value="Eliminar"
+                                 actionListener="#{usuarioBean.eliminar(u.idUsuario)}"
+                                 update="@form tablaUsuarios"
+                                 styleClass="ui-button-danger"
+                                 onclick="return confirm('¿Eliminar usuario?');"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:commandButton value="Nuevo usuario"
+                         styleClass="ui-button-success"
+                         style="margin-top:1rem;"
+                         actionListener="#{usuarioBean.prepararNuevo}"
+                         oncomplete="PF('dlgUsuario').show()"
+                         update=":dlgUsuario"/>
+
+        <p:dialog widgetVar="dlgUsuario"
+                  header="Registro de usuario"
+                  modal="true"
+                  width="80%"
+                  id="dlgUsuario">
+            <ui:include src="form.xhtml"/>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+
