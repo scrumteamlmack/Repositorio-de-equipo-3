@@ -2,10 +2,6 @@ package beans;
 
 import util.PasswordUtil;
 
-/**
- * @deprecated Mantenido únicamente para compatibilidad con código existente.
- *             Utilizar {@link PasswordUtil}.
- */
 @Deprecated
 public final class Utils {
 

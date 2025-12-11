@@ -4,13 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Utilidad centralizada para el manejo de contraseñas:
- *  - genera hashes con SHA-256
- *  - compara contraseñas planas contra el hash almacenado.
- *
- * Se mantiene libre de dependencias externas para facilitar las pruebas.
- */
 public final class PasswordUtil {
 
     private PasswordUtil() {

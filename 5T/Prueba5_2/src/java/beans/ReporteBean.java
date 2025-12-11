@@ -45,7 +45,7 @@ public class ReporteBean implements Serializable {
 
     public void filtrar() {
         incidentesFiltrados = incidenteDAO.filtrar(filtro);
-        // Para recursos solo se filtra por ambiente/tipo recurso
+        
         recursosFiltrados = recursoDAO.listar();
         if (filtro.getAmbienteId() != null || filtro.getTipoRecursoId() != null) {
             recursosFiltrados.removeIf(recurso ->

@@ -33,7 +33,7 @@ public class AsistenciaDAO {
                 asistencias.add(mapRowWithNames(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ AsistenciaDAO.listar: Error: " + e.getMessage());
+            System.err.println("AsistenciaDAO.listar: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return asistencias;
@@ -60,7 +60,7 @@ public class AsistenciaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ AsistenciaDAO.listarPorAprendiz: Error: " + e.getMessage());
+            System.err.println("AsistenciaDAO.listarPorAprendiz: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return asistencias;
@@ -130,7 +130,7 @@ public class AsistenciaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ AsistenciaDAO.buscarPorId: Error: " + e.getMessage());
+            System.err.println("AsistenciaDAO.buscarPorId: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -154,10 +154,10 @@ public class AsistenciaDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, instructorId);
             int filas = ps.executeUpdate();
-            System.out.println("✅ AsistenciaDAO.eliminarPorInstructor: Eliminados " + filas + " registros de asistencia del instructor ID: " + instructorId);
+            System.out.println("AsistenciaDAO.eliminarPorInstructor: Eliminados " + filas + " registros de asistencia del instructor ID: " + instructorId);
             return true;
         } catch (SQLException e) {
-            System.err.println("❌ AsistenciaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+            System.err.println("AsistenciaDAO.eliminarPorInstructor: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -195,8 +195,8 @@ public class AsistenciaDAO {
                 asistencia.setJornadaNombre(jornadaNombre.trim());
             }
         } catch (SQLException e) {
-            System.err.println("⚠️ AsistenciaDAO.mapRowWithNames: Error al obtener nombres: " + e.getMessage());
-            // Si las columnas no existen, simplemente no las asignamos
+            System.err.println(" AsistenciaDAO.mapRowWithNames: Error al obtener nombres: " + e.getMessage());
+     
         }
         return asistencia;
     }

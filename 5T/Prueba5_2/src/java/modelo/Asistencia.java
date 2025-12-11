@@ -12,7 +12,7 @@ public class Asistencia implements Serializable {
     private LocalDate fecha;
     private String estado;
     
-    // Campos adicionales para mostrar nombres en la vista
+
     private String aprendizNombre;
     private String instructorNombre;
     private String jornadaNombre;

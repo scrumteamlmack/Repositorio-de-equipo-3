@@ -33,8 +33,6 @@ public class TrasladoRecursoBean implements Serializable {
 
     private TrasladoRecurso traslado = new TrasladoRecurso();
     private Integer idTrasladoEditar;
-    
-    // Propiedad Date para el calendario (conversión Date <-> LocalDateTime)
     private Date fechaTrasladoDate;
     
     private boolean inicializado = false;
@@ -46,31 +44,30 @@ public class TrasladoRecursoBean implements Serializable {
 
     private void cargarDatos() {
         try {
-            System.out.println("🔍 TrasladoRecursoBean.cargarDatos: Iniciando carga de datos");
+            System.out.println("TrasladoRecursoBean.cargarDatos: Iniciando carga de datos");
             
             traslados = trasladoDAO.listar();
             trasladosFiltrados = null;
-            System.out.println("   - Traslados cargados: " + (traslados != null ? traslados.size() : 0));
+            System.out.println("Traslados cargados: " + (traslados != null ? traslados.size() : 0));
             
             recursos = recursoDAO.listar();
-            System.out.println("   - Recursos cargados: " + (recursos != null ? recursos.size() : 0));
+            System.out.println("Recursos cargados: " + (recursos != null ? recursos.size() : 0));
             
             ambientes = ambienteDAO.listar();
-            System.out.println("   - Ambientes cargados: " + (ambientes != null ? ambientes.size() : 0));
+            System.out.println("Ambientes cargados: " + (ambientes != null ? ambientes.size() : 0));
         } catch (Exception e) {
-            System.err.println("❌ TrasladoRecursoBean.cargarDatos: Error al cargar datos: " + e.getMessage());
+            System.err.println("TrasladoRecursoBean.cargarDatos: Error al cargar datos: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     @PostConstruct
     public void init() {
-        System.out.println("🔍 TrasladoRecursoBean.init: @PostConstruct ejecutado");
-        System.out.println("   - idTrasladoEditar recibido: " + idTrasladoEditar);
+        System.out.println("TrasladoRecursoBean.init: @PostConstruct ejecutado");
+        System.out.println("idTrasladoEditar recibido: " + idTrasladoEditar);
         
         cargarDatos();
         
-        // Si no hay idTrasladoEditar, intentar obtenerlo de la URL manualmente
         if (idTrasladoEditar == null || idTrasladoEditar == 0) {
             try {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -81,30 +78,27 @@ public class TrasladoRecursoBean implements Serializable {
                     }
                     if (idParam != null && !idParam.isEmpty()) {
                         idTrasladoEditar = Integer.parseInt(idParam);
-                        System.out.println("   - idTrasladoEditar obtenido de URL: " + idTrasladoEditar);
+                        System.out.println("idTrasladoEditar obtenido de URL: " + idTrasladoEditar);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ TrasladoRecursoBean.init: Error al obtener idTrasladoEditar de URL: " + e.getMessage());
+                System.err.println("TrasladoRecursoBean.init: Error al obtener idTrasladoEditar de URL: " + e.getMessage());
             }
         }
         
         if (idTrasladoEditar != null && idTrasladoEditar > 0) {
-            // Modo edición: cargar el traslado
             TrasladoRecurso encontrado = trasladoDAO.buscarPorId(idTrasladoEditar);
             if (encontrado != null) {
                 traslado = encontrado;
-                // Convertir LocalDateTime a Date para el calendario
                 if (traslado.getFechaTraslado() != null) {
                     fechaTrasladoDate = Date.from(traslado.getFechaTraslado().atZone(ZoneId.systemDefault()).toInstant());
                 }
-                System.out.println("   ✅ Traslado cargado para edición: ID " + idTrasladoEditar);
+                System.out.println("Traslado cargado para edición: ID " + idTrasladoEditar);
             } else {
-                System.err.println("   ⚠️ No se encontró traslado con ID: " + idTrasladoEditar);
+                System.err.println("No se encontró traslado con ID: " + idTrasladoEditar);
                 prepararNuevo();
             }
         } else {
-            // Modo creación: preparar nuevo traslado
             prepararNuevo();
         }
         
@@ -123,26 +117,24 @@ public class TrasladoRecursoBean implements Serializable {
 
     public void guardar() {
         try {
-            // Convertir Date a LocalDateTime antes de guardar
             if (fechaTrasladoDate != null) {
                 traslado.setFechaTraslado(fechaTrasladoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             }
             
-            // Validar campos requeridos
             if (traslado.getRecursoId() == 0) {
-                FacesUtils.addErrorMessage("⚠️ Debe seleccionar un recurso");
+                FacesUtils.addErrorMessage("Debe seleccionar un recurso");
                 return;
             }
             if (traslado.getAmbienteOrigen() == 0) {
-                FacesUtils.addErrorMessage("⚠️ Debe seleccionar un ambiente de origen");
+                FacesUtils.addErrorMessage("Debe seleccionar un ambiente de origen");
                 return;
             }
             if (traslado.getAmbienteDestino() == 0) {
-                FacesUtils.addErrorMessage("⚠️ Debe seleccionar un ambiente de destino");
+                FacesUtils.addErrorMessage("Debe seleccionar un ambiente de destino");
                 return;
             }
             if (traslado.getAmbienteOrigen() == traslado.getAmbienteDestino()) {
-                FacesUtils.addErrorMessage("⚠️ El ambiente de origen y destino no pueden ser el mismo");
+                FacesUtils.addErrorMessage("El ambiente de origen y destino no pueden ser el mismo");
                 return;
             }
             
@@ -150,17 +142,17 @@ public class TrasladoRecursoBean implements Serializable {
             if (traslado.getIdTraslado() == 0) {
                 int id = trasladoDAO.guardar(traslado);
                 if (id > 0) {
-                    mensaje = "✅ Traslado registrado correctamente";
+                    mensaje = "Traslado registrado correctamente";
                 } else {
-                    FacesUtils.addErrorMessage("❌ No se pudo registrar el traslado");
+                    FacesUtils.addErrorMessage("No se pudo registrar el traslado");
                     return;
                 }
             } else {
                 boolean exito = trasladoDAO.actualizar(traslado);
                 if (exito) {
-                    mensaje = "✅ Traslado actualizado correctamente";
+                    mensaje = "Traslado actualizado correctamente";
                 } else {
-                    FacesUtils.addErrorMessage("❌ No se pudo actualizar el traslado");
+                    FacesUtils.addErrorMessage("No se pudo actualizar el traslado");
                     return;
                 }
             }
@@ -168,11 +160,8 @@ public class TrasladoRecursoBean implements Serializable {
             traslados = trasladoDAO.listar();
             prepararNuevo();
             
-            // Guardar mensaje en Flash para que sobreviva la redirección
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.getExternalContext().getFlash().put("mensaje", mensaje);
-            
-            // Detectar si estamos en el contexto de instructor o guarda
             String currentView = facesContext.getViewRoot().getViewId();
             if (currentView != null && currentView.contains("/instructor/")) {
                 FacesUtils.redirect("/faces/pages/instructor/traslados/listarTraslados.xhtml");
@@ -181,13 +170,12 @@ public class TrasladoRecursoBean implements Serializable {
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage("Error al guardar el traslado: " + e.getMessage());
-            System.err.println("❌ TrasladoRecursoBean.guardar: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoBean.guardar: Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public String editar(int idTraslado) {
-        // Detectar si estamos en el contexto de instructor o guarda
         String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
         String currentView = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         
@@ -203,18 +191,17 @@ public class TrasladoRecursoBean implements Serializable {
             boolean exito = trasladoDAO.eliminar(idTraslado);
             if (exito) {
                 traslados = trasladoDAO.listar();
-                FacesUtils.addInfoMessage("✅ Traslado eliminado correctamente");
+                FacesUtils.addInfoMessage("Traslado eliminado correctamente");
             } else {
-                FacesUtils.addErrorMessage("❌ No se pudo eliminar el traslado");
+                FacesUtils.addErrorMessage("No se pudo eliminar el traslado");
             }
         } catch (Exception e) {
             FacesUtils.addErrorMessage("Error al eliminar el traslado: " + e.getMessage());
-            System.err.println("❌ TrasladoRecursoBean.eliminar: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoBean.eliminar: Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
     
-    // Método helper para formatear fechas
     public String formatearFecha(LocalDateTime fecha) {
         if (fecha == null) {
             return "";
@@ -222,7 +209,6 @@ public class TrasladoRecursoBean implements Serializable {
         return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
     
-    // Métodos helper para filtros - aseguran que siempre haya un valor para filtrar
     public String getTextoRecurso(TrasladoRecurso tras) {
         return tras.getRecursoNombre() != null ? tras.getRecursoNombre() : "Recurso " + tras.getRecursoId();
     }
@@ -235,7 +221,6 @@ public class TrasladoRecursoBean implements Serializable {
         return tras.getAmbienteDestinoNombre() != null ? tras.getAmbienteDestinoNombre() : "Ambiente " + tras.getAmbienteDestino();
     }
     
-    // Getter y Setter para propiedad Date
     public Date getFechaTrasladoDate() {
         if (fechaTrasladoDate == null && traslado.getFechaTraslado() != null) {
             fechaTrasladoDate = Date.from(traslado.getFechaTraslado().atZone(ZoneId.systemDefault()).toInstant());
@@ -250,7 +235,6 @@ public class TrasladoRecursoBean implements Serializable {
         }
     }
 
-    // Getters y Setters
     public TrasladoRecurso getTraslado() {
         if (traslado == null) {
             traslado = new TrasladoRecurso();

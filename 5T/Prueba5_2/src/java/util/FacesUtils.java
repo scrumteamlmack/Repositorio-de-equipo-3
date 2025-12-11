@@ -6,10 +6,6 @@ import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.io.Serializable;
 
-/**
- * Métodos de ayuda para mostrar mensajes y realizar redirecciones JSF
- * sin repetir código en los ManagedBeans.
- */
 public final class FacesUtils implements Serializable {
 
     private FacesUtils() {

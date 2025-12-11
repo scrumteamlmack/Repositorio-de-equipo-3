@@ -24,15 +24,14 @@ public class FichaBean implements Serializable {
 
     private Ficha ficha = new Ficha();
     private List<Ficha> fichas;
-    private List<Ficha> fichasInstructor = new ArrayList<>(); // Inicializar como lista vacía
+    private List<Ficha> fichasInstructor = new ArrayList<>(); 
     private List<Instructor> instructores;
     private List<String> instructoresSeleccionados = new ArrayList<>();
     private Integer idFichaEditar;
 
     public void init() {
-        System.out.println("🔍 FichaBean.init: Inicializando bean");
+        System.out.println("FichaBean.init: Inicializando bean");
         
-        // Solo cargar fichas e instructores si no están cargados
         if (fichas == null) {
             fichas = fichaDAO.listar();
         }
@@ -40,10 +39,9 @@ public class FichaBean implements Serializable {
             cargarInstructores();
         }
         
-        // Cargar fichas del instructor actual (siempre que se inicialice el bean)
         cargarFichasInstructor();
         
-        // Intentar obtener idFichaEditar de la URL si no está establecido
+
         if (idFichaEditar == null || idFichaEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -54,18 +52,17 @@ public class FichaBean implements Serializable {
                     }
                     if (idParam != null && !idParam.isEmpty()) {
                         idFichaEditar = Integer.parseInt(idParam);
-                        System.out.println("   - idFichaEditar obtenido de URL: " + idFichaEditar);
+                        System.out.println("idFichaEditar obtenido de URL: " + idFichaEditar);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ FichaBean.init: Error al obtener idFichaEditar de URL: " + e.getMessage());
+                System.err.println("FichaBean.init: Error al obtener idFichaEditar de URL: " + e.getMessage());
             }
         }
         
         if (idFichaEditar != null && idFichaEditar > 0) {
             ficha = fichaDAO.buscarPorId(idFichaEditar);
             if (ficha != null) {
-                // Cargar instructores asignados a esta ficha
                 List<Ficha> fichasMismoNumero = fichaDAO.buscarPorNumero(ficha.getNumFicha());
                 if (instructoresSeleccionados == null) {
                     instructoresSeleccionados = new ArrayList<>();
@@ -87,7 +84,7 @@ public class FichaBean implements Serializable {
             }
         }
         
-        System.out.println("✅ FichaBean.init: Bean inicializado correctamente");
+        System.out.println("FichaBean.init: Bean inicializado correctamente");
     }
 
     private void cargarInstructores() {
@@ -114,16 +111,14 @@ public class FichaBean implements Serializable {
         }
 
         try {
-            // Si es edición, eliminar las asignaciones anteriores de esta ficha
             if (idFichaEditar != null && idFichaEditar > 0) {
                 Ficha fichaExistente = fichaDAO.buscarPorId(idFichaEditar);
                 if (fichaExistente != null) {
-                    // Eliminar todas las fichas con el mismo número
+
                     fichaDAO.eliminarPorNumero(fichaExistente.getNumFicha());
                 }
             }
 
-            // Crear una ficha para cada instructor seleccionado
             boolean alMenosUnoGuardado = false;
             for (String instructorIdStr : instructoresSeleccionados) {
                 try {
@@ -137,7 +132,7 @@ public class FichaBean implements Serializable {
                         alMenosUnoGuardado = true;
                     }
                 } catch (NumberFormatException e) {
-                    System.err.println("❌ FichaBean.guardar: Error al convertir instructorId: " + instructorIdStr);
+                    System.err.println("FichaBean.guardar: Error al convertir instructorId: " + instructorIdStr);
                     e.printStackTrace();
                 }
             }
@@ -151,7 +146,7 @@ public class FichaBean implements Serializable {
             }
 
         } catch (Exception e) {
-            System.err.println("❌ FichaBean.guardar: Error: " + e.getMessage());
+            System.err.println("FichaBean.guardar: Error: " + e.getMessage());
             e.printStackTrace();
             FacesUtils.addErrorMessage("Error al guardar la ficha: " + e.getMessage());
             return null;
@@ -161,7 +156,6 @@ public class FichaBean implements Serializable {
     public String eliminar(int idFicha) {
         Ficha fichaEliminar = fichaDAO.buscarPorId(idFicha);
         if (fichaEliminar != null) {
-            // Eliminar todas las fichas con el mismo número
             if (fichaDAO.eliminarPorNumero(fichaEliminar.getNumFicha())) {
                 FacesUtils.addInfoMessage("Ficha eliminada correctamente");
             } else {
@@ -266,9 +260,9 @@ public class FichaBean implements Serializable {
     }
 
     public List<Ficha> getFichasPorInstructor() {
-        System.out.println("🔍 FichaBean.getFichasPorInstructor: Llamado");
+        System.out.println("FichaBean.getFichasPorInstructor: Llamado");
         if (fichasInstructor == null) {
-            System.out.println("   - fichasInstructor es null, cargando...");
+            System.out.println("fichasInstructor es null, cargando...");
             cargarFichasInstructor();
         }
         System.out.println("   - Retornando " + (fichasInstructor != null ? fichasInstructor.size() : 0) + " fichas");
@@ -276,8 +270,8 @@ public class FichaBean implements Serializable {
     }
     
     public List<Ficha> getFichasInstructor() {
-        System.out.println("🔍 FichaBean.getFichasInstructor: Getter llamado");
-        System.out.println("   - fichasInstructor actual: " + (fichasInstructor != null ? fichasInstructor.size() + " elementos" : "null"));
+        System.out.println("FichaBean.getFichasInstructor: Getter llamado");
+        System.out.println("fichasInstructor actual: " + (fichasInstructor != null ? fichasInstructor.size() + " elementos" : "null"));
         
         // Si es null o está vacía, cargar las fichas
         if (fichasInstructor == null || fichasInstructor.isEmpty()) {
@@ -285,7 +279,7 @@ public class FichaBean implements Serializable {
             cargarFichasInstructor();
         }
         
-        System.out.println("   - Retornando " + (fichasInstructor != null ? fichasInstructor.size() : 0) + " fichas");
+        System.out.println("Retornando " + (fichasInstructor != null ? fichasInstructor.size() : 0) + " fichas");
         return fichasInstructor != null ? fichasInstructor : new ArrayList<>();
     }
 
@@ -300,32 +294,29 @@ public class FichaBean implements Serializable {
         try {
             javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
             if (facesContext == null) {
-                System.err.println("⚠️ FichaBean.cargarFichasInstructor: FacesContext es null");
+                System.err.println("FichaBean.cargarFichasInstructor: FacesContext es null");
                 return;
             }
-            
-            // Intentar obtener userId de múltiples formas
             Object userIdObj = null;
             
-            // Método 1: Desde el sessionMap directamente
-            userIdObj = facesContext.getExternalContext().getSessionMap().get("userId");
-            System.out.println("   - userIdObj de sessionMap: " + userIdObj);
             
-            // Método 2: Intentar obtener desde LoginBean usando EL
+            userIdObj = facesContext.getExternalContext().getSessionMap().get("userId");
+            System.out.println("userIdObj de sessionMap: " + userIdObj);
+            
+         
             if (userIdObj == null) {
                 try {
                     javax.el.ELContext elContext = facesContext.getELContext();
                     javax.el.ExpressionFactory factory = facesContext.getApplication().getExpressionFactory();
                     javax.el.ValueExpression ve = factory.createValueExpression(elContext, "#{loginBean.usuarioAutenticado.idUsuario}", Object.class);
                     userIdObj = ve.getValue(elContext);
-                    System.out.println("   - userIdObj de LoginBean: " + userIdObj);
+                    System.out.println(" userIdObj de LoginBean: " + userIdObj);
                 } catch (Exception e) {
-                    System.err.println("⚠️ FichaBean.cargarFichasInstructor: Error al obtener de LoginBean: " + e.getMessage());
+                    System.err.println("FichaBean.cargarFichasInstructor: Error al obtener de LoginBean: " + e.getMessage());
                 }
             }
-            
-            // Método 3: Listar todas las claves de la sesión para debug
-            System.out.println("   - Claves en sessionMap: " + facesContext.getExternalContext().getSessionMap().keySet());
+
+            System.out.println("Claves en sessionMap: " + facesContext.getExternalContext().getSessionMap().keySet());
             
             if (userIdObj != null) {
                 int instructorId;
@@ -334,24 +325,24 @@ public class FichaBean implements Serializable {
                 } else if (userIdObj instanceof String) {
                     instructorId = Integer.parseInt((String) userIdObj);
                 } else {
-                    System.err.println("❌ FichaBean.cargarFichasInstructor: Tipo inesperado: " + userIdObj.getClass().getName());
+                    System.err.println("FichaBean.cargarFichasInstructor: Tipo inesperado: " + userIdObj.getClass().getName());
                     return;
                 }
                 
-                System.out.println("   - Instructor ID obtenido: " + instructorId);
+                System.out.println("Instructor ID obtenido: " + instructorId);
                 fichasInstructor = fichaDAO.buscarPorInstructor(instructorId);
-                System.out.println("   - Fichas encontradas en BD: " + (fichasInstructor != null ? fichasInstructor.size() : 0));
+                System.out.println("Fichas encontradas en BD: " + (fichasInstructor != null ? fichasInstructor.size() : 0));
                 
                 if (fichasInstructor != null && !fichasInstructor.isEmpty()) {
                     for (Ficha f : fichasInstructor) {
-                        System.out.println("      - Ficha ID: " + f.getIdFicha() + ", Num: " + f.getNumFicha() + ", Instructor: " + f.getInstructorUsuarioId());
+                        System.out.println("Ficha ID: " + f.getIdFicha() + ", Num: " + f.getNumFicha() + ", Instructor: " + f.getInstructorUsuarioId());
                     }
                 }
             } else {
-                System.err.println("⚠️ FichaBean.cargarFichasInstructor: userIdObj es null - no se pudo obtener de ninguna fuente");
+                System.err.println("FichaBean.cargarFichasInstructor: userIdObj es null - no se pudo obtener de ninguna fuente");
             }
         } catch (Exception e) {
-            System.err.println("❌ FichaBean.cargarFichasInstructor: Error: " + e.getMessage());
+            System.err.println("FichaBean.cargarFichasInstructor: Error: " + e.getMessage());
             e.printStackTrace();
         }
     }

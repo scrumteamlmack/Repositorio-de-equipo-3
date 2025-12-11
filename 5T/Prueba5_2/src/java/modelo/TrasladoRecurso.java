@@ -12,7 +12,7 @@ public class TrasladoRecurso implements Serializable {
     private LocalDateTime fechaTraslado;
     private String observacion;
     
-    // Campos para mostrar nombres en la vista
+
     private String recursoNombre;
     private String ambienteOrigenNombre;
     private String ambienteDestinoNombre;

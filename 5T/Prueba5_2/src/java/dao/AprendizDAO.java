@@ -30,15 +30,15 @@ public class AprendizDAO {
         String sql = "INSERT INTO aprendiz (Usuario_id_usuario, programas_id_programas, ficha_idficha) "
                 + "VALUES (?,?,?)";
         
-        System.out.println("🔍 AprendizDAO.guardar: Intentando guardar aprendiz");
-        System.out.println("   - ID Usuario: " + aprendiz.getIdUsuario());
-        System.out.println("   - ID Programa: " + aprendiz.getProgramaId());
-        System.out.println("   - ID Ficha: " + aprendiz.getFichaId());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("AprendizDAO.guardar: Intentando guardar aprendiz");
+        System.out.println("ID Usuario: " + aprendiz.getIdUsuario());
+        System.out.println("ID Programa: " + aprendiz.getProgramaId());
+        System.out.println("ID Ficha: " + aprendiz.getFichaId());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ AprendizDAO.guardar: No se pudo establecer conexión");
+                System.err.println("AprendizDAO.guardar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -48,16 +48,16 @@ public class AprendizDAO {
                 ps.setInt(3, aprendiz.getFichaId());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ AprendizDAO.guardar: Filas afectadas: " + filas);
+                System.out.println("AprendizDAO.guardar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ AprendizDAO.guardar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("AprendizDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ AprendizDAO.guardar: Error inesperado: " + e.getMessage());
+            System.err.println("AprendizDAO.guardar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -66,15 +66,15 @@ public class AprendizDAO {
     public boolean actualizar(Aprendiz aprendiz) {
         String sql = "UPDATE aprendiz SET programas_id_programas=?, ficha_idficha=? WHERE Usuario_id_usuario=?";
         
-        System.out.println("🔍 AprendizDAO.actualizar: Intentando actualizar aprendiz");
-        System.out.println("   - ID Usuario: " + aprendiz.getIdUsuario());
-        System.out.println("   - ID Programa: " + aprendiz.getProgramaId());
-        System.out.println("   - ID Ficha: " + aprendiz.getFichaId());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("AprendizDAO.actualizar: Intentando actualizar aprendiz");
+        System.out.println("ID Usuario: " + aprendiz.getIdUsuario());
+        System.out.println("ID Programa: " + aprendiz.getProgramaId());
+        System.out.println("ID Ficha: " + aprendiz.getFichaId());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ AprendizDAO.actualizar: No se pudo establecer conexión");
+                System.err.println("AprendizDAO.actualizar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -84,16 +84,16 @@ public class AprendizDAO {
                 ps.setInt(3, aprendiz.getIdUsuario());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ AprendizDAO.actualizar: Filas afectadas: " + filas);
+                System.out.println("AprendizDAO.actualizar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ AprendizDAO.actualizar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("AprendizDAO.actualizar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ AprendizDAO.actualizar: Error inesperado: " + e.getMessage());
+            System.err.println("AprendizDAO.actualizar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -139,7 +139,7 @@ public class AprendizDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ AprendizDAO.buscarPorFicha: Error: " + e.getMessage());
+            System.err.println("AprendizDAO.buscarPorFicha: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return aprendices;

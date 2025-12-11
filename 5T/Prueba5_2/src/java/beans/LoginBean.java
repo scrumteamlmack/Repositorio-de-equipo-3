@@ -54,21 +54,21 @@ public class LoginBean implements Serializable {
             return null;
         }
 
-        System.out.println("🔍 LoginBean: Buscando usuario con documento: " + documento);
+        System.out.println("LoginBean: Buscando usuario con documento: " + documento);
 
         Usuario usuarioBD = null;
         try {
             usuarioBD = usuarioDAO.buscarPorDocumento(documento);
-            System.out.println("🔍 LoginBean: Resultado de búsqueda: " + (usuarioBD != null ? "Usuario encontrado (ID: " + usuarioBD.getIdUsuario() + ")" : "Usuario no encontrado"));
+            System.out.println("LoginBean: Resultado de búsqueda: " + (usuarioBD != null ? "Usuario encontrado (ID: " + usuarioBD.getIdUsuario() + ")" : "Usuario no encontrado"));
         } catch (Exception e) {
-            System.err.println("❌ LoginBean: Error al buscar usuario: " + e.getMessage());
+            System.err.println("LoginBean: Error al buscar usuario: " + e.getMessage());
             e.printStackTrace();
             FacesUtils.addErrorMessage("Error al conectarse a la base de datos: " + e.getMessage());
             return null;
         }
 
         if (usuarioBD == null) {
-            System.out.println("❌ LoginBean: Usuario no encontrado con documento: " + documento);
+            System.out.println("LoginBean: Usuario no encontrado con documento: " + documento);
             FacesUtils.addErrorMessage("Usuario no encontrado. Verifique su número de documento.");
             return null;
         }
@@ -80,16 +80,15 @@ public class LoginBean implements Serializable {
         }
 
         if (!PasswordUtil.matches(passwordIngresada, usuarioBD.getContrasena())) {
-            System.out.println("❌ LoginBean: Contraseña incorrecta para usuario: " + documento);
+            System.out.println("LoginBean: Contraseña incorrecta para usuario: " + documento);
             FacesUtils.addErrorMessage("Contraseña incorrecta");
             return null;
         }
 
-        // Login exitoso
-        System.out.println("✅ LoginBean: Autenticación exitosa para usuario: " + usuarioBD.getPNombre() + " (ID: " + usuarioBD.getIdUsuario() + ")");
+        System.out.println("LoginBean: Autenticación exitosa para usuario: " + usuarioBD.getPNombre() + " (ID: " + usuarioBD.getIdUsuario() + ")");
         usuarioAutenticado = usuarioBD;
         roles = usuarioDAO.obtenerRolesIdsPorUsuarioId(usuarioBD.getIdUsuario());
-        System.out.println("✅ LoginBean: Roles asignados: " + roles);
+        System.out.println("LoginBean: Roles asignados: " + roles);
         guardarEnSesion();
         FacesUtils.addInfoMessage("Bienvenido " + usuarioBD.getPNombre());
 
@@ -105,22 +104,22 @@ public class LoginBean implements Serializable {
     }
 
     private String redireccionSegunRol() {
-        System.out.println("🔍 LoginBean.redireccionSegunRol: Roles del usuario: " + roles);
+        System.out.println("LoginBean.redireccionSegunRol: Roles del usuario: " + roles);
         
-        if (hasRol(1)) { // Administrador/Coordinador
+        if (hasRol(1)) { 
             System.out.println("   → Redirigiendo a Admin");
             return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
-        } else if (hasRol(2)) { // Instructor
+        } else if (hasRol(2)) { 
             System.out.println("   → Redirigiendo a Instructor");
             return "/pages/instructor/index.xhtml?faces-redirect=true";
-        } else if (hasRol(3)) { // Aprendiz
+        } else if (hasRol(3)) { 
             System.out.println("   → Redirigiendo a Aprendiz");
             return "/pages/aprendiz/index.xhtml?faces-redirect=true";
-        } else if (hasRol(4)) { // Guarda de Seguridad
+        } else if (hasRol(4)) { 
             System.out.println("   → Redirigiendo a Guarda");
             return "/pages/guarda/index.xhtml?faces-redirect=true";
         } else {
-            System.out.println("   ⚠️ No se encontró rol válido, redirigiendo a Admin por defecto");
+            System.out.println(" No se encontró rol válido, redirigiendo a Admin por defecto");
             return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
         }
     }
@@ -130,14 +129,12 @@ public class LoginBean implements Serializable {
     }
 
     public void verificarSesion(int... rolesPermitidos) {
-        // Verificar si hay sesión activa
         if (!isAutenticado()) {
-            System.out.println("⚠️ LoginBean.verificarSesion: Usuario no autenticado, redirigiendo al aviso de logout");
+            System.out.println(" LoginBean.verificarSesion: Usuario no autenticado, redirigiendo al aviso de logout");
             FacesUtils.redirect("/faces/aviso-logout.xhtml");
             return;
         }
         
-        // Verificar roles si se especificaron
         if (rolesPermitidos != null && rolesPermitidos.length > 0) {
             boolean tieneRol = false;
             for (int rol : rolesPermitidos) {
@@ -147,13 +144,12 @@ public class LoginBean implements Serializable {
                 }
             }
             if (!tieneRol) {
-                System.out.println("⚠️ LoginBean.verificarSesion: Usuario no tiene rol permitido, redirigiendo");
+                System.out.println("LoginBean.verificarSesion: Usuario no tiene rol permitido, redirigiendo");
                 FacesUtils.redirect("/faces/sinacceso.xhtml");
             }
         }
     }
     
-    // Método wrapper para verificar sesión sin restricciones de rol (para perfil)
     public String verificarSesionCualquiera() {
         if (!isAutenticado()) {
             System.out.println("⚠️ LoginBean.verificarSesionCualquiera: Usuario no autenticado, redirigiendo al aviso de logout");
@@ -163,7 +159,6 @@ public class LoginBean implements Serializable {
         return null;
     }
     
-    // Métodos wrapper para f:viewAction que retornan String
     public String verificarSesionAdmin() {
         verificarSesion(1);
         return null;
@@ -198,21 +193,19 @@ public class LoginBean implements Serializable {
         try {
             ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
             
-            // Limpiar todas las variables de sesión
+            
             externalContext.getSessionMap().clear();
             usuarioAutenticado = null;
             roles.clear();
             credenciales = new Usuario();
-            
-            // Invalidar la sesión HTTP completamente
+
             javax.servlet.http.HttpSession session = (javax.servlet.http.HttpSession) externalContext.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
             
-            System.out.println("✅ LoginBean.cerrarSesion: Sesión cerrada e invalidada correctamente");
+            System.out.println("LoginBean.cerrarSesion: Sesión cerrada e invalidada correctamente");
             
-            // Redirigir al formulario de inicio de sesión
             return "/login.xhtml?faces-redirect=true";
         } catch (Exception e) {
             System.err.println("❌ LoginBean.cerrarSesion: Error al cerrar sesión: " + e.getMessage());

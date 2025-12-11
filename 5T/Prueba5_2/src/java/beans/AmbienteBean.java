@@ -23,13 +23,12 @@ public class AmbienteBean implements Serializable {
     @PostConstruct
     public void init() {
         ambientes = ambienteDAO.listar();
-        // Si estamos en modo edición, cargar el ambiente aquí también
-        // (respaldo por si el viewParam no se procesó aún)
+
         cargarAmbienteSiEsNecesario();
     }
     
     private void cargarAmbienteSiEsNecesario() {
-        // Intentar cargar ambiente si hay un ID en la URL (para formulario de edición)
+       
         try {
             javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
             if (facesContext != null) {
@@ -38,17 +37,17 @@ public class AmbienteBean implements Serializable {
                     try {
                         int id = Integer.parseInt(idParam);
                         System.out.println("   - ID encontrado en URL en @PostConstruct: " + id);
-                        // Si encontramos un ID en la URL, es probable que sea modo edición
+                        
                         if (id > 0 && (ambiente == null || ambiente.getIdAmbiente() == 0)) {
                             Ambiente encontrado = ambienteDAO.buscarPorId(id);
                             if (encontrado != null) {
                                 idAmbienteEditar = id;
                                 ambiente = encontrado;
-                                System.out.println("   ✅ Ambiente cargado en @PostConstruct: " + ambiente.getNumero());
+                                System.out.println(" Ambiente cargado en @PostConstruct: " + ambiente.getNumero());
                             }
                         }
                     } catch (NumberFormatException e) {
-                        // No es un número, no es un ID de edición
+              
                     }
                 }
             }
@@ -87,19 +86,17 @@ public class AmbienteBean implements Serializable {
     }
     
     public String cargarAmbienteParaEditar() {
-        System.out.println("═══════════════════════════════════════════════════════");
+
         System.out.println("🔍 AmbienteBean.cargarAmbienteParaEditar: INICIO");
         System.out.println("   - idAmbienteEditar desde viewParam: " + idAmbienteEditar);
         System.out.println("   - ambiente actual: " + (ambiente != null ? "ID=" + ambiente.getIdAmbiente() : "null"));
         
-        // Verificar si ya tenemos los datos cargados (evitar cargar múltiples veces)
+    
         if (ambiente != null && ambiente.getIdAmbiente() > 0 && idAmbienteEditar != null && ambiente.getIdAmbiente() == idAmbienteEditar) {
             System.out.println("   ✅ Ambiente ya está cargado, no es necesario recargar");
-            System.out.println("═══════════════════════════════════════════════════════");
             return null;
         }
-        
-        // Intentar obtener el ID de la URL si no está establecido
+
         if (idAmbienteEditar == null || idAmbienteEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -108,36 +105,34 @@ public class AmbienteBean implements Serializable {
                     System.out.println("   - Parámetro 'id' obtenido de URL: " + idParam);
                     if (idParam != null && !idParam.isEmpty()) {
                         idAmbienteEditar = Integer.parseInt(idParam);
-                        System.out.println("   ✅ idAmbienteEditar parseado desde URL: " + idAmbienteEditar);
+                        System.out.println(" idAmbienteEditar parseado desde URL: " + idAmbienteEditar);
                     } else {
-                        System.err.println("   ❌ No se encontró parámetro 'id' en la URL");
+                        System.err.println(" No se encontró parámetro 'id' en la URL");
                     }
                 } else {
-                    System.err.println("   ❌ FacesContext es null");
+                    System.err.println("FacesContext es null");
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ AmbienteBean.cargarAmbienteParaEditar: Error al obtener idAmbienteEditar de URL: " + e.getMessage());
+                System.err.println("AmbienteBean.cargarAmbienteParaEditar: Error al obtener idAmbienteEditar de URL: " + e.getMessage());
                 e.printStackTrace();
             }
         }
         
-        System.out.println("   - idAmbienteEditar FINAL: " + idAmbienteEditar);
-        
-        // Si hay idAmbienteEditar, cargar los datos del ambiente
+        System.out.println(" idAmbienteEditar FINAL: " + idAmbienteEditar);
+
         if (idAmbienteEditar != null && idAmbienteEditar > 0) {
             System.out.println("   - Llamando a ambienteDAO.buscarPorId(" + idAmbienteEditar + ")");
             Ambiente encontrado = ambienteDAO.buscarPorId(idAmbienteEditar);
             
             if (encontrado != null) {
-                System.out.println("   ✅ Ambiente encontrado en BD:");
+                System.out.println(" Ambiente encontrado en BD:");
                 System.out.println("      * ID: " + encontrado.getIdAmbiente());
                 System.out.println("      * Número: " + encontrado.getNumero());
                 System.out.println("      * Capacidad: " + encontrado.getCapacidad());
                 System.out.println("      * Tipo: " + encontrado.getTipo());
                 System.out.println("      * Estado: " + encontrado.getEstado());
                 
-                // CRÍTICO: Asignar los datos al objeto ambiente del bean
-                // Crear una copia completa para asegurar que todos los campos estén asignados
+
                 if (ambiente == null) {
                     ambiente = new Ambiente();
                 }
@@ -147,28 +142,27 @@ public class AmbienteBean implements Serializable {
                 ambiente.setTipo(encontrado.getTipo());
                 ambiente.setEstado(encontrado.getEstado());
                 
-                System.out.println("   ✅ Datos asignados al bean ambiente:");
-                System.out.println("      * ambiente.getIdAmbiente(): " + ambiente.getIdAmbiente());
-                System.out.println("      * ambiente.getNumero(): " + ambiente.getNumero());
-                System.out.println("      * ambiente.getCapacidad(): " + ambiente.getCapacidad());
-                System.out.println("      * ambiente.getTipo(): " + ambiente.getTipo());
-                System.out.println("      * ambiente.getEstado(): " + ambiente.getEstado());
-                System.out.println("═══════════════════════════════════════════════════════");
+                System.out.println(" Datos asignados al bean ambiente:");
+                System.out.println(" ambiente.getIdAmbiente(): " + ambiente.getIdAmbiente());
+                System.out.println(" ambiente.getNumero(): " + ambiente.getNumero());
+                System.out.println(" ambiente.getCapacidad(): " + ambiente.getCapacidad());
+                System.out.println(" ambiente.getTipo(): " + ambiente.getTipo());
+                System.out.println(" ambiente.getEstado(): " + ambiente.getEstado());
             } else {
-                System.err.println("   ❌ Ambiente NO encontrado en BD con ID: " + idAmbienteEditar);
+                System.err.println(" Ambiente NO encontrado en BD con ID: " + idAmbienteEditar);
                 FacesUtils.addErrorMessage("Ambiente no encontrado con ID: " + idAmbienteEditar);
             }
         } else {
-            System.err.println("   ❌ idAmbienteEditar es null o 0 - No se puede cargar ambiente");
-            System.err.println("   - Esto puede indicar que el viewParam no funcionó correctamente");
+            System.err.println(" idAmbienteEditar es null o 0 - No se puede cargar ambiente");
+            System.err.println(" Esto puede indicar que el viewParam no funcionó correctamente");
             FacesUtils.addErrorMessage("No se proporcionó ID de ambiente válido para editar.");
         }
         
-        return null; // No redirigir, mostrar la vista actual
+        return null;
     }
     
     public String actualizarAmbiente() {
-        System.out.println("🔍 AmbienteBean.actualizarAmbiente: Actualizando ambiente ID: " + ambiente.getIdAmbiente());
+        System.out.println("AmbienteBean.actualizarAmbiente: Actualizando ambiente ID: " + ambiente.getIdAmbiente());
         
         if (ambiente.getIdAmbiente() == 0) {
             FacesUtils.addErrorMessage("Error: No se puede actualizar un ambiente sin ID.");

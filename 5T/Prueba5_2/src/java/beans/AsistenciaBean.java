@@ -42,7 +42,6 @@ public class AsistenciaBean implements Serializable {
     private int idAsistenciaSeleccionada;
     private Integer idAsistenciaEditar;
     
-    // Propiedad Date para el calendario (conversión Date <-> LocalDate)
     private Date fechaDate;
 
     @PostConstruct
@@ -52,7 +51,7 @@ public class AsistenciaBean implements Serializable {
         instructores = instructorDAO.listar();
         jornadas = jornadaDAO.listar();
         
-        // Cargar usuarios completos para mostrar nombres
+   
         aprendicesUsuarios = new java.util.ArrayList<>();
         for (Aprendiz a : aprendices) {
             Usuario u = usuarioDAO.buscarPorId(a.getIdUsuario());
@@ -69,15 +68,14 @@ public class AsistenciaBean implements Serializable {
             }
         }
         
-        // Si estamos en modo edición, cargar la asistencia aquí también
-        // Si no, preparar para nuevo registro
+
         if (!cargarAsistenciaSiEsNecesario()) {
             prepararNuevo();
         }
     }
     
     private boolean cargarAsistenciaSiEsNecesario() {
-        // Intentar cargar asistencia si hay un ID en la URL (para formulario de edición)
+        
         try {
             javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
             if (facesContext != null) {
@@ -101,14 +99,14 @@ public class AsistenciaBean implements Serializable {
                             }
                         }
                     } catch (NumberFormatException e) {
-                        // No es un número, no es un ID de edición
+                        
                     }
                 }
             }
         } catch (Exception e) {
             System.err.println("⚠️ AsistenciaBean.cargarAsistenciaSiEsNecesario: Error: " + e.getMessage());
         }
-        return false; // No se cargó ninguna asistencia, es modo nuevo
+        return false; 
     }
 
     public void prepararNuevo() {
@@ -122,7 +120,7 @@ public class AsistenciaBean implements Serializable {
     }
 
     public String guardar() {
-        // Validar que los campos requeridos no sean 0 o vacíos
+
         if (asistencia.getAprendizUsuarioId() == 0) {
             FacesUtils.addErrorMessage("Debe seleccionar un aprendiz.");
             return null;
@@ -140,7 +138,6 @@ public class AsistenciaBean implements Serializable {
             return null;
         }
         
-        // Convertir Date a LocalDate antes de guardar
         if (fechaDate != null) {
             asistencia.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } else {
@@ -168,57 +165,53 @@ public class AsistenciaBean implements Serializable {
     }
     
     public String cargarAsistenciaParaEditar() {
-        System.out.println("═══════════════════════════════════════════════════════");
-        System.out.println("🔍 AsistenciaBean.cargarAsistenciaParaEditar: INICIO");
-        System.out.println("   - idAsistenciaEditar desde viewParam: " + idAsistenciaEditar);
-        System.out.println("   - asistencia actual: " + (asistencia != null ? "ID=" + asistencia.getIdAsistencia() : "null"));
+        System.out.println("AsistenciaBean.cargarAsistenciaParaEditar: INICIO");
+        System.out.println("idAsistenciaEditar desde viewParam: " + idAsistenciaEditar);
+        System.out.println("asistencia actual: " + (asistencia != null ? "ID=" + asistencia.getIdAsistencia() : "null"));
         
-        // Verificar si ya tenemos los datos cargados (evitar cargar múltiples veces)
         if (asistencia != null && asistencia.getIdAsistencia() > 0 && idAsistenciaEditar != null && asistencia.getIdAsistencia() == idAsistenciaEditar) {
-            System.out.println("   ✅ Asistencia ya está cargada, no es necesario recargar");
-            System.out.println("═══════════════════════════════════════════════════════");
+            System.out.println(" Asistencia ya está cargada, no es necesario recargar");
             return null;
         }
         
-        // Intentar obtener el ID de la URL si no está establecido
         if (idAsistenciaEditar == null || idAsistenciaEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
                 if (facesContext != null) {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
-                    System.out.println("   - Parámetro 'id' obtenido de URL: " + idParam);
+                    System.out.println(" Parámetro 'id' obtenido de URL: " + idParam);
                     if (idParam != null && !idParam.isEmpty()) {
                         idAsistenciaEditar = Integer.parseInt(idParam);
-                        System.out.println("   ✅ idAsistenciaEditar parseado desde URL: " + idAsistenciaEditar);
+                        System.out.println(" idAsistenciaEditar parseado desde URL: " + idAsistenciaEditar);
                     } else {
-                        System.err.println("   ❌ No se encontró parámetro 'id' en la URL");
+                        System.err.println(" No se encontró parámetro 'id' en la URL");
                     }
                 } else {
-                    System.err.println("   ❌ FacesContext es null");
+                    System.err.println(" FacesContext es null");
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ AsistenciaBean.cargarAsistenciaParaEditar: Error al obtener idAsistenciaEditar de URL: " + e.getMessage());
+                System.err.println(" AsistenciaBean.cargarAsistenciaParaEditar: Error al obtener idAsistenciaEditar de URL: " + e.getMessage());
                 e.printStackTrace();
             }
         }
         
-        System.out.println("   - idAsistenciaEditar FINAL: " + idAsistenciaEditar);
+        System.out.println(" idAsistenciaEditar FINAL: " + idAsistenciaEditar);
         
-        // Si hay idAsistenciaEditar, cargar los datos de la asistencia
+        
         if (idAsistenciaEditar != null && idAsistenciaEditar > 0) {
             System.out.println("   - Llamando a asistenciaDAO.buscarPorId(" + idAsistenciaEditar + ")");
             Asistencia encontrada = asistenciaDAO.buscarPorId(idAsistenciaEditar);
             
             if (encontrada != null) {
-                System.out.println("   ✅ Asistencia encontrada en BD:");
-                System.out.println("      * ID: " + encontrada.getIdAsistencia());
-                System.out.println("      * Aprendiz: " + encontrada.getAprendizUsuarioId());
-                System.out.println("      * Instructor: " + encontrada.getInstructorUsuarioId());
-                System.out.println("      * Jornada: " + encontrada.getJornadaId());
-                System.out.println("      * Estado: " + encontrada.getEstado());
-                System.out.println("      * Fecha: " + encontrada.getFecha());
+                System.out.println(" Asistencia encontrada en BD:");
+                System.out.println(" ID: " + encontrada.getIdAsistencia());
+                System.out.println(" Aprendiz: " + encontrada.getAprendizUsuarioId());
+                System.out.println(" Instructor: " + encontrada.getInstructorUsuarioId());
+                System.out.println(" Jornada: " + encontrada.getJornadaId());
+                System.out.println(" Estado: " + encontrada.getEstado());
+                System.out.println(" Fecha: " + encontrada.getFecha());
                 
-                // CRÍTICO: Asignar los datos al objeto asistencia del bean
+                
                 if (asistencia == null) {
                     asistencia = new Asistencia();
                 }
@@ -229,32 +222,29 @@ public class AsistenciaBean implements Serializable {
                 asistencia.setEstado(encontrada.getEstado());
                 asistencia.setFecha(encontrada.getFecha());
                 
-                // Convertir LocalDate a Date para el calendario
                 if (asistencia.getFecha() != null) {
                     fechaDate = java.sql.Date.valueOf(asistencia.getFecha());
                 } else {
                     fechaDate = null;
                 }
                 
-                System.out.println("   ✅ Datos asignados al bean asistencia");
-                System.out.println("═══════════════════════════════════════════════════════");
+                System.out.println(" Datos asignados al bean asistencia");
             } else {
-                System.err.println("   ❌ Asistencia NO encontrada en BD con ID: " + idAsistenciaEditar);
+                System.err.println(" Asistencia NO encontrada en BD con ID: " + idAsistenciaEditar);
                 FacesUtils.addErrorMessage("Asistencia no encontrada con ID: " + idAsistenciaEditar);
             }
         } else {
-            System.err.println("   ❌ idAsistenciaEditar es null o 0 - No se puede cargar asistencia");
-            System.err.println("   - Esto puede indicar que el viewParam no funcionó correctamente");
+            System.err.println(" idAsistenciaEditar es null o 0 - No se puede cargar asistencia");
+            System.err.println(" Esto puede indicar que el viewParam no funcionó correctamente");
             FacesUtils.addErrorMessage("No se proporcionó ID de asistencia válido para editar.");
         }
         
-        return null; // No redirigir, mostrar la vista actual
+        return null;
     }
     
     public String actualizarAsistencia() {
-        System.out.println("🔍 AsistenciaBean.actualizarAsistencia: Actualizando asistencia ID: " + asistencia.getIdAsistencia());
+        System.out.println("AsistenciaBean.actualizarAsistencia: Actualizando asistencia ID: " + asistencia.getIdAsistencia());
         
-        // Validar que los campos requeridos no sean 0 o vacíos
         if (asistencia.getAprendizUsuarioId() == 0) {
             FacesUtils.addErrorMessage("Debe seleccionar un aprendiz.");
             return null;
@@ -272,7 +262,7 @@ public class AsistenciaBean implements Serializable {
             return null;
         }
         
-        // Convertir Date a LocalDate antes de guardar
+        
         if (fechaDate != null) {
             asistencia.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         } else {
@@ -383,7 +373,7 @@ public class AsistenciaBean implements Serializable {
     }
     
     public Date getFechaDate() {
-        // Si hay una fecha en LocalDate, convertirla a Date
+        
         if (asistencia != null && asistencia.getFecha() != null && fechaDate == null) {
             fechaDate = java.sql.Date.valueOf(asistencia.getFecha());
         }

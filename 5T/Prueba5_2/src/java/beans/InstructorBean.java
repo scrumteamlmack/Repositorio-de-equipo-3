@@ -26,13 +26,13 @@ public class InstructorBean implements Serializable {
     private List<Coordinacion> coordinaciones;
 
     public void init() {
-        System.out.println("🔍 InstructorBean.init: Inicializando bean");
-        System.out.println("   - idUsuario recibido: " + idUsuario);
+        System.out.println("InstructorBean.init: Inicializando bean");
+        System.out.println(" idUsuario recibido: " + idUsuario);
         
         coordinaciones = coordinacionDAO.listar();
-        System.out.println("   - Coordinaciones cargadas: " + (coordinaciones != null ? coordinaciones.size() : 0));
+        System.out.println("  Coordinaciones cargadas: " + (coordinaciones != null ? coordinaciones.size() : 0));
         
-        // Si no hay idUsuario, intentar obtenerlo de la URL manualmente
+        
         if (idUsuario == null || idUsuario == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -40,49 +40,49 @@ public class InstructorBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuario = Integer.parseInt(idParam);
-                        System.out.println("   - idUsuario obtenido de parámetro URL: " + idUsuario);
+                        System.out.println(" idUsuario obtenido de parámetro URL: " + idUsuario);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ InstructorBean.init: Error al obtener idUsuario de URL: " + e.getMessage());
+                System.err.println(" InstructorBean.init: Error al obtener idUsuario de URL: " + e.getMessage());
             }
         }
         
         if (idUsuario != null && idUsuario > 0) {
             Instructor existente = instructorDAO.buscarPorUsuario(idUsuario);
             if (existente != null) {
-                System.out.println("   - Instructor existente encontrado");
+                System.out.println(" Instructor existente encontrado");
                 instructor = existente;
             } else {
-                System.out.println("   - Creando nuevo instructor para usuario ID: " + idUsuario);
+                System.out.println(" Creando nuevo instructor para usuario ID: " + idUsuario);
                 instructor = new Instructor();
                 instructor.setIdUsuario(idUsuario);
                 instructor.setEstado("Activo");
                 
-                // Cargar el correo del usuario desde la base de datos
+                
                 Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
                 if (usuario != null && usuario.getCorreo() != null && !usuario.getCorreo().isEmpty()) {
                     instructor.setEmail(usuario.getCorreo());
                     System.out.println("   - Correo del usuario cargado: " + usuario.getCorreo());
                 } else {
-                    System.err.println("⚠️ InstructorBean.init: No se pudo cargar el correo del usuario");
+                    System.err.println("InstructorBean.init: No se pudo cargar el correo del usuario");
                 }
             }
         } else {
-            System.err.println("⚠️ InstructorBean.init: idUsuario es null o 0 - no se pudo obtener de la URL");
+            System.err.println(" InstructorBean.init: idUsuario es null o 0 - no se pudo obtener de la URL");
             instructor.setEstado("Activo");
         }
     }
 
     public String guardar() {
-        System.out.println("🔍 InstructorBean.guardar: Iniciando guardado");
-        System.out.println("   - idUsuario en bean: " + idUsuario);
-        System.out.println("   - instructor.getIdUsuario(): " + instructor.getIdUsuario());
-        System.out.println("   - instructor.getEmail(): " + instructor.getEmail());
-        System.out.println("   - instructor.getTelefono(): " + instructor.getTelefono());
-        System.out.println("   - instructor.getCoordinacionId(): " + instructor.getCoordinacionId());
+        System.out.println("InstructorBean.guardar: Iniciando guardado");
+        System.out.println("idUsuario en bean: " + idUsuario);
+        System.out.println("instructor.getIdUsuario(): " + instructor.getIdUsuario());
+        System.out.println("instructor.getEmail(): " + instructor.getEmail());
+        System.out.println("instructor.getTelefono(): " + instructor.getTelefono());
+        System.out.println("instructor.getCoordinacionId(): " + instructor.getCoordinacionId());
         
-        // Intentar obtener idUsuario de la URL si no está establecido
+       
         if ((instructor.getIdUsuario() == 0) && (idUsuario == null || idUsuario == 0)) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -90,34 +90,34 @@ public class InstructorBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuario = Integer.parseInt(idParam);
-                        System.out.println("   - idUsuario obtenido de URL en guardar(): " + idUsuario);
+                        System.out.println("idUsuario obtenido de URL en guardar(): " + idUsuario);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ InstructorBean.guardar: Error al obtener idUsuario de URL: " + e.getMessage());
+                System.err.println("InstructorBean.guardar: Error al obtener idUsuario de URL: " + e.getMessage());
             }
         }
         
-        // Establecer idUsuario en instructor si está disponible
+        
         if (instructor.getIdUsuario() == 0 && idUsuario != null && idUsuario > 0) {
             System.out.println("   - Estableciendo idUsuario desde variable: " + idUsuario);
             instructor.setIdUsuario(idUsuario);
         }
         
         if (instructor.getIdUsuario() == 0) {
-            System.err.println("❌ InstructorBean.guardar: idUsuario es 0 después de todos los intentos");
+            System.err.println("InstructorBean.guardar: idUsuario es 0 después de todos los intentos");
             FacesUtils.addErrorMessage("Error: No se pudo identificar el usuario. Por favor, intente nuevamente.");
             return null;
         }
         
         if (instructor.getEmail() == null || instructor.getEmail().isEmpty()) {
-            System.err.println("❌ InstructorBean.guardar: email está vacío");
+            System.err.println("InstructorBean.guardar: email está vacío");
             FacesUtils.addErrorMessage("Debe ingresar un correo electrónico.");
             return null;
         }
         
         if (instructor.getTelefono() == null || instructor.getTelefono().isEmpty()) {
-            System.err.println("❌ InstructorBean.guardar: telefono está vacío");
+            System.err.println("InstructorBean.guardar: telefono está vacío");
             FacesUtils.addErrorMessage("Debe ingresar un teléfono.");
             return null;
         }
@@ -140,17 +140,17 @@ public class InstructorBean implements Serializable {
         }
 
         if (guardado) {
-            System.out.println("✅ InstructorBean.guardar: Guardado exitoso");
+            System.out.println("InstructorBean.guardar: Guardado exitoso");
             FacesUtils.addInfoMessage("Instructor registrado correctamente.");
             return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
         } else {
-            System.err.println("❌ InstructorBean.guardar: No se pudo guardar");
+            System.err.println("InstructorBean.guardar: No se pudo guardar");
             FacesUtils.addErrorMessage("No fue posible guardar los datos del instructor. Verifique los logs del servidor.");
             return null;
         }
     }
 
-    // GETTERS Y SETTERS
+    
 
     public Instructor getInstructor() {
         return instructor;

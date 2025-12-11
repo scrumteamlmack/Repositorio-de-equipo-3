@@ -14,7 +14,7 @@ public class Usuario implements Serializable {
     private String contrasena;
     private int Telefono;
     private String Activo;
-    // auxiliar para formularios (confirm pass)
+  
     private String pass1;
 
     public int getTelefono() {
@@ -36,7 +36,7 @@ public class Usuario implements Serializable {
 
     public Usuario() {}
 
-    // getters / setters
+
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
@@ -67,18 +67,18 @@ public class Usuario implements Serializable {
     public String getPass1() { return pass1; }
     public void setPass1(String pass1) { this.pass1 = pass1; }
 
-    // Métodos para compatibilidad con código antiguo:
+
     public int getDoc() { return this.numDocumento; }
     public void setDoc(int doc) { this.numDocumento = doc; }
 
-    // Nombre "legible"
+
     public String getNombre() {
         String a = (pNombre != null ? pNombre : "");
         String b = (pApellido != null ? pApellido : "");
         return (a + " " + b).trim();
     }
 
-    // Compatibilidad con getPass/setPass usados en tus formularios antiguos
+
     public String getPass() { return this.contrasena; }
     public void setPass(String pass) { this.contrasena = pass; }
 

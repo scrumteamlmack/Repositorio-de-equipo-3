@@ -23,13 +23,13 @@ public class CoordinadorBean implements Serializable {
     private List<Coordinacion> coordinaciones;
 
     public void init() {
-        System.out.println("🔍 CoordinadorBean.init: Inicializando bean");
-        System.out.println("   - idUsuario recibido: " + idUsuario);
+        System.out.println("CoordinadorBean.init: Inicializando bean");
+        System.out.println(" idUsuario recibido: " + idUsuario);
         
         coordinaciones = coordinacionDAO.listar();
         System.out.println("   - Coordinaciones cargadas: " + (coordinaciones != null ? coordinaciones.size() : 0));
         
-        // Si no hay idUsuario, intentar obtenerlo de la URL manualmente
+        
         if (idUsuario == null || idUsuario == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -37,36 +37,36 @@ public class CoordinadorBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuario = Integer.parseInt(idParam);
-                        System.out.println("   - idUsuario obtenido de parámetro URL: " + idUsuario);
+                        System.out.println("idUsuario obtenido de parámetro URL: " + idUsuario);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ CoordinadorBean.init: Error al obtener idUsuario de URL: " + e.getMessage());
+                System.err.println("CoordinadorBean.init: Error al obtener idUsuario de URL: " + e.getMessage());
             }
         }
         
         if (idUsuario != null && idUsuario > 0) {
             Coordinador existente = coordinadorDAO.buscarPorUsuario(idUsuario);
             if (existente != null) {
-                System.out.println("   - Coordinador existente encontrado");
+                System.out.println(" Coordinador existente encontrado");
                 coordinador = existente;
             } else {
-                System.out.println("   - Creando nuevo coordinador para usuario ID: " + idUsuario);
+                System.out.println(" Creando nuevo coordinador para usuario ID: " + idUsuario);
                 coordinador = new Coordinador();
                 coordinador.setIdUsuario(idUsuario);
             }
         } else {
-            System.err.println("⚠️ CoordinadorBean.init: idUsuario es null o 0 - no se pudo obtener de la URL");
+            System.err.println("CoordinadorBean.init: idUsuario es null o 0 - no se pudo obtener de la URL");
         }
     }
 
     public String guardar() {
-        System.out.println("🔍 CoordinadorBean.guardar: Iniciando guardado");
-        System.out.println("   - idUsuario en bean: " + idUsuario);
-        System.out.println("   - coordinador.getIdUsuario(): " + coordinador.getIdUsuario());
-        System.out.println("   - coordinador.getCoordinacionId(): " + coordinador.getCoordinacionId());
+        System.out.println("CoordinadorBean.guardar: Iniciando guardado");
+        System.out.println(" idUsuario en bean: " + idUsuario);
+        System.out.println(" coordinador.getIdUsuario(): " + coordinador.getIdUsuario());
+        System.out.println(" coordinador.getCoordinacionId(): " + coordinador.getCoordinacionId());
         
-        // Intentar obtener idUsuario de la URL si no está establecido
+        
         if ((coordinador.getIdUsuario() == 0) && (idUsuario == null || idUsuario == 0)) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -74,28 +74,28 @@ public class CoordinadorBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuario = Integer.parseInt(idParam);
-                        System.out.println("   - idUsuario obtenido de URL en guardar(): " + idUsuario);
+                        System.out.println(" idUsuario obtenido de URL en guardar(): " + idUsuario);
                     }
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ CoordinadorBean.guardar: Error al obtener idUsuario de URL: " + e.getMessage());
+                System.err.println("CoordinadorBean.guardar: Error al obtener idUsuario de URL: " + e.getMessage());
             }
         }
         
-        // Establecer idUsuario en coordinador si está disponible
+    
         if (coordinador.getIdUsuario() == 0 && idUsuario != null && idUsuario > 0) {
             System.out.println("   - Estableciendo idUsuario desde variable: " + idUsuario);
             coordinador.setIdUsuario(idUsuario);
         }
         
         if (coordinador.getIdUsuario() == 0) {
-            System.err.println("❌ CoordinadorBean.guardar: idUsuario es 0 después de todos los intentos");
+            System.err.println("CoordinadorBean.guardar: idUsuario es 0 después de todos los intentos");
             FacesUtils.addErrorMessage("Error: No se pudo identificar el usuario. Por favor, intente nuevamente.");
             return null;
         }
         
         if (coordinador.getCoordinacionId() == 0) {
-            System.err.println("❌ CoordinadorBean.guardar: coordinacionId es 0");
+            System.err.println("CoordinadorBean.guardar: coordinacionId es 0");
             FacesUtils.addErrorMessage("Debe seleccionar una coordinación.");
             return null;
         }
@@ -104,25 +104,25 @@ public class CoordinadorBean implements Serializable {
         Coordinador existente = coordinadorDAO.buscarPorUsuario(coordinador.getIdUsuario());
         
         if (existente == null) {
-            System.out.println("   - Creando nuevo registro de coordinador");
+            System.out.println(" Creando nuevo registro de coordinador");
             guardado = coordinadorDAO.guardar(coordinador);
         } else {
-            System.out.println("   - Actualizando registro existente");
+            System.out.println(" Actualizando registro existente");
             guardado = coordinadorDAO.actualizar(coordinador);
         }
 
         if (guardado) {
-            System.out.println("✅ CoordinadorBean.guardar: Guardado exitoso");
+            System.out.println("CoordinadorBean.guardar: Guardado exitoso");
             FacesUtils.addInfoMessage("Coordinador registrado correctamente.");
             return "/pages/admin/indexAdmin.xhtml?faces-redirect=true";
         } else {
-            System.err.println("❌ CoordinadorBean.guardar: No se pudo guardar");
+            System.err.println("CoordinadorBean.guardar: No se pudo guardar");
             FacesUtils.addErrorMessage("No fue posible guardar los datos del coordinador. Verifique los logs del servidor.");
             return null;
         }
     }
 
-    // GETTERS Y SETTERS
+
 
     public Coordinador getCoordinador() {
         return coordinador;

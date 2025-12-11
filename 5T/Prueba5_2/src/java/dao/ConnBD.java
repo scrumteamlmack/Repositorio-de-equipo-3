@@ -16,16 +16,16 @@ public class ConnBD {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println("✔️ ConnBD: Conexión establecida correctamente");
+            System.out.println("ConnBD: Conexión establecida correctamente");
 
         } catch (ClassNotFoundException e) {
-            System.out.println("❌ ERROR: No se encontró el driver MySQL.");
-            System.out.println("➡ Asegúrate de copiar 'mysql-connector-java-5.1.xx.jar' en:");
+            System.out.println("ERROR: No se encontró el driver MySQL.");
+            System.out.println("Asegúrate de copiar 'mysql-connector-java-5.1.xx.jar' en:");
             System.out.println("   glassfish/domains/domain1/lib/");
             e.printStackTrace();
 
         } catch (SQLException e) {
-            System.out.println("❌ ConnBD: ERROR DE CONEXIÓN A LA BD");
+            System.out.println("ConnBD: ERROR DE CONEXIÓN A LA BD");
             e.printStackTrace();
         }
 

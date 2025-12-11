@@ -6,9 +6,9 @@ public class Ficha implements Serializable {
 
     private int idFicha;
     private int numFicha;
-    private int instructorUsuarioId; // instructor_Usuario_id_usuario
+    private int instructorUsuarioId; 
 
-    // Getters y Setters
+ 
     public int getIdFicha() {
         return idFicha;
     }

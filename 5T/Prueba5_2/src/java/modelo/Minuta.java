@@ -15,7 +15,7 @@ public class Minuta implements Serializable {
     private String descripcion;
     private String estado;
     
-    // Campos adicionales para mostrar nombres en la vista
+
     private String ambienteNombre;
     private String guardaNombre;
     private String responsableNombre;
