@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Mi Perfil - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: var(--light-green);
+            color: white;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:viewAction action="#{loginBean.verificarSesionCualquiera}"/>
+    </f:metadata>
+
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- Menú para Administrador -->
+                <h:panelGroup rendered="#{perfilBean.esRol(1)}">
+                    <h:link outcome="/pages/admin/indexAdmin.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/listarUsuarios.xhtml" value="👥 Usuarios" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/formUsuario.xhtml" value="➕ Crear Usuario" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/listarFichas.xhtml" value="📁 Fichas" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/listarProgramas.xhtml" value="📚 Programas" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/listarRecursos.xhtml" value="💻 Recursos" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/admin/listarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link active"/>
+                </h:panelGroup>
+                
+                <!-- Menú para Instructor -->
+                <h:panelGroup rendered="#{perfilBean.esRol(2)}">
+                    <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/consultarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link active"/>
+                </h:panelGroup>
+                
+                <!-- Menú para Aprendiz -->
+                <h:panelGroup rendered="#{perfilBean.esRol(3)}">
+                    <h:link outcome="/pages/aprendiz/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/aprendiz/asistencias/listarAsistencias.xhtml" value="📋 Mis Asistencias" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link active"/>
+                </h:panelGroup>
+                
+                <!-- Menú para Guarda -->
+                <h:panelGroup rendered="#{perfilBean.esRol(4)}">
+                    <h:link outcome="/pages/guarda/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/guarda/minutas/listarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/guarda/traslados/listarTraslados.xhtml" value="📦 Traslados" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/guarda/incidentes/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/guarda/ambientes/listarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                    <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link active"/>
+                </h:panelGroup>
+            </nav>
+            <div class="sidebar-footer">
+                <h:form>
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
+                                     action="#{loginBean.cerrarSesion}"
+                                     styleClass="btn-logout"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h:form id="formPerfil">
+                    <div class="form-header">
+                        <h2><i class="pi pi-user" style="margin-right: 10px;"></i>Mi Perfil</h2>
+                    </div>
+
+                    <p:messages id="messages" showSummary="true" closable="true" severity="info,error,warn"/>
+
+                    <f:event listener="#{perfilBean.init}" type="preRenderView"/>
+
+                    <div class="card" style="max-width: 800px; margin: 20px auto; padding: 30px;">
+                        <h:panelGroup rendered="#{!perfilBean.modoEdicion}">
+                    <!-- MODO VISUALIZACIÓN -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h3 style="color: var(--primary-green); margin-bottom: 25px;">
+                                <i class="pi pi-user" style="margin-right: 10px;"></i>Información Personal
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Primer Nombre:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.PNombre}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Segundo Nombre:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.SNombre != null ? perfilBean.usuario.SNombre : 'No especificado'}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Primer Apellido:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.PApellido}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Segundo Apellido:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.SApellido != null ? perfilBean.usuario.SApellido : 'No especificado'}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Tipo de Documento:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.tipoDocumento}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Número de Documento:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.numDocumento}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label"><strong>Correo Electrónico:</strong></label>
+                            <p class="form-control-plaintext">#{perfilBean.usuario.correo}</p>
+                        </div>
+                    </div>
+
+                    <!-- INFORMACIÓN DE APRENDIZ (Solo para aprendices) -->
+                    <h:panelGroup rendered="#{perfilBean.esAprendiz}">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-md-12">
+                                <hr style="margin: 25px 0;"/>
+                                <h4 style="color: var(--primary-green); margin-bottom: 20px;">
+                                    <i class="pi pi-book" style="margin-right: 10px;"></i>Información Académica
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><strong>Programa:</strong></label>
+                                <p class="form-control-plaintext">#{perfilBean.nombrePrograma}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><strong>Ficha:</strong></label>
+                                <p class="form-control-plaintext">#{perfilBean.numeroFicha}</p>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <p:commandButton value="Editar Perfil"
+                                             icon="pi pi-pencil"
+                                             action="#{perfilBean.activarEdicion}"
+                                             styleClass="btn btn-primary"
+                                             update="formPerfil"/>
+                        </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{perfilBean.modoEdicion}">
+                    <!-- MODO EDICIÓN -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h3 style="color: var(--primary-green); margin-bottom: 25px;">
+                                <i class="pi pi-pencil" style="margin-right: 10px;"></i>Editar Información Personal
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Primer Nombre <span style="color: red;">*</span></label>
+                            <p:inputText value="#{perfilBean.usuario.PNombre}"
+                                        styleClass="form-control"
+                                        required="true"
+                                        requiredMessage="El primer nombre es obligatorio"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Segundo Nombre</label>
+                            <p:inputText value="#{perfilBean.usuario.SNombre}"
+                                        styleClass="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Primer Apellido <span style="color: red;">*</span></label>
+                            <p:inputText value="#{perfilBean.usuario.PApellido}"
+                                        styleClass="form-control"
+                                        required="true"
+                                        requiredMessage="El primer apellido es obligatorio"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Segundo Apellido</label>
+                            <p:inputText value="#{perfilBean.usuario.SApellido}"
+                                        styleClass="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de Documento <span style="color: red;">*</span></label>
+                            <p:selectOneMenu value="#{perfilBean.usuario.tipoDocumento}"
+                                           styleClass="form-select"
+                                           required="true"
+                                           requiredMessage="El tipo de documento es obligatorio">
+                                <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                <f:selectItem itemLabel="CC" itemValue="CC"/>
+                                <f:selectItem itemLabel="TI" itemValue="TI"/>
+                                <f:selectItem itemLabel="CE" itemValue="CE"/>
+                                <f:selectItem itemLabel="OTRO" itemValue="OTRO"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Número de Documento <span style="color: red;">*</span></label>
+                            <p:inputText value="#{perfilBean.usuario.numDocumento}"
+                                        styleClass="form-control"
+                                        required="true"
+                                        requiredMessage="El número de documento es obligatorio"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Correo Electrónico <span style="color: red;">*</span></label>
+                            <p:inputText value="#{perfilBean.usuario.correo}"
+                                        styleClass="form-control"
+                                        required="true"
+                                        requiredMessage="El correo electrónico es obligatorio"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <hr style="margin: 25px 0;"/>
+                            <h4 style="color: var(--primary-green); margin-bottom: 20px;">
+                                <i class="pi pi-lock" style="margin-right: 10px;"></i>Cambiar Contraseña (Opcional)
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nueva Contraseña</label>
+                            <p:password value="#{perfilBean.nuevaContrasena}"
+                                       styleClass="form-control"
+                                       feedback="false"
+                                       placeholder="Dejar vacío para mantener la actual"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Confirmar Contraseña</label>
+                            <p:password value="#{perfilBean.confirmarContrasena}"
+                                       styleClass="form-control"
+                                       feedback="false"
+                                       placeholder="Repetir nueva contraseña"/>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12" style="display: flex; gap: 10px;">
+                            <p:commandButton value="Guardar Cambios"
+                                             icon="pi pi-check"
+                                             action="#{perfilBean.guardarPerfil}"
+                                             styleClass="btn btn-primary"
+                                             update="formPerfil"/>
+                            <p:commandButton value="Cancelar"
+                                             icon="pi pi-times"
+                                             action="#{perfilBean.cancelarEdicion}"
+                                             styleClass="btn btn-secondary"
+                                             update="formPerfil"/>
+                        </div>
+                        </div>
+                    </h:panelGroup>
+                    </div>
+                </h:form>
+            </div>
+        </main>
+    </div>
+</h:body>
+</html>
+

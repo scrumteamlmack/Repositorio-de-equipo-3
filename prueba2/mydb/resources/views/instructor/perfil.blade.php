@@ -1,6 +1,9 @@
 @extends('instructor.dashboard')
 
 @section('content')
+<head>
+    <link rel="stylesheet" href="{{ asset('css/perfil_ins.css') }}">
+</head>
 <div class="perfil-container">
     <h2>👤 Mi Perfil</h2>
 

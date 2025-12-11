@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+<h:head>
+    <title>L-MACK - Sistema de Gestión</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+    <div class="landing-container">
+        <!-- HEADER -->
+        <div class="landing-header">
+            <div class="landing-logo">
+                <span>👤</span>
+                <span>L-MACK</span>
+            </div>
+            <div class="landing-header-buttons">
+                <h:link outcome="faces/index.xhtml" styleClass="landing-header-btn" value="Inicio"/>
+                <h:link outcome="faces/login.xhtml" styleClass="landing-header-btn" value="Registrarse"/>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="landing-content">
+            <h1 class="landing-title">Bienvenido al Sistema de Gestión</h1>
+            <p class="landing-subtitle">
+                Accede fácilmente a tus funciones según tu rol: Instructor, Guarda, Aprendiz o Administrador.
+            </p>
+            <h:link outcome="faces/login.xhtml" styleClass="landing-btn" value="Iniciar sesión"/>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="landing-footer">
+            © 2025 L-MACK - Todos los derechos reservados
+        </div>
+    </div>
+</h:body>
+</html>

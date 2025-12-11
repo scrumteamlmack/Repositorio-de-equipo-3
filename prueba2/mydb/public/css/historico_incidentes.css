@@ -33,7 +33,11 @@ body {
 }
 
 .custom-table th {
+<<<<<<< HEAD
     background: #0d6efd;
+=======
+    background: #00a878;
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
     color: #fff;
 }
 

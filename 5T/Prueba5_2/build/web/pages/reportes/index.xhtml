@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Reportes</ui:define>
+    <ui:define name="moduleTitle">Consultas y reportes</ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmReportes" styleClass="ui-fluid">
+            <f:event type="preRenderView" listener="#{loginBean.verificarSesion(1)}"/>
+
+            <p:panel header="Filtros multicriterio">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{reporteBean.filtro.ambienteId}" filter="true">
+                            <f:selectItem itemLabel="Todos los ambientes" itemValue="#{null}"/>
+                            <f:selectItems value="#{reporteBean.ambientes}" var="amb"
+                                           itemLabel="#{amb.numero} - #{amb.tipo}"
+                                           itemValue="#{amb.idAmbiente}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{reporteBean.filtro.tipoIncidenteId}">
+                            <f:selectItem itemLabel="Todo tipo incidente" itemValue="#{null}"/>
+                            <f:selectItems value="#{reporteBean.tiposIncidente}" var="tipoInc"
+                                           itemLabel="#{tipoInc.nombre}" itemValue="#{tipoInc.idTipoIncidente}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{reporteBean.filtro.tipoRecursoId}">
+                            <f:selectItem itemLabel="Todo tipo recurso" itemValue="#{null}"/>
+                            <f:selectItems value="#{reporteBean.tiposRecurso}" var="tipoRec"
+                                           itemLabel="#{tipoRec.nombre}" itemValue="#{tipoRec.idTipoRecurso}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{reporteBean.filtro.usuarioId}" filter="true">
+                            <f:selectItem itemLabel="Todos los usuarios" itemValue="#{null}"/>
+                            <f:selectItems value="#{reporteBean.usuarios}" var="user"
+                                           itemLabel="#{user.nombre}" itemValue="#{user.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:calendar value="#{reporteBean.filtro.fechaDesde}" showIcon="true" placeholder="Desde"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:calendar value="#{reporteBean.filtro.fechaHasta}" showIcon="true" placeholder="Hasta"/>
+                    </div>
+                </div>
+                <p:commandButton value="Filtrar"
+                                 actionListener="#{reporteBean.filtrar}"
+                                 update="panelIncidentes panelRecursos"
+                                 styleClass="ui-button-success"/>
+                <p:commandButton value="Limpiar"
+                                 actionListener="#{reporteBean.limpiar}"
+                                 update="@form"
+                                 styleClass="ui-button-secondary"/>
+            </p:panel>
+
+            <p:panel id="panelIncidentes" header="Incidentes" style="margin-top:1.5rem;">
+                <p:dataTable value="#{reporteBean.incidentesFiltrados}" var="inc" paginator="true" rows="10">
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{inc.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Hora">
+                        <h:outputText value="#{inc.hora}">
+                            <f:convertDateTime pattern="HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Ambiente">#{inc.idAmbiente}</p:column>
+                    <p:column headerText="Tipo">#{inc.idTipoIncidente}</p:column>
+                    <p:column headerText="Descripción">
+                        #{inc.descripcion}
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+
+            <p:panel id="panelRecursos" header="Recursos" style="margin-top:1.5rem;">
+                <p:dataTable value="#{reporteBean.recursosFiltrados}" var="rec" paginator="true" rows="10">
+                    <p:column headerText="Nombre">#{rec.nombre}</p:column>
+                    <p:column headerText="Tipo">#{rec.idTipoRecurso}</p:column>
+                    <p:column headerText="Ambiente">#{rec.idAmbiente}</p:column>
+                    <p:column headerText="Estado" exportValue="#{rec.estado}">
+                        <span class="badge #{rec.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}">
+                            #{rec.estado}
+                        </span>
+                    </p:column>
+                    <p:column headerText="Marca/Serial">#{rec.marca} / #{rec.serial}</p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

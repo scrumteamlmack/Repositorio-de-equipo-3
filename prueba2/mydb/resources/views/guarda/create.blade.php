@@ -2,7 +2,11 @@
 
 @section('content')
 <head>
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ asset('css/guarda.css') }}">
+=======
+    <link rel="stylesheet" href="{{ asset('css/guarda_create.css') }}">
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 </head>
 <div class="form-container">
     <h2>Completar datos del Guarda de Seguridad</h2>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Administrar Usuarios - EMAC</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+    <h:form>
+        <f:event type="preRenderView" listener="#{usuarioBean.listar()}" />
+        
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="title">EMAC</div>
+            <div class="menu">
+                <p:commandButton value="Inicio"
+                                 icon="pi pi-home"
+                                 action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                                 styleClass="btn-secondary"/>
+                <p:commandButton value="Cerrar sesión"
+                                 icon="pi pi-sign-out"
+                                 action="#{loginBean.cerrarSesion}"
+                                 styleClass="btn-secondary"/>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content">
+            <div class="form-header">
+                <h2>Administrar Usuarios</h2>
+            </div>
+
+            <p:panel header="Acciones">
+                <p:commandButton value="Nuevo Usuario"
+                                 action="nuevo"
+                                 icon="pi pi-plus"
+                                 styleClass="btn-primary"/>
+                <p:commandButton value="Volver al Menú"
+                                 action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                                 icon="pi pi-arrow-left"
+                                 styleClass="btn-secondary"
+                                 style="margin-left: 10px;"/>
+            </p:panel>
+
+            <p:panel header="Lista de Usuarios" style="margin-top: 20px;">
+                <p:dataTable value="#{usuarioBean.listaU}" var="usr" 
+                             paginator="true" rows="10"
+                             emptyMessage="No hay usuarios registrados"
+                             styleClass="ui-datatable">
+                    <p:column headerText="ID">
+                        <h:outputText value="#{usr.id}" />
+                    </p:column>
+                    <p:column headerText="Documento">
+                        <h:outputText value="#{usr.doc}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{usr.nombre}" />
+                    </p:column>
+                    <p:column headerText="Correo">
+                        <h:outputText value="#{usr.correo}" />
+                    </p:column>
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{usr.tipo}" />
+                    </p:column>
+                    <p:column headerText="Acciones" style="width: 150px;">
+                        <p:commandButton value="Editar"
+                                         actionListener="#{usuarioBean.buscar(usr.id)}"
+                                         action="editar"
+                                         icon="pi pi-pencil"
+                                         styleClass="btn-secondary"
+                                         style="margin-right: 5px;"/>
+                        <p:commandButton value="Eliminar"
+                                         actionListener="#{usuarioBean.eliminar(usr.id)}"
+                                         icon="pi pi-trash"
+                                         styleClass="btn-danger"
+                                         onclick="return confirm('¿Está completamente seguro de ELIMINAR el Usuario #{usr.nombre}?');"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </div>
+    </h:form>
+</h:body>
+</html>

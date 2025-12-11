@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>#{fichaBean.idFichaEditar != null ? 'Editar' : 'Registrar'} Ficha - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            display: block;
+        }
+        .btn-group-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-gray);
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+<h:form id="formFicha">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">L-MACK</div>
+        <div class="menu">
+            <p:commandButton value="Inicio"
+                             icon="pi pi-home"
+                             action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                             styleClass="btn btn-secondary"
+                             ajax="false"/>
+            <p:menuButton value="Administración" icon="pi pi-cog" styleClass="btn btn-secondary">
+                <p:menuitem value="Fichas"
+                            icon="pi pi-file"
+                            outcome="/pages/admin/listarFichas.xhtml"/>
+            </p:menuButton>
+            <p:commandButton value="Cerrar sesión"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.cerrarSesion}"
+                             styleClass="btn btn-secondary"
+                             ajax="false"/>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{fichaBean.idFichaEditar}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+            <f:event type="preRenderView" listener="#{fichaBean.init}" />
+        </f:metadata>
+        
+        <div class="form-container">
+            <div style="margin-bottom: 25px;">
+                <h2 style="color: var(--primary-green); font-size: 28px; font-weight: 600; margin: 0;">
+                    <i class="pi #{fichaBean.idFichaEditar != null ? 'pi-file-edit' : 'pi-file-plus'}" style="margin-right: 10px;"></i>
+                    #{fichaBean.idFichaEditar != null ? 'Editar Ficha' : 'Registrar Ficha'}
+                </h2>
+            </div>
+
+            <p:messages showSummary="true" closable="true" severity="info,error,warn" styleClass="mb-3"/>
+
+            <div class="form-section">
+                <h5 style="margin-bottom: 20px; color: var(--text-dark);">Datos de la Ficha</h5>
+                
+                <div style="margin-bottom: 20px;">
+                    <label class="form-label">Número de Ficha</label>
+                    <p:inputText id="numFicha" 
+                                 value="#{fichaBean.ficha.numFicha}" 
+                                 required="true"
+                                 requiredMessage="El número de ficha es obligatorio"
+                                 placeholder="Ej: 2271021"
+                                 styleClass="form-control"/>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label class="form-label">Instructores (Puede seleccionar varios)</label>
+                    <p:selectManyMenu id="instructores" 
+                                       value="#{fichaBean.instructoresSeleccionados}" 
+                                       required="true"
+                                       requiredMessage="Debe seleccionar al menos un instructor"
+                                       style="width: 100%; min-height: 150px;">
+                        <f:selectItems value="#{fichaBean.instructores}" 
+                                       var="inst"
+                                       itemLabel="#{fichaBean.getNombreInstructor(inst.idUsuario)}"
+                                       itemValue="#{inst.idUsuario.toString()}" />
+                    </p:selectManyMenu>
+                    <small class="text-muted">Mantenga presionada la tecla Ctrl (Cmd en Mac) para seleccionar múltiples instructores</small>
+                </div>
+
+                <div class="btn-group-actions">
+                    <p:commandButton value="Cancelar"
+                                     action="/pages/admin/listarFichas.xhtml?faces-redirect=true"
+                                     icon="pi pi-times"
+                                     ajax="false"
+                                     styleClass="btn btn-secondary"
+                                     style="min-width: 120px;"/>
+                    <p:commandButton value="#{fichaBean.idFichaEditar != null ? 'Guardar Cambios' : 'Guardar'}"
+                                     action="#{fichaBean.guardar}"
+                                     icon="pi pi-save"
+                                     ajax="false"
+                                     styleClass="btn btn-primary"
+                                     style="min-width: 120px;"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</h:form>
+
+</h:body>
+</html>
+
