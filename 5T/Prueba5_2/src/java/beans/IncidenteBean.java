@@ -249,7 +249,7 @@ public class IncidenteBean implements Serializable {
         return "/pages/instructor/formIncidente.xhtml?idIncidenteEditar=" + id + "&faces-redirect=true";
     }
 
-    public void eliminar(int id) {
+    public String eliminar(int id) {
         System.out.println("IncidenteBean.eliminar: Eliminando incidente ID: " + id);
         boolean eliminado = incidenteDAO.eliminar(id);
         if (eliminado) {
@@ -258,8 +258,9 @@ public class IncidenteBean implements Serializable {
             cargarDatos();
         } else {
             System.err.println("IncidenteBean.eliminar: No se pudo eliminar");
-            FacesUtils.addErrorMessage("No fue posible eliminar el incidente.");
+            FacesUtils.addErrorMessage("No fue posible eliminar el incidente. Puede que tenga registros relacionados.");
         }
+        return null; // Se queda en la misma página
     }
 
     public void prepararNuevo() {

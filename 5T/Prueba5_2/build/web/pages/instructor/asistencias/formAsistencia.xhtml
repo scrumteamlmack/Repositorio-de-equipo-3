@@ -302,15 +302,19 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Fecha</label>
+                                    <label class="form-label">Fecha *</label>
                                     <p:calendar id="fecha" 
                                                 value="#{asistenciaBean.fechaDate}"
                                                 showIcon="true" 
                                                 pattern="dd/MM/yyyy"
                                                 required="true"
                                                 requiredMessage="Debe seleccionar una fecha"
+                                                mindate="#{java.util.Date()}"
+                                                maxdate="#{java.util.Date()}"
                                                 styleClass="form-control"
                                                 style="width: 100%;"/>
+                                    <p:message for="fecha" display="text" styleClass="text-danger"/>
+                                    <small class="text-muted">Solo se permite la fecha de hoy</small>
                                 </div>
                             </div>
 
