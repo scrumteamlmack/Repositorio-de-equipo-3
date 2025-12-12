@@ -1,0 +1,76 @@
+/* Fondo general */
+body {
+    background-color: #f7f9e9; /* tono pastel claro */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor del formulario */
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.container h2 {
+    text-align: center;
+    color: #009879;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+/* Inputs y selects */
+.form-control {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    background-color: #fdfdfd;
+}
+
+.form-control:focus {
+    border-color: #009879;
+    box-shadow: 0 0 6px rgba(0, 152, 121, 0.4);
+    outline: none;
+}
+
+/* Botón */
+.btn-success {
+    display: block;
+    width: 100%;
+    background-color: #009879;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #007d63;
+    cursor: pointer;
+}
+
+/* Mensajes de error */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}

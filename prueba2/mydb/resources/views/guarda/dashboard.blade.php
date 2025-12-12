@@ -35,8 +35,8 @@
                         <li onclick="toggleSubmenu(this)">
                             <span>Mi perfil</span>
                             <ul class="submenu">
-                                <li><a href="{{ route('guarda.perfil') }}">Ver perfil</a></li>
-                                <li><a href="{{ route('guarda.editar') }}">Editar perfil</a></li>
+                                <li><a href="#">Ver perfil</a></li>
+                                <li><a href="#">Editar perfil</a></li>
                             </ul>
                         </li>
 
@@ -44,8 +44,8 @@
                         <li onclick="toggleSubmenu(this)">
                             <span>Minutas</span>
                             <ul class="submenu">
-                                <li><a href="{{ route('minutas.index') }}">Ver minutas</a></li>
-                                <li><a href="{{route('minutas.create')}}">Registrar minuta</a></li>
+                                <li><a href="#">Ver minutas</a></li>
+                                <li><a href="#">Registrar minuta</a></li>
                             </ul>
                         </li>
 

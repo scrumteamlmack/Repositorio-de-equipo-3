@@ -1,4 +1,4 @@
-@extends('instructor.dashboard')
+@extends('layouts.admin')
 
 @section('content')
 <div style="max-width:700px;margin:32px auto;padding:0 16px;">
@@ -41,7 +41,7 @@
         <option value="">Seleccione un aprendiz</option>
         @foreach ($aprendices as $aprendiz)
           <option value="{{ $aprendiz->Usuario_id_usuario }}" {{ old('aprendiz_Usuario_id_usuario') == $aprendiz->Usuario_id_usuario ? 'selected' : '' }}>
-            {{ $aprendiz->usuario->p_nombre ?? 'Sin nombre' }} {{ $aprendiz->usuario->p_apellido ?? 'Sin nombre' }}
+            {{ $aprendiz->usuario->p_nombre ?? 'Sin nombre' }}
           </option>
         @endforeach
       </select>
@@ -67,7 +67,7 @@
         <option value="">Seleccione un instructor</option>
         @foreach ($instructores as $instructor)
           <option value="{{ $instructor->Usuario_id_usuario }}" {{ old('instructor_Usuario_id_usuario') == $instructor->Usuario_id_usuario ? 'selected' : '' }}>
-            {{ $instructor->usuario->p_nombre ?? 'Sin nombre' }} {{ $instructor->usuario->p_apellido ?? 'Sin nombre' }}
+            {{ $instructor->usuario->p_nombre ?? 'Sin nombre' }}
           </option>
         @endforeach
       </select>

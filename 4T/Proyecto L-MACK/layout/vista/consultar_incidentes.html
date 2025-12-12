@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Consulta de Incidentes - SENA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/consulta_incidente.css" />
+  <link rel="shortcut icon" href="../resources/logo_L-MACK_FONDO2.png" type="image/x-icon">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" id="logo" class="img">
+    </div>
+    <nav aria-label="Navegación administrador">
+      <a href="../index.html">Inicio</a>
+      <a href="../html/login.html">Cerrar Sesion</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Consulta de Incidentes</h2>
+    <p class="description">Consulta los incidentes registrados en los ambientes de formación del SENA.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Ambiente</th>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>INC-001</td>
+          <td>101</td>
+          <td>2025-07-15</td>
+          <td>Proyector dañado</td>
+          <td>Abierto</td>
+        </tr>
+        <tr>
+          <td>INC-002</td>
+          <td>204</td>
+          <td>2025-07-16</td>
+          <td>Ventilador no funciona</td>
+          <td>En proceso</td>
+        </tr>
+        <tr>
+          <td>INC-003</td>
+          <td>301</td>
+          <td>2025-07-18</td>
+          <td>Sillas insuficientes</td>
+          <td>Cerrado</td>
+        </tr>
+        <tr>
+          <td>INC-004</td>
+          <td>105</td>
+          <td>2025-07-19</td>
+          <td>Problemas eléctricos</td>
+          <td>Abierto</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="centrado">
+      <a href="../html/registrar_incidentes.html" class="btn-volver">Registrar nuevo incidente</a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 L-MACK - Consulta de Incidentes
+  </footer>
+
+</body>
+</html>

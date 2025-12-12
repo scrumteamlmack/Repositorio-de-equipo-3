@@ -1,3 +1,4 @@
+{{-- resources/views/instructor/dashboard.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,7 +36,7 @@
                             <ul class="submenu">
                                 <li><a href="{{ route('instructor.perfil') }}">Ver Perfil</a></li>
                                 <li><a href="{{ route('instructor.edit') }}">Editar Perfil</a></li>
-                            </ul>
+</ul>
                         </li>
 
                         <!-- Fichas -->
@@ -43,17 +44,7 @@
                             <span>Fichas</span>
                             <ul class="submenu">
                                 <li><a href="{{ route('instructor.fichas') }}">Mis Fichas</a></li>
-                                @if(isset($fichas) && $fichas->count())
-                                    @foreach($fichas as $ficha)
-                                        <li>
-                                            <a href="{{ route('instructor.fichaAprendices', $ficha->idficha) }}">
-                                                Ficha {{ $ficha->Num_ficha }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                @else
-                                    <li><span>No tienes fichas asignadas</span></li>
-                                @endif
+                                <li><a href="{{ route('instructor.aprendices') }}">Ver Aprendices</a></li>
                             </ul>
                         </li>
 
@@ -79,21 +70,8 @@
                             <ul class="submenu">
                                 <li><a href="{{ route('incidentes.create') }}">Registrar Incidente</a></li>
                                 <li><a href="{{ route('incidentes.index') }}">Mis Incidentes</a></li>
-                                <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
-                            </ul>
-                        </li>
-                         <li onclick="toggleSubmenu(this)">
-                            <span>Asistencias</span>
-                            <ul class="submenu">
-                                <li><a href="{{ route('registro_inasistencia.create') }}">Registrar Asistencia</a></li>
-                                <li><a href="{{ route('registro_inasistencia.index') }}">Consultar Asistencia</a></li>
-                            </ul>
-                        </li>
-                         <li onclick="toggleSubmenu(this)">
-                            <span>Traslado Recursos</span>
-                            <ul class="submenu">
-                                <li><a href=" {{ route('traslados.create') }}">Registrar Traslado</a></li>
-                                <li><a href="{{  route('traslados.index') }}">Consultar Traslado</a></li>
+                            <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
+                            
                             </ul>
                         </li>
                     </ul>
@@ -113,8 +91,6 @@
             <p>
                 Aquí puedes gestionar tu perfil, consultar fichas y aprendices, ambientes, revisar minutas y registrar incidentes.
             </p>
-
-
             @yield('content')
         </main>
     </div>

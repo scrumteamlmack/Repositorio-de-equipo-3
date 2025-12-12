@@ -1,0 +1,83 @@
+/* Contenedor principal */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Título */
+.container h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Etiquetas */
+form label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+    color: #444;
+}
+
+/* Inputs y selects */
+form input[type="text"],
+form input[type="date"],
+form input[type="time"],
+form select,
+form textarea {
+    width: 95%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 18px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #00a878;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0,168,120,0.3);
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Botón actualizar */
+.btn-success {
+    background: #00a878;
+    color: #fff;
+    border: none;
+}
+.btn-success:hover {
+    background: #008a65;
+}
+
+/* Botón cancelar */
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+    margin-left: 10px;
+}
+.btn-secondary:hover {
+    background: #545b62;
+}

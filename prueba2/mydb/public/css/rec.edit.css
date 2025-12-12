@@ -1,0 +1,105 @@
+/* rec.edit.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin: 25px 0;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 12px 0 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+form input,
+form select,
+form textarea {
+    width: 95%;
+    padding: 10px 12px;
+    border-radius: 8px; 
+    border: 1px solid #ccc;
+    font-size: 15px;
+    margin-bottom: 12px;
+    transition: 0.3s ease;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.3);
+}
+
+form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Botones */
+form button {
+    background-color: #007bff; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    margin-right: 12px;
+    transition: 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0069d9;
+}
+
+form a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    background-color: #6c757d; /* Gris para cancelar */
+    color: white;
+    transition: 0.3s ease;
+}
+
+form a:hover {
+    background-color: #5a6268;
+}
+
+/* Errores */
+.error-box {
+    background: #ffe0e0;
+    color: #b30000;
+    border: 1px solid #ffb3b3;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.error-box ul {
+    margin: 0;
+    padding-left: 18px;
+}

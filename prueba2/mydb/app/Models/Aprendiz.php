@@ -46,15 +46,15 @@ class Aprendiz extends Model
 		return $this->belongsTo(Programa::class, 'programas_id_programas', 'id_programas');
 	}
 
-	  public function usuario()
-    {
-        return $this->belongsTo(Usuario::class, 'Usuario_id_usuario', 'id_usuario');
-    }
+	public function usuario()
+	{
+		return $this->belongsTo(Usuario::class, 'Usuario_id_usuario');
+	}
 
-    public function ficha()
-    {
-        return $this->belongsTo(Ficha::class, 'ficha_idficha', 'idficha');
-    }
+	public function ficha()
+	{
+		return $this->belongsTo(Ficha::class, 'ficha_idficha');
+	}
 
 	public function registro_inasistencia()
 	{

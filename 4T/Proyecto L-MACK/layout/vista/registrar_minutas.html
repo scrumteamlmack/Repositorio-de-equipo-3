@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar Minuta - L-MACK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/registrar_minuta.css" />
+  <link rel="shortcut icon" href="../resources/fondo oscuro N L-MACK.png" type="image/x-icon">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" class="img">
+    </div>
+    <nav>
+      <a href="../index.html">Inicio</a>
+      <a href="../html/login.html">Cerrar Sesion</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Registrar Minuta</h2>
+    <form action="#" method="post">
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" name="fecha" required>
+
+      <label for="ambiente">Ambiente</label>
+      <input type="text" id="ambiente" name="ambiente" placeholder="Ej: Ambiente 304B" required>
+
+      <label for="tema">Tema Tratado</label>
+      <input type="text" id="tema" name="tema" placeholder="Resumen del tema" required>
+
+      <label for="detalles">Detalles</label>
+      <textarea id="detalles" name="detalles" rows="5" placeholder="Describe los acuerdos o aspectos importantes de la reunión" required></textarea>
+
+      <button type="submit" class="btn">Guardar Minuta</button>
+    </form>
+  </main>
+
+  <footer>
+    &copy; 2025 L-MACK - Registro de Minutas
+  </footer>
+
+</body>
+</html>

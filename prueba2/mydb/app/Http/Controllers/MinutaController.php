@@ -17,13 +17,15 @@ class MinutaController extends Controller
      */
      public function index()
 {
+    // Dashboard → solo minutas de HOY
+    $hoy = Carbon::today();
+
     $minutas = RegistroMinutum::with(['ambiente', 'guarda_seguridad', 'instructor'])
-                ->orderBy('fecha_hora_recibo', 'desc')
+                ->whereDate('fecha_hora_recibo', $hoy)
                 ->get();
 
     return view('minutas.index', compact('minutas'));
 }
-
 
 public function historial()
 {
