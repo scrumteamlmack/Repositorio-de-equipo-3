@@ -13,16 +13,16 @@ public class GuardaSeguridadDAO {
     public boolean guardar(GuardaSeguridad guardaSeguridad) {
         String sql = "INSERT INTO guarda_seguridad (Usuario_id_usuario, turno, fecha_ingreso, estado) VALUES (?, ?, ?, ?)";
         
-        System.out.println("🔍 GuardaSeguridadDAO.guardar: Intentando guardar guarda de seguridad");
-        System.out.println("   - ID Usuario: " + guardaSeguridad.getIdUsuario());
-        System.out.println("   - Turno: " + guardaSeguridad.getTurno());
-        System.out.println("   - Fecha Ingreso: " + guardaSeguridad.getFechaIngreso());
-        System.out.println("   - Estado: " + guardaSeguridad.getEstado());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("GuardaSeguridadDAO.guardar: Intentando guardar guarda de seguridad");
+        System.out.println("ID Usuario: " + guardaSeguridad.getIdUsuario());
+        System.out.println("Turno: " + guardaSeguridad.getTurno());
+        System.out.println("Fecha Ingreso: " + guardaSeguridad.getFechaIngreso());
+        System.out.println("Estado: " + guardaSeguridad.getEstado());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ GuardaSeguridadDAO.guardar: No se pudo establecer conexión");
+                System.err.println("GuardaSeguridadDAO.guardar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -33,16 +33,16 @@ public class GuardaSeguridadDAO {
                 ps.setString(4, guardaSeguridad.getEstado());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ GuardaSeguridadDAO.guardar: Filas afectadas: " + filas);
+                System.out.println("GuardaSeguridadDAO.guardar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ GuardaSeguridadDAO.guardar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("GuardaSeguridadDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ GuardaSeguridadDAO.guardar: Error inesperado: " + e.getMessage());
+            System.err.println("GuardaSeguridadDAO.guardar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -51,16 +51,16 @@ public class GuardaSeguridadDAO {
     public boolean actualizar(GuardaSeguridad guardaSeguridad) {
         String sql = "UPDATE guarda_seguridad SET turno=?, fecha_ingreso=?, estado=? WHERE Usuario_id_usuario=?";
         
-        System.out.println("🔍 GuardaSeguridadDAO.actualizar: Intentando actualizar guarda de seguridad");
-        System.out.println("   - ID Usuario: " + guardaSeguridad.getIdUsuario());
-        System.out.println("   - Turno: " + guardaSeguridad.getTurno());
-        System.out.println("   - Fecha Ingreso: " + guardaSeguridad.getFechaIngreso());
-        System.out.println("   - Estado: " + guardaSeguridad.getEstado());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("GuardaSeguridadDAO.actualizar: Intentando actualizar guarda de seguridad");
+        System.out.println("ID Usuario: " + guardaSeguridad.getIdUsuario());
+        System.out.println("Turno: " + guardaSeguridad.getTurno());
+        System.out.println("Fecha Ingreso: " + guardaSeguridad.getFechaIngreso());
+        System.out.println("Estado: " + guardaSeguridad.getEstado());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ GuardaSeguridadDAO.actualizar: No se pudo establecer conexión");
+                System.err.println("GuardaSeguridadDAO.actualizar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -71,16 +71,16 @@ public class GuardaSeguridadDAO {
                 ps.setInt(4, guardaSeguridad.getIdUsuario());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ GuardaSeguridadDAO.actualizar: Filas afectadas: " + filas);
+                System.out.println("GuardaSeguridadDAO.actualizar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ GuardaSeguridadDAO.actualizar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("GuardaSeguridadDAO.actualizar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ GuardaSeguridadDAO.actualizar: Error inesperado: " + e.getMessage());
+            System.err.println("GuardaSeguridadDAO.actualizar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;

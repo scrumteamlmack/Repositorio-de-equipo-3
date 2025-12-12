@@ -14,46 +14,46 @@ public class ProgramaDAO {
     private static final String BASE_SELECT = "SELECT id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id FROM programas";
 
     public List<Programa> listar() {
-        System.out.println("🔍 ProgramaDAO.listar: Iniciando consulta de programas");
+        System.out.println("ProgramaDAO.listar: Iniciando consulta de programas");
         List<Programa> lista = new ArrayList<>();
         String sql = BASE_SELECT + " ORDER BY id_programas ASC";
-        System.out.println("   - SQL: " + sql);
+        System.out.println("SQL: " + sql);
 
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ ProgramaDAO.listar: No se pudo establecer conexión");
+                System.err.println("ProgramaDAO.listar: No se pudo establecer conexión");
                 return lista;
             }
-            System.out.println("✅ ProgramaDAO.listar: Conexión establecida");
+            System.out.println("ProgramaDAO.listar: Conexión establecida");
 
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
 
-                System.out.println("   - Ejecutando consulta...");
+                System.out.println("Ejecutando consulta...");
                 int contador = 0;
                 
                 while (rs.next()) {
                     Programa p = mapRow(rs);
                     lista.add(p);
                     contador++;
-                    System.out.println("   - Programa encontrado: ID=" + p.getIdProgramas() + ", Nombre=" + p.getNombrePrograma());
+                    System.out.println("Programa encontrado: ID=" + p.getIdProgramas() + ", Nombre=" + p.getNombrePrograma());
                 }
                 
-                System.out.println("✅ ProgramaDAO.listar: Total de programas encontrados: " + contador);
+                System.out.println("ProgramaDAO.listar: Total de programas encontrados: " + contador);
 
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.listar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("ProgramaDAO.listar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ ProgramaDAO.listar: Error inesperado: " + e.getMessage());
+            System.err.println("ProgramaDAO.listar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
 
-        System.out.println("🔍 ProgramaDAO.listar: Retornando lista con " + lista.size() + " programas");
+        System.out.println("ProgramaDAO.listar: Retornando lista con " + lista.size() + " programas");
         return lista;
     }
 
@@ -72,7 +72,7 @@ public class ProgramaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.buscarPorId: Error: " + e.getMessage());
+            System.err.println("ProgramaDAO.buscarPorId: Error: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -80,10 +80,10 @@ public class ProgramaDAO {
     }
 
     public int guardar(Programa programa) {
-        // Obtener el siguiente ID disponible
+
         int siguienteId = obtenerSiguienteId();
         if (siguienteId <= 0) {
-            System.err.println("❌ ProgramaDAO.guardar: No se pudo obtener el siguiente ID");
+            System.err.println("ProgramaDAO.guardar: No se pudo obtener el siguiente ID");
             return 0;
         }
 
@@ -103,16 +103,16 @@ public class ProgramaDAO {
             int filas = ps.executeUpdate();
 
             if (filas > 0) {
-                System.out.println("✅ ProgramaDAO.guardar: Programa guardado con ID: " + siguienteId);
+                System.out.println("ProgramaDAO.guardar: Programa guardado con ID: " + siguienteId);
                 return siguienteId;
             } else {
-                System.err.println("❌ ProgramaDAO.guardar: No se insertaron filas");
+                System.err.println("ProgramaDAO.guardar: No se insertaron filas");
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.guardar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("ProgramaDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
 
@@ -128,12 +128,12 @@ public class ProgramaDAO {
             
             if (rs.next()) {
                 int siguienteId = rs.getInt("siguiente_id");
-                System.out.println("🔍 ProgramaDAO.obtenerSiguienteId: Siguiente ID: " + siguienteId);
+                System.out.println("ProgramaDAO.obtenerSiguienteId: Siguiente ID: " + siguienteId);
                 return siguienteId;
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.obtenerSiguienteId: Error: " + e.getMessage());
+            System.err.println("ProgramaDAO.obtenerSiguienteId: Error: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -158,7 +158,7 @@ public class ProgramaDAO {
             return filas > 0;
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.actualizar: Error: " + e.getMessage());
+            System.err.println("ProgramaDAO.actualizar: Error: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -177,7 +177,7 @@ public class ProgramaDAO {
             return filas > 0;
 
         } catch (SQLException e) {
-            System.err.println("❌ ProgramaDAO.eliminar: Error: " + e.getMessage());
+            System.err.println("ProgramaDAO.eliminar: Error: " + e.getMessage());
             e.printStackTrace();
         }
 

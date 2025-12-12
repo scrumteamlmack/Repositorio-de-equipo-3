@@ -27,7 +27,7 @@ public class RolDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ RolDAO: Error al listar roles: " + e.getMessage());
+            System.err.println("RolDAO: Error al listar roles: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -52,7 +52,7 @@ public class RolDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ RolDAO: Error al buscar rol por ID: " + e.getMessage());
+            System.err.println("RolDAO: Error al buscar rol por ID: " + e.getMessage());
             e.printStackTrace();
         }
         

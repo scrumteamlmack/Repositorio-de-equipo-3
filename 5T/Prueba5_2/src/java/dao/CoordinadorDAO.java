@@ -12,14 +12,14 @@ public class CoordinadorDAO {
     public boolean guardar(Coordinador coordinador) {
         String sql = "INSERT INTO coordinador (Usuario_id_usuario, coordinacion_id_coordinacion) VALUES (?, ?)";
         
-        System.out.println("🔍 CoordinadorDAO.guardar: Intentando guardar coordinador");
-        System.out.println("   - ID Usuario: " + coordinador.getIdUsuario());
-        System.out.println("   - ID Coordinación: " + coordinador.getCoordinacionId());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("CoordinadorDAO.guardar: Intentando guardar coordinador");
+        System.out.println("ID Usuario: " + coordinador.getIdUsuario());
+        System.out.println("ID Coordinación: " + coordinador.getCoordinacionId());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ CoordinadorDAO.guardar: No se pudo establecer conexión");
+                System.err.println("CoordinadorDAO.guardar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -28,16 +28,16 @@ public class CoordinadorDAO {
                 ps.setInt(2, coordinador.getCoordinacionId());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ CoordinadorDAO.guardar: Filas afectadas: " + filas);
+                System.out.println("CoordinadorDAO.guardar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ CoordinadorDAO.guardar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("CoordinadorDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ CoordinadorDAO.guardar: Error inesperado: " + e.getMessage());
+            System.err.println("CoordinadorDAO.guardar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -46,14 +46,14 @@ public class CoordinadorDAO {
     public boolean actualizar(Coordinador coordinador) {
         String sql = "UPDATE coordinador SET coordinacion_id_coordinacion=? WHERE Usuario_id_usuario=?";
         
-        System.out.println("🔍 CoordinadorDAO.actualizar: Intentando actualizar coordinador");
-        System.out.println("   - ID Usuario: " + coordinador.getIdUsuario());
-        System.out.println("   - ID Coordinación: " + coordinador.getCoordinacionId());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("CoordinadorDAO.actualizar: Intentando actualizar coordinador");
+        System.out.println("ID Usuario: " + coordinador.getIdUsuario());
+        System.out.println("ID Coordinación: " + coordinador.getCoordinacionId());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ CoordinadorDAO.actualizar: No se pudo establecer conexión");
+                System.err.println("CoordinadorDAO.actualizar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -62,16 +62,16 @@ public class CoordinadorDAO {
                 ps.setInt(2, coordinador.getIdUsuario());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ CoordinadorDAO.actualizar: Filas afectadas: " + filas);
+                System.out.println("CoordinadorDAO.actualizar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ CoordinadorDAO.actualizar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("CoordinadorDAO.actualizar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ CoordinadorDAO.actualizar: Error inesperado: " + e.getMessage());
+            System.err.println("CoordinadorDAO.actualizar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;

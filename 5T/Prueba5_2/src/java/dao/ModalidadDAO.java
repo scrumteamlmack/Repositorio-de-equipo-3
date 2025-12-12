@@ -12,22 +12,22 @@ import java.util.List;
 public class ModalidadDAO {
     
     public List<Modalidad> listar() {
-        System.out.println("🔍 ModalidadDAO.listar: Iniciando consulta de modalidades");
+        System.out.println("ModalidadDAO.listar: Iniciando consulta de modalidades");
         List<Modalidad> lista = new ArrayList<>();
         String sql = "SELECT id_modalidad, nombre_modalidad FROM modalidad ORDER BY nombre_modalidad ASC";
-        System.out.println("   - SQL: " + sql);
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ ModalidadDAO.listar: No se pudo establecer conexión");
+                System.err.println("ModalidadDAO.listar: No se pudo establecer conexión");
                 return lista;
             }
-            System.out.println("✅ ModalidadDAO.listar: Conexión establecida");
+            System.out.println("ModalidadDAO.listar: Conexión establecida");
             
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
                 
-                System.out.println("   - Ejecutando consulta...");
+                System.out.println("Ejecutando consulta...");
                 int contador = 0;
                 
                 while (rs.next()) {
@@ -36,16 +36,16 @@ public class ModalidadDAO {
                     m.setNombreModalidad(rs.getString("nombre_modalidad"));
                     lista.add(m);
                     contador++;
-                    System.out.println("   - Modalidad encontrada: ID=" + m.getIdModalidad() + ", Nombre=" + m.getNombreModalidad());
+                    System.out.println("Modalidad encontrada: ID=" + m.getIdModalidad() + ", Nombre=" + m.getNombreModalidad());
                 }
                 
-                System.out.println("✅ ModalidadDAO.listar: Total de modalidades encontradas: " + contador);
+                System.out.println("ModalidadDAO.listar: Total de modalidades encontradas: " + contador);
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ ModalidadDAO.listar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("ModalidadDAO.listar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         
@@ -70,7 +70,7 @@ public class ModalidadDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ ModalidadDAO.buscarPorId: Error: " + e.getMessage());
+            System.err.println("ModalidadDAO.buscarPorId: Error: " + e.getMessage());
             e.printStackTrace();
         }
         

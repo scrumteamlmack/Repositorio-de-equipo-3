@@ -12,17 +12,17 @@ public class InstructorDAO {
     public boolean guardar(Instructor instructor) {
         String sql = "INSERT INTO instructor (Usuario_id_usuario, email, telefono, coordinacion_id_coordinacion, estado) VALUES (?, ?, ?, ?, ?)";
         
-        System.out.println("🔍 InstructorDAO.guardar: Intentando guardar instructor");
-        System.out.println("   - ID Usuario: " + instructor.getIdUsuario());
-        System.out.println("   - Email: " + instructor.getEmail());
-        System.out.println("   - Teléfono: " + instructor.getTelefono());
-        System.out.println("   - ID Coordinación: " + instructor.getCoordinacionId());
-        System.out.println("   - Estado: " + instructor.getEstado());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("InstructorDAO.guardar: Intentando guardar instructor");
+        System.out.println("ID Usuario: " + instructor.getIdUsuario());
+        System.out.println("Email: " + instructor.getEmail());
+        System.out.println("Teléfono: " + instructor.getTelefono());
+        System.out.println("ID Coordinación: " + instructor.getCoordinacionId());
+        System.out.println("Estado: " + instructor.getEstado());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ InstructorDAO.guardar: No se pudo establecer conexión");
+                System.err.println("InstructorDAO.guardar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -34,16 +34,16 @@ public class InstructorDAO {
                 ps.setString(5, instructor.getEstado());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ InstructorDAO.guardar: Filas afectadas: " + filas);
+                System.out.println("InstructorDAO.guardar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ InstructorDAO.guardar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("InstructorDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ InstructorDAO.guardar: Error inesperado: " + e.getMessage());
+            System.err.println("InstructorDAO.guardar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -52,17 +52,17 @@ public class InstructorDAO {
     public boolean actualizar(Instructor instructor) {
         String sql = "UPDATE instructor SET email=?, telefono=?, coordinacion_id_coordinacion=?, estado=? WHERE Usuario_id_usuario=?";
         
-        System.out.println("🔍 InstructorDAO.actualizar: Intentando actualizar instructor");
-        System.out.println("   - ID Usuario: " + instructor.getIdUsuario());
-        System.out.println("   - Email: " + instructor.getEmail());
-        System.out.println("   - Teléfono: " + instructor.getTelefono());
-        System.out.println("   - ID Coordinación: " + instructor.getCoordinacionId());
-        System.out.println("   - Estado: " + instructor.getEstado());
-        System.out.println("   - SQL: " + sql);
+        System.out.println("InstructorDAO.actualizar: Intentando actualizar instructor");
+        System.out.println("ID Usuario: " + instructor.getIdUsuario());
+        System.out.println("Email: " + instructor.getEmail());
+        System.out.println("Teléfono: " + instructor.getTelefono());
+        System.out.println("ID Coordinación: " + instructor.getCoordinacionId());
+        System.out.println("Estado: " + instructor.getEstado());
+        System.out.println("SQL: " + sql);
         
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ InstructorDAO.actualizar: No se pudo establecer conexión");
+                System.err.println("InstructorDAO.actualizar: No se pudo establecer conexión");
                 return false;
             }
             
@@ -74,16 +74,16 @@ public class InstructorDAO {
                 ps.setInt(5, instructor.getIdUsuario());
                 
                 int filas = ps.executeUpdate();
-                System.out.println("✅ InstructorDAO.actualizar: Filas afectadas: " + filas);
+                System.out.println("InstructorDAO.actualizar: Filas afectadas: " + filas);
                 return filas > 0;
             }
         } catch (SQLException e) {
-            System.err.println("❌ InstructorDAO.actualizar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("InstructorDAO.actualizar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ InstructorDAO.actualizar: Error inesperado: " + e.getMessage());
+            System.err.println("InstructorDAO.actualizar: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return false;

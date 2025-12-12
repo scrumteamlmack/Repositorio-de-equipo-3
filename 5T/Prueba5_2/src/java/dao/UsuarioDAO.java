@@ -83,11 +83,11 @@ public class UsuarioDAO {
 
     public Usuario buscarPorId(int id) {
         String sql = BASE_SELECT + " WHERE id_usuario=?";
-        System.out.println("🔍 UsuarioDAO.buscarPorId: Buscando usuario con ID: " + id);
-        System.out.println("   - SQL: " + sql);
+        System.out.println("UsuarioDAO.buscarPorId: Buscando usuario con ID: " + id);
+        System.out.println("SQL: " + sql);
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ UsuarioDAO.buscarPorId: No se pudo establecer conexión");
+                System.err.println("UsuarioDAO.buscarPorId: No se pudo establecer conexión");
                 return null;
             }
             try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -95,20 +95,20 @@ public class UsuarioDAO {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         Usuario u = mapRow(rs);
-                        System.out.println("   ✅ UsuarioDAO.buscarPorId: Usuario encontrado:");
-                        System.out.println("      * ID: " + u.getIdUsuario());
-                        System.out.println("      * Nombre: " + u.getPNombre() + " " + u.getPApellido());
-                        System.out.println("      * Correo: " + u.getCorreo());
-                        System.out.println("      * TipoDoc: " + u.getTipoDocumento());
-                        System.out.println("      * NumDoc: " + u.getNumDocumento());
+                        System.out.println(" UsuarioDAO.buscarPorId: Usuario encontrado:");
+                        System.out.println(" ID: " + u.getIdUsuario());
+                        System.out.println(" Nombre: " + u.getPNombre() + " " + u.getPApellido());
+                        System.out.println(" Correo: " + u.getCorreo());
+                        System.out.println(" TipoDoc: " + u.getTipoDocumento());
+                        System.out.println(" NumDoc: " + u.getNumDocumento());
                         return u;
                     } else {
-                        System.err.println("   ❌ UsuarioDAO.buscarPorId: No se encontró usuario con ID: " + id);
+                        System.err.println("UsuarioDAO.buscarPorId: No se encontró usuario con ID: " + id);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ UsuarioDAO.buscarPorId: Error SQL: " + e.getMessage());
+            System.err.println("UsuarioDAO.buscarPorId: Error SQL: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -116,31 +116,31 @@ public class UsuarioDAO {
 
     public Usuario buscarPorDocumento(int documento) {
         String sql = BASE_SELECT + " WHERE num_documento=?";
-        System.out.println("🔍 UsuarioDAO: Buscando usuario con documento: " + documento);
-        System.out.println("🔍 UsuarioDAO: SQL: " + sql);
+        System.out.println("UsuarioDAO: Buscando usuario con documento: " + documento);
+        System.out.println("UsuarioDAO: SQL: " + sql);
         try (Connection con = ConnBD.conectar()) {
             if (con == null) {
-                System.err.println("❌ UsuarioDAO: No se pudo establecer conexión a la base de datos");
+                System.err.println("UsuarioDAO: No se pudo establecer conexión a la base de datos");
                 return null;
             }
-            System.out.println("✅ UsuarioDAO: Conexión establecida");
+            System.out.println("UsuarioDAO: Conexión establecida");
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 ps.setInt(1, documento);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         Usuario usuario = mapRow(rs);
-                        System.out.println("✅ UsuarioDAO: Usuario encontrado - ID: " + usuario.getIdUsuario() + ", Nombre: " + usuario.getPNombre());
+                        System.out.println("UsuarioDAO: Usuario encontrado - ID: " + usuario.getIdUsuario() + ", Nombre: " + usuario.getPNombre());
                         return usuario;
                     } else {
-                        System.out.println("⚠️ UsuarioDAO: No se encontró ningún usuario con documento: " + documento);
+                        System.out.println("UsuarioDAO: No se encontró ningún usuario con documento: " + documento);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ UsuarioDAO: Error SQL al buscar usuario: " + e.getMessage());
+            System.err.println("UsuarioDAO: Error SQL al buscar usuario: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ UsuarioDAO: Error inesperado: " + e.getMessage());
+            System.err.println("UsuarioDAO: Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -174,12 +174,12 @@ public class UsuarioDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idUsuario);
             int filas = ps.executeUpdate();
-            System.out.println("🔍 UsuarioDAO.eliminar: Filas afectadas: " + filas);
+            System.out.println("UsuarioDAO.eliminar: Filas afectadas: " + filas);
             return filas > 0;
         } catch (SQLException e) {
-            System.err.println("❌ UsuarioDAO.eliminar: Error SQL: " + e.getMessage());
-            System.err.println("   - SQL State: " + e.getSQLState());
-            System.err.println("   - Error Code: " + e.getErrorCode());
+            System.err.println("UsuarioDAO.eliminar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         return false;

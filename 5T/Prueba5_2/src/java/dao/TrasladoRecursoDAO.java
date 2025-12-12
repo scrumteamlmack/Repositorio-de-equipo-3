@@ -50,7 +50,7 @@ public class TrasladoRecursoDAO {
             ps.setString(5, traslado.getObservacion());
             ps.executeUpdate();
             
-            // Actualizar el ambiente del recurso al destino
+            
             String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
             try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
                 psUpdate.setInt(1, traslado.getAmbienteDestino());
@@ -64,7 +64,7 @@ public class TrasladoRecursoDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return -1;
@@ -84,7 +84,7 @@ public class TrasladoRecursoDAO {
             
             int rows = ps.executeUpdate();
             
-            // Actualizar el ambiente del recurso al destino
+            
             if (rows > 0) {
                 String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
                 try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
@@ -96,7 +96,7 @@ public class TrasladoRecursoDAO {
             
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.actualizar: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoDAO.actualizar: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -109,7 +109,7 @@ public class TrasladoRecursoDAO {
             ps.setInt(1, idTraslado);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -134,7 +134,7 @@ public class TrasladoRecursoDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ TrasladoRecursoDAO.buscarPorId: Error: " + e.getMessage());
+            System.err.println("TrasladoRecursoDAO.buscarPorId: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return null;

@@ -127,10 +127,10 @@ public class MinutaDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, instructorId);
             int filas = ps.executeUpdate();
-            System.out.println("✅ MinutaDAO.eliminarPorInstructor: Eliminadas " + filas + " minutas del instructor ID: " + instructorId);
+            System.out.println("MinutaDAO.eliminarPorInstructor: Eliminadas " + filas + " minutas del instructor ID: " + instructorId);
             return true;
         } catch (SQLException e) {
-            System.err.println("❌ MinutaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+            System.err.println("MinutaDAO.eliminarPorInstructor: Error: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
