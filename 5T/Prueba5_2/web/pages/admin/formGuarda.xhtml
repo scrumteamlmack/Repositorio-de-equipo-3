@@ -65,14 +65,21 @@
                     <f:selectItems value="#{guardaSeguridadBean.turnos}" />
                 </p:selectOneMenu>
 
-                <h:outputLabel value="Fecha de Ingreso:" for="fechaIngreso" />
-                <p:calendar id="fechaIngreso" 
-                            value="#{guardaSeguridadBean.guardaSeguridad.fechaIngreso}" 
-                            required="true"
-                            requiredMessage="Debe seleccionar una fecha de ingreso"
-                            pattern="dd/MM/yyyy"
-                            showOn="button"
-                            navigator="true"/>
+                <h:outputLabel value="Fecha de Ingreso: *" for="fechaIngreso" />
+                <h:panelGroup>
+                    <p:calendar id="fechaIngreso" 
+                                value="#{guardaSeguridadBean.guardaSeguridad.fechaIngreso}" 
+                                required="true"
+                                requiredMessage="Debe seleccionar una fecha de ingreso"
+                                pattern="dd/MM/yyyy"
+                                showIcon="true"
+                                showOn="button"
+                                navigator="true"
+                                yearRange="c-30:c+0"
+                                maxdate="#{java.util.Date()}"/>
+                    <p:message for="fechaIngreso" display="text" styleClass="text-danger"/>
+                    <h:outputText value="La fecha no puede ser futura" style="font-size: 0.85em; color: #666; display: block;"/>
+                </h:panelGroup>
 
                 <h:outputLabel value="Estado:" for="estado" />
                 <p:selectOneMenu id="estado" 

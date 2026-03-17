@@ -32,9 +32,15 @@
                                  required="true"/>
                 </div>
                 <div class="ui-g-12 ui-md-6">
-                    <p:inputText value="#{usuarioBean.usuario.numDocumento}"
+                    <p:inputText id="numDocumento"
+                                 value="#{usuarioBean.usuario.numDocumento}"
                                  label="Número documento"
-                                 required="true"/>
+                                 required="true"
+                                 requiredMessage="El número de documento es obligatorio"
+                                 validatorMessage="El número de documento debe tener entre 6 y 15 dígitos (solo números positivos)">
+                        <f:validateLongRange minimum="100000" maximum="999999999999999"/>
+                    </p:inputText>
+                    <p:message for="numDocumento" display="text"/>
                 </div>
                 <div class="ui-g-12 ui-md-6">
                     <p:inputText value="#{usuarioBean.usuario.correo}"
@@ -83,7 +89,14 @@
                         <p:inputText value="#{usuarioBean.instructor.email}" label="Correo institucional" required="true"/>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <p:inputText value="#{usuarioBean.instructor.telefono}" label="Teléfono"/>
+                        <p:inputText id="telefonoInst"
+                                     value="#{usuarioBean.instructor.telefono}" 
+                                     label="Teléfono"
+                                     validatorMessage="El teléfono debe tener entre 7 y 20 dígitos (solo números)">
+                            <f:validateLength minimum="7" maximum="20"/>
+                            <f:validateRegex pattern="^[0-9]*$"/>
+                        </p:inputText>
+                        <p:message for="telefonoInst" display="text"/>
                     </div>
                     <div class="ui-g-12 ui-md-4">
                         <p:inputNumber value="#{usuarioBean.instructor.coordinacionId}" label="ID Coordinación" required="true"/>
@@ -115,8 +128,16 @@
                         </p:selectOneMenu>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <p:calendar value="#{usuarioBean.guardaSeguridad.fechaIngreso}" showIcon="true"
-                                      pattern="dd/MM/yyyy" label="Fecha ingreso" required="true"/>
+                        <p:calendar id="fechaIngresoGuarda"
+                                    value="#{usuarioBean.guardaSeguridad.fechaIngreso}" 
+                                    showIcon="true"
+                                    pattern="dd/MM/yyyy" 
+                                    label="Fecha ingreso" 
+                                    required="true"
+                                    navigator="true"
+                                    yearRange="c-30:c+0"
+                                    maxdate="#{java.util.Date()}"/>
+                        <p:message for="fechaIngresoGuarda" display="text"/>
                     </div>
                     <div class="ui-g-12 ui-md-4">
                         <p:selectOneMenu value="#{usuarioBean.guardaSeguridad.estado}" required="true">

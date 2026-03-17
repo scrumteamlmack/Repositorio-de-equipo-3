@@ -139,13 +139,54 @@ public class IncidenteDAO {
     }
     
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM registro_incidente WHERE id_incidente=?";
-        try (Connection con = ConnBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+        Connection con = null;
+        try {
+            con = ConnBD.conectar();
+            con.setAutoCommit(false);
+            
+            // Primero eliminar registros de historico_incidentes (FK)
+            String sqlHistorico = "DELETE FROM historico_incidentes WHERE incidente_id=?";
+            try (PreparedStatement psHistorico = con.prepareStatement(sqlHistorico)) {
+                psHistorico.setInt(1, id);
+                int eliminadosHistorico = psHistorico.executeUpdate();
+                System.out.println("IncidenteDAO.eliminar: Eliminados " + eliminadosHistorico + " registros de historico_incidentes");
+            }
+            
+            // Luego eliminar el incidente
+            String sql = "DELETE FROM registro_incidente WHERE id_incidente=?";
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                boolean eliminado = ps.executeUpdate() > 0;
+                
+                if (eliminado) {
+                    con.commit();
+                    System.out.println("IncidenteDAO.eliminar: Incidente eliminado exitosamente ID: " + id);
+                    return true;
+                } else {
+                    con.rollback();
+                    System.err.println("IncidenteDAO.eliminar: No se encontró el incidente ID: " + id);
+                    return false;
+                }
+            }
         } catch (SQLException e) {
+            System.err.println("IncidenteDAO.eliminar: Error SQL: " + e.getMessage());
             e.printStackTrace();
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }
