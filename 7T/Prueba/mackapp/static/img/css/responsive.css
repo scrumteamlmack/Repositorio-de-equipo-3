@@ -1,0 +1,39 @@
+
+/* 📱 Tablets y celulares */
+@media (max-width: 768px) {
+
+  .landing-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .landing-header-buttons {
+    margin-top: 10px;
+  }
+
+  .landing-content {
+    padding: 20px;
+  }
+
+  .landing-title {
+    font-size: 1.6rem;
+  }
+
+  .landing-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 📱 Celulares pequeños */
+@media (max-width: 480px) {
+
+  .landing-logo span:last-child {
+    font-size: 1.2rem;
+  }
+
+  .landing-title {
+    font-size: 1.3rem;
+  }
+
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>L-MACK - Iniciar Sesión</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <div class="landing-header">
+        <div class="landing-logo">
+            <span>👤</span>
+            <span>L-MACK</span>
+        </div>
+        <div class="landing-header-buttons">
+            <a href="{% url 'index' %}" class="landing-header-btn">Inicio</a>
+            <a href="{% url 'register' %}" class="landing-header-btn">Registrarse</a>
+        </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Iniciar Sesión</h2>
+            </div>
+
+            <!-- MENSAJES -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="color: red;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="login-form-group">
+                    <label>Correo electrónico</label>
+                    <input type="text" name="doc" placeholder="Email" required
+                        style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                </div>
+
+                <div class="login-form-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="pass" placeholder="Contraseña" required
+                        style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                </div>
+
+                <button type="submit" class="btn-primary"
+                    style="width: 100%; margin-top: 10px;">
+                    Entrar
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; font-size: 14px;">
+                <p>¿No tienes cuenta? 
+                    <a href="{% url 'register' %}" style="text-decoration: underline;">
+                        Regístrate aquí
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
