@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@-*!0=fn6c==0hso7bt6n)t)o1mxczo(nzg^ts-uk4+w9dy1r6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'data_wizard',
     'data_wizard.sources',
     'mackapp',
