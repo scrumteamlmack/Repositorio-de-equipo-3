@@ -1,51 +1,51 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block title %}L-MACK - Iniciar Sesión{% endblock %}
 
 {% block content %}
-<!-- LOGIN FORM -->
+
 <div class="login-container">
     <div class="login-card">
+
+        <!-- HEADER -->
         <div class="login-header">
             <h2>Iniciar Sesión</h2>
         </div>
 
-        <form method="POST">
+        <!-- FORM -->
+        <form method="POST" novalidate>
             {% csrf_token %}
 
-            <!-- Mensajes -->
+            <!-- MENSAJES -->
             {% if messages %}
                 {% for message in messages %}
-                    <div style="color:red; margin-bottom:10px;">
+                    <div style="margin-bottom:10px; color:red;">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <div class="login-form-group">
-                <label>Correo electrónico</label>
-                <input type="text" name="doc" placeholder="Email" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
-            </div>
+            <!-- FORM CRISPY -->
+            {{ miForm|crispy }}
 
-            <div class="login-form-group">
-                <label>Contraseña</label>
-                <input type="password" name="pass" placeholder="Contraseña" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
-            </div>
-
+            <!-- BOTÓN -->
             <button type="submit" class="btn-primary"
                 style="width: 100%; margin-top: 10px;">
                 Entrar
             </button>
         </form>
 
+        <!-- FOOTER -->
         <div style="text-align: center; margin-top: 25px; color: var(--text-gray); font-size: 14px;">
-            <p>¿No tienes cuenta? 
+            <p>
+                ¿No tienes cuenta?
                 <a href="#" style="color: var(--primary-green); text-decoration: underline;">
                     Regístrate aquí
                 </a>
             </p>
         </div>
+
     </div>
 </div>
 
