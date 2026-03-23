@@ -4,7 +4,7 @@
 {% block title %}L-MACK - Iniciar Sesión{% endblock %}
 
 {% block content %}
-
+<!-- LOGIN FORM -->
 <div class="login-container">
     <div class="login-card">
 
@@ -26,10 +26,18 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- FORM CRISPY -->
-            {{ miForm|crispy }}
+            <div class="login-form-group">
+                <label>Correo electrónico</label>
+                <input type="text" name="doc" placeholder="Email" required
+                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+            </div>
 
-            <!-- BOTÓN -->
+            <div class="login-form-group">
+                <label>Contraseña</label>
+                <input type="password" name="pass" placeholder="Contraseña" required
+                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+            </div>
+
             <button type="submit" class="btn-primary"
                 style="width: 100%; margin-top: 10px;">
                 Entrar
