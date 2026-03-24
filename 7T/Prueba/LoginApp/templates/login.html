@@ -14,7 +14,7 @@
         </div>
 
         <!-- FORM -->
-        <form method="POST" novalidate>
+        <form method="POST" >
             {% csrf_token %}
 
             <!-- MENSAJES -->
@@ -27,14 +27,14 @@
             {% endif %}
 
             <div class="login-form-group">
-                <label>Correo electrónico</label>
-                <input type="text" name="doc" placeholder="Email" required
+                <label>Numero de documento</label>
+                <input type="text" name="Cedula" placeholder="Email" required
                     style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
             </div>
 
             <div class="login-form-group">
                 <label>Contraseña</label>
-                <input type="password" name="pass" placeholder="Contraseña" required
+                <input type="password" name="contraseña" placeholder="Contraseña" required
                     style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
             </div>
 

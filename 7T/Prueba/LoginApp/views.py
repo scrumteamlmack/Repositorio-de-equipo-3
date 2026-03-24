@@ -1,31 +1,54 @@
+import hashlib
+import re
+
 from django.shortcuts import render, redirect
-from django.views.generic import View
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login as auth_login, logout, authenticate
 from django.contrib import messages
-from .forms import FormLogin
+from .models import Usuario, UserRol
+
+
+def _contrasena_coincide(almacenada: str, ingresada: str) -> bool:
+    """La BD guarda MD5 (32 hex), SHA-256 (64 hex) o texto plano según el registro."""
+    almacenada = (almacenada or "").strip()
+    ingresada = (ingresada or "").strip()
+    if not almacenada:
+        return False
+    baja = almacenada.lower()
+    if re.fullmatch(r"[0-9a-f]{64}", baja):
+        return hashlib.sha256(ingresada.encode("utf-8")).hexdigest() == baja
+    if re.fullmatch(r"[0-9a-f]{32}", baja):
+        return hashlib.md5(ingresada.encode("utf-8")).hexdigest() == baja
+    return almacenada == ingresada
 
 
 def login_view(request):
 
     if request.method == 'POST':
-        miForm = FormLogin(request.POST)
+        cedula = request.POST.get('Cedula')
+        password = request.POST.get('contraseña')
 
-        if miForm.is_valid():
-            datosForm = miForm.cleaned_data
+        try:
+            user = Usuario.objects.get(num_documento=int(cedula))
 
-            user = authenticate(
-                request,
-                username=datosForm["Cedula"],
-                password=datosForm["contraseña"]
-            )
+            if not _contrasena_coincide(user.contrasena, password):
+                messages.error(request, "Contraseña incorrecta")
+                return render(request, "login.html")
 
-            if user is not None:
-                auth_login(request, user)
-                return redirect('index')
+            # GUARDAR SESIÓN
+            request.session['usuario_id'] = user.id_usuario
+
+            # SACAR ROL
+            user_rol = UserRol.objects.get(id_usuario=user)
+            rol = user_rol.id_rol.nombre_rol.lower()
+
+            # REDIRIGIR A OTRA APP
+            if rol in ("admin", "administrador"):
+                return redirect('admin_index')
             else:
-                messages.error(request, "Credenciales incorrectas")
-    else:
-        miForm = FormLogin()
+                return redirect('index')
 
-    return render(request, "login.html", {"miForm": miForm})
+        except Usuario.DoesNotExist:
+            messages.error(request, "Usuario no encontrado")
+        except UserRol.DoesNotExist:
+            messages.error(request, "Usuario sin rol")
+
+    return render(request, "login.html")

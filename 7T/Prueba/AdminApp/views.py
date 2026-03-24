@@ -1,6 +1,11 @@
+from collections import defaultdict
+
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import redirect, render
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+
+from LoginApp.models import Usuario, UserRol
 
 
 EMPTY_USER = {
@@ -99,7 +104,25 @@ def perfil(request):
 
 
 def listar_usuarios(request):
-    return _render_admin(request, "listarUsuarios.html")
+    roles_por_usuario = defaultdict(list)
+    for ur in UserRol.objects.select_related("id_rol").all():
+        roles_por_usuario[ur.id_usuario_id].append(ur.id_rol.nombre_rol)
+
+    filas = []
+    for u in Usuario.objects.all().order_by("id_usuario"):
+        nombres = " ".join(filter(None, [u.p_nombre, u.s_nombre])).strip()
+        apellidos = " ".join(filter(None, [u.p_apellido, u.s_apellido])).strip()
+        roles = roles_por_usuario.get(u.id_usuario, [])
+        filas.append(
+            {
+                "id": u.id_usuario,
+                "first_name": nombres or "—",
+                "last_name": apellidos or "—",
+                "email": u.correo,
+                "rol": ", ".join(roles) if roles else "—",
+            }
+        )
+    return _render_admin(request, "listarUsuarios.html", {"usuarios": filas})
 
 
 def form_usuario(request):
