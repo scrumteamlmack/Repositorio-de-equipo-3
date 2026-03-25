@@ -1,11 +1,34 @@
+import hashlib
 from collections import defaultdict
-
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.shortcuts import redirect, render
+from django.db import IntegrityError, transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
 from LoginApp.models import Usuario, UserRol, Ficha, Rol, Programas, Recursos, Ambiente
+
+
+def _hash_nueva_contrasena(plain: str) -> str:
+    """Mismo criterio que registros recientes en BD: SHA-256 en hexadecimal."""
+    return hashlib.sha256(plain.encode("utf-8")).hexdigest()
+
+
+def _usuario_a_formulario(u: Usuario, rol_id=None):
+    if rol_id is None:
+        ur = UserRol.objects.filter(id_usuario=u).first()
+        rol_id = ur.id_rol_id if ur else ""
+    return {
+        "PNombre": u.p_nombre,
+        "SNombre": u.s_nombre or "",
+        "PApellido": u.p_apellido,
+        "SApellido": u.s_apellido or "",
+        "tipoDocumento": u.tipo_documento,
+        "numDocumento": u.num_documento,
+        "correo": u.correo,
+        "rolSeleccionado": str(rol_id) if rol_id != "" else "",
+    }
 
 
 EMPTY_USER = {
@@ -126,8 +149,85 @@ def listar_usuarios(request):
 
 
 def form_usuario(request):
-    roles = Rol.objects.all()
-    return _render_admin(request, "formUsuario.html", {"roles" : roles})
+    roles = list(Rol.objects.all().order_by("id_rol"))
+    if request.method == "POST":
+        p_nombre = request.POST.get("PNombre", "").strip()
+        s_nombre = request.POST.get("SNombre", "").strip()
+        p_apellido = request.POST.get("PApellido", "").strip()
+        s_apellido = request.POST.get("SApellido", "").strip()
+        tipo_doc = request.POST.get("tipoDocumento", "").strip()
+        correo = request.POST.get("correo", "").strip()
+        password = (request.POST.get("pass") or "").strip()
+        rol_raw = request.POST.get("rolSeleccionado")
+        num_raw = request.POST.get("numDocumento")
+
+        try:
+            num_doc = int(num_raw)
+        except (TypeError, ValueError):
+            messages.error(request, "Número de documento inválido.")
+            return _render_admin(
+                request,
+                "formUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": {
+                        "PNombre": p_nombre,
+                        "SNombre": s_nombre,
+                        "PApellido": p_apellido,
+                        "SApellido": s_apellido,
+                        "tipoDocumento": tipo_doc,
+                        "numDocumento": num_raw or "",
+                        "correo": correo,
+                        "rolSeleccionado": str(rol_raw) if rol_raw else "",
+                    },
+                },
+            )
+
+        if not p_nombre or not p_apellido or not tipo_doc:
+            messages.error(request, "Complete los campos obligatorios.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+        if not password:
+            messages.error(request, "La contraseña es obligatoria al crear usuario.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+        if not rol_raw:
+            messages.error(request, "Seleccione un rol.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+        try:
+            rol_id = int(rol_raw)
+        except ValueError:
+            messages.error(request, "Rol no válido.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+        if not Rol.objects.filter(pk=rol_id).exists():
+            messages.error(request, "El rol indicado no existe.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+        if Usuario.objects.filter(num_documento=num_doc).exists():
+            messages.error(request, "Ya existe un usuario con ese número de documento.")
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+
+        try:
+            with transaction.atomic():
+                u = Usuario.objects.create(
+                    p_nombre=p_nombre,
+                    s_nombre=s_nombre or None,
+                    p_apellido=p_apellido,
+                    s_apellido=s_apellido or None,
+                    tipo_documento=tipo_doc,
+                    num_documento=num_doc,
+                    correo=correo,
+                    contrasena=_hash_nueva_contrasena(password),
+                )
+                UserRol.objects.create(id_usuario=u, id_rol_id=rol_id)
+        except IntegrityError: 
+            messages.error(
+                request,
+                "No se pudo crear el usuario. Revise que el documento o correo no estén duplicados.",
+            )
+            return _render_admin(request, "formUsuario.html", {"roles": roles})
+
+        messages.success(request, "Usuario registrado correctamente.")
+        return redirect("listar_usuarios")
+
+    return _render_admin(request, "formUsuario.html", {"roles": roles})
 
 
 def crear_usuario(request):
@@ -135,17 +235,125 @@ def crear_usuario(request):
 
 
 def editar_usuario(request, usuario_id):
+    u = get_object_or_404(Usuario, pk=usuario_id)
+    roles = list(Rol.objects.all().order_by("id_rol"))
+    ur = UserRol.objects.filter(id_usuario=u).first()
+    rol_actual = ur.id_rol_id if ur else ""
+
+    if request.method == "POST":
+        p_nombre = request.POST.get("PNombre", "").strip()
+        s_nombre = request.POST.get("SNombre", "").strip()
+        p_apellido = request.POST.get("PApellido", "").strip()
+        s_apellido = request.POST.get("SApellido", "").strip()
+        tipo_doc = request.POST.get("tipoDocumento", "").strip()
+        correo = request.POST.get("correo", "").strip()
+        password = (request.POST.get("pass") or "").strip()
+        rol_raw = request.POST.get("rolSeleccionado")
+
+        if not p_nombre or not p_apellido or not tipo_doc or not correo:
+            messages.error(request, "Complete los campos obligatorios.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if not rol_raw:
+            messages.error(request, "Seleccione un rol.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        try:
+            rol_id = int(rol_raw)
+        except ValueError:
+            messages.error(request, "Rol no válido.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if not Rol.objects.filter(pk=rol_id).exists():
+            messages.error(request, "El rol indicado no existe.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+
+        u.p_nombre = p_nombre
+        u.s_nombre = s_nombre or None
+        u.p_apellido = p_apellido
+        u.s_apellido = s_apellido or None
+        u.tipo_documento = tipo_doc
+        u.correo = correo
+        if password:
+            u.contrasena = _hash_nueva_contrasena(password)
+
+        try:
+            with transaction.atomic():
+                u.save()
+                UserRol.objects.filter(id_usuario=u).delete()
+                UserRol.objects.create(id_usuario=u, id_rol_id=rol_id)
+        except IntegrityError:
+            messages.error(request, "No se pudo actualizar el usuario.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+
+        messages.success(request, "Usuario actualizado correctamente.")
+        return redirect("listar_usuarios")
+
     return _render_admin(
         request,
         "editarUsuario.html",
         {
+            "roles": roles,
+            "usuario": _usuario_a_formulario(u, rol_actual),
             "idUsuarioEditar": usuario_id,
         },
     )
 
 
+@require_POST
 def eliminar_usuario(request, usuario_id):
-    messages.info(request, f"Eliminar usuario {usuario_id} aun no esta implementado.")
+    u = Usuario.objects.filter(pk=usuario_id).first()
+    if not u:
+        messages.error(request, "Usuario no encontrado.")
+        return redirect("listar_usuarios")
+    try:
+        with transaction.atomic():
+            UserRol.objects.filter(id_usuario=u).delete()
+            u.delete()
+    except IntegrityError:
+        messages.error(
+            request,
+            "No se puede eliminar: el usuario tiene datos enlazados (aprendiz, instructor, incidentes, etc.).",
+        )
+        return redirect("listar_usuarios")
+    messages.success(request, "Usuario eliminado correctamente.")
     return redirect("listar_usuarios")
 
 

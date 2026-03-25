@@ -122,10 +122,10 @@
 
                             <div class="col-md-6 mb-3">
                                 <label>Rol</label>
-                                <select name="rolSeleccionado" class="form-select" disabled>
+                                <select name="rolSeleccionado" class="form-select" required>
                                     <option value="">Seleccione rol</option>
                                     {% for r in roles %}
-                                        <option value="{{ r.idRol }}" {% if usuario.rolSeleccionado == r.idRol %}selected{% endif %}>{{ r.nombre }}</option>
+                                        <option value="{{ r.id_rol }}" {% if usuario.rolSeleccionado|stringformat:"s" == r.id_rol|stringformat:"s" %}selected{% endif %}>{{ r.nombre_rol }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
