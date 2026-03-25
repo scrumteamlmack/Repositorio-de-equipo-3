@@ -153,8 +153,11 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <h:form id="formListar">
+<<<<<<< HEAD
                     <p:growl id="mensajes" showDetail="true" life="3000"/>
                     
+=======
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                     <div class="form-header">
                         <h2><i class="pi pi-exclamation-triangle" style="margin-right: 10px;"></i>Lista de Incidentes</h2>
                     </div>
@@ -263,11 +266,18 @@
                                                      styleClass="btn btn-sm btn-secondary"/>
                                     <p:commandButton icon="pi pi-trash"
                                                      title="Eliminar"
+<<<<<<< HEAD
                                                      action="#{incidenteBean.eliminar(inc.idIncidente)}"
                                                      update="@form"
                                                      process="@this"
                                                      onclick="if(!confirm('¿Está seguro de eliminar este incidente?')) return false;"
                                                      styleClass="btn btn-sm btn-danger"/>
+=======
+                                                     actionListener="#{incidenteBean.eliminar(inc.idIncidente)}"
+                                                     update="@form"
+                                                     styleClass="btn btn-sm btn-danger"
+                                                     onclick="return confirm('¿Está seguro de eliminar este incidente?');"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                                 </div>
                             </p:column>
 

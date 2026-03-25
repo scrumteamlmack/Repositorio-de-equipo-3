@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('guarda.dashboard')
 
 @section('content')
 <head>

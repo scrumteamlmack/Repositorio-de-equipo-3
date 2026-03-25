@@ -1,6 +1,8 @@
 @extends('instructor.dashboard')
 
 @section('content')
+<head>
+    <link rel="stylesheet" href="{{ asset('css/perfil_edit.css') }}">
 <div class="perfil-container">
     <h2>✏️ Editar Perfil</h2>
 

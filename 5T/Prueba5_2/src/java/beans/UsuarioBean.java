@@ -26,18 +26,37 @@ public class UsuarioBean implements Serializable {
     private final MinutaDAO minutaDAO = new MinutaDAO();
     private final IncidenteDAO incidenteDAO = new IncidenteDAO();
 
+<<<<<<< HEAD
  
+=======
+    // MODELOS
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     private Usuario usuario = new Usuario();
     private List<Usuario> usuarios;
     private List<Usuario> usuariosFiltrados;
     private List<Rol> roles;
+<<<<<<< HEAD
     private int rolSeleccionado = 3;
     private Integer filtroRolId;
     private String filtroTipoDocumento;
+=======
+    private int rolSeleccionado = 3; // aprendiz por defecto
+    
+    // FILTROS MULTICRITERIO
+    private Integer filtroRolId;
+    private String filtroTipoDocumento;
+
+    // Objetos específicos según el rol
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     private Aprendiz aprendiz = new Aprendiz();
     private Instructor instructor = new Instructor();
     private Coordinador coordinador = new Coordinador();
     private GuardaSeguridad guardaSeguridad = new GuardaSeguridad();
+<<<<<<< HEAD
+=======
+
+    // CONTROL DE VISTAS PRINCIPALES
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     private boolean mostrarBienvenida = true;
     private boolean mostrarFormularioUsuario = false;
     private boolean mostrarTablaUsuarios = false;
@@ -45,6 +64,7 @@ public class UsuarioBean implements Serializable {
     private String textoBusqueda;
     private Integer idUsuarioEditar;
 
+<<<<<<< HEAD
     @PostConstruct
     public void init() {
         roles = rolDAO.listar();
@@ -55,6 +75,22 @@ public class UsuarioBean implements Serializable {
             }
         } else {
             System.err.println(" UsuarioBean.init: No se encontraron roles en la base de datos");
+=======
+    // ----------------------------------------------------------
+    // INIT
+    // ----------------------------------------------------------
+
+    @PostConstruct
+    public void init() {
+        roles = rolDAO.listar();
+        System.out.println("✅ UsuarioBean.init (@PostConstruct): Roles cargados: " + (roles != null ? roles.size() : 0));
+        if (roles != null && !roles.isEmpty()) {
+            for (Rol r : roles) {
+                System.out.println("   - Rol ID: " + r.getIdRol() + ", Nombre: " + r.getNombre());
+            }
+        } else {
+            System.err.println("⚠️ UsuarioBean.init: No se encontraron roles en la base de datos");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         }
         usuarios = usuarioDAO.listar();
         usuariosFiltrados = null;
@@ -63,7 +99,11 @@ public class UsuarioBean implements Serializable {
     }
     
     private void cargarUsuarioSiEsNecesario() {
+<<<<<<< HEAD
         
+=======
+        // Intentar cargar usuario si hay un ID en la URL (para formulario de edición)
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         try {
             javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
             if (facesContext != null) {
@@ -71,29 +111,52 @@ public class UsuarioBean implements Serializable {
                 if (idParam != null && !idParam.isEmpty()) {
                     try {
                         int id = Integer.parseInt(idParam);
+<<<<<<< HEAD
                         System.out.println(" ID encontrado en URL en @PostConstruct: " + id);
                         
+=======
+                        System.out.println("   - ID encontrado en URL en @PostConstruct: " + id);
+                        // Si encontramos un ID en la URL, es probable que sea modo edición
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                         if (id > 0 && (usuario == null || usuario.getIdUsuario() == 0)) {
                             Usuario encontrado = usuarioDAO.buscarPorId(id);
                             if (encontrado != null) {
                                 idUsuarioEditar = id;
                                 usuario = encontrado;
                                 usuario.setPass("");
+<<<<<<< HEAD
                                 System.out.println(" Usuario cargado en @PostConstruct: " + usuario.getPNombre());
                             }
                         }
                     } catch (NumberFormatException e) {
+=======
+                                System.out.println("   ✅ Usuario cargado en @PostConstruct: " + usuario.getPNombre());
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        // No es un número, no es un ID de edición
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                     }
                 }
             }
         } catch (Exception e) {
+<<<<<<< HEAD
             System.err.println("UsuarioBean.cargarUsuarioSiEsNecesario: Error: " + e.getMessage());
+=======
+            System.err.println("⚠️ UsuarioBean.cargarUsuarioSiEsNecesario: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         }
     }
     
     private void cargarUsuarioSiEsEdicion() {
+<<<<<<< HEAD
         System.out.println("UsuarioBean.cargarUsuarioSiEsEdicion: Verificando si hay usuario a editar");
         
+=======
+        System.out.println("🔍 UsuarioBean.cargarUsuarioSiEsEdicion: Verificando si hay usuario a editar");
+        
+        // Intentar obtener el ID de la URL
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (idUsuarioEditar == null || idUsuarioEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -101,6 +164,7 @@ public class UsuarioBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuarioEditar = Integer.parseInt(idParam);
+<<<<<<< HEAD
                         System.out.println(" idUsuarioEditar obtenido de URL: " + idUsuarioEditar);
                     }
                 }
@@ -135,13 +199,60 @@ public class UsuarioBean implements Serializable {
             }
         } else {
             System.out.println("Modo CREACIÓN (no hay ID de usuario)");
+=======
+                        System.out.println("   - idUsuarioEditar obtenido de URL: " + idUsuarioEditar);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("⚠️ UsuarioBean.cargarUsuarioSiEsEdicion: Error al obtener idUsuarioEditar de URL: " + e.getMessage());
+            }
+        }
+        
+        // Si hay idUsuarioEditar, cargar los datos del usuario
+        if (idUsuarioEditar != null && idUsuarioEditar > 0) {
+            System.out.println("   - Modo EDICIÓN detectado. Cargando usuario ID: " + idUsuarioEditar);
+            Usuario encontrado = usuarioDAO.buscarPorId(idUsuarioEditar);
+            if (encontrado != null) {
+                System.out.println("   ✅ Usuario encontrado: " + encontrado.getPNombre() + " " + encontrado.getPApellido());
+                System.out.println("   - Datos cargados:");
+                System.out.println("      * Correo: " + encontrado.getCorreo());
+                System.out.println("      * TipoDoc: " + encontrado.getTipoDocumento());
+                System.out.println("      * NumDoc: " + encontrado.getNumDocumento());
+                System.out.println("      * PNombre: " + encontrado.getPNombre());
+                System.out.println("      * PApellido: " + encontrado.getPApellido());
+                
+                usuario = encontrado;
+                // Establecer el ID explícitamente
+                usuario.setIdUsuario(idUsuarioEditar);
+                // No establecer la contraseña para que el campo quede vacío
+                usuario.setPass("");
+                
+                // Cargar el rol actual
+                List<Integer> listaRoles = usuarioDAO.obtenerRolesIdsPorUsuarioId(idUsuarioEditar);
+                rolSeleccionado = listaRoles.isEmpty() ? 0 : listaRoles.get(0);
+                System.out.println("   - Rol actual cargado: " + rolSeleccionado);
+            } else {
+                System.err.println("⚠️ UsuarioBean.cargarUsuarioSiEsEdicion: Usuario no encontrado con ID: " + idUsuarioEditar);
+                prepararNuevo();
+            }
+        } else {
+            System.out.println("   - Modo CREACIÓN (no hay ID de usuario)");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             prepararNuevo();
         }
     }
     
     public void initForm() {
+<<<<<<< HEAD
         System.out.println("UsuarioBean.initForm: Método llamado desde evento preRenderView");
         System.out.println("idUsuarioEditar desde viewParam: " + idUsuarioEditar);
+=======
+        System.out.println("🔍 UsuarioBean.initForm: Método llamado desde evento preRenderView");
+        System.out.println("   - idUsuarioEditar desde viewParam: " + idUsuarioEditar);
+        
+        // Cargar datos del usuario si estamos en modo edición
+        // Este método se ejecuta DESPUÉS de que el viewParam procese el parámetro
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         cargarUsuarioSiEsEdicion();
     }
     
@@ -152,7 +263,15 @@ public class UsuarioBean implements Serializable {
     public void refrescar() {
         usuarios = usuarioDAO.listar();
     }
+<<<<<<< HEAD
     
+=======
+
+    // ----------------------------------------------------------
+    // CRUD USUARIOS
+    // ----------------------------------------------------------
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public void prepararNuevo() {
         usuario = new Usuario();
         aprendiz = new Aprendiz();
@@ -160,10 +279,19 @@ public class UsuarioBean implements Serializable {
         coordinador = new Coordinador();
         guardaSeguridad = new GuardaSeguridad();
 
+<<<<<<< HEAD
         rolSeleccionado = 3; 
     }
 
     public String guardarUsuario() {
+=======
+        rolSeleccionado = 3; // aprendiz por defecto
+    }
+
+    public String guardarUsuario() {
+
+        // Validaciones
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (usuarioDAO.existeDocumento(usuario.getNumDocumento(),
                 usuario.getIdUsuario() == 0 ? null : usuario.getIdUsuario())) {
 
@@ -171,7 +299,13 @@ public class UsuarioBean implements Serializable {
             return null;
         }
 
+<<<<<<< HEAD
         if (usuario.getIdUsuario() == 0) {
+=======
+        // NUEVO USUARIO
+        if (usuario.getIdUsuario() == 0) {
+            // Validar contraseña solo para nuevos usuarios
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
                 FacesUtils.addWarnMessage("Debe definir una contraseña.");
                 return null;
@@ -188,6 +322,7 @@ public class UsuarioBean implements Serializable {
             usuario.setIdUsuario(id);
             usuarioDAO.asignarRol(id, rolSeleccionado);
             FacesUtils.addInfoMessage("Usuario registrado correctamente. Complete la información del rol.");
+<<<<<<< HEAD
             return redireccionarAlFormularioRol(id, rolSeleccionado);
 
         } else {
@@ -196,6 +331,19 @@ public class UsuarioBean implements Serializable {
                 usuario.setContrasena(PasswordUtil.hash(usuario.getPass()));
             } else {
 
+=======
+
+            // 🔥 REDIRECCIÓN SEGÚN ROL
+            return redireccionarAlFormularioRol(id, rolSeleccionado);
+
+        } else {
+            // ACTUALIZAR USUARIO
+            // Solo actualizar contraseña si se proporcionó una nueva
+            if (usuario.getPass() != null && !usuario.getPass().isEmpty()) {
+                usuario.setContrasena(PasswordUtil.hash(usuario.getPass()));
+            } else {
+                // Mantener la contraseña actual si no se proporcionó una nueva
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 Usuario usuarioActual = usuarioDAO.buscarPorId(usuario.getIdUsuario());
                 if (usuarioActual != null) {
                     usuario.setContrasena(usuarioActual.getContrasena());
@@ -203,6 +351,12 @@ public class UsuarioBean implements Serializable {
             }
             
             usuarioDAO.actualizar(usuario);
+<<<<<<< HEAD
+=======
+            // NO cambiar el rol en modo edición (el rol se mantiene igual)
+            // usuarioDAO.quitarRoles(usuario.getIdUsuario());
+            // usuarioDAO.asignarRol(usuario.getIdUsuario(), rolSeleccionado);
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addInfoMessage("Usuario actualizado correctamente.");
             return "/pages/admin/listarUsuarios.xhtml?faces-redirect=true";
         }
@@ -212,6 +366,7 @@ public class UsuarioBean implements Serializable {
 
         switch (rol) {
 
+<<<<<<< HEAD
             case 1:
                 return "/pages/admin/formCoordinador.xhtml?id=" + idUsuario + "&faces-redirect=true";
 
@@ -222,6 +377,18 @@ public class UsuarioBean implements Serializable {
                 return "/pages/aprendiz/formAprendiz.xhtml?id=" + idUsuario + "&faces-redirect=true";
 
             case 4: 
+=======
+            case 1: // Coordinador
+                return "/pages/admin/formCoordinador.xhtml?id=" + idUsuario + "&faces-redirect=true";
+
+            case 2: // Instructor
+                return "/pages/admin/formInstructor.xhtml?id=" + idUsuario + "&faces-redirect=true";
+
+            case 3: // Aprendiz
+                return "/pages/aprendiz/formAprendiz.xhtml?id=" + idUsuario + "&faces-redirect=true";
+
+            case 4: // Guarda seguridad
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 return "/pages/admin/formGuarda.xhtml?id=" + idUsuario + "&faces-redirect=true";
 
             default:
@@ -231,11 +398,16 @@ public class UsuarioBean implements Serializable {
 
 
     public String editar(int idUsuario) {
+<<<<<<< HEAD
         System.out.println("UsuarioBean.editar: Editando usuario ID: " + idUsuario);
+=======
+        System.out.println("🔍 UsuarioBean.editar: Editando usuario ID: " + idUsuario);
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         return "/pages/admin/editarUsuario.xhtml?id=" + idUsuario + "&faces-redirect=true";
     }
     
     public String cargarUsuarioParaEditar() {
+<<<<<<< HEAD
         System.out.println("UsuarioBean.cargarUsuarioParaEditar: INICIO");
         System.out.println("idUsuarioEditar desde viewParam: " + idUsuarioEditar);
         System.out.println("usuario actual: " + (usuario != null ? "ID=" + usuario.getIdUsuario() : "null"));
@@ -247,11 +419,27 @@ public class UsuarioBean implements Serializable {
         }
         
 
+=======
+        System.out.println("═══════════════════════════════════════════════════════");
+        System.out.println("🔍 UsuarioBean.cargarUsuarioParaEditar: INICIO");
+        System.out.println("   - idUsuarioEditar desde viewParam: " + idUsuarioEditar);
+        System.out.println("   - usuario actual: " + (usuario != null ? "ID=" + usuario.getIdUsuario() : "null"));
+        
+        // Verificar si ya tenemos los datos cargados (evitar cargar múltiples veces)
+        if (usuario != null && usuario.getIdUsuario() > 0 && idUsuarioEditar != null && usuario.getIdUsuario() == idUsuarioEditar) {
+            System.out.println("   ✅ Usuario ya está cargado, no es necesario recargar");
+            System.out.println("═══════════════════════════════════════════════════════");
+            return null;
+        }
+        
+        // Intentar obtener el ID de la URL si no está establecido
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (idUsuarioEditar == null || idUsuarioEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
                 if (facesContext != null) {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("id");
+<<<<<<< HEAD
                     System.out.println("  Parámetro 'id' obtenido de URL: " + idParam);
                     if (idParam != null && !idParam.isEmpty()) {
                         idUsuarioEditar = Integer.parseInt(idParam);
@@ -264,10 +452,25 @@ public class UsuarioBean implements Serializable {
                 }
             } catch (Exception e) {
                 System.err.println("UsuarioBean.cargarUsuarioParaEditar: Error al obtener idUsuarioEditar de URL: " + e.getMessage());
+=======
+                    System.out.println("   - Parámetro 'id' obtenido de URL: " + idParam);
+                    if (idParam != null && !idParam.isEmpty()) {
+                        idUsuarioEditar = Integer.parseInt(idParam);
+                        System.out.println("   ✅ idUsuarioEditar parseado desde URL: " + idUsuarioEditar);
+                    } else {
+                        System.err.println("   ❌ No se encontró parámetro 'id' en la URL");
+                    }
+                } else {
+                    System.err.println("   ❌ FacesContext es null");
+                }
+            } catch (Exception e) {
+                System.err.println("⚠️ UsuarioBean.cargarUsuarioParaEditar: Error al obtener idUsuarioEditar de URL: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 e.printStackTrace();
             }
         }
         
+<<<<<<< HEAD
         System.out.println(" idUsuarioEditar FINAL: " + idUsuarioEditar);
         
         if (idUsuarioEditar != null && idUsuarioEditar > 0) {
@@ -286,6 +489,28 @@ public class UsuarioBean implements Serializable {
                 System.out.println(" NumDoc: " + encontrado.getNumDocumento());
                 
          
+=======
+        System.out.println("   - idUsuarioEditar FINAL: " + idUsuarioEditar);
+        
+        // Si hay idUsuarioEditar, cargar los datos del usuario
+        if (idUsuarioEditar != null && idUsuarioEditar > 0) {
+            System.out.println("   - Llamando a usuarioDAO.buscarPorId(" + idUsuarioEditar + ")");
+            Usuario encontrado = usuarioDAO.buscarPorId(idUsuarioEditar);
+            
+            if (encontrado != null) {
+                System.out.println("   ✅ Usuario encontrado en BD:");
+                System.out.println("      * ID: " + encontrado.getIdUsuario());
+                System.out.println("      * PNombre: " + encontrado.getPNombre());
+                System.out.println("      * SNombre: " + encontrado.getSNombre());
+                System.out.println("      * PApellido: " + encontrado.getPApellido());
+                System.out.println("      * SApellido: " + encontrado.getSApellido());
+                System.out.println("      * Correo: " + encontrado.getCorreo());
+                System.out.println("      * TipoDoc: " + encontrado.getTipoDocumento());
+                System.out.println("      * NumDoc: " + encontrado.getNumDocumento());
+                
+                // CRÍTICO: Asignar los datos al objeto usuario del bean
+                // Crear una copia completa para asegurar que todos los campos estén asignados
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 if (usuario == null) {
                     usuario = new Usuario();
                 }
@@ -297,6 +522,7 @@ public class UsuarioBean implements Serializable {
                 usuario.setTipoDocumento(encontrado.getTipoDocumento());
                 usuario.setNumDocumento(encontrado.getNumDocumento());
                 usuario.setCorreo(encontrado.getCorreo());
+<<<<<<< HEAD
                 usuario.setContrasena(encontrado.getContrasena()); 
                 usuario.setPass(""); 
                 
@@ -325,12 +551,47 @@ public class UsuarioBean implements Serializable {
     public String actualizarUsuario() {
         System.out.println("UsuarioBean.actualizarUsuario: Actualizando usuario");
         System.out.println("ID Usuario: " + usuario.getIdUsuario());
+=======
+                usuario.setContrasena(encontrado.getContrasena()); // Mantener la contraseña encriptada
+                usuario.setPass(""); // Limpiar el campo de texto de contraseña
+                
+                System.out.println("   ✅ Datos asignados al bean usuario:");
+                System.out.println("      * usuario.getIdUsuario(): " + usuario.getIdUsuario());
+                System.out.println("      * usuario.getPNombre(): " + usuario.getPNombre());
+                System.out.println("      * usuario.getSNombre(): " + usuario.getSNombre());
+                System.out.println("      * usuario.getPApellido(): " + usuario.getPApellido());
+                System.out.println("      * usuario.getSApellido(): " + usuario.getSApellido());
+                System.out.println("      * usuario.getCorreo(): " + usuario.getCorreo());
+                System.out.println("      * usuario.getTipoDocumento(): " + usuario.getTipoDocumento());
+                System.out.println("      * usuario.getNumDocumento(): " + usuario.getNumDocumento());
+                System.out.println("═══════════════════════════════════════════════════════");
+            } else {
+                System.err.println("   ❌ Usuario NO encontrado en BD con ID: " + idUsuarioEditar);
+                FacesUtils.addErrorMessage("Usuario no encontrado con ID: " + idUsuarioEditar);
+            }
+        } else {
+            System.err.println("   ❌ idUsuarioEditar es null o 0 - No se puede cargar usuario");
+            System.err.println("   - Esto puede indicar que el viewParam no funcionó correctamente");
+            FacesUtils.addErrorMessage("No se proporcionó ID de usuario válido para editar.");
+        }
+        
+        return null; // No redirigir, mostrar la vista actual
+    }
+    
+    public String actualizarUsuario() {
+        System.out.println("🔍 UsuarioBean.actualizarUsuario: Actualizando usuario");
+        System.out.println("   - ID Usuario: " + usuario.getIdUsuario());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         
         if (usuario.getIdUsuario() == 0) {
             FacesUtils.addErrorMessage("Error: No se puede actualizar un usuario sin ID.");
             return null;
         }
         
+<<<<<<< HEAD
+=======
+        // Validaciones básicas
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (usuario.getPNombre() == null || usuario.getPNombre().trim().isEmpty()) {
             FacesUtils.addErrorMessage("El primer nombre es obligatorio.");
             return null;
@@ -346,11 +607,19 @@ public class UsuarioBean implements Serializable {
             return null;
         }
         
+<<<<<<< HEAD
+=======
+        // Solo actualizar contraseña si se proporcionó una nueva
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (usuario.getPass() != null && !usuario.getPass().isEmpty()) {
             usuario.setContrasena(PasswordUtil.hash(usuario.getPass()));
             System.out.println("   - Nueva contraseña establecida");
         } else {
+<<<<<<< HEAD
 
+=======
+            // Mantener la contraseña actual si no se proporcionó una nueva
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             Usuario usuarioActual = usuarioDAO.buscarPorId(usuario.getIdUsuario());
             if (usuarioActual != null) {
                 usuario.setContrasena(usuarioActual.getContrasena());
@@ -361,17 +630,26 @@ public class UsuarioBean implements Serializable {
         boolean actualizado = usuarioDAO.actualizar(usuario);
         
         if (actualizado) {
+<<<<<<< HEAD
             System.out.println("UsuarioBean.actualizarUsuario: Usuario actualizado correctamente");
             FacesUtils.addInfoMessage("Usuario actualizado correctamente.");
             return "/pages/admin/listarUsuarios.xhtml?faces-redirect=true";
         } else {
             System.err.println("UsuarioBean.actualizarUsuario: No se pudo actualizar el usuario");
+=======
+            System.out.println("✅ UsuarioBean.actualizarUsuario: Usuario actualizado correctamente");
+            FacesUtils.addInfoMessage("Usuario actualizado correctamente.");
+            return "/pages/admin/listarUsuarios.xhtml?faces-redirect=true";
+        } else {
+            System.err.println("❌ UsuarioBean.actualizarUsuario: No se pudo actualizar el usuario");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("No se pudo actualizar el usuario.");
             return null;
         }
     }
 
     public void eliminar(int idUsuario) {
+<<<<<<< HEAD
         System.out.println("UsuarioBean.eliminar: Eliminando usuario ID: " + idUsuario);
         
         try {
@@ -389,11 +667,39 @@ public class UsuarioBean implements Serializable {
             }
             
             System.out.println(" Eliminando perfiles...");
+=======
+        System.out.println("🔍 UsuarioBean.eliminar: Eliminando usuario ID: " + idUsuario);
+        
+        try {
+            // 1. SIEMPRE intentar eliminar referencias relacionadas con instructor
+            // (incluso si el usuario ya no tiene rol, puede tener registro en tabla instructor)
+            // Esto es necesario porque las tablas ficha, registro_inasistencia y registro_minuta
+            // tienen claves foráneas que referencian a instructor con ON DELETE NO ACTION
+            Instructor instructor = instructorDAO.buscarPorUsuario(idUsuario);
+            if (instructor != null) {
+                System.out.println("   - Usuario tiene registro en tabla instructor, eliminando referencias relacionadas...");
+                // Eliminar fichas asociadas al instructor
+                System.out.println("   - Eliminando fichas...");
+                fichaDAO.eliminarPorInstructor(idUsuario);
+                // Eliminar registros de asistencia asociados al instructor
+                System.out.println("   - Eliminando asistencias...");
+                asistenciaDAO.eliminarPorInstructor(idUsuario);
+                // Eliminar minutas asociadas al instructor (como responsable)
+                System.out.println("   - Eliminando minutas...");
+                minutaDAO.eliminarPorInstructor(idUsuario);
+            } else {
+                System.out.println("   - Usuario no tiene registro en tabla instructor");
+            }
+            
+            // 2. Eliminar perfiles (intentar todos, algunos pueden no existir)
+            System.out.println("   - Eliminando perfiles...");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             aprendizDAO.eliminarPorUsuario(idUsuario);
             instructorDAO.eliminarPorUsuario(idUsuario);
             coordinadorDAO.eliminarPorUsuario(idUsuario);
             guardaDAO.eliminarPorUsuario(idUsuario);
 
+<<<<<<< HEAD
 
             System.out.println(" Eliminando incidentes del usuario...");
             incidenteDAO.eliminarPorUsuario(idUsuario);
@@ -411,13 +717,38 @@ public class UsuarioBean implements Serializable {
                 FacesUtils.addInfoMessage("Usuario eliminado correctamente.");
             } else {
                 System.err.println("UsuarioBean.eliminar: No se pudo eliminar el usuario (posible restricción de clave foránea)");
+=======
+            // 3. Eliminar incidentes asociados directamente al usuario
+            // (registro_incidente tiene usuario_id_usuario que referencia directamente a usuario)
+            System.out.println("   - Eliminando incidentes del usuario...");
+            incidenteDAO.eliminarPorUsuario(idUsuario);
+            
+            // 4. Eliminar roles
+            System.out.println("   - Eliminando roles...");
+            usuarioDAO.quitarRoles(idUsuario);
+
+            // 5. Eliminar usuario
+            System.out.println("   - Eliminando usuario...");
+            boolean eliminado = usuarioDAO.eliminar(idUsuario);
+            
+            if (eliminado) {
+                System.out.println("✅ UsuarioBean.eliminar: Usuario eliminado correctamente");
+                FacesUtils.addInfoMessage("Usuario eliminado correctamente.");
+            } else {
+                System.err.println("❌ UsuarioBean.eliminar: No se pudo eliminar el usuario (posible restricción de clave foránea)");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 FacesUtils.addErrorMessage("No se pudo eliminar el usuario. Verifique la consola del servidor para más detalles.");
             }
             
             refrescar();
         } catch (Exception e) {
+<<<<<<< HEAD
             System.err.println("UsuarioBean.eliminar: Error al eliminar usuario: " + e.getMessage());
             System.err.println("Tipo de error: " + e.getClass().getName());
+=======
+            System.err.println("❌ UsuarioBean.eliminar: Error al eliminar usuario: " + e.getMessage());
+            System.err.println("   - Tipo de error: " + e.getClass().getName());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
             FacesUtils.addErrorMessage("Error al eliminar el usuario: " + e.getMessage());
         }
@@ -466,6 +797,13 @@ public class UsuarioBean implements Serializable {
         usuariosFiltrados = null;
     }
 
+<<<<<<< HEAD
+=======
+    // ----------------------------------------------------------
+    // VISTAS DEL DASHBOARD
+    // ----------------------------------------------------------
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public void mostrarFormulario() {
         prepararNuevo();
         mostrarBienvenida = false;
@@ -486,6 +824,13 @@ public class UsuarioBean implements Serializable {
         mostrarTablaUsuarios = false;
     }
 
+<<<<<<< HEAD
+=======
+    // ----------------------------------------------------------
+    // GETTERS & SETTERS
+    // ----------------------------------------------------------
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public Usuario getUsuario() { return usuario; }
     public List<Usuario> getUsuarios() { 
         if (usuarios == null) {
@@ -527,6 +872,10 @@ public class UsuarioBean implements Serializable {
         FacesUtils.addInfoMessage("Filtros limpiados. Mostrando todos los usuarios.");
     }
 
+<<<<<<< HEAD
+=======
+    // Obtener nombre del rol para la tabla
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public String obtenerNombreRol(int idUsuario) {
         List<Integer> r = usuarioDAO.obtenerRolesIdsPorUsuarioId(idUsuario);
         if (r == null || r.isEmpty()) return "Sin rol";

@@ -80,6 +80,7 @@
                                      autoResize="false"
                                      style="width: 100%;"/>
 
+<<<<<<< HEAD
                     <h:outputLabel value="Fecha del Incidente: *" for="fecha" />
                     <h:panelGroup>
                         <p:calendar id="fecha"
@@ -96,6 +97,17 @@
                         <p:message for="fecha" display="text" styleClass="text-danger"/>
                         <h:outputText value="La fecha no puede ser futura ni mayor a 5 años atrás" style="font-size: 0.85em; color: #666; display: block;"/>
                     </h:panelGroup>
+=======
+                    <h:outputLabel value="Fecha del Incidente:" for="fecha" />
+                    <p:calendar id="fecha"
+                                value="#{incidenteBean.fechaDate}"
+                                required="true"
+                                requiredMessage="Debe seleccionar una fecha"
+                                pattern="dd/MM/yyyy"
+                                showIcon="true"
+                                locale="es"
+                                style="width: 100%;"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 
                     <h:outputLabel value="Hora del Incidente:" for="hora" />
                     <h:panelGroup>

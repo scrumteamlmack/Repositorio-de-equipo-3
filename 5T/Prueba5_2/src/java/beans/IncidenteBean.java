@@ -37,7 +37,11 @@ public class IncidenteBean implements Serializable {
     private Incidente incidente = new Incidente();
     private Integer idIncidenteEditar;
     private String horaString;
+<<<<<<< HEAD
     private Date fechaDate; 
+=======
+    private Date fechaDate; // Propiedad intermedia para p:calendar
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     
     private boolean inicializado = false;
 
@@ -48,11 +52,16 @@ public class IncidenteBean implements Serializable {
     private List<Usuario> instructores;
 
     public IncidenteBean() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean: Constructor llamado");
+=======
+        System.out.println("🔍 IncidenteBean: Constructor llamado");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     }
 
     private void cargarDatos() {
         try {
+<<<<<<< HEAD
             System.out.println("IncidenteBean.cargarDatos: Iniciando carga de datos");
             
             incidentes = incidenteDAO.listar();
@@ -90,15 +99,61 @@ public class IncidenteBean implements Serializable {
             }
         } catch (Exception e) {
             System.err.println("IncidenteBean.cargarDatos: Error al cargar datos: " + e.getMessage());
+=======
+            System.out.println("🔍 IncidenteBean.cargarDatos: Iniciando carga de datos");
+            
+            incidentes = incidenteDAO.listar();
+            incidentesFiltrados = null;
+            System.out.println("   - Incidentes cargados: " + (incidentes != null ? incidentes.size() : 0));
+            
+            ambientes = ambienteDAO.listar();
+            System.out.println("   - Ambientes cargados: " + (ambientes != null ? ambientes.size() : 0));
+            if (ambientes != null && !ambientes.isEmpty()) {
+                for (Ambiente a : ambientes) {
+                    System.out.println("      - Ambiente: " + a.getNumero() + " (ID: " + a.getIdAmbiente() + ")");
+                }
+            } else {
+                System.err.println("   ⚠️ No se encontraron ambientes en la base de datos");
+            }
+            
+            tiposIncidente = tipoIncidenteDAO.listar();
+            System.out.println("   - Tipos de incidente cargados: " + (tiposIncidente != null ? tiposIncidente.size() : 0));
+            if (tiposIncidente != null && !tiposIncidente.isEmpty()) {
+                for (TipoIncidente t : tiposIncidente) {
+                    System.out.println("      - Tipo: " + t.getNombre() + " (ID: " + t.getIdTipoIncidente() + ")");
+                }
+            } else {
+                System.err.println("   ⚠️ No se encontraron tipos de incidente en la base de datos");
+            }
+            
+            instructores = usuarioDAO.listarPorRol("Instructor");
+            System.out.println("   - Instructores cargados: " + (instructores != null ? instructores.size() : 0));
+            if (instructores != null && !instructores.isEmpty()) {
+                for (Usuario u : instructores) {
+                    System.out.println("      - Instructor: " + u.getPNombre() + " " + u.getPApellido() + " (ID: " + u.getIdUsuario() + ")");
+                }
+            } else {
+                System.err.println("   ⚠️ No se encontraron instructores en la base de datos");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ IncidenteBean.cargarDatos: Error al cargar datos: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
     }
 
     @PostConstruct
     public void init() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.init: @PostConstruct ejecutado");
         System.out.println("idIncidenteEditar recibido: " + idIncidenteEditar);
         
+=======
+        System.out.println("🔍 IncidenteBean.init: @PostConstruct ejecutado");
+        System.out.println("   - idIncidenteEditar recibido: " + idIncidenteEditar);
+        
+        // Si no hay idIncidenteEditar, intentar obtenerlo de la URL manualmente
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (idIncidenteEditar == null || idIncidenteEditar == 0) {
             try {
                 javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -106,6 +161,7 @@ public class IncidenteBean implements Serializable {
                     String idParam = facesContext.getExternalContext().getRequestParameterMap().get("idIncidenteEditar");
                     if (idParam != null && !idParam.isEmpty()) {
                         idIncidenteEditar = Integer.parseInt(idParam);
+<<<<<<< HEAD
                         System.out.println(" idIncidenteEditar obtenido de parámetro URL: " + idIncidenteEditar);
                     }
                 }
@@ -128,11 +184,38 @@ public class IncidenteBean implements Serializable {
                 System.out.println(" Ambiente: " + existente.getIdAmbiente());
                 System.out.println(" Tipo: " + existente.getIdTipoIncidente());
                 System.out.println(" Reportador: " + existente.getIdReportador());
+=======
+                        System.out.println("   - idIncidenteEditar obtenido de parámetro URL: " + idIncidenteEditar);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("⚠️ IncidenteBean.init: Error al obtener idIncidenteEditar de URL: " + e.getMessage());
+            }
+        }
+        
+        // Cargar datos siempre
+        cargarDatos();
+        inicializado = true;
+        
+        // Si hay idIncidenteEditar, cargar el incidente para editar
+        if (idIncidenteEditar != null && idIncidenteEditar > 0) {
+            System.out.println("   - Cargando incidente para editar con ID: " + idIncidenteEditar);
+            Incidente existente = incidenteDAO.buscarPorId(idIncidenteEditar);
+            if (existente != null) {
+                System.out.println("   - Incidente existente encontrado");
+                System.out.println("      - Descripción: " + existente.getDescripcion());
+                System.out.println("      - Fecha: " + existente.getFecha());
+                System.out.println("      - Hora: " + existente.getHora());
+                System.out.println("      - Ambiente: " + existente.getIdAmbiente());
+                System.out.println("      - Tipo: " + existente.getIdTipoIncidente());
+                System.out.println("      - Reportador: " + existente.getIdReportador());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 
                 incidente = existente;
                 
                 if (incidente.getHora() != null) {
                     horaString = incidente.getHora().format(DateTimeFormatter.ofPattern("HH:mm"));
+<<<<<<< HEAD
                     System.out.println("Hora convertida a String: " + horaString);
                 } else {
                     System.err.println("La hora del incidente es NULL");
@@ -154,11 +237,37 @@ public class IncidenteBean implements Serializable {
             if (loginBean != null && loginBean.getUsuarioAutenticado() != null) {
                 incidente.setIdReportador(loginBean.getUsuarioAutenticado().getIdUsuario());
                 System.out.println("Reportador asignado: " + loginBean.getUsuarioAutenticado().getIdUsuario());
+=======
+                    System.out.println("   - Hora convertida a String: " + horaString);
+                } else {
+                    System.err.println("   ⚠️ La hora del incidente es NULL");
+                }
+                
+                // Convertir LocalDate a Date para el formulario
+                if (incidente.getFecha() != null) {
+                    fechaDate = java.sql.Date.valueOf(incidente.getFecha());
+                    System.out.println("   - Fecha convertida para formulario: " + fechaDate);
+                } else {
+                    System.err.println("   ⚠️ La fecha del incidente es NULL");
+                }
+            } else {
+                System.err.println("   ❌ No se encontró el incidente con ID: " + idIncidenteEditar);
+                incidente = new Incidente();
+            }
+        } else {
+            System.out.println("   - Creando nuevo incidente");
+            incidente = new Incidente();
+            // Asignar el instructor autenticado como reportador por defecto
+            if (loginBean != null && loginBean.getUsuarioAutenticado() != null) {
+                incidente.setIdReportador(loginBean.getUsuarioAutenticado().getIdUsuario());
+                System.out.println("   - Reportador asignado: " + loginBean.getUsuarioAutenticado().getIdUsuario());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             }
         }
     }
 
     public String guardar() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.guardar: Iniciando guardado");
         System.out.println("incidente.getIdIncidente(): " + incidente.getIdIncidente());
         System.out.println("incidente.getDescripcion(): " + incidente.getDescripcion());
@@ -168,10 +277,23 @@ public class IncidenteBean implements Serializable {
         
         if (incidente.getDescripcion() == null || incidente.getDescripcion().trim().isEmpty()) {
             System.err.println(" IncidenteBean.guardar: descripcion vacía");
+=======
+        System.out.println("🔍 IncidenteBean.guardar: Iniciando guardado");
+        System.out.println("   - incidente.getIdIncidente(): " + incidente.getIdIncidente());
+        System.out.println("   - incidente.getDescripcion(): " + incidente.getDescripcion());
+        System.out.println("   - incidente.getIdAmbiente(): " + incidente.getIdAmbiente());
+        System.out.println("   - incidente.getIdTipoIncidente(): " + incidente.getIdTipoIncidente());
+        System.out.println("   - incidente.getIdReportador(): " + incidente.getIdReportador());
+        
+        // Validaciones
+        if (incidente.getDescripcion() == null || incidente.getDescripcion().trim().isEmpty()) {
+            System.err.println("❌ IncidenteBean.guardar: descripcion vacía");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Debe ingresar una descripción del incidente.");
             return null;
         }
         
+<<<<<<< HEAD
         if (fechaDate != null) {
             incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             System.out.println(" Fecha convertida de Date a LocalDate: " + incidente.getFecha());
@@ -179,38 +301,71 @@ public class IncidenteBean implements Serializable {
         
         if (incidente.getFecha() == null) {
             System.err.println(" IncidenteBean.guardar: fecha vacía");
+=======
+        // Convertir Date a LocalDate si se seleccionó una fecha
+        if (fechaDate != null) {
+            incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            System.out.println("   - Fecha convertida de Date a LocalDate: " + incidente.getFecha());
+        }
+        
+        if (incidente.getFecha() == null) {
+            System.err.println("❌ IncidenteBean.guardar: fecha vacía");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Debe seleccionar una fecha.");
             return null;
         }
         
         if (horaString == null || horaString.trim().isEmpty()) {
+<<<<<<< HEAD
             System.err.println(" IncidenteBean.guardar: hora vacía");
+=======
+            System.err.println("❌ IncidenteBean.guardar: hora vacía");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Debe ingresar una hora.");
             return null;
         }
         
+<<<<<<< HEAD
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             incidente.setHora(LocalTime.parse(horaString, formatter));
             System.out.println(" Hora convertida: " + incidente.getHora());
         } catch (Exception e) {
             System.err.println(" IncidenteBean.guardar: Error al parsear hora: " + e.getMessage());
+=======
+        // Convertir horaString a LocalTime
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            incidente.setHora(LocalTime.parse(horaString, formatter));
+            System.out.println("   - Hora convertida: " + incidente.getHora());
+        } catch (Exception e) {
+            System.err.println("❌ IncidenteBean.guardar: Error al parsear hora: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Formato de hora inválido. Use HH:mm (ejemplo: 14:30).");
             return null;
         }
         
         if (incidente.getIdAmbiente() == 0) {
+<<<<<<< HEAD
             System.err.println("IncidenteBean.guardar: ambiente no seleccionado");
+=======
+            System.err.println("❌ IncidenteBean.guardar: ambiente no seleccionado");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Debe seleccionar un ambiente.");
             return null;
         }
         
         if (incidente.getIdTipoIncidente() == 0) {
+<<<<<<< HEAD
             System.err.println("IncidenteBean.guardar: tipo de incidente no seleccionado");
+=======
+            System.err.println("❌ IncidenteBean.guardar: tipo de incidente no seleccionado");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Debe seleccionar un tipo de incidente.");
             return null;
         }
         
+<<<<<<< HEAD
         if (incidente.getIdReportador() == 0 && loginBean != null && loginBean.getUsuarioAutenticado() != null) {
             incidente.setIdReportador(loginBean.getUsuarioAutenticado().getIdUsuario());
             System.out.println(" Reportador asignado automáticamente: " + incidente.getIdReportador());
@@ -218,6 +373,16 @@ public class IncidenteBean implements Serializable {
         
         if (incidente.getIdReportador() == 0) {
             System.err.println("IncidenteBean.guardar: reportador no asignado");
+=======
+        // Asignar el instructor autenticado como reportador si no está asignado
+        if (incidente.getIdReportador() == 0 && loginBean != null && loginBean.getUsuarioAutenticado() != null) {
+            incidente.setIdReportador(loginBean.getUsuarioAutenticado().getIdUsuario());
+            System.out.println("   - Reportador asignado automáticamente: " + incidente.getIdReportador());
+        }
+        
+        if (incidente.getIdReportador() == 0) {
+            System.err.println("❌ IncidenteBean.guardar: reportador no asignado");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("Error: No se pudo identificar el instructor reportador.");
             return null;
         }
@@ -225,26 +390,43 @@ public class IncidenteBean implements Serializable {
         boolean guardado;
         
         if (incidente.getIdIncidente() == 0) {
+<<<<<<< HEAD
             System.out.println(" Creando nuevo registro de incidente");
             int idGenerado = incidenteDAO.guardar(incidente);
             guardado = idGenerado > 0;
         } else {
             System.out.println(" Actualizando registro existente");
+=======
+            System.out.println("   - Creando nuevo registro de incidente");
+            int idGenerado = incidenteDAO.guardar(incidente);
+            guardado = idGenerado > 0;
+        } else {
+            System.out.println("   - Actualizando registro existente");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             guardado = incidenteDAO.actualizar(incidente);
         }
 
         if (guardado) {
+<<<<<<< HEAD
             System.out.println("IncidenteBean.guardar: Guardado exitoso");
             FacesUtils.addInfoMessage("Incidente registrado correctamente.");
             return "/pages/instructor/listarIncidentes.xhtml?faces-redirect=true";
         } else {
             System.err.println("IncidenteBean.guardar: No se pudo guardar");
+=======
+            System.out.println("✅ IncidenteBean.guardar: Guardado exitoso");
+            FacesUtils.addInfoMessage("Incidente registrado correctamente.");
+            return "/pages/instructor/listarIncidentes.xhtml?faces-redirect=true";
+        } else {
+            System.err.println("❌ IncidenteBean.guardar: No se pudo guardar");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             FacesUtils.addErrorMessage("No fue posible guardar el incidente. Verifique los logs del servidor.");
             return null;
         }
     }
 
     public String editar(int id) {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.editar: Editando incidente ID: " + id);
         return "/pages/instructor/formIncidente.xhtml?idIncidenteEditar=" + id + "&faces-redirect=true";
     }
@@ -268,11 +450,41 @@ public class IncidenteBean implements Serializable {
         incidente = new Incidente();
         horaString = null;
         fechaDate = null;
+=======
+        System.out.println("🔍 IncidenteBean.editar: Editando incidente ID: " + id);
+        return "/pages/instructor/formIncidente.xhtml?idIncidenteEditar=" + id + "&faces-redirect=true";
+    }
+
+    public void eliminar(int id) {
+        System.out.println("🔍 IncidenteBean.eliminar: Eliminando incidente ID: " + id);
+        boolean eliminado = incidenteDAO.eliminar(id);
+        if (eliminado) {
+            System.out.println("✅ IncidenteBean.eliminar: Eliminado exitosamente");
+            FacesUtils.addInfoMessage("Incidente eliminado correctamente.");
+            // Recargar la lista
+            cargarDatos();
+        } else {
+            System.err.println("❌ IncidenteBean.eliminar: No se pudo eliminar");
+            FacesUtils.addErrorMessage("No fue posible eliminar el incidente.");
+        }
+    }
+
+    public void prepararNuevo() {
+        System.out.println("🔍 IncidenteBean.prepararNuevo: Preparando nuevo incidente");
+        incidente = new Incidente();
+        horaString = null;
+        fechaDate = null;
+        // Asignar el instructor autenticado como reportador por defecto
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (loginBean != null && loginBean.getUsuarioAutenticado() != null) {
             incidente.setIdReportador(loginBean.getUsuarioAutenticado().getIdUsuario());
         }
     }
 
+<<<<<<< HEAD
+=======
+    // Métodos auxiliares para obtener nombres
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public String getNombreAmbiente(int idAmbiente) {
         Ambiente ambiente = ambienteDAO.buscarPorId(idAmbiente);
         if (ambiente != null) {
@@ -298,6 +510,10 @@ public class IncidenteBean implements Serializable {
         return "Instructor " + idInstructor;
     }
 
+<<<<<<< HEAD
+=======
+    // Métodos helper para formatear fecha y hora como String
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public String formatearFecha(LocalDate fecha) {
         if (fecha == null) {
             return "-";
@@ -324,6 +540,11 @@ public class IncidenteBean implements Serializable {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // GETTERS Y SETTERS
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public LoginBean getLoginBean() {
         return loginBean;
     }
@@ -360,6 +581,10 @@ public class IncidenteBean implements Serializable {
     }
 
     public Date getFechaDate() {
+<<<<<<< HEAD
+=======
+        // Si hay una fecha en LocalDate, convertirla a Date
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         if (incidente != null && incidente.getFecha() != null && fechaDate == null) {
             fechaDate = java.sql.Date.valueOf(incidente.getFecha());
         }
@@ -368,9 +593,16 @@ public class IncidenteBean implements Serializable {
 
     public void setFechaDate(Date fechaDate) {
         this.fechaDate = fechaDate;
+<<<<<<< HEAD
         if (fechaDate != null && incidente != null) {
             incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             System.out.println("Fecha establecida desde Date: " + incidente.getFecha());
+=======
+        // Convertir Date a LocalDate cuando se establece
+        if (fechaDate != null && incidente != null) {
+            incidente.setFecha(fechaDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            System.out.println("   - Fecha establecida desde Date: " + incidente.getFecha());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         }
     }
 
@@ -390,6 +622,7 @@ public class IncidenteBean implements Serializable {
     }
 
     public List<Ambiente> getAmbientes() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.getAmbientes: Getter llamado");
         if (!inicializado) {
             System.out.println("️ Bean no inicializado, ejecutando init()...");
@@ -400,10 +633,23 @@ public class IncidenteBean implements Serializable {
             cargarDatos();
         }
         System.out.println("Retornando " + (ambientes != null ? ambientes.size() : 0) + " ambientes");
+=======
+        System.out.println("🔍 IncidenteBean.getAmbientes: Getter llamado");
+        if (!inicializado) {
+            System.out.println("   ⚠️ Bean no inicializado, ejecutando init()...");
+            init();
+        }
+        if (ambientes == null || ambientes.isEmpty()) {
+            System.out.println("   - Ambientes es null o vacío, cargando datos...");
+            cargarDatos();
+        }
+        System.out.println("   - Retornando " + (ambientes != null ? ambientes.size() : 0) + " ambientes");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         return ambientes != null ? ambientes : new java.util.ArrayList<>();
     }
 
     public List<TipoIncidente> getTiposIncidente() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.getTiposIncidente: Getter llamado");
         if (!inicializado) {
             System.out.println(" Bean no inicializado, ejecutando init()...");
@@ -414,10 +660,23 @@ public class IncidenteBean implements Serializable {
             cargarDatos();
         }
         System.out.println(" Retornando " + (tiposIncidente != null ? tiposIncidente.size() : 0) + " tipos de incidente");
+=======
+        System.out.println("🔍 IncidenteBean.getTiposIncidente: Getter llamado");
+        if (!inicializado) {
+            System.out.println("   ⚠️ Bean no inicializado, ejecutando init()...");
+            init();
+        }
+        if (tiposIncidente == null || tiposIncidente.isEmpty()) {
+            System.out.println("   - Tipos de incidente es null o vacío, cargando datos...");
+            cargarDatos();
+        }
+        System.out.println("   - Retornando " + (tiposIncidente != null ? tiposIncidente.size() : 0) + " tipos de incidente");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         return tiposIncidente != null ? tiposIncidente : new java.util.ArrayList<>();
     }
 
     public List<Usuario> getInstructores() {
+<<<<<<< HEAD
         System.out.println("IncidenteBean.getInstructores: Getter llamado");
         if (!inicializado) {
             System.out.println(" Bean no inicializado, ejecutando init()...");
@@ -428,6 +687,18 @@ public class IncidenteBean implements Serializable {
             cargarDatos();
         }
         System.out.println(" Retornando " + (instructores != null ? instructores.size() : 0) + " instructores");
+=======
+        System.out.println("🔍 IncidenteBean.getInstructores: Getter llamado");
+        if (!inicializado) {
+            System.out.println("   ⚠️ Bean no inicializado, ejecutando init()...");
+            init();
+        }
+        if (instructores == null || instructores.isEmpty()) {
+            System.out.println("   - Instructores es null o vacío, cargando datos...");
+            cargarDatos();
+        }
+        System.out.println("   - Retornando " + (instructores != null ? instructores.size() : 0) + " instructores");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         return instructores != null ? instructores : new java.util.ArrayList<>();
     }
 

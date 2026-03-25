@@ -157,6 +157,15 @@
 
             <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
 
+<<<<<<< HEAD
+=======
+            <!-- Mensaje de éxito después de guardar -->
+            <h:panelGroup rendered="#{not empty flash.mensaje}">
+                <p:growl id="growl" life="4000" />
+                <p:message severity="info" summary="#{flash.mensaje}" />
+            </h:panelGroup>
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             <div style="margin-bottom: 20px;">
                 <h:link value="➕ Nuevo Traslado"
                         outcome="/pages/guarda/traslados/formTraslado.xhtml"

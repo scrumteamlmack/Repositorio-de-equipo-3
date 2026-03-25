@@ -1,0 +1,84 @@
+/* instructor_edit_perfil.css */
+
+/* Contenedor principal */
+.perfil-container {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 30px 35px;
+    background-color: #fdfdfd;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Título */
+.perfil-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+}
+
+/* Estilo de los labels */
+.perfil-container label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Inputs */
+.perfil-container input[type="text"],
+.perfil-container input[type="email"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.perfil-container input:focus {
+    border-color: #00a878;
+    box-shadow: 0 0 5px rgba(255,127,80,0.3);
+    outline: none;
+}
+
+/* Botones */
+.btn-update, .btn-cancel {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+/* Botón actualizar */
+.btn-update {
+    background-color: #00a878;
+    color: #fff;
+    border: none;
+    margin-right: 10px;
+}
+
+.btn-update:hover {
+    background-color: #00a878;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* Botón cancelar */
+.btn-cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.btn-cancel:hover {
+    background-color: #b3b3b3;
+    transform: translateY(-2px);
+}

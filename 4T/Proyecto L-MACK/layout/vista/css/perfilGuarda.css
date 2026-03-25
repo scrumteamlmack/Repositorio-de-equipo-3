@@ -1,0 +1,120 @@
+/* perfilGuarda.css */
+
+/* Contenedor principal */
+.perfil-container {
+    max-width: 750px;
+    margin: 50px auto;
+    padding: 30px;
+    background: linear-gradient(145deg, #ffffff, #f0fff4);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+    font-family: 'Poppins', sans-serif;
+    color: #1f2937;
+    transition: all 0.3s ease;
+}
+
+.perfil-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.25);
+}
+
+/* Título */
+.perfil-container h2 {
+    text-align: center;
+    color: #10b981;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+/* Línea decorativa bajo el título */
+.perfil-container h2::after {
+    content: '';
+    width: 60px;
+    height: 3px;
+    background-color: #10b981;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 3px;
+}
+
+/* Mensaje de éxito */
+.alert-success {
+    background-color: #dcfce7;
+    color: #065f46;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.1);
+}
+
+/* Tarjeta de perfil */
+.perfil-card {
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 25px 30px;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.12);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.perfil-card:hover {
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.18);
+}
+
+.perfil-card p {
+    font-size: 17px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Etiquetas fuertes */
+.perfil-card strong {
+    color: #065f46;
+}
+
+/* Botón de editar */
+.btn-edit {
+    display: inline-block;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+    background-color: #10b981;
+    color: #fff;
+    padding: 12px 0;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+}
+
+.btn-edit:hover {
+    background-color: #059669;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .perfil-container {
+        padding: 20px;
+        margin: 30px 15px;
+    }
+    .perfil-card {
+        padding: 20px;
+    }
+    .perfil-card p {
+        font-size: 15px;
+    }
+    .btn-edit {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+}
