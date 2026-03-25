@@ -101,38 +101,38 @@
                 </thead>
 
                 <tbody>
-                    {% for rec in recursos %}
+                    {% for r in recursos %}
                     <tr>
-                        <td>{{ rec.id }}</td>
-                        <td>{{ rec.nombre }}</td>
-                        <td>{{ rec.serial }}</td>
-                        <td>{{ rec.numero }}</td>
+                        <td>{{ r.r_id }}</td>
+                        <td>{{ r.r_nombre }}</td>
+                        <td>{{ r.r_serial }}</td>
+                        <td>{{ r.r_numero }}</td>
 
                         <!-- RELACIONES -->
-                        <td>{{ rec.tipo.nombre }}</td>
+                        <td>{{ r.r_tipo }}</td>
                         <td>
                             <span class="badge
-                                {% if rec.estado == 'Disponible' or rec.estado == 'Operativo' %}
-                                    bg-success
-                                {% elif rec.estado == 'Dañado' %}
-                                    bg-danger
+                                {% if r.r_estado == 'Disponible' or r.r_estado == 'Operativo' %}
+                                    bg-success text-dark
+                                {% elif r.r_estado == 'Dañado' %}
+                                    bg-danger text-dark
                                 {% else %}
-                                    bg-warning
+                                    bg-warning text-dark
                                 {% endif %}
                             ">
-                                {{ rec.estado }}
+                                {{ r.r_estado }}
                             </span>
                         </td>
-                        <td>{{ rec.ambiente.nombre }}</td>
+                        <td>{{ r.r_ambiente }}</td>
 
-                        <td>{{ rec.observacion|default:"—" }}</td>
+                        <td>{{ r.r_observacion|default:"—" }}</td>
 
                         <td>
-                            <a href="{% url 'editar_recurso' rec.id %}" class="btn btn-sm btn-primary">
+                            <a href="{% url 'editar_recurso' r.r_id %}" class="btn btn-sm btn-primary">
                                 ✏️
                             </a>
 
-                            <form method="post" action="{% url 'eliminar_recurso' rec.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'eliminar_recurso' r.r_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
                                         onclick="return confirm('¿Eliminar recurso?');">

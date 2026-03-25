@@ -43,6 +43,16 @@ def login_view(request):
             # REDIRIGIR A OTRA APP
             if rol in ("admin", "administrador"):
                 return redirect('admin_index')
+            
+            elif rol in ("Instructor"):
+                return redirect('instructor_index')
+            
+            elif rol in ("Aprendiz"):
+                return redirect('Aprendiz_index')
+            
+            elif rol in ("Guarda de Seguridad"):
+                return redirect('guarda_index')
+            
             else:
                 return redirect('index')
 

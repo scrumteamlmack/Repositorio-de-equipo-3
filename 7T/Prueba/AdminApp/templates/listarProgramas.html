@@ -80,7 +80,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Nivel</th>
+                        <th>Nivel de formacion</th>
                         <th>Duración</th>
                         <th>Jornada</th>
                         <th>Modalidad</th>
@@ -90,25 +90,25 @@
                 </thead>
 
                 <tbody>
-                    {% for prog in programas %}
+                    {% for p in programas %}
                     <tr>
-                        <td>{{ prog.id }}</td>
-                        <td>{{ prog.nombre }}</td>
-                        <td>{{ prog.nivel }}</td>
-                        <td>{{ prog.duracion }}</td>
+                        <td>{{ p.p_id }}</td>
+                        <td>{{ p.p_nombre }}</td>
+                        <td>{{ p.p_nivel }}</td>
+                        <td>{{ p.p_duracion }}</td>
 
                         <!-- RELACIONES -->
-                        <td>{{ prog.jornada.nombre }}</td>
-                        <td>{{ prog.modalidad.nombre }}</td>
-                        <td>{{ prog.coordinacion.nombre }}</td>
+                        <td>{{ p.p_jornada }}</td>
+                        <td>{{ p.p_modalidad }}</td>
+                        <td>{{ p.p_coordinacion }}</td>
 
                         <!-- ACCIONES -->
                         <td>
-                            <a href="{% url 'editar_programa' prog.id %}" class="btn btn-sm btn-secondary">
+                            <a href="{% url 'editar_programa' p.p_id %}" class="btn btn-sm btn-secondary">
                                 ✏️
                             </a>
 
-                            <form method="post" action="{% url 'eliminar_programa' prog.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'eliminar_programa' p.p_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
                                         onclick="return confirm('¿Eliminar programa?');">

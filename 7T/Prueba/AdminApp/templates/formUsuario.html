@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -126,7 +127,7 @@
                                 <select name="rolSeleccionado" class="form-select" {% if idUsuarioEditar %}disabled{% else %}required{% endif %}>
                                     <option value="">Seleccione rol</option>
                                     {% for r in roles %}
-                                        <option value="{{ r.idRol }}" {% if usuario.rolSeleccionado == r.idRol %}selected{% endif %}>{{ r.nombre }}</option>
+                                        <option value="{{ r.id_Rol }}" {% if usuario.rolSeleccionado == r.idRol %}selected{% endif %}>{{ r.nombre_rol }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

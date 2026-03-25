@@ -91,29 +91,29 @@
                 </thead>
 
                 <tbody>
-                    {% for amb in ambientes %}
+                    {% for am in ambientes %}
                     <tr>
-                        <td>{{ amb.id }}</td>
-                        <td>{{ amb.numero }}</td>
-                        <td>{{ amb.capacidad }}</td>
-                        <td>{{ amb.tipo }}</td>
+                        <td>{{ am.am_id }}</td>
+                        <td>{{ am.am_num }}</td>
+                        <td>{{ am.am_capaci }}</td>
+                        <td>{{ am.am_estado }}</td>
 
                         <td>
                             {% if amb.estado == "Disponible" or amb.estado == "Operativo" %}
-                                <span class="badge badge-success">{{ amb.estado }}</span>
+                                <span class="badge badge-success">{{ am.am_estado }}</span>
                             {% elif amb.estado == "Ocupado" %}
-                                <span class="badge badge-danger">{{ amb.estado }}</span>
+                                <span class="badge badge-danger">{{ am.am_estado }}</span>
                             {% else %}
-                                <span class="badge badge-warning">{{ amb.estado }}</span>
+                                <span class="badge badge-warning">{{ am.am_estado }}</span>
                             {% endif %}
                         </td>
 
                         <td>
-                            <a href="{% url 'editar_ambiente' amb.id %}" class="btn btn-sm btn-info">
+                            <a href="{% url 'editar_ambiente' am.am_id %}" class="btn btn-sm btn-info">
                                 Editar
                             </a>
 
-                            <form method="post" action="{% url 'eliminar_ambiente' amb.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'eliminar_ambiente' am.am_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
                                         onclick="return confirm('¿Eliminar ambiente?');">

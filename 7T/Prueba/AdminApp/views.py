@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
-from LoginApp.models import Usuario, UserRol
+from LoginApp.models import Usuario, UserRol, Ficha, Rol, Programas, Recursos, Ambiente
 
 
 EMPTY_USER = {
@@ -126,7 +126,8 @@ def listar_usuarios(request):
 
 
 def form_usuario(request):
-    return _render_admin(request, "formUsuario.html")
+    roles = Rol.objects.all()
+    return _render_admin(request, "formUsuario.html", {"roles" : roles})
 
 
 def crear_usuario(request):
@@ -161,7 +162,22 @@ def form_guarda(request):
 
 
 def listar_fichas(request):
-    return _render_admin(request, "listarFichas.html")
+    Listado_fichas = defaultdict(list)
+    for fi in Ficha.objects.select_related("instructor_usuario_id_usuario").all():
+        Listado_fichas[fi.idficha].append(fi.instructor_usuario_id_usuario.usuario_id_usuario.p_nombre)
+
+    filas = []
+    for f in Ficha.objects.all().order_by("num_ficha"):
+        NumFicha = str(f.num_ficha).strip()
+        Instructor = " ".join(filter(None, [f.instructor_usuario_id_usuario.usuario_id_usuario.p_nombre, f.instructor_usuario_id_usuario.usuario_id_usuario.p_apellido])).strip()
+        filas.append(
+            {
+                "id": f.pk ,
+                "Num_ficha": NumFicha or "—",
+                "Instructor": Instructor or "—",
+            }
+        )
+    return _render_admin(request, "listarFichas.html", {"fichas": filas})
 
 
 def crear_ficha(request):
@@ -184,7 +200,30 @@ def eliminar_ficha(request, ficha_id):
 
 
 def listar_programas(request):
-    return _render_admin(request, "listarProgramas.html")
+    Listar_program = defaultdict(list)
+    for pr in Programas.objects.select_related("jornada").all():
+        Listar_program[pr.id_programas].append(pr.jornada.nombre_jornada)
+    filas = []
+    for p in Programas.objects.all().order_by("id_programas"):
+        nombre_p = " ".join(filter(None, [p.nombre_programa])).strip()
+        Nivel_p = " ".join(filter(None, [p.nivel_formacion])).strip()
+        Duracion_p = " ".join(filter(None, [p.duracion])).strip()
+        Jornada_p = " ".join(filter(None, [p.jornada.nombre_jornada])).strip()
+        Modalidad_p = " ".join(filter(None, [p.modalidad.nombre_modalidad])).strip()
+        Coordinacion_p = " ".join(filter(None, [p.coordinacion.nombre_coordinacion])).strip()
+        filas.append(
+            {
+                "p_id": p.pk,
+                "p_nombre": nombre_p or "—",
+                "p_nivel": Nivel_p or "—",
+                "p_duracion": Duracion_p or "—",
+                "p_jornada": Jornada_p or "—",
+                "p_modalidad": Modalidad_p or "—",
+                "p_coordinacion": Coordinacion_p or "—",
+
+            }
+        )
+    return _render_admin(request, "listarProgramas.html", {"programas": filas})
 
 
 def crear_programa(request):
@@ -193,7 +232,7 @@ def crear_programa(request):
 
 def editar_programa(request, programa_id):
     return _render_admin(
-        request,
+request,
         "formPrograma.html",
         {
             "idProgramaEditar": programa_id,
@@ -207,7 +246,32 @@ def eliminar_programa(request, programa_id):
 
 
 def listar_recursos(request):
-    return _render_admin(request, "listarRecursos.html")
+    Listar_recur = defaultdict(list)
+    for re in Recursos.objects.select_related("tipo_recurso").all():
+        Listar_recur[re.id_recurso].append(re.tipo_recurso.id_tipo_recurso)
+    filas = []
+    for r in Recursos.objects.all().order_by("id_recurso"):
+        nombre_r = " ".join(filter(None, [r.nombre_recurso])).strip()
+        serial_r = " ".join(filter(None, [r.serial_recurso])).strip()
+        numero_r = str(r.num_recurso).strip()
+        tipo_r = " ".join(filter(None, [r.tipo_recurso.recurso_tipo])).strip()
+        estado_r = " ".join(filter(None, [r.estado])).strip()
+        observacion_r = " ".join(filter(None, [r.observacion])).strip()
+        ambiente_r = str(r.ambiente.num_ambiente).strip()
+
+        filas.append(
+            {
+                "r_id": r.pk,
+                "r_nombre": nombre_r or "—",
+                "r_serial": serial_r or "—",
+                "r_numero": numero_r or "—",
+                "r_tipo": tipo_r or "—",
+                "r_estado": estado_r or "—",
+                "r_observacion": observacion_r or "—",
+                "r_ambiente": ambiente_r or "—",
+            }
+        )
+    return _render_admin(request, "listarRecursos.html", {"recursos": filas})
 
 
 def crear_recurso(request):
@@ -224,7 +288,24 @@ def eliminar_recurso(request, recurso_id):
 
 
 def listar_ambientes(request):
-    return _render_admin(request, "listarAmbientes.html")
+
+    filas = []
+    for am in Ambiente.objects.all().order_by("id_ambiente"):
+        num_am = str(am.num_ambiente).strip()
+        capaci_am = str(am.capacidad).strip()
+        tipo_am = " ".join(filter(None, [am.tipo_ambiente])).strip()
+        estado_am = " ".join(filter(None, [am.estado])).strip()
+
+        filas.append(
+            {
+                "am_id": am.pk,
+                "am_num": num_am or "—",
+                "am_capaci": capaci_am or "—",
+                "am_tipo": tipo_am or "—",
+                "am_estado": estado_am or "—",
+            }
+        )
+    return _render_admin(request, "listarAmbientes.html", {"ambientes": filas})
 
 
 def crear_ambiente(request):

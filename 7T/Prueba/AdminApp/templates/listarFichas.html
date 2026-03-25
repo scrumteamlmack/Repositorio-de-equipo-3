@@ -79,9 +79,9 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>id_ficha</th>
                         <th>Número de Ficha</th>
                         <th>Instructores</th>
-                        <th>Cantidad</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -89,30 +89,13 @@
                 <tbody>
                     {% for f in fichas %}
                     <tr>
-                        <td>{{ f.numFicha }}</td>
+
+                        <td>{{ f.id }}</td>
+
+                        <td>{{ f.Num_ficha }}</td>
 
                         <!-- INSTRUCTORES -->
-                        <td>
-                            {% with instructores=f.instructores.all %}
-                                
-                                {% if instructores|length > 0 %}
-                                    {{ instructores.0.nombre }}
-                                {% endif %}
-
-                                {% if instructores|length > 1 %}
-                                    , {{ instructores.1.nombre }}
-                                {% endif %}
-
-                                {% if instructores|length > 2 %}
-                                    y {{ instructores|length|add:"-2" }} más
-                                {% endif %}
-
-                            {% endwith %}
-                        </td>
-
-                        <!-- CANTIDAD -->
-                        <td>
-                            {{ f.instructores.count }}
+                        <td>{{ f.Instructor }}
                         </td>
 
                         <!-- ACCIONES -->
