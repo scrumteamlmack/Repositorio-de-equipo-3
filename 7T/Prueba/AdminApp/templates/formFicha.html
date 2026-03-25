@@ -16,7 +16,7 @@
 
     <style>
         .layout-container { display: flex; min-height: 100vh; background-color: var(--cream-bg); }
-        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; z-index: 1000; }
         .sidebar-header { padding: 25px 20px; background-color: var(--dark-green); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .sidebar-header h3 { color: white; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
         .sidebar-header h3::before { content: "👤"; font-size: 28px; }
@@ -66,7 +66,7 @@
 
     <main class="main-content">
         <div class="content-wrapper">
-            <form method="post">
+            <form method="post" action="{% if idFichaEditar %}{% url 'editar_ficha' idFichaEditar %}{% else %}{% url 'crear_ficha' %}{% endif %}">
                 {% csrf_token %}
                 <div class="form-container">
                     <div style="margin-bottom: 25px;">
@@ -85,18 +85,18 @@
                         <h5 style="margin-bottom: 20px;">Datos de la Ficha</h5>
 
                         <div class="mb-3">
-                            <label class="form-label">Número de Ficha</label>
-                            <input type="text" name="numFicha" value="{{ ficha.numFicha }}" class="form-control" placeholder="Ej: 2271021">
+                            <label class="form-label">Número de ficha</label>
+                            <input type="number" name="numFicha" value="{{ ficha.numFicha }}" class="form-control" placeholder="Ej: 2271021" required min="1">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Instructores (Puede seleccionar varios)</label>
-                            <select name="instructores" multiple class="form-select" style="min-height:150px;">
+                            <label class="form-label">Instructor asignado</label>
+                            <select name="instructorId" class="form-select" required>
+                                <option value="">Seleccione…</option>
                                 {% for inst in instructores %}
-                                    <option value="{{ inst.idUsuario }}">{{ inst.nombre }}</option>
+                                    <option value="{{ inst.id }}" {% if ficha.instructorId|stringformat:"s" == inst.id|stringformat:"s" %}selected{% endif %}>{{ inst.nombre }}</option>
                                 {% endfor %}
                             </select>
-                            <small class="text-muted">Mantén presionada Ctrl (Cmd en Mac) para seleccionar varios</small>
                         </div>
 
                         <div class="btn-group-actions">

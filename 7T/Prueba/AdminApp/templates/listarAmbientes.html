@@ -96,29 +96,22 @@
                         <td>{{ am.am_id }}</td>
                         <td>{{ am.am_num }}</td>
                         <td>{{ am.am_capaci }}</td>
-                        <td>{{ am.am_estado }}</td>
-
+                        <td>{{ am.am_tipo }}</td>
                         <td>
-                            {% if amb.estado == "Disponible" or amb.estado == "Operativo" %}
+                            {% if am.am_estado == "Disponible" or am.am_estado == "Operativo" %}
                                 <span class="badge badge-success">{{ am.am_estado }}</span>
-                            {% elif amb.estado == "Ocupado" %}
+                            {% elif am.am_estado == "Ocupado" %}
                                 <span class="badge badge-danger">{{ am.am_estado }}</span>
                             {% else %}
                                 <span class="badge badge-warning">{{ am.am_estado }}</span>
                             {% endif %}
                         </td>
-
                         <td>
-                            <a href="{% url 'editar_ambiente' am.am_id %}" class="btn btn-sm btn-info">
-                                Editar
-                            </a>
-
+                            <a href="{% url 'editar_ambiente' am.am_id %}" class="btn btn-sm btn-secondary">✏️</a>
                             <form method="post" action="{% url 'eliminar_ambiente' am.am_id %}" style="display:inline;">
                                 {% csrf_token %}
-                                <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar ambiente?');">
-                                    Eliminar
-                                </button>
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('¿Eliminar ambiente?');">🗑️</button>
                             </form>
                         </td>
                     </tr>
