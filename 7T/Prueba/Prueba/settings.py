@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'data_wizard.sources',
     'mackapp',
     'LoginApp',
-    'AdminApp'
+    'AdminApp',
+    'AprenApp',
 ]
 
 
