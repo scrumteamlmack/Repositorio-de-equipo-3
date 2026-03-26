@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Mis Asistencias - L-MACK</title>
+    <title>Mis Inasistencias - L-MACK</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0"/>
@@ -121,7 +121,7 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="{% url 'aprendiz_index' %}" class="sidebar-link">🏠 Inicio</a>
-                <a href="{% url 'listar_asistencias' %}" class="sidebar-link">📋 Mis Asistencias</a>
+                <a href="{% url 'listar_asistencias' %}" class="sidebar-link">📋 Mis Inasistencias</a>
                 <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
@@ -135,7 +135,7 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="form-header">
-                    <h2>✅ Mis Asistencias</h2>
+                    <h2>✅ Mis Inasistencias</h2>
                 </div>
 
                 {% if messages %}
@@ -169,51 +169,35 @@
                             <th style="width: 80px;">ID</th>
                             <th style="width: 120px;">Fecha</th>
                             <th style="width: 120px;">Estado</th>
-                            <th>Instructor</th>
+                            <th style="width: 150px;">Instructor</th>
                             <th style="width: 150px;">Jornada</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for asis in asistencias %}
+                        {% for a in asistencias %}
                         <tr>
-                            <td>{{ asis.id_asistencia }}</td>
+                            <td>{{ a.id_a }}</td>
 
                             <td>
-                                {% if asis.fecha %}
-                                    {{ asis.fecha|date:"d/m/Y" }}
-                                {% else %}
-                                    —
-                                {% endif %}
+                                    {{ a.a_fecha }}
                             </td>
 
                             <td>
-                                {% if asis.estado == 'P' %}
-                                    <span class="badge badge-presente rounded-pill px-3 py-2">Presente</span>
-                                {% elif asis.estado == 'A' %}
-                                    <span class="badge badge-ausente rounded-pill px-3 py-2">Ausente</span>
-                                {% elif asis.estado == 'E' %}
-                                    <span class="badge badge-excusado rounded-pill px-3 py-2">Excusado</span>
-                                {% elif asis.estado == 'T' %}
-                                    <span class="badge badge-tardanza rounded-pill px-3 py-2">Tardanza</span>
-                                {% else %}
-                                    <span class="badge badge-desconocido rounded-pill px-3 py-2">Desconocido</span>
-                                {% endif %}
+                                
+                                {{ a.a_estado }}
+            
                             </td>
 
                             <td>
-                                {% if asis.instructor_nombre %}
-                                    {{ asis.instructor_nombre }}
-                                {% else %}
-                                    Instructor {{ asis.instructor_usuario_id }}
-                                {% endif %}
+                             
+                                    {{ a.a_instructor }}
+                               
                             </td>
 
                             <td>
-                                {% if asis.jornada_nombre %}
-                                    {{ asis.jornada_nombre }}
-                                {% else %}
-                                    Jornada {{ asis.jornada_id }}
-                                {% endif %}
+                           
+                                    {{ a.a_jornada }}
+                              
                             </td>
                         </tr>
                         {% empty %}
@@ -227,27 +211,7 @@
                 </table>
 
                 <!-- Paginación -->
-                {% if asistencias.has_other_pages %}
-                <nav>
-                    <ul class="pagination justify-content-center mt-3">
-                        {% if asistencias.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ asistencias.previous_page_number }}">«</a>
-                            </li>
-                        {% endif %}
-                        {% for num in asistencias.paginator.page_range %}
-                            <li class="page-item {% if asistencias.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if asistencias.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ asistencias.next_page_number }}">»</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
+                
 
             </div>
         </main>

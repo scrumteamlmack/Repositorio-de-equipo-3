@@ -60,7 +60,7 @@ def login_view(request):
                 return redirect('instructor_index')
 
             if rol == "aprendiz":
-                return redirect('Aprendiz_index')
+                return redirect('aprendiz_index')
 
             if rol == "guarda de seguridad":
                 return redirect('guarda_index')
