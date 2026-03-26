@@ -68,20 +68,7 @@ def login_view(request):
 
             # REDIRIGIR A OTRA APP
             if rol in ("admin", "administrador"):
-<<<<<<< HEAD
-                return redirect('admin_index')
 
-            if rol == "instructor":
-                return redirect('instructor_index')
-
-            if rol == "aprendiz":
-                return redirect('aprendiz_index')
-
-            if rol == "guarda de seguridad":
-                return redirect('guarda_index')
-
-            return redirect('index')
-=======
                 return _no_cache(redirect('admin_index'))
             
             elif rol in ("instructor",):
@@ -95,7 +82,6 @@ def login_view(request):
             
             else:
                 return _no_cache(redirect('index'))
->>>>>>> 32dee523fabb602d34234afc060623d32c0e891b
 
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
