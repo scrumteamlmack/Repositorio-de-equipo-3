@@ -97,7 +97,7 @@
                             <select name="jornadaId" class="form-select" required>
                                 <option value="">Seleccione una jornada</option>
                                 {% for j in jornadas %}
-                                    <option value="{{ j.idJornada }}" {% if programa.jornadaId == j.idJornada %}selected{% endif %}>{{ j.nombreJornada }}</option>
+                                    <option value="{{ j.id_jornada }}" {% if programa.jornadaId|stringformat:"s" == j.id_jornada|stringformat:"s" %}selected{% endif %}>{{ j.nombre_jornada }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -106,7 +106,7 @@
                             <select name="modalidadId" class="form-select" required>
                                 <option value="">Seleccione una modalidad</option>
                                 {% for m in modalidades %}
-                                    <option value="{{ m.idModalidad }}" {% if programa.modalidadId == m.idModalidad %}selected{% endif %}>{{ m.nombreModalidad }}</option>
+                                    <option value="{{ m.id_modalidad }}" {% if programa.modalidadId|stringformat:"s" == m.id_modalidad|stringformat:"s" %}selected{% endif %}>{{ m.nombre_modalidad }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -115,7 +115,7 @@
                             <select name="coordinacionId" class="form-select" required>
                                 <option value="">Seleccione una coordinación</option>
                                 {% for c in coordinaciones %}
-                                    <option value="{{ c.idCoordinacion }}" {% if programa.coordinacionId == c.idCoordinacion %}selected{% endif %}>{{ c.nombreCoordinacion }}</option>
+                                    <option value="{{ c.id_coordinacion }}" {% if programa.coordinacionId|stringformat:"s" == c.id_coordinacion|stringformat:"s" %}selected{% endif %}>{{ c.nombre_coordinacion }}</option>
                                 {% endfor %}
                             </select>
                         </div>

@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Ambiente - L-MACK</title>
+    <title>{% if idAmbienteEditar %}Editar{% else %}Registrar{% endif %} Ambiente - L-MACK</title>
 
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
@@ -241,7 +241,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="mb-0">
-                            🏢 Registrar Ambiente
+                            {% if idAmbienteEditar %}🏢 Editar ambiente{% else %}🏢 Registrar ambiente{% endif %}
                         </h3>
                     </div>
 
@@ -260,7 +260,8 @@
                             <!-- Número -->
                             <div class="col-md-6">
                                 <label>Número de Ambiente</label>
-                                <input type="number" name="numero"
+                                <input type="number" name="numero" required
+                                       value="{{ ambiente.numero }}"
                                        class="form-control"
                                        placeholder="Ingrese el número de ambiente">
                             </div>
@@ -268,7 +269,8 @@
                             <!-- Capacidad -->
                             <div class="col-md-6">
                                 <label>Capacidad</label>
-                                <input type="number" name="capacidad"
+                                <input type="number" name="capacidad" required
+                                       value="{{ ambiente.capacidad }}"
                                        class="form-control"
                                        placeholder="Ingrese la capacidad">
                             </div>
@@ -276,7 +278,8 @@
                             <!-- Tipo -->
                             <div class="col-md-6">
                                 <label>Tipo de Ambiente</label>
-                                <input type="text" name="tipo"
+                                <input type="text" name="tipo" required
+                                       value="{{ ambiente.tipo }}"
                                        class="form-control"
                                        placeholder="Ej: Aula, Laboratorio, Taller">
                             </div>
@@ -284,12 +287,12 @@
                             <!-- Estado -->
                             <div class="col-md-6">
                                 <label>Estado</label>
-                                <select name="estado" class="form-select">
+                                <select name="estado" class="form-select" required>
                                     <option value="">Seleccione un estado...</option>
-                                    <option value="Disponible">Disponible</option>
-                                    <option value="En mantenimiento">En mantenimiento</option>
-                                    <option value="Ocupado">Ocupado</option>
-                                    <option value="No disponible">No disponible</option>
+                                    <option value="Disponible" {% if ambiente.estado == "Disponible" %}selected{% endif %}>Disponible</option>
+                                    <option value="En mantenimiento" {% if ambiente.estado == "En mantenimiento" %}selected{% endif %}>En mantenimiento</option>
+                                    <option value="Ocupado" {% if ambiente.estado == "Ocupado" %}selected{% endif %}>Ocupado</option>
+                                    <option value="No disponible" {% if ambiente.estado == "No disponible" %}selected{% endif %}>No disponible</option>
                                 </select>
                             </div>
 
@@ -302,7 +305,7 @@
                             </a>
 
                             <button type="submit" class="btn btn-primary">
-                                Guardar
+                                {% if idAmbienteEditar %}Guardar cambios{% else %}Guardar{% endif %}
                             </button>
                         </div>
 

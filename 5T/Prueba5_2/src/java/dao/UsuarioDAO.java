@@ -312,7 +312,7 @@ public class UsuarioDAO {
             params.add("%" + criterio + "%");
         }
 
-        sql.append(" ORDER BY fecha_registro DESC");
+        sql.append(" ORDER BY id_usuario DESC");
 
         try (Connection con = ConnBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql.toString())) {

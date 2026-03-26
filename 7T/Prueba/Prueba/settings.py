@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'mackapp',
     'LoginApp',
     'AdminApp',
-    'GuardaApp'
+    'AprenApp',
 ]
 
 
