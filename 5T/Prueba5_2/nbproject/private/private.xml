@@ -3,50 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/index.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/ConnBD.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/UsuarioDAO.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/UsuarioBean.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/modelo/Usuario.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/LoginBean.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/login.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/Utils.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/layout/template.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/incidentes/list.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/util/FacesUtils.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/util/PasswordUtil.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/dashboard.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/index.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/TipoRecursoBean.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/AprendizBean.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/sinacceso.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/aprendiz/index.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/aprendiz/formAprendiz.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/ProgramaDAO.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/FichaDAO.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/modelo/Programa.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/modelo/Ficha.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/formUsuario.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarUsuarios.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/indexAdmin.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/ambientes/list.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/reportes/index.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/minutas/list.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarFichas.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/misFichas.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/index.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/perfil.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/JornadaDAO.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/listarIncidentes.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/dao/IncidenteDAO.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/beans/IncidenteBean.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/modelo/Incidente.java</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/consultarAmbientes.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/instructor/consultarMinutas.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarRecursos.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/pages/admin/listarAmbientes.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/web/aviso-logout.xhtml</file>
-            <file>file:/C:/Users/yamil/OneDrive/Documentos/NetBeansProjects/Prueba5/src/java/filter/SessionFilter.java</file>
+            <file>file:/C:/Users/USER/Documents/GitHub/Repositorio-de-equipo-3/5T/Prueba5_2/nbproject/build-impl.xml</file>
         </group>
     </open-files>
 </project-private>

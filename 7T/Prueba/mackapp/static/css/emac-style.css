@@ -723,3 +723,7 @@ body {
 .p-20 {
     padding: 20px;
 }
+
+.layout-container .sidebar {
+    z-index: 1000;
+}

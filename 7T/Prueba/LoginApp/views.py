@@ -20,6 +20,13 @@ def _contrasena_coincide(almacenada: str, ingresada: str) -> bool:
     return almacenada == ingresada
 
 
+def _redirect_despues_login(request):
+    raw = (request.POST.get("next") or request.GET.get("next") or "").strip()
+    if raw.startswith("/") and not raw.startswith("//"):
+        return redirect(raw)
+    return None
+
+
 def login_view(request):
 
     if request.method == 'POST':
@@ -31,34 +38,48 @@ def login_view(request):
 
             if not _contrasena_coincide(user.contrasena, password):
                 messages.error(request, "Contraseña incorrecta")
-                return render(request, "login.html")
+                return render(
+                    request,
+                    "login.html",
+                    {"next": request.POST.get("next") or ""},
+                )
 
-            # GUARDAR SESIÓN
             request.session['usuario_id'] = user.id_usuario
 
-            # SACAR ROL
             user_rol = UserRol.objects.get(id_usuario=user)
             rol = user_rol.id_rol.nombre_rol.lower()
 
-            # REDIRIGIR A OTRA APP
+            destino = _redirect_despues_login(request)
+            if destino:
+                return destino
+
             if rol in ("admin", "administrador"):
                 return redirect('admin_index')
-            
-            elif rol in ("Instructor"):
+
+            if rol == "instructor":
                 return redirect('instructor_index')
-            
-            elif rol in ("Aprendiz"):
+
+            if rol == "aprendiz":
                 return redirect('Aprendiz_index')
-            
-            elif rol in ("Guarda de Seguridad"):
+
+            if rol == "guarda de seguridad":
                 return redirect('guarda_index')
-            
-            else:
-                return redirect('index')
+
+            return redirect('index')
 
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
         except UserRol.DoesNotExist:
             messages.error(request, "Usuario sin rol")
 
-    return render(request, "login.html")
+        return render(
+            request,
+            "login.html",
+            {"next": request.POST.get("next") or request.GET.get("next") or ""},
+        )
+
+    return render(
+        request,
+        "login.html",
+        {"next": request.GET.get("next") or ""},
+    )
