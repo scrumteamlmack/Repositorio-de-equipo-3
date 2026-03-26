@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6a11ff,100:2575fc&height=200&section=header&text=SCRUM%20TEAM%205&fontSize=60&fontColor=fff&animation=fadeIn" width="100%"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6a11ff,100:2575fc&height=200&section=header&text=SCRUM%20TEAM%201&fontSize=60&fontColor=fff&animation=fadeIn" width="100%"/>
   
   
-  ### *SE TRABAJA CON LO QUE HAY*
+  ### *SUBIENDO MAL LOS COMMITS DESDE 2025*
   
   [![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com)
   [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
