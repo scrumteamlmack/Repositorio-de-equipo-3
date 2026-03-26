@@ -20,18 +20,18 @@
 
 Somos un grupo de **6 desarrolladores apasionados** por crear soluciones robustas y escalables. Nuestra diversidad técnica nos permite abordar proyectos full-stack con excelencia.
 
-| <img src="https://github.com/identificador-santiago.png?size=100" width="100" style="border-radius: 50%"> | <img src="https://github.com/identificador-kennen.png?size=100" width="100"> | <img src="https://github.com/identificador-luis.png?size=100" width="100"> |
+| <img src="https://avatars.githubusercontent.com/u/211164728?v=4?size=100" width="100" style="border-radius: 50%"> | <img src="https://avatars.githubusercontent.com/u/210031008?v=4)?size=100" width="100"> | <img src="https://avatars.githubusercontent.com/u/204597597?v=4)?size=100" width="100"> |
 |:---:|:---:|:---:|
 | **Santiago Cruz** | **Kennen Cortes** | **Luis Mariño** |
 | *Arquitecto de Software* | *Backend Specialist* | *Full Stack Developer* |
 | `Django` `Java` `MongoDB` | `Python` `Laravel` `MySQL` | `Django` `PHP` `JSF` |
 | [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)](https://github.com/santiago) | [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)](https://github.com/kennen) | [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)](https://github.com/luis) |
 
-| <img src="https://github.com/identificador-mahily.png?size=100" width="100"> | <img src="https://github.com/identificador-sergio.png?size=100" width="100"> |
+| <img src="https://avatars.githubusercontent.com/u/211367398?v=4?size=100" width="100"> | <img src="https://ih1.redbubble.net/image.5107204926.2102/raf,360x360,075,t,fafafa:ca443f4786.jpg?size=100" width="100"> |
 |:---:|:---:|
 | **Mahily Gutiérrez** | **Sergio Espinosa** |
-| *Data & Backend Developer* | *DevOps & Backend Engineer* |
-| `Python` `Django` `MongoDB` | `Java` `JSF` `Laravel` `MySQL` |
+| *Data & Backend Developer* | *DevOps &  Onion Engineer* |
+| `Python` `Django` `MongoDB` | `PHP` `MongoDB` `Laravel` `MySQL` |
 | [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)](https://github.com/mahily) | [![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)](https://github.com/sergio) |
 
 > *"Soy uno de los Toros Negros ¿Verdad?"*
