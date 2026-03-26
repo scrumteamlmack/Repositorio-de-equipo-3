@@ -24,6 +24,32 @@ use Illuminate\Database\Eloquent\Model;
 class Ficha extends Model
 {
 	protected $table = 'ficha';
+<<<<<<< HEAD
+	protected $primaryKey = 'idficha';
+	public $incrementing = false;
+	public $timestamps = false;
+
+	protected $casts = [
+		'idficha' => 'int',
+		'Num_ficha' => 'int',
+		'instructor_Usuario_id_usuario' => 'int'
+	];
+
+	protected $fillable = [
+		'Num_ficha',
+		'instructor_Usuario_id_usuario'
+	];
+
+	public function instructor()
+	{
+		return $this->belongsTo(Instructor::class, 'instructor_Usuario_id_usuario', 'Usuario_id_usuario');
+	}
+
+	public function aprendizs()
+	{
+		return $this->hasMany(Aprendiz::class, 'ficha_idficha');
+	}
+=======
 protected $primaryKey = 'idficha';
 public $timestamps = false;
 	public $incrementing = false;
@@ -65,4 +91,5 @@ public function modalidad()
 {
     return $this->belongsTo(Modalidad::class, 'modalidad_id', 'id_modalidad');
 }
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 }

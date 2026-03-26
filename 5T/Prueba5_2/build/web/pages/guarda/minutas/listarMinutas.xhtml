@@ -116,6 +116,17 @@
             padding: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
+        .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
+        .badge.bg-danger { background: #fee2e2 !important; color: #b91c1c !important; }
     </style>
 </h:head>
 
@@ -172,47 +183,93 @@
                 </h:link>
             </div>
 
+            <p:toolbar style="margin-bottom: 10px;">
+                <f:facet name="left">
+                    <p:commandButton value="📄 Exportar PDF"
+                                     icon="pi pi-file-pdf"
+                                     styleClass="btn-primary"
+                                     ajax="false">
+                        <p:dataExporter type="pdf" target="tablaMinutas" fileName="minutas"/>
+                    </p:commandButton>
+                    <p:commandButton value="📊 Exportar Excel"
+                                     icon="pi pi-file-excel"
+                                     styleClass="btn-success"
+                                     ajax="false">
+                        <p:dataExporter type="xls" target="tablaMinutas" fileName="minutas"/>
+                    </p:commandButton>
+                </f:facet>
+            </p:toolbar>
+
             <div class="table-container">
-                <p:dataTable value="#{minutaBean.minutas}" var="min" 
+                <p:dataTable id="tablaMinutas"
+                             value="#{minutaBean.minutas}" 
+                             var="min"
+                             filteredValue="#{minutaBean.minutasFiltradas}"
                              emptyMessage="No hay minutas registradas"
                              paginator="true" rows="10"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              rowsPerPageTemplate="5,10,15,20"
                              styleClass="table table-striped table-hover">
 
-                    <p:column headerText="ID" style="width: 60px;">
+                    <p:column headerText="ID" 
+                             filterBy="#{min.idMinuta}" 
+                             filterMatchMode="exact"
+                             style="width: 60px;">
                         <h:outputText value="#{min.idMinuta}" />
                     </p:column>
 
-                    <p:column headerText="Ambiente">
+                    <p:column headerText="Ambiente"
+                             filterBy="#{minutaBean.getTextoAmbiente(min)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{minutaBean.getTextoAmbiente(min)}">
                         <h:outputText value="#{min.ambienteNombre != null ? min.ambienteNombre : 'Ambiente ' + min.ambienteId}" />
                     </p:column>
 
-                    <p:column headerText="Guarda de Seguridad">
+                    <p:column headerText="Guarda de Seguridad"
+                             filterBy="#{minutaBean.getTextoGuarda(min)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{minutaBean.getTextoGuarda(min)}">
                         <h:outputText value="#{min.guardaNombre != null ? min.guardaNombre : 'Guarda ' + min.guardaId}" />
                     </p:column>
 
-                    <p:column headerText="Instructor Responsable">
+                    <p:column headerText="Instructor Responsable"
+                             filterBy="#{minutaBean.getTextoResponsable(min)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{minutaBean.getTextoResponsable(min)}">
                         <h:outputText value="#{min.responsableNombre != null ? min.responsableNombre : 'Instructor ' + min.responsableId}" />
                     </p:column>
 
-                    <p:column headerText="Fecha Recibo">
+                    <p:column headerText="Fecha Recibo"
+                             filterBy="#{minutaBean.formatearFecha(min.fechaRecibo)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{minutaBean.formatearFecha(min.fechaRecibo)}">
                         <h:outputText value="#{minutaBean.formatearFecha(min.fechaRecibo)}" rendered="#{min.fechaRecibo != null}" />
                     </p:column>
 
-                    <p:column headerText="Fecha Entrega">
+                    <p:column headerText="Fecha Entrega"
+                             filterBy="#{minutaBean.formatearFecha(min.fechaEntrega)}" 
+                             filterMatchMode="contains"
+                             exportValue="#{minutaBean.formatearFecha(min.fechaEntrega)}">
                         <h:outputText value="#{minutaBean.formatearFecha(min.fechaEntrega)}" rendered="#{min.fechaEntrega != null}" />
                     </p:column>
 
-                    <p:column headerText="Estado">
-                        <h:outputText value="#{min.estado}" />
+                    <p:column headerText="Estado"
+                             filterBy="#{min.estado}" 
+                             filterMatchMode="contains"
+                             style="width: 120px;">
+                        <h:outputText value="#{min.estado}" 
+                                     styleClass="badge #{min.estado eq 'Entregado' or min.estado eq 'Normal' or min.estado eq 'Disponible' ? 'bg-success' : 'bg-warning'}"/>
                     </p:column>
 
-                    <p:column headerText="Novedad">
+                    <p:column headerText="Novedad"
+                             filterBy="#{min.novedad}" 
+                             filterMatchMode="contains">
                         <h:outputText value="#{min.novedad != null ? min.novedad : '—'}" />
                     </p:column>
 
-                    <p:column headerText="Acciones" style="width: 150px;">
+                    <p:column headerText="Acciones" 
+                             style="width: 150px;"
+                             exportable="false">
                         <p:commandButton value="✏️ Editar" 
                                          action="#{minutaBean.editar(min.idMinuta)}"
                                          icon="pi pi-pencil"

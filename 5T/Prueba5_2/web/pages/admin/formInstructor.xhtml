@@ -63,12 +63,26 @@
                              requiredMessage="El correo es obligatorio"
                              placeholder="correo@institucional.com"/>
 
+<<<<<<< HEAD
+                <h:outputLabel value="Teléfono: *" for="telefono" />
+=======
                 <h:outputLabel value="Teléfono:" for="telefono" />
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 <p:inputText id="telefono" 
                              value="#{instructorBean.instructor.telefono}" 
                              required="true"
                              requiredMessage="El teléfono es obligatorio"
+<<<<<<< HEAD
+                             validatorMessage="El teléfono debe tener entre 7 y 20 dígitos (solo números)"
+                             placeholder="3001234567">
+                    <f:validateLength minimum="7" maximum="20"/>
+                    <f:validateRegex pattern="^[0-9]+$"/>
+                </p:inputText>
+                <p:message for="telefono" display="text" styleClass="text-danger"/>
+                <h:outputText value="Solo números, entre 7 y 20 dígitos" style="font-size: 0.85em; color: #666; display: block;"/>
+=======
                              placeholder="3001234567"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 
                 <h:outputLabel value="Coordinación:" for="coordinacion" />
                 <p:selectOneMenu id="coordinacion" 

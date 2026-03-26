@@ -35,8 +35,13 @@
                         <li onclick="toggleSubmenu(this)">
                             <span>Mi perfil</span>
                             <ul class="submenu">
+<<<<<<< HEAD
+                                <li><a href="#">Ver perfil</a></li>
+                                <li><a href="#">Editar perfil</a></li>
+=======
                                 <li><a href="{{ route('guarda.perfil') }}">Ver perfil</a></li>
                                 <li><a href="{{ route('guarda.editar') }}">Editar perfil</a></li>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                             </ul>
                         </li>
 
@@ -44,8 +49,13 @@
                         <li onclick="toggleSubmenu(this)">
                             <span>Minutas</span>
                             <ul class="submenu">
+<<<<<<< HEAD
+                                <li><a href="#">Ver minutas</a></li>
+                                <li><a href="#">Registrar minuta</a></li>
+=======
                                 <li><a href="{{ route('minutas.index') }}">Ver minutas</a></li>
                                 <li><a href="{{route('minutas.create')}}">Registrar minuta</a></li>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                             </ul>
                         </li>
 

@@ -14,6 +14,19 @@ public class ProgramaDAO {
     private static final String BASE_SELECT = "SELECT id_programas, nombre_programa, nivel_formacion, duracion, jornada_id, modalidad_id, coordinacion_id FROM programas";
 
     public List<Programa> listar() {
+<<<<<<< HEAD
+        System.out.println("ProgramaDAO.listar: Iniciando consulta de programas");
+        List<Programa> lista = new ArrayList<>();
+        String sql = BASE_SELECT + " ORDER BY id_programas ASC";
+        System.out.println("SQL: " + sql);
+
+        try (Connection con = ConnBD.conectar()) {
+            if (con == null) {
+                System.err.println("ProgramaDAO.listar: No se pudo establecer conexión");
+                return lista;
+            }
+            System.out.println("ProgramaDAO.listar: Conexión establecida");
+=======
         System.out.println("🔍 ProgramaDAO.listar: Iniciando consulta de programas");
         List<Programa> lista = new ArrayList<>();
         String sql = BASE_SELECT + " ORDER BY id_programas ASC";
@@ -25,25 +38,49 @@ public class ProgramaDAO {
                 return lista;
             }
             System.out.println("✅ ProgramaDAO.listar: Conexión establecida");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
 
+<<<<<<< HEAD
+                System.out.println("Ejecutando consulta...");
+=======
                 System.out.println("   - Ejecutando consulta...");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 int contador = 0;
                 
                 while (rs.next()) {
                     Programa p = mapRow(rs);
                     lista.add(p);
                     contador++;
+<<<<<<< HEAD
+                    System.out.println("Programa encontrado: ID=" + p.getIdProgramas() + ", Nombre=" + p.getNombrePrograma());
+                }
+                
+                System.out.println("ProgramaDAO.listar: Total de programas encontrados: " + contador);
+=======
                     System.out.println("   - Programa encontrado: ID=" + p.getIdProgramas() + ", Nombre=" + p.getNombrePrograma());
                 }
                 
                 System.out.println("✅ ProgramaDAO.listar: Total de programas encontrados: " + contador);
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 
             }
 
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("ProgramaDAO.listar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ProgramaDAO.listar: Error inesperado: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        System.out.println("ProgramaDAO.listar: Retornando lista con " + lista.size() + " programas");
+=======
             System.err.println("❌ ProgramaDAO.listar: Error SQL: " + e.getMessage());
             System.err.println("   - SQL State: " + e.getSQLState());
             System.err.println("   - Error Code: " + e.getErrorCode());
@@ -54,6 +91,7 @@ public class ProgramaDAO {
         }
 
         System.out.println("🔍 ProgramaDAO.listar: Retornando lista con " + lista.size() + " programas");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         return lista;
     }
 
@@ -72,7 +110,11 @@ public class ProgramaDAO {
             }
 
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("ProgramaDAO.buscarPorId: Error: " + e.getMessage());
+=======
             System.err.println("❌ ProgramaDAO.buscarPorId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
 
@@ -80,10 +122,17 @@ public class ProgramaDAO {
     }
 
     public int guardar(Programa programa) {
+<<<<<<< HEAD
+
+        int siguienteId = obtenerSiguienteId();
+        if (siguienteId <= 0) {
+            System.err.println("ProgramaDAO.guardar: No se pudo obtener el siguiente ID");
+=======
         // Obtener el siguiente ID disponible
         int siguienteId = obtenerSiguienteId();
         if (siguienteId <= 0) {
             System.err.println("❌ ProgramaDAO.guardar: No se pudo obtener el siguiente ID");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             return 0;
         }
 
@@ -103,6 +152,18 @@ public class ProgramaDAO {
             int filas = ps.executeUpdate();
 
             if (filas > 0) {
+<<<<<<< HEAD
+                System.out.println("ProgramaDAO.guardar: Programa guardado con ID: " + siguienteId);
+                return siguienteId;
+            } else {
+                System.err.println("ProgramaDAO.guardar: No se insertaron filas");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("ProgramaDAO.guardar: Error SQL: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+=======
                 System.out.println("✅ ProgramaDAO.guardar: Programa guardado con ID: " + siguienteId);
                 return siguienteId;
             } else {
@@ -113,6 +174,7 @@ public class ProgramaDAO {
             System.err.println("❌ ProgramaDAO.guardar: Error SQL: " + e.getMessage());
             System.err.println("   - SQL State: " + e.getSQLState());
             System.err.println("   - Error Code: " + e.getErrorCode());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
 
@@ -128,12 +190,20 @@ public class ProgramaDAO {
             
             if (rs.next()) {
                 int siguienteId = rs.getInt("siguiente_id");
+<<<<<<< HEAD
+                System.out.println("ProgramaDAO.obtenerSiguienteId: Siguiente ID: " + siguienteId);
+=======
                 System.out.println("🔍 ProgramaDAO.obtenerSiguienteId: Siguiente ID: " + siguienteId);
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 return siguienteId;
             }
             
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("ProgramaDAO.obtenerSiguienteId: Error: " + e.getMessage());
+=======
             System.err.println("❌ ProgramaDAO.obtenerSiguienteId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         
@@ -158,7 +228,11 @@ public class ProgramaDAO {
             return filas > 0;
 
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("ProgramaDAO.actualizar: Error: " + e.getMessage());
+=======
             System.err.println("❌ ProgramaDAO.actualizar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
 
@@ -177,7 +251,11 @@ public class ProgramaDAO {
             return filas > 0;
 
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("ProgramaDAO.eliminar: Error: " + e.getMessage());
+=======
             System.err.println("❌ ProgramaDAO.eliminar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
 

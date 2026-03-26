@@ -50,7 +50,11 @@ public class TrasladoRecursoDAO {
             ps.setString(5, traslado.getObservacion());
             ps.executeUpdate();
             
+<<<<<<< HEAD
+            
+=======
             // Actualizar el ambiente del recurso al destino
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
             try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
                 psUpdate.setInt(1, traslado.getAmbienteDestino());
@@ -64,7 +68,11 @@ public class TrasladoRecursoDAO {
                 }
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
+=======
             System.err.println("❌ TrasladoRecursoDAO.guardar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return -1;
@@ -84,7 +92,11 @@ public class TrasladoRecursoDAO {
             
             int rows = ps.executeUpdate();
             
+<<<<<<< HEAD
+            
+=======
             // Actualizar el ambiente del recurso al destino
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             if (rows > 0) {
                 String sqlUpdateRecurso = "UPDATE recursos SET ambiente_id=? WHERE id_recurso=?";
                 try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateRecurso)) {
@@ -96,7 +108,11 @@ public class TrasladoRecursoDAO {
             
             return rows > 0;
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("TrasladoRecursoDAO.actualizar: Error: " + e.getMessage());
+=======
             System.err.println("❌ TrasladoRecursoDAO.actualizar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return false;
@@ -109,7 +125,11 @@ public class TrasladoRecursoDAO {
             ps.setInt(1, idTraslado);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
+=======
             System.err.println("❌ TrasladoRecursoDAO.eliminar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return false;
@@ -134,7 +154,11 @@ public class TrasladoRecursoDAO {
                 }
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("TrasladoRecursoDAO.buscarPorId: Error: " + e.getMessage());
+=======
             System.err.println("❌ TrasladoRecursoDAO.buscarPorId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return null;

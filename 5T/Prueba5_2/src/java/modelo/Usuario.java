@@ -14,7 +14,11 @@ public class Usuario implements Serializable {
     private String contrasena;
     private int Telefono;
     private String Activo;
+<<<<<<< HEAD
+  
+=======
     // auxiliar para formularios (confirm pass)
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     private String pass1;
 
     public int getTelefono() {
@@ -36,7 +40,11 @@ public class Usuario implements Serializable {
 
     public Usuario() {}
 
+<<<<<<< HEAD
+
+=======
     // getters / setters
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
@@ -67,18 +75,30 @@ public class Usuario implements Serializable {
     public String getPass1() { return pass1; }
     public void setPass1(String pass1) { this.pass1 = pass1; }
 
+<<<<<<< HEAD
+
+    public int getDoc() { return this.numDocumento; }
+    public void setDoc(int doc) { this.numDocumento = doc; }
+
+
+=======
     // Métodos para compatibilidad con código antiguo:
     public int getDoc() { return this.numDocumento; }
     public void setDoc(int doc) { this.numDocumento = doc; }
 
     // Nombre "legible"
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public String getNombre() {
         String a = (pNombre != null ? pNombre : "");
         String b = (pApellido != null ? pApellido : "");
         return (a + " " + b).trim();
     }
 
+<<<<<<< HEAD
+
+=======
     // Compatibilidad con getPass/setPass usados en tus formularios antiguos
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public String getPass() { return this.contrasena; }
     public void setPass(String pass) { this.contrasena = pass; }
 

@@ -100,7 +100,7 @@
                     <p:column headerText="Novedad" style="width:200px;">
                         <h:outputText value="#{min.novedad != null ? min.novedad : '—'}"/>
                     </p:column>
-                    <p:column headerText="Estado" style="width:120px;">
+                    <p:column headerText="Estado" exportValue="#{min.estado}" style="width:120px;">
                         <span class="badge #{min.estado == 'activo' or min.estado == 'Normal' or min.estado == 'Disponible' ? 'bg-success' : 'bg-danger'}">
                             #{min.estado}
                         </span>

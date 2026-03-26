@@ -13,18 +13,28 @@ use Illuminate\Support\Facades\Auth;
 
 class IncidenteController extends Controller
 {
+<<<<<<< HEAD
+   public function index()
+{
+    $incidentes = RegistroIncidente::with(['ambiente', 'tipo_incidente', 'usuario'])
+        ->whereDate('fecha_incidente', now()->toDateString()) // solo los de hoy
+=======
 public function index()
 {
     $incidentes = RegistroIncidente::with(['ambiente', 'tipo_incidente', 'usuario'])
         ->orderBy('fecha_incidente', 'desc')
         ->orderBy('hora_incidente', 'desc')
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
         ->get();
 
     return view('incidentes.index', compact('incidentes'));
 }
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 public function create()
 {
     $ambientes = Ambiente::all();

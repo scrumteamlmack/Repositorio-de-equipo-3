@@ -170,13 +170,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaTraslados').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaTraslados" fileName="traslados"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaTraslados').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaTraslados" fileName="traslados"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -200,26 +202,30 @@
                         </p:column>
 
                         <p:column headerText="Recurso" 
-                                 filterBy="#{tras.recursoNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{trasladoRecursoBean.getTextoRecurso(tras)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{trasladoRecursoBean.getTextoRecurso(tras)}">
                             <h:outputText value="#{tras.recursoNombre != null ? tras.recursoNombre : 'Recurso ' + tras.recursoId}" />
                         </p:column>
 
                         <p:column headerText="Ambiente Origen" 
-                                 filterBy="#{tras.ambienteOrigenNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}">
                             <h:outputText value="#{tras.ambienteOrigenNombre != null ? tras.ambienteOrigenNombre : 'Ambiente ' + tras.ambienteOrigen}" />
                         </p:column>
 
                         <p:column headerText="Ambiente Destino" 
-                                 filterBy="#{tras.ambienteDestinoNombre}" 
-                                 filterMatchMode="contains">
+                                 filterBy="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}" 
+                                 filterMatchMode="contains"
+                                 exportValue="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}">
                             <h:outputText value="#{tras.ambienteDestinoNombre != null ? tras.ambienteDestinoNombre : 'Ambiente ' + tras.ambienteDestino}" />
                         </p:column>
 
                         <p:column headerText="Fecha Traslado" 
                                  filterBy="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" 
-                                 filterMatchMode="contains">
+                                 filterMatchMode="contains"
+                                 exportValue="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}">
                             <h:outputText value="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" rendered="#{tras.fechaTraslado != null}" />
                         </p:column>
 

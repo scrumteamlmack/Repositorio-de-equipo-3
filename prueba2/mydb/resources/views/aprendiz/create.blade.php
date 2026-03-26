@@ -2,7 +2,11 @@
 
 @section('content')
 <head>
+<<<<<<< HEAD
+    <link rel="stylesheet" href="{{ asset('css/aprendiz.css') }}">
+=======
     <link rel="stylesheet" href="{{ asset('css/aprendiz_create.css') }}">
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 </head>
 <div class="form-container">
     <div class="form-card">

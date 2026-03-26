@@ -207,6 +207,24 @@
                                               itemValue="#{amb.idAmbiente}" />
                             </p:selectOneMenu>
 
+<<<<<<< HEAD
+                            <h:outputLabel value="Fecha y Hora del Traslado: *" for="fechaTraslado" />
+                            <h:panelGroup>
+                                <p:calendar id="fechaTraslado"
+                                            value="#{trasladoRecursoBean.fechaTrasladoDate}"
+                                            required="true"
+                                            requiredMessage="Debe seleccionar fecha y hora del traslado"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            showIcon="true"
+                                            showTime="true"
+                                            locale="es"
+                                            mindate="#{java.util.Date()}"
+                                            maxdate="#{java.util.Date()}"
+                                            style="width: 100%;"/>
+                                <p:message for="fechaTraslado" display="text" styleClass="text-danger"/>
+                                <h:outputText value="Solo se permite la fecha de hoy" style="font-size: 0.85em; color: #666; display: block;"/>
+                            </h:panelGroup>
+=======
                             <h:outputLabel value="Fecha y Hora del Traslado:" for="fechaTraslado" />
                             <p:calendar id="fechaTraslado"
                                         value="#{trasladoRecursoBean.fechaTrasladoDate}"
@@ -217,6 +235,7 @@
                                         showTime="true"
                                         locale="es"
                                         style="width: 100%;"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 
                             <h:outputLabel value="Observación:" for="observacion" />
                             <p:inputTextarea id="observacion" 

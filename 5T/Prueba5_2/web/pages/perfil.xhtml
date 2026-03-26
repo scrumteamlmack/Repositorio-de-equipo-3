@@ -340,10 +340,23 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Número de Documento <span style="color: red;">*</span></label>
+<<<<<<< HEAD
+                            <p:inputText id="numDocPerfil"
+                                        value="#{perfilBean.usuario.numDocumento}"
+                                        styleClass="form-control"
+                                        required="true"
+                                        requiredMessage="El número de documento es obligatorio"
+                                        validatorMessage="El número de documento debe tener entre 6 y 15 dígitos (solo números positivos)">
+                                <f:validateLongRange minimum="100000" maximum="999999999999999"/>
+                            </p:inputText>
+                            <p:message for="numDocPerfil" display="text" styleClass="text-danger"/>
+                            <small class="text-muted">Mínimo 6 dígitos, solo números positivos</small>
+=======
                             <p:inputText value="#{perfilBean.usuario.numDocumento}"
                                         styleClass="form-control"
                                         required="true"
                                         requiredMessage="El número de documento es obligatorio"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                         </div>
                     </div>
 

@@ -12,7 +12,11 @@ public class Programa implements Serializable {
     private int modalidadId;
     private int coordinacionId;
 
+<<<<<<< HEAD
+
+=======
     // Getters y Setters
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
     public int getIdProgramas() {
         return idProgramas;
     }

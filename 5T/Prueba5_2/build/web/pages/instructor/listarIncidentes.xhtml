@@ -153,6 +153,11 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <h:form id="formListar">
+<<<<<<< HEAD
+                    <p:growl id="mensajes" showDetail="true" life="3000"/>
+                    
+=======
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                     <div class="form-header">
                         <h2><i class="pi pi-exclamation-triangle" style="margin-right: 10px;"></i>Lista de Incidentes</h2>
                     </div>
@@ -168,46 +173,91 @@
                         </h:link>
                     </div>
 
+                    <p:toolbar style="margin-bottom: 10px;">
+                        <f:facet name="left">
+                            <p:commandButton value="📄 Exportar PDF"
+                                             icon="pi pi-file-pdf"
+                                             styleClass="btn-primary"
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
+                            <p:commandButton value="📊 Exportar Excel"
+                                             icon="pi pi-file-excel"
+                                             styleClass="btn-success"
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+
                     <div class="table-container">
-                        <p:dataTable value="#{incidenteBean.incidentes}" var="inc" 
+                        <p:dataTable id="tablaIncidentes"
+                                     value="#{incidenteBean.incidentes}" 
+                                     var="inc"
+                                     filteredValue="#{incidenteBean.incidentesFiltrados}"
                                      emptyMessage="No hay incidentes registrados"
                                      paginator="true" rows="10"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      rowsPerPageTemplate="5,10,15,20"
                                      styleClass="table table-striped table-hover">
 
-                            <p:column headerText="ID" style="width: 60px;">
+                            <p:column headerText="ID" 
+                                     filterBy="#{inc.idIncidente}" 
+                                     filterMatchMode="exact"
+                                     style="width: 60px;">
                                 <h:outputText value="#{inc.idIncidente}" />
                             </p:column>
 
-                            <p:column headerText="Descripción" style="width: 300px;">
+                            <p:column headerText="Descripción" 
+                                     filterBy="#{inc.descripcion}" 
+                                     filterMatchMode="contains"
+                                     style="width: 300px;">
                                 <h:outputText value="#{inc.descripcion}" />
                             </p:column>
 
-                            <p:column headerText="Fecha" style="width: 120px;">
+                            <p:column headerText="Fecha" 
+                                     filterBy="#{incidenteBean.formatearFecha(inc.fecha)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.formatearFecha(inc.fecha)}"
+                                     style="width: 120px;">
                                 <h:outputText value="#{incidenteBean.formatearFecha(inc.fecha)}" />
                             </p:column>
 
-                            <p:column headerText="Hora" style="width: 100px;">
+                            <p:column headerText="Hora" 
+                                     filterBy="#{incidenteBean.formatearHora(inc.hora)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.formatearHora(inc.hora)}"
+                                     style="width: 100px;">
                                 <h:outputText value="#{incidenteBean.formatearHora(inc.hora)}" />
                             </p:column>
 
-                            <p:column headerText="Ambiente">
+                            <p:column headerText="Ambiente"
+                                     filterBy="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}">
                                 <h:outputText value="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}" rendered="#{inc.idAmbiente > 0}" />
                                 <h:outputText value="-" rendered="#{inc.idAmbiente == 0}" style="color: #999;"/>
                             </p:column>
 
-                            <p:column headerText="Tipo de Incidente">
+                            <p:column headerText="Tipo de Incidente"
+                                     filterBy="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}">
                                 <h:outputText value="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}" rendered="#{inc.idTipoIncidente > 0}" />
                                 <h:outputText value="-" rendered="#{inc.idTipoIncidente == 0}" style="color: #999;"/>
                             </p:column>
 
-                            <p:column headerText="Reportado por">
+                            <p:column headerText="Reportado por"
+                                     filterBy="#{incidenteBean.getNombreInstructor(inc.idReportador)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreInstructor(inc.idReportador)}">
                                 <h:outputText value="#{incidenteBean.getNombreInstructor(inc.idReportador)}" rendered="#{inc.idReportador > 0}" />
                                 <h:outputText value="-" rendered="#{inc.idReportador == 0}" style="color: #999;"/>
                             </p:column>
 
-                            <p:column headerText="Acciones" style="width: 150px;">
+                            <p:column headerText="Acciones" 
+                                     style="width: 150px;"
+                                     exportable="false">
                                 <div style="display: flex; gap: 5px;">
                                     <p:commandButton icon="pi pi-pencil"
                                                      title="Editar"
@@ -216,10 +266,18 @@
                                                      styleClass="btn btn-sm btn-secondary"/>
                                     <p:commandButton icon="pi pi-trash"
                                                      title="Eliminar"
+<<<<<<< HEAD
+                                                     action="#{incidenteBean.eliminar(inc.idIncidente)}"
+                                                     update="@form"
+                                                     process="@this"
+                                                     onclick="if(!confirm('¿Está seguro de eliminar este incidente?')) return false;"
+                                                     styleClass="btn btn-sm btn-danger"/>
+=======
                                                      actionListener="#{incidenteBean.eliminar(inc.idIncidente)}"
                                                      update="@form"
                                                      styleClass="btn btn-sm btn-danger"
                                                      onclick="return confirm('¿Está seguro de eliminar este incidente?');"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                                 </div>
                             </p:column>
 

@@ -78,7 +78,11 @@ class Usuario extends Authenticatable
 
 	public function guarda_seguridad()
 	{
+<<<<<<< HEAD
+		return $this->hasOne(GuardaSeguridad::class, 'Usuario_id_usuario');
+=======
 		return $this->hasOne(GuardaSeguridad::class, 'Usuario_id_usuario', 'id_usuario');
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 	}
 
 	public function instructor()

@@ -280,23 +280,44 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label">Tipo de Documento</label>
-                                    <p:inputText id="tipoDoc" 
-                                                 value="#{usuarioBean.usuario.tipoDocumento}" 
-                                                 required="#{!usuarioBean.isModoEdicion()}"
-                                                 requiredMessage="El tipo de documento es obligatorio"
-                                                 placeholder="CC, TI, CE, etc."
-                                                 styleClass="form-control"/>
+                                    <p:selectOneMenu id="tipoDoc" 
+                                                     value="#{usuarioBean.usuario.tipoDocumento}" 
+                                                     required="#{!usuarioBean.isModoEdicion()}"
+                                                     requiredMessage="El tipo de documento es obligatorio"
+                                                     styleClass="form-select"
+                                                     style="width: 100%;">
+                                        <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                        <f:selectItem itemLabel="CC" itemValue="CC"/>
+                                        <f:selectItem itemLabel="TI" itemValue="TI"/>
+                                        <f:selectItem itemLabel="CE" itemValue="CE"/>
+                                        <f:selectItem itemLabel="OTRO" itemValue="OTRO"/>
+                                    </p:selectOneMenu>
                                 </div>
 
                                 <div class="col-md-6">
+<<<<<<< HEAD
+                                    <label class="form-label">Número Documento *</label>
+=======
                                     <label class="form-label">Número Documento</label>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                                     <p:inputText id="numDoc" 
                                                  value="#{usuarioBean.usuario.numDocumento}" 
                                                  required="#{!usuarioBean.isModoEdicion()}"
                                                  requiredMessage="El número de documento es obligatorio"
+<<<<<<< HEAD
+                                                 validatorMessage="El número de documento debe tener entre 6 y 15 dígitos"
+                                                 placeholder="Número de documento"
+                                                 styleClass="form-control"
+                                                 disabled="#{usuarioBean.isModoEdicion()}">
+                                        <f:validateLongRange minimum="100000" maximum="999999999999999"/>
+                                    </p:inputText>
+                                    <p:message for="numDoc" display="text" styleClass="text-danger"/>
+                                    <small class="text-muted">Mínimo 6 dígitos, solo números positivos</small>
+=======
                                                  placeholder="Número de documento"
                                                  styleClass="form-control"
                                                  disabled="#{usuarioBean.isModoEdicion()}"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                                 </div>
 
                                 <div class="col-md-6">

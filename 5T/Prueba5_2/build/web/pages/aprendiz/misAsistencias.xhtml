@@ -157,13 +157,15 @@
                             <p:commandButton value="📄 Exportar PDF"
                                              icon="pi pi-file-pdf"
                                              styleClass="btn-primary"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencias').exportToPdf();"/>
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaAsistencias" fileName="asistencias"/>
+                            </p:commandButton>
                             <p:commandButton value="📊 Exportar Excel"
                                              icon="pi pi-file-excel"
                                              styleClass="btn-success"
-                                             ajax="false"
-                                             onclick="PF('tablaAsistencias').exportToXls();"/>
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaAsistencias" fileName="asistencias"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:toolbar>
 
@@ -196,6 +198,7 @@
                         <p:column headerText="Estado" 
                                  filterBy="#{asistenciaAprendizBean.getEstadoTexto(asis.estado)}" 
                                  filterMatchMode="contains"
+                                 exportValue="#{asistenciaAprendizBean.getEstadoTexto(asis.estado)}"
                                  style="width: 120px;">
                             <p:tag value="#{asistenciaAprendizBean.getEstadoTexto(asis.estado)}" 
                                    severity="#{asistenciaAprendizBean.getEstadoSeverity(asis.estado)}"/>

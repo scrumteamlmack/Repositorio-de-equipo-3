@@ -33,7 +33,11 @@ public class AsistenciaDAO {
                 asistencias.add(mapRowWithNames(rs));
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("AsistenciaDAO.listar: Error: " + e.getMessage());
+=======
             System.err.println("❌ AsistenciaDAO.listar: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return asistencias;
@@ -60,7 +64,11 @@ public class AsistenciaDAO {
                 }
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("AsistenciaDAO.listarPorAprendiz: Error: " + e.getMessage());
+=======
             System.err.println("❌ AsistenciaDAO.listarPorAprendiz: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return asistencias;
@@ -130,7 +138,11 @@ public class AsistenciaDAO {
                 }
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("AsistenciaDAO.buscarPorId: Error: " + e.getMessage());
+=======
             System.err.println("❌ AsistenciaDAO.buscarPorId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return null;
@@ -143,6 +155,28 @@ public class AsistenciaDAO {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean eliminarPorInstructor(int instructorId) {
+        String sql = "DELETE FROM registro_inasistencia WHERE instructor_Usuario_id_usuario = ?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, instructorId);
+            int filas = ps.executeUpdate();
+<<<<<<< HEAD
+            System.out.println("AsistenciaDAO.eliminarPorInstructor: Eliminados " + filas + " registros de asistencia del instructor ID: " + instructorId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("AsistenciaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+=======
+            System.out.println("✅ AsistenciaDAO.eliminarPorInstructor: Eliminados " + filas + " registros de asistencia del instructor ID: " + instructorId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("❌ AsistenciaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return false;
@@ -180,8 +214,13 @@ public class AsistenciaDAO {
                 asistencia.setJornadaNombre(jornadaNombre.trim());
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println(" AsistenciaDAO.mapRowWithNames: Error al obtener nombres: " + e.getMessage());
+     
+=======
             System.err.println("⚠️ AsistenciaDAO.mapRowWithNames: Error al obtener nombres: " + e.getMessage());
             // Si las columnas no existen, simplemente no las asignamos
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         }
         return asistencia;
     }

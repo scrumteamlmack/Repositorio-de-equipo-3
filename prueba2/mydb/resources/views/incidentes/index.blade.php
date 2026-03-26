@@ -3,6 +3,9 @@
 @section('content')
 <head>
     <link rel="stylesheet" href="{{ asset('css/incidentes.css') }}">
+<<<<<<< HEAD
+</head>
+=======
 
     {{-- Librerías DataTables --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,12 +21,22 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 </head>
 
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 <div class="incidente-container">
     <h2>📋 Lista de Incidentes</h2>
 
     <a href="{{ route('incidentes.create') }}" class="btn-registrar">➕ Nuevo Incidente</a>
 
     @if(session('success'))
+<<<<<<< HEAD
+        <div class="alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="tabla-container">
+        <table class="tabla-incidentes">
+=======
         <div class="alert-success">{{ session('success') }}</div>
     @endif
 
@@ -39,6 +52,7 @@
         </div>
 
         <table id="tablaIncidentes" class="tabla-incidentes">
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
             <thead>
                 <tr>
                     <th>ID</th>
@@ -56,8 +70,13 @@
                     <tr>
                         <td>{{ $incidente->id_incidente }}</td>
                         <td>{{ $incidente->descripcion }}</td>
+<<<<<<< HEAD
+                        <td>{{ \Carbon\Carbon::parse($incidente->fecha_incidente)->format('Y-m-d') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($incidente->hora_incidente)->format('H:i') }}</td>
+=======
                         <td>{{ $incidente->fecha_incidente->format('Y-m-d') }}</td>
                         <td>{{ $incidente->hora_incidente->format('H:i') }}</td>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                         <td>{{ $incidente->ambiente->num_ambiente ?? 'N/A' }}</td>
                         <td>{{ $incidente->tipo_incidente->tipo_incidente ?? 'N/A' }}</td>
                         <td>{{ $incidente->usuario->p_nombre ?? 'N/A' }} {{ $incidente->usuario->p_apellido ?? '' }}</td>
@@ -65,19 +84,31 @@
                             <a href="{{ route('incidentes.show', $incidente) }}" class="btn-show">👁 Ver</a>
                             <a href="{{ route('incidentes.edit', $incidente) }}" class="btn-warning">✏️ Editar</a>
                             <form action="{{ route('incidentes.destroy', $incidente) }}" method="POST" class="inline-form">
+<<<<<<< HEAD
+                                @csrf @method('DELETE')
+=======
                                 @csrf
                                 @method('DELETE')
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                                 <button type="submit" class="btn-danger" onclick="return confirm('¿Eliminar este incidente?')">🗑 Eliminar</button>
                             </form>
                         </td>
                     </tr>
                 @empty
+<<<<<<< HEAD
+                    <tr>
+                        <td colspan="8">⚠️ No hay incidentes registrados.</td>
+                    </tr>
+=======
                     <tr><td colspan="8">⚠️ No hay incidentes registrados.</td></tr>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+<<<<<<< HEAD
+=======
 
 <script>
 $(document).ready(function() {
@@ -99,4 +130,5 @@ $(document).ready(function() {
     $('#filtro_instructor').on('keyup', function() { table.column(6).search(this.value).draw(); });
 });
 </script>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 @endsection

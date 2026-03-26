@@ -44,20 +44,62 @@ public class AmbienteDAO {
     }
 
     public int guardar(Ambiente ambiente) {
-        String sql = "INSERT INTO ambiente (num_ambiente, capacidad, tipo_ambiente, estado) VALUES (?,?,?,?)";
+<<<<<<< HEAD
+ 
+        int siguienteId = obtenerSiguienteId();
+        if (siguienteId <= 0) {
+            System.err.println("AmbienteDAO.guardar: No se pudo obtener el siguiente ID");
+=======
+        // Obtener el siguiente ID disponible ya que la tabla no tiene AUTO_INCREMENT
+        int siguienteId = obtenerSiguienteId();
+        if (siguienteId <= 0) {
+            System.err.println("❌ AmbienteDAO.guardar: No se pudo obtener el siguiente ID");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+            return -1;
+        }
+        
+        String sql = "INSERT INTO ambiente (id_ambiente, num_ambiente, capacidad, tipo_ambiente, estado) VALUES (?,?,?,?,?)";
         try (Connection con = ConnBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, ambiente.getNumero());
-            ps.setInt(2, ambiente.getCapacidad());
-            ps.setString(3, ambiente.getTipo());
-            ps.setString(4, ambiente.getEstado());
-            ps.executeUpdate();
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, siguienteId);
+            ps.setInt(2, ambiente.getNumero());
+            ps.setInt(3, ambiente.getCapacidad());
+            ps.setString(4, ambiente.getTipo());
+            ps.setString(5, ambiente.getEstado());
+            int filas = ps.executeUpdate();
+            if (filas > 0) {
+<<<<<<< HEAD
+                System.out.println("AmbienteDAO.guardar: Ambiente guardado con ID: " + siguienteId);
+                return siguienteId;
             }
         } catch (SQLException e) {
+            System.err.println("AmbienteDAO.guardar: Error SQL: " + e.getMessage());
+=======
+                System.out.println("✅ AmbienteDAO.guardar: Ambiente guardado con ID: " + siguienteId);
+                return siguienteId;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ AmbienteDAO.guardar: Error SQL: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    private int obtenerSiguienteId() {
+        String sql = "SELECT COALESCE(MAX(id_ambiente), 0) + 1 AS siguiente_id FROM ambiente";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("siguiente_id");
+            }
+        } catch (SQLException e) {
+<<<<<<< HEAD
+            System.err.println("AmbienteDAO.obtenerSiguienteId: Error: " + e.getMessage());
+=======
+            System.err.println("❌ AmbienteDAO.obtenerSiguienteId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return -1;

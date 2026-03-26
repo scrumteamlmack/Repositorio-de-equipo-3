@@ -9,26 +9,6 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0"/>
-    <script type="text/javascript">
-        // Prevenir que el botón atrás funcione - mantener siempre en esta página
-        (function() {
-            // Reemplazar la entrada actual del historial
-            if (window.history && window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.href);
-            }
-            
-            // Agregar una entrada al historial para que el botón atrás siempre vuelva aquí
-            if (window.history && window.history.pushState) {
-                window.history.pushState(null, null, window.location.href);
-            }
-            
-            // Interceptar el botón atrás
-            window.addEventListener('popstate', function(event) {
-                // Siempre redirigir de vuelta a esta página
-                window.history.pushState(null, null, window.location.href);
-            });
-        })();
-    </script>
     <style>
         .logout-container {
             min-height: 100vh;

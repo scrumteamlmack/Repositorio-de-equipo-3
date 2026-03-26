@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+{{-- resources/views/instructor/dashboard.blade.php --}}
+=======
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,7 +39,11 @@
                             <ul class="submenu">
                                 <li><a href="{{ route('instructor.perfil') }}">Ver Perfil</a></li>
                                 <li><a href="{{ route('instructor.edit') }}">Editar Perfil</a></li>
+<<<<<<< HEAD
+</ul>
+=======
                             </ul>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                         </li>
 
                         <!-- Fichas -->
@@ -43,6 +51,9 @@
                             <span>Fichas</span>
                             <ul class="submenu">
                                 <li><a href="{{ route('instructor.fichas') }}">Mis Fichas</a></li>
+<<<<<<< HEAD
+                                <li><a href="{{ route('instructor.aprendices') }}">Ver Aprendices</a></li>
+=======
                                 @if(isset($fichas) && $fichas->count())
                                     @foreach($fichas as $ficha)
                                         <li>
@@ -54,6 +65,7 @@
                                 @else
                                     <li><span>No tienes fichas asignadas</span></li>
                                 @endif
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                             </ul>
                         </li>
 
@@ -79,6 +91,10 @@
                             <ul class="submenu">
                                 <li><a href="{{ route('incidentes.create') }}">Registrar Incidente</a></li>
                                 <li><a href="{{ route('incidentes.index') }}">Mis Incidentes</a></li>
+<<<<<<< HEAD
+                            <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
+                            
+=======
                                 <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
                             </ul>
                         </li>
@@ -94,6 +110,7 @@
                             <ul class="submenu">
                                 <li><a href=" {{ route('traslados.create') }}">Registrar Traslado</a></li>
                                 <li><a href="{{  route('traslados.index') }}">Consultar Traslado</a></li>
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
                             </ul>
                         </li>
                     </ul>
@@ -113,8 +130,11 @@
             <p>
                 Aquí puedes gestionar tu perfil, consultar fichas y aprendices, ambientes, revisar minutas y registrar incidentes.
             </p>
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
             @yield('content')
         </main>
     </div>

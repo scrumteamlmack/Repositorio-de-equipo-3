@@ -1,0 +1,118 @@
+/* estilo_admin.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc;
+  color: #1f2937;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #10b981;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+  margin-left: 16px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  background-color: #059669; 
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+  .img {
+  width: 125px;
+  height: auto;
+}
+  nav a:hover {
+    text-decoration: underline;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 480px;
+    margin: 64px auto;
+    padding: 0 20px;
+  }
+
+main h2 {
+  font-size: 2rem;
+  color: #10b981;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 2rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+thead {
+  background-color: #10b981;
+  color: white;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.btn-volver {
+  display: inline-block;
+  margin-top: 2rem;
+  background-color: #10b981;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-volver:hover {
+  background-color: #0e9e6e;
+}
+
+.centrado {
+  text-align: center;
+}
+
+footer {
+  background-color: #10b981;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}

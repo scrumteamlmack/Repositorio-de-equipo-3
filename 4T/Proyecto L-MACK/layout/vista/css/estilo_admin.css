@@ -1,0 +1,103 @@
+ *{margin:0;padding:0;box-sizing:border-box;}
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #F5F5DC;
+    color: #374151;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header, footer {
+    background-color: #10b981;
+    color: white;
+    padding: 16px 32px;
+  }
+  header {
+    position: sticky;
+    top: 0;z-index: 1000;
+    display: flex;align-items: center;justify-content: space-between;
+  }
+  .logo {
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+  .img {
+  width: 125px;
+  height: auto;
+}
+  nav a {
+  margin-left: 16px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  background-color: #059669; ;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+  nav a:hover {
+    text-decoration: underline;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 900px;
+    margin: 48px auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  h2 {
+    color: #10b981;
+    margin-bottom: 36px;
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 15px;
+    background-color: #10b981;
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    text-align: center;
+  }
+  
+  .action-btn:hover {
+    background-color: #059669;
+    transform: translateY(-3px);
+  }
+  
+  .action-btn .material-icons {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  @media (max-width: 640px) {
+    main {
+      margin: 32px 16px;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }

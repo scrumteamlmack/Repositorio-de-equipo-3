@@ -120,6 +120,28 @@ public class MinutaDAO {
         }
         return false;
     }
+    
+    public boolean eliminarPorInstructor(int instructorId) {
+        String sql = "DELETE FROM registro_minuta WHERE responsable_id = ?";
+        try (Connection con = ConnBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, instructorId);
+            int filas = ps.executeUpdate();
+<<<<<<< HEAD
+            System.out.println("MinutaDAO.eliminarPorInstructor: Eliminadas " + filas + " minutas del instructor ID: " + instructorId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("MinutaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+=======
+            System.out.println("✅ MinutaDAO.eliminarPorInstructor: Eliminadas " + filas + " minutas del instructor ID: " + instructorId);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("❌ MinutaDAO.eliminarPorInstructor: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     private Minuta mapRow(ResultSet rs) throws SQLException {
         Minuta minuta = new Minuta();
