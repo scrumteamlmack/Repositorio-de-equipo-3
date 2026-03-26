@@ -116,9 +116,18 @@ def _render_admin(request, template_name, extra_context=None):
 
 
 def cerrar_sesion(request):
+    # Este proyecto maneja sesión propia con `request.session['usuario_id']`.
+    # Siempre la limpiamos, incluso si no se usa `django.contrib.auth`.
+    request.session.pop("usuario_id", None)
+    try:
+        request.session.flush()
+    except Exception:
+        # Si el backend de sesión no permite flush por algún motivo,
+        # al menos ya eliminamos la clave principal.
+        pass
     if request.user.is_authenticated:
         logout(request)
-        messages.success(request, "Te saliste primo")
+    messages.success(request, "Sesión cerrada correctamente.")
     return redirect("siza")
 
 
