@@ -18,7 +18,7 @@
 
 ## 👥 **El Equipo**
 
-Somos un grupo de **6 desarrolladores apasionados** por crear soluciones robustas y escalables. Nuestra diversidad técnica nos permite abordar proyectos full-stack con excelencia.
+Somos un grupo de **5 desarrolladores apasionados** por crear soluciones robustas y escalables. Nuestra diversidad técnica nos permite abordar proyectos full-stack con excelencia la mediocridad es para los debiles.
 
 | <img src="https://avatars.githubusercontent.com/u/211164728?v=4?size=100" width="100" style="border-radius: 50%"> | <img src="https://avatars.githubusercontent.com/u/210031008?v=4)?size=100" width="100"> | <img src="https://avatars.githubusercontent.com/u/204597597?v=4)?size=100" width="100"> |
 |:---:|:---:|:---:|
