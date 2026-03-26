@@ -15,8 +15,8 @@ public class ConnBD {
 
         try {
             // *** Cargar el driver de MySQL (OBLIGATORIO en GlassFish) ***
-            // Usar el driver original que funcionaba antes
-            Class.forName("com.mysql.jdbc.Driver");
+            // Usar el driver moderno de MySQL Connector/J
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Intentar la conexión
             conn = DriverManager.getConnection(URL, USER, PASS);
@@ -24,7 +24,7 @@ public class ConnBD {
 
         } catch (ClassNotFoundException e) {
             System.out.println("❌ ERROR: No se encontró el driver MySQL.");
-            System.out.println("➡ Asegúrate de copiar 'mysql-connector-java-5.1.xx.jar' en:");
+            System.out.println("➡ Asegúrate de copiar 'mysql-connector-java-8.x.x.jar' o superior en:");
             System.out.println("   glassfish/domains/domain1/lib/");
             e.printStackTrace();
 
