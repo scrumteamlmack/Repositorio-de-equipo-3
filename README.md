@@ -71,7 +71,7 @@ Dominamos un ecosistema completo de tecnologías, con **Django como nuestro pila
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/code-forge.git
+git clone https://github.com/scrumteamlmack/Repositorio-de-equipo-3/tree/main
 
 # Navegar a un proyecto Django actual
 cd code-forge/proyectos-actuales/django-microservices
