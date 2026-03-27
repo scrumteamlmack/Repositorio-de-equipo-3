@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('AdminApp.urls')),
     path('', include('AprenApp.urls')),
     path('', include('GuardaApp.urls')),
+    path('', include('InstApp.urls')),
     
     
     

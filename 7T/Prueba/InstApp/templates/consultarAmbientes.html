@@ -1,12 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-
-<h:head>
+<html lang="es">
+<head>
     <title>Consultar Ambientes - L-MACK</title>
-    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
         .layout-container {
@@ -14,7 +14,6 @@
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .sidebar {
             width: 260px;
             background-color: var(--primary-green);
@@ -27,13 +26,11 @@
             display: flex;
             flex-direction: column;
         }
-        
         .sidebar-header {
             padding: 25px 20px;
             background-color: var(--dark-green);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        
         .sidebar-header h3 {
             color: white;
             margin: 0;
@@ -43,17 +40,11 @@
             align-items: center;
             gap: 10px;
         }
-        
         .sidebar-header h3::before {
             content: "👤";
             font-size: 28px;
         }
-        
-        .sidebar-nav {
-            padding: 20px 0;
-            flex: 1;
-        }
-        
+        .sidebar-nav { padding: 20px 0; flex: 1; }
         .sidebar-nav a {
             display: block;
             color: rgba(255,255,255,0.9);
@@ -63,20 +54,22 @@
             border-left: 3px solid transparent;
             font-size: 15px;
         }
-        
         .sidebar-nav a:hover {
             background: rgba(255,255,255,0.1);
             border-left-color: var(--light-green);
             color: white;
             padding-left: 30px;
         }
-        
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: white;
+            color: white;
+        }
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: auto;
         }
-        
         .sidebar-footer .btn-logout {
             width: 100%;
             padding: 12px 20px;
@@ -93,12 +86,10 @@
             justify-content: center;
             gap: 8px;
         }
-        
         .sidebar-footer .btn-logout:hover {
             background-color: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.3);
         }
-        
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -106,14 +97,19 @@
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .content-wrapper {
             background: var(--white);
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Badges de estado — mismos colores del JSF original */
         .badge {
             display: inline-block;
             padding: 6px 12px;
@@ -123,120 +119,138 @@
         }
         .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
         .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
-        .badge.bg-danger { background: #fee2e2 !important; color: #b91c1c !important; }
+        .badge.bg-danger  { background: #fee2e2 !important; color: #b91c1c !important; }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <f:metadata>
-        <f:viewAction action="#{loginBean.verificarSesionInstructor}"/>
-    </f:metadata>
-
+<body>
     <div class="layout-container">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>L-MACK</h3>
             </div>
             <nav class="sidebar-nav">
-                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
+                <a href="{% url 'instructor_index' %}" class="sidebar-link">🏠 Inicio</a>
+                <a href="{% url 'mis_fichas' %}" class="sidebar-link">📁 Mis Fichas</a>
+                <a href="{% url 'listar_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
+                <a href="{% url 'listar_minutas' %}" class="sidebar-link">📝 Minutas</a>
+                <a href="{% url 'listar_incidentes' %}" class="sidebar-link">⚠️ Incidentes</a>
+                <a href="{% url 'listar_traslados' %}" class="sidebar-link">🚚 Traslados</a>
+                <a href="{% url 'consultar_ambientes' %}" class="sidebar-link active">🏢 Ambientes</a>
+                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
-                <h:form>
-                    <p:commandButton value="Cerrar sesión"
-                                     icon="pi pi-sign-out"
-                                     action="#{loginBean.cerrarSesion}"
-                                     styleClass="btn-logout"
-                                     ajax="false"/>
-                </h:form>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout"> Cerrar sesión</button>
+                </form>
             </div>
         </aside>
-        
+
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="form-header">
-                    <h2><i class="pi pi-building" style="margin-right: 10px;"></i>Consultar Ambientes</h2>
+                    <h2>🏢 Consultar Ambientes</h2>
                 </div>
-                
-                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
 
-                <h:form id="formAmbientes">
-                    <p:toolbar>
-                        <f:facet name="left">
-                            <p:commandButton value="📄 Exportar PDF"
-                                             icon="pi pi-file-pdf"
-                                             styleClass="btn-primary"
-                                             ajax="false">
-                                <p:dataExporter type="pdf" target="tablaAmbientes" fileName="ambientes"/>
-                            </p:commandButton>
-                            <p:commandButton value="📊 Exportar Excel"
-                                             icon="pi pi-file-excel"
-                                             styleClass="btn-success"
-                                             ajax="false">
-                                <p:dataExporter type="xls" target="tablaAmbientes" fileName="ambientes"/>
-                            </p:commandButton>
-                        </f:facet>
-                    </p:toolbar>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-                    <p:dataTable id="tablaAmbientes" 
-                                 value="#{ambienteBean.ambientes}" 
-                                 var="amb"
-                                 filteredValue="#{ambienteBean.ambientesFiltrados}"
-                                 emptyMessage="No hay ambientes registrados"
-                                 paginator="true" 
-                                 rows="10"
-                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                 rowsPerPageTemplate="5,10,15,20"
-                                 styleClass="table table-striped table-hover"
-                                 exportable="true">
+                <!-- Toolbar de exportación -->
+                <div class="toolbar">
+                    <a href="{% url 'exportar_ambientes_pdf' %}" class="btn btn-primary">📄 Exportar PDF</a>
+                    <a href="{% url 'exportar_ambientes_excel' %}" class="btn btn-success">📊 Exportar Excel</a>
+                </div>
 
-                        <p:column headerText="ID" 
-                                 filterBy="#{amb.idAmbiente}" 
-                                 filterMatchMode="exact"
-                                 style="width: 80px;">
-                            <h:outputText value="#{amb.idAmbiente}" />
-                        </p:column>
+                <!-- Filtro de búsqueda -->
+                <div style="margin-bottom: 15px;">
+                    <input type="text"
+                           id="filtroTabla"
+                           class="form-control"
+                           placeholder="🔍 Buscar ambiente..."
+                           onkeyup="filtrarTabla()"
+                           style="max-width: 350px;"/>
+                </div>
 
-                        <p:column headerText="Número" 
-                                 filterBy="#{amb.numero}" 
-                                 filterMatchMode="contains"
-                                 style="width: 120px;">
-                            <h:outputText value="#{amb.numero}" />
-                        </p:column>
+                <table class="table table-striped table-hover" id="tablaAmbientes">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th style="width: 120px;">Número</th>
+                            <th style="width: 120px;">Capacidad</th>
+                            <th>Tipo</th>
+                            <th style="width: 150px;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for amb in ambientes %}
+                        <tr>
+                            <td>{{ amb.id_ambiente }}</td>
+                            <td>{{ amb.numero }}</td>
+                            <td>{{ amb.capacidad }}</td>
+                            <td>{{ amb.tipo }}</td>
+                            <td>
+                                {% if amb.estado == 'Disponible' or amb.estado == 'Operativo' %}
+                                    <span class="badge bg-success">{{ amb.estado }}</span>
+                                {% elif amb.estado == 'En Uso' or amb.estado == 'Ocupado' %}
+                                    <span class="badge bg-warning">{{ amb.estado }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ amb.estado }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No hay ambientes registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-                        <p:column headerText="Capacidad" 
-                                 filterBy="#{amb.capacidad}" 
-                                 filterMatchMode="contains"
-                                 style="width: 120px;">
-                            <h:outputText value="#{amb.capacidad}" />
-                        </p:column>
+                <!-- Paginación -->
+                {% if ambientes.has_other_pages %}
+                <nav>
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if ambientes.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ ambientes.previous_page_number }}">«</a>
+                            </li>
+                        {% endif %}
+                        {% for num in ambientes.paginator.page_range %}
+                            <li class="page-item {% if ambientes.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if ambientes.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ ambientes.next_page_number }}">»</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
 
-                        <p:column headerText="Tipo" 
-                                 filterBy="#{amb.tipo}" 
-                                 filterMatchMode="contains">
-                            <h:outputText value="#{amb.tipo}" />
-                        </p:column>
-
-                        <p:column headerText="Estado" 
-                                 filterBy="#{amb.estado}" 
-                                 filterMatchMode="contains"
-                                 style="width: 150px;">
-                            <h:outputText value="#{amb.estado}" 
-                                         styleClass="badge #{amb.estado eq 'Disponible' or amb.estado eq 'Operativo' ? 'bg-success' : 'bg-warning'}"/>
-                        </p:column>
-
-                    </p:dataTable>
-                </h:form>
             </div>
         </main>
     </div>
 
-</h:body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filtrarTabla() {
+            const input = document.getElementById("filtroTabla").value.toLowerCase();
+            const filas = document.querySelectorAll("#tablaAmbientes tbody tr");
+            filas.forEach(fila => {
+                fila.style.display = fila.textContent.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
 </html>
-

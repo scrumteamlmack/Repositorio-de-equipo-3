@@ -37,6 +37,7 @@ def _no_cache(response: HttpResponse) -> HttpResponse:
     return response
 
 
+
 def _usuario_sesion(request):
     usuario_id = request.session.get("usuario_id")
     if not usuario_id:

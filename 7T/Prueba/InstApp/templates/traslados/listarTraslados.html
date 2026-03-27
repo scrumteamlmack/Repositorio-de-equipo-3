@@ -1,12 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-
-<h:head>
+<html lang="es">
+<head>
     <title>Traslados de Recursos - L-MACK</title>
-    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
         .layout-container {
@@ -14,7 +14,6 @@
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .sidebar {
             width: 260px;
             background-color: var(--primary-green);
@@ -27,13 +26,11 @@
             display: flex;
             flex-direction: column;
         }
-        
         .sidebar-header {
             padding: 25px 20px;
             background-color: var(--dark-green);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        
         .sidebar-header h3 {
             color: white;
             margin: 0;
@@ -43,17 +40,11 @@
             align-items: center;
             gap: 10px;
         }
-        
         .sidebar-header h3::before {
             content: "👤";
             font-size: 28px;
         }
-        
-        .sidebar-nav {
-            padding: 20px 0;
-            flex: 1;
-        }
-        
+        .sidebar-nav { padding: 20px 0; flex: 1; }
         .sidebar-nav a {
             display: block;
             color: rgba(255,255,255,0.9);
@@ -63,20 +54,22 @@
             border-left: 3px solid transparent;
             font-size: 15px;
         }
-        
         .sidebar-nav a:hover {
             background: rgba(255,255,255,0.1);
             border-left-color: var(--light-green);
             color: white;
             padding-left: 30px;
         }
-        
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: white;
+            color: white;
+        }
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: auto;
         }
-        
         .sidebar-footer .btn-logout {
             width: 100%;
             padding: 12px 20px;
@@ -93,12 +86,10 @@
             justify-content: center;
             gap: 8px;
         }
-        
         .sidebar-footer .btn-logout:hover {
             background-color: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.3);
         }
-        
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -106,159 +97,197 @@
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .content-wrapper {
             background: var(--white);
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <f:metadata>
-        <f:viewAction action="#{loginBean.verificarSesion(2)}"/>
-    </f:metadata>
-
+<body>
     <div class="layout-container">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>L-MACK</h3>
             </div>
             <nav class="sidebar-nav">
-                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
+                <a href="{% url 'instructor_index' %}" class="sidebar-link">🏠 Inicio</a>
+                <a href="{% url 'mis_fichas' %}" class="sidebar-link">📁 Mis Fichas</a>
+                <a href="{% url 'listar_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
+                <a href="{% url 'listar_minutas' %}" class="sidebar-link">📝 Minutas</a>
+                <a href="{% url 'listar_incidentes' %}" class="sidebar-link">⚠️ Incidentes</a>
+                <a href="{% url 'listar_traslados' %}" class="sidebar-link active">🚚 Traslados</a>
+                <a href="{% url 'consultar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
+                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
-                <h:form>
-                    <p:commandButton value="Cerrar sesión"
-                                     icon="pi pi-sign-out"
-                                     action="#{loginBean.cerrarSesion}"
-                                     styleClass="btn-logout"
-                                     ajax="false"/>
-                </h:form>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout"> Cerrar sesión</button>
+                </form>
             </div>
         </aside>
-        
+
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="form-header">
-                    <h2><i class="pi pi-truck" style="margin-right: 10px;"></i>Traslados de Recursos</h2>
+                    <h2>🚚 Traslados de Recursos</h2>
                 </div>
-                
-                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
 
-                <h:form id="formTraslados">
-                    <div style="margin-bottom: 20px;">
-                        <h:link value="➕ Nuevo Traslado"
-                                outcome="/pages/instructor/traslados/formTraslado.xhtml"
-                                styleClass="btn btn-primary"
-                                style="text-decoration: none; display: inline-block; padding: 8px 16px;">
-                            <i class="pi pi-plus" style="margin-right: 5px;"></i>
-                        </h:link>
-                    </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-                    <p:toolbar style="margin-bottom: 10px;">
-                        <f:facet name="left">
-                            <p:commandButton value="📄 Exportar PDF"
-                                             icon="pi pi-file-pdf"
-                                             styleClass="btn-primary"
-                                             ajax="false">
-                                <p:dataExporter type="pdf" target="tablaTraslados" fileName="traslados"/>
-                            </p:commandButton>
-                            <p:commandButton value="📊 Exportar Excel"
-                                             icon="pi pi-file-excel"
-                                             styleClass="btn-success"
-                                             ajax="false">
-                                <p:dataExporter type="xls" target="tablaTraslados" fileName="traslados"/>
-                            </p:commandButton>
-                        </f:facet>
-                    </p:toolbar>
+                <!-- Botón nuevo traslado -->
+                <div style="margin-bottom: 20px;">
+                    <a href="{% url 'form_traslado' %}"
+                       class="btn btn-primary"
+                       style="text-decoration: none; display: inline-block; padding: 8px 16px;">
+                        ➕ Nuevo Traslado
+                    </a>
+                </div>
 
-                    <p:dataTable id="tablaTraslados" 
-                                 value="#{trasladoRecursoBean.traslados}" 
-                                 var="tras"
-                                 filteredValue="#{trasladoRecursoBean.trasladosFiltrados}"
-                                 emptyMessage="No hay traslados registrados"
-                                 paginator="true" 
-                                 rows="10"
-                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                 rowsPerPageTemplate="5,10,15,20"
-                                 styleClass="table table-striped table-hover"
-                                 exportable="true">
+                <!-- Toolbar de exportación -->
+                <div class="toolbar">
+                    <a href="{% url 'exportar_traslados_pdf' %}" class="btn btn-primary">📄 Exportar PDF</a>
+                    <a href="{% url 'exportar_traslados_excel' %}" class="btn btn-success">📊 Exportar Excel</a>
+                </div>
 
-                        <p:column headerText="ID" 
-                                 filterBy="#{tras.idTraslado}" 
-                                 filterMatchMode="exact"
-                                 style="width: 80px;">
-                            <h:outputText value="#{tras.idTraslado}" />
-                        </p:column>
+                <!-- Filtro de búsqueda -->
+                <div style="margin-bottom: 15px;">
+                    <input type="text"
+                           id="filtroTabla"
+                           class="form-control"
+                           placeholder="🔍 Buscar traslado..."
+                           onkeyup="filtrarTabla()"
+                           style="max-width: 350px;"/>
+                </div>
 
-                        <p:column headerText="Recurso" 
-                                 filterBy="#{trasladoRecursoBean.getTextoRecurso(tras)}" 
-                                 filterMatchMode="contains"
-                                 exportValue="#{trasladoRecursoBean.getTextoRecurso(tras)}">
-                            <h:outputText value="#{tras.recursoNombre != null ? tras.recursoNombre : 'Recurso ' + tras.recursoId}" />
-                        </p:column>
+                <table class="table table-striped table-hover" id="tablaTraslados">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Recurso</th>
+                            <th>Ambiente Origen</th>
+                            <th>Ambiente Destino</th>
+                            <th>Fecha Traslado</th>
+                            <th>Observación</th>
+                            <th style="width: 180px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tras in traslados %}
+                        <tr>
+                            <td>{{ tras.id_traslado }}</td>
 
-                        <p:column headerText="Ambiente Origen" 
-                                 filterBy="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}" 
-                                 filterMatchMode="contains"
-                                 exportValue="#{trasladoRecursoBean.getTextoAmbienteOrigen(tras)}">
-                            <h:outputText value="#{tras.ambienteOrigenNombre != null ? tras.ambienteOrigenNombre : 'Ambiente ' + tras.ambienteOrigen}" />
-                        </p:column>
+                            <td>
+                                {% if tras.recurso_nombre %}
+                                    {{ tras.recurso_nombre }}
+                                {% else %}
+                                    Recurso {{ tras.recurso_id }}
+                                {% endif %}
+                            </td>
 
-                        <p:column headerText="Ambiente Destino" 
-                                 filterBy="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}" 
-                                 filterMatchMode="contains"
-                                 exportValue="#{trasladoRecursoBean.getTextoAmbienteDestino(tras)}">
-                            <h:outputText value="#{tras.ambienteDestinoNombre != null ? tras.ambienteDestinoNombre : 'Ambiente ' + tras.ambienteDestino}" />
-                        </p:column>
+                            <td>
+                                {% if tras.ambiente_origen_nombre %}
+                                    {{ tras.ambiente_origen_nombre }}
+                                {% else %}
+                                    Ambiente {{ tras.ambiente_origen }}
+                                {% endif %}
+                            </td>
 
-                        <p:column headerText="Fecha Traslado" 
-                                 filterBy="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" 
-                                 filterMatchMode="contains"
-                                 exportValue="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}">
-                            <h:outputText value="#{trasladoRecursoBean.formatearFecha(tras.fechaTraslado)}" rendered="#{tras.fechaTraslado != null}" />
-                        </p:column>
+                            <td>
+                                {% if tras.ambiente_destino_nombre %}
+                                    {{ tras.ambiente_destino_nombre }}
+                                {% else %}
+                                    Ambiente {{ tras.ambiente_destino }}
+                                {% endif %}
+                            </td>
 
-                        <p:column headerText="Observación" 
-                                 filterBy="#{tras.observacion}" 
-                                 filterMatchMode="contains">
-                            <h:outputText value="#{tras.observacion != null ? tras.observacion : '—'}" />
-                        </p:column>
+                            <td>
+                                {% if tras.fecha_traslado %}
+                                    {{ tras.fecha_traslado|date:"d/m/Y" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
 
-                        <p:column headerText="Acciones" 
-                                 style="width: 200px;"
-                                 exportable="false">
-                            <p:commandButton value="✏️ Editar" 
-                                             action="#{trasladoRecursoBean.editar(tras.idTraslado)}"
-                                             icon="pi pi-pencil"
-                                             styleClass="btn btn-warning btn-sm"
-                                             style="margin-right: 5px;"
-                                             ajax="false"/>
-                            <p:commandButton value="🗑️ Eliminar" 
-                                             action="#{trasladoRecursoBean.eliminar(tras.idTraslado)}"
-                                             icon="pi pi-trash"
-                                             styleClass="btn btn-danger btn-sm"
-                                             update="tablaTraslados"
-                                             onclick="return confirm('¿Está seguro de eliminar el traslado ##{tras.idTraslado}?');"
-                                             ajax="false"/>
-                        </p:column>
+                            <td>{{ tras.observacion|default:"—" }}</td>
 
-                    </p:dataTable>
-                </h:form>
+                            <td>
+                                <div style="display: flex; gap: 5px;">
+                                    <a href="{% url 'editar_traslado' tras.id_traslado %}"
+                                       class="btn btn-warning btn-sm">✏️ Editar</a>
+
+                                    <form method="post"
+                                          action="{% url 'eliminar_traslado' tras.id_traslado %}"
+                                          onsubmit="return confirm('¿Está seguro de eliminar el traslado #{{ tras.id_traslado }}?');"
+                                          style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">🗑️ Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No hay traslados registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                {% if traslados.has_other_pages %}
+                <nav>
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if traslados.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ traslados.previous_page_number }}">«</a>
+                            </li>
+                        {% endif %}
+                        {% for num in traslados.paginator.page_range %}
+                            <li class="page-item {% if traslados.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if traslados.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ traslados.next_page_number }}">»</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
             </div>
         </main>
     </div>
 
-</h:body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filtrarTabla() {
+            const input = document.getElementById("filtroTabla").value.toLowerCase();
+            const filas = document.querySelectorAll("#tablaTraslados tbody tr");
+            filas.forEach(fila => {
+                fila.style.display = fila.textContent.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
 </html>
-

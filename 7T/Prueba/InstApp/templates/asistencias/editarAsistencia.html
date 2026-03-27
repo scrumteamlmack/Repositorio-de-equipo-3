@@ -1,359 +1,161 @@
+{% load static %}
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-
-<h:head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
     <title>Editar Asistencia - L-MACK</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
-    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-        .layout-container {
-            display: flex;
-            min-height: 100vh;
-            background-color: var(--cream-bg);
-        }
-        
-        .sidebar {
-            width: 260px;
-            background-color: var(--primary-green);
-            color: white;
-            padding: 0;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-header {
-            padding: 25px 20px;
-            background-color: var(--dark-green);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-header h3 {
-            color: white;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .sidebar-header h3::before {
-            content: "👤";
-            font-size: 28px;
-        }
-        
-        .sidebar-nav {
-            padding: 20px 0;
-            flex: 1;
-        }
-        
-        .sidebar-nav a {
-            display: block;
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-            padding: 15px 25px;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-            font-size: 15px;
-        }
-        
-        .sidebar-nav a:hover {
-            background: rgba(255,255,255,0.1);
-            border-left-color: var(--light-green);
-            color: white;
-            padding-left: 30px;
-        }
-        
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: auto;
-        }
-        
-        .sidebar-footer .btn-logout {
-            width: 100%;
-            padding: 12px 20px;
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .sidebar-footer .btn-logout:hover {
-            background-color: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .main-content {
-            flex: 1;
-            margin-left: 260px;
-            padding: 20px;
-            min-height: 100vh;
-            background-color: var(--cream-bg);
-        }
-        
-        .content-wrapper {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        
-        .form-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-section {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-            display: block;
-        }
-        .btn-group-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-gray);
-        }
-        .d-flex {
-            display: flex;
-        }
-        .justify-content-between {
-            justify-content: space-between;
-        }
-        .align-items-center {
-            align-items: center;
-        }
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-        .mb-0 {
-            margin-bottom: 0;
-        }
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -10px;
-        }
-        .col-md-6 {
-            flex: 0 0 50%;
-            max-width: 50%;
-            padding: 0 10px;
-            margin-bottom: 15px;
-        }
-        @media (max-width: 768px) {
-            .col-md-6 {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-        }
-        .text-muted {
-            color: var(--text-gray);
-            font-size: 12px;
-            display: block;
-            margin-top: 5px;
-        }
+        .layout-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--primary-green); color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; background: var(--dark-green); }
+        .sidebar-nav a { display: block; padding: 12px 20px; color: white; text-decoration: none; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.1); }
+        .main-content { margin-left: 260px; padding: 20px; width: 100%; }
+        .content-wrapper { background: white; padding: 25px; border-radius: 8px; }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <f:metadata>
-        <f:viewAction action="#{loginBean.verificarSesionInstructor}"/>
-    </f:metadata>
+<body>
 
-    <div class="layout-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>L-MACK</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
-            </nav>
-            <div class="sidebar-footer">
-                <h:form>
-                    <p:commandButton value="Cerrar sesión"
-                                     icon="pi pi-sign-out"
-                                     action="#{loginBean.cerrarSesion}"
-                                     styleClass="btn-logout"
-                                     ajax="false"/>
-                </h:form>
-            </div>
-        </aside>
-        
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h:form id="formEditarAsistencia">
-                    <f:metadata>
-                        <f:viewParam name="id" value="#{asistenciaBean.idAsistenciaEditar}">
-                            <f:converter converterId="javax.faces.Integer" />
-                        </f:viewParam>
-                        <f:viewAction action="#{asistenciaBean.cargarAsistenciaParaEditar}" />
-                    </f:metadata>
-                    
-                    <div class="form-container">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h3 class="mb-0">
-                                <i class="pi pi-check-circle" style="margin-right: 10px;"></i>
-                                Editar Asistencia
-                            </h3>
-                        </div>
+<div class="layout-container">
 
-                        <p:messages showSummary="true" closable="true" severity="info,error,warn" styleClass="mb-3"/>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>L-MACK</h3>
+        </div>
 
-                        <div class="form-section">
-                            <h5 class="mb-4">Datos de la Asistencia</h5>
-                            
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Aprendiz</label>
-                                    <p:selectOneMenu id="aprendiz" 
-                                                     value="#{asistenciaBean.asistencia.aprendizUsuarioId}" 
-                                                     required="true"
-                                                     requiredMessage="Debe seleccionar un aprendiz"
-                                                     filter="true"
-                                                     styleClass="form-select"
-                                                     style="width: 100%;">
-                                        <f:selectItem itemLabel="Seleccione un aprendiz..." itemValue="0"/>
-                                        <f:selectItems value="#{asistenciaBean.aprendicesUsuarios}" 
-                                                       var="usuario"
-                                                       itemLabel="#{usuario.nombre}" 
-                                                       itemValue="#{usuario.idUsuario}" />
-                                    </p:selectOneMenu>
-                                </div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'inicio_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'listar_asistencias' %}">📋 Asistencia</a>
+            <a href="{% url 'consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'consultar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+        </nav>
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Instructor</label>
-                                    <p:selectOneMenu id="instructor" 
-                                                     value="#{asistenciaBean.asistencia.instructorUsuarioId}" 
-                                                     required="true"
-                                                     requiredMessage="Debe seleccionar un instructor"
-                                                     filter="true"
-                                                     styleClass="form-select"
-                                                     style="width: 100%;">
-                                        <f:selectItem itemLabel="Seleccione un instructor..." itemValue="0"/>
-                                        <f:selectItems value="#{asistenciaBean.instructoresUsuarios}" 
-                                                       var="usuario"
-                                                       itemLabel="#{usuario.nombre}" 
-                                                       itemValue="#{usuario.idUsuario}" />
-                                    </p:selectOneMenu>
-                                </div>
+        <div class="sidebar-footer">
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Jornada</label>
-                                    <p:selectOneMenu id="jornada" 
-                                                     value="#{asistenciaBean.asistencia.jornadaId}" 
-                                                     required="true"
-                                                     requiredMessage="Debe seleccionar una jornada"
-                                                     filter="true"
-                                                     styleClass="form-select"
-                                                     style="width: 100%;">
-                                        <f:selectItem itemLabel="Seleccione una jornada..." itemValue="0"/>
-                                        <f:selectItems value="#{asistenciaBean.jornadas}" 
-                                                       var="jornada"
-                                                       itemLabel="#{jornada.nombreJornada}" 
-                                                       itemValue="#{jornada.idJornada}" />
-                                    </p:selectOneMenu>
-                                </div>
+    <!-- CONTENIDO -->
+    <main class="main-content">
+        <div class="content-wrapper">
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Estado</label>
-                                    <p:selectOneMenu id="estado" 
-                                                     value="#{asistenciaBean.asistencia.estado}" 
-                                                     required="true"
-                                                     requiredMessage="Debe seleccionar un estado"
-                                                     styleClass="form-select"
-                                                     style="width: 100%;">
-                                        <f:selectItem itemLabel="Seleccione un estado..." itemValue=""/>
-                                        <f:selectItem itemLabel="Asistió (S)" itemValue="S"/>
-                                        <f:selectItem itemLabel="Retraso (R)" itemValue="R"/>
-                                        <f:selectItem itemLabel="No asistió (N)" itemValue="N"/>
-                                    </p:selectOneMenu>
-                                </div>
+            <form method="POST">
+                {% csrf_token %}
 
-                                <div class="col-md-6">
-<<<<<<< HEAD
-                                    <label class="form-label">Fecha *</label>
-=======
-                                    <label class="form-label">Fecha</label>
->>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
-                                    <p:calendar id="fecha" 
-                                                value="#{asistenciaBean.fechaDate}"
-                                                showIcon="true" 
-                                                pattern="dd/MM/yyyy"
-                                                required="true"
-                                                requiredMessage="Debe seleccionar una fecha"
-<<<<<<< HEAD
-                                                mindate="#{java.util.Date()}"
-                                                maxdate="#{java.util.Date()}"
-                                                styleClass="form-control"
-                                                style="width: 100%;"/>
-                                    <p:message for="fecha" display="text" styleClass="text-danger"/>
-                                    <small class="text-muted">Solo se permite la fecha de hoy</small>
-=======
-                                                styleClass="form-control"
-                                                style="width: 100%;"/>
->>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
-                                </div>
-                            </div>
-
-                            <div class="btn-group-actions">
-                                <p:commandButton value="Cancelar"
-                                                 action="/pages/instructor/asistencias/listarAsistencias.xhtml?faces-redirect=true"
-                                                 icon="pi pi-times"
-                                                 ajax="false"
-                                                 styleClass="btn btn-secondary"
-                                                 style="min-width: 120px;"/>
-                                <p:commandButton value="Guardar Cambios"
-                                                 action="#{asistenciaBean.actualizarAsistencia}"
-                                                 icon="pi pi-save"
-                                                 ajax="false"
-                                                 styleClass="btn btn-primary"
-                                                 style="min-width: 120px;"/>
-                            </div>
-                        </div>
+                <div class="form-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">Editar Asistencia</h3>
                     </div>
-                </h:form>
-            </div>
-        </main>
-    </div>
-</h:body>
-</html>
 
+                    <!-- MENSAJES -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="form-section">
+                        <h5 class="mb-4">Datos de la Asistencia</h5>
+
+                        <div class="row">
+
+                            <!-- APRENDIZ -->
+                            <div class="col-md-6">
+                                <label class="form-label">Aprendiz</label>
+                                <select name="aprendiz" class="form-select" required>
+                                    <option value="">Seleccione un aprendiz...</option>
+                                    {% for usuario in aprendices %}
+                                        <option value="{{ usuario.id }}"
+                                            {% if usuario.id == asistencia.aprendiz_id %}selected{% endif %}>
+                                            {{ usuario.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- INSTRUCTOR -->
+                            <div class="col-md-6">
+                                <label class="form-label">Instructor</label>
+                                <select name="instructor" class="form-select" required>
+                                    <option value="">Seleccione un instructor...</option>
+                                    {% for usuario in instructores %}
+                                        <option value="{{ usuario.id }}"
+                                            {% if usuario.id == asistencia.instructor_id %}selected{% endif %}>
+                                            {{ usuario.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- JORNADA -->
+                            <div class="col-md-6">
+                                <label class="form-label">Jornada</label>
+                                <select name="jornada" class="form-select" required>
+                                    <option value="">Seleccione una jornada...</option>
+                                    {% for jornada in jornadas %}
+                                        <option value="{{ jornada.id }}"
+                                            {% if jornada.id == asistencia.jornada_id %}selected{% endif %}>
+                                            {{ jornada.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- ESTADO -->
+                            <div class="col-md-6">
+                                <label class="form-label">Estado</label>
+                                <select name="estado" class="form-select" required>
+                                    <option value="">Seleccione un estado...</option>
+                                    <option value="S" {% if asistencia.estado == "S" %}selected{% endif %}>Asistió</option>
+                                    <option value="R" {% if asistencia.estado == "R" %}selected{% endif %}>Retraso</option>
+                                    <option value="N" {% if asistencia.estado == "N" %}selected{% endif %}>No asistió</option>
+                                </select>
+                            </div>
+
+                            <!-- FECHA -->
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha</label>
+                                <input type="date"
+                                       name="fecha"
+                                       value="{{ asistencia.fecha|date:'Y-m-d' }}"
+                                       class="form-control"
+                                       required>
+                            </div>
+
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="btn-group-actions">
+                            <a href="{% url 'listar_asistencias' %}" class="btn btn-secondary">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">
+                                Guardar Cambios
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

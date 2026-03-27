@@ -1,20 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% if modo_edicion %}Editar Traslado{% else %}Registrar Traslado{% endif %} - L-MACK
+    </title>
 
-<h:head>
-    <title>#{trasladoRecursoBean.modoEdicion ? 'Editar Traslado' : 'Registrar Traslado'} - L-MACK</title>
-    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
     <style>
         .layout-container {
             display: flex;
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .sidebar {
             width: 260px;
             background-color: var(--primary-green);
@@ -27,13 +28,11 @@
             display: flex;
             flex-direction: column;
         }
-        
         .sidebar-header {
             padding: 25px 20px;
             background-color: var(--dark-green);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        
         .sidebar-header h3 {
             color: white;
             margin: 0;
@@ -43,17 +42,14 @@
             align-items: center;
             gap: 10px;
         }
-        
         .sidebar-header h3::before {
             content: "👤";
             font-size: 28px;
         }
-        
         .sidebar-nav {
             padding: 20px 0;
             flex: 1;
         }
-        
         .sidebar-nav a {
             display: block;
             color: rgba(255,255,255,0.9);
@@ -63,20 +59,22 @@
             border-left: 3px solid transparent;
             font-size: 15px;
         }
-        
         .sidebar-nav a:hover {
             background: rgba(255,255,255,0.1);
             border-left-color: var(--light-green);
             color: white;
             padding-left: 30px;
         }
-        
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: white;
+            color: white;
+        }
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: auto;
         }
-        
         .sidebar-footer .btn-logout {
             width: 100%;
             padding: 12px 20px;
@@ -93,12 +91,10 @@
             justify-content: center;
             gap: 8px;
         }
-        
         .sidebar-footer .btn-logout:hover {
             background-color: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.3);
         }
-        
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -106,166 +102,162 @@
             min-height: 100vh;
             background-color: var(--cream-bg);
         }
-        
         .content-wrapper {
             background: var(--white);
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
+        .form-container {
+            max-width: 900px;
+        }
+        .form-section {
+            background: #fff;
+        }
+        .btn-group-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #2f3b2f;
+            margin-bottom: 8px;
+        }
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            min-height: 44px;
+        }
+        textarea.form-control {
+            min-height: 120px;
+        }
     </style>
-</h:head>
+</head>
 
-<h:body>
-    <f:metadata>
-        <f:viewParam name="idTrasladoEditar" value="#{trasladoRecursoBean.idTrasladoEditar}">
-            <f:converter converterId="javax.faces.Integer" />
-        </f:viewParam>
-        <f:event type="preRenderView" listener="#{trasladoRecursoBean.init}"/>
-    </f:metadata>
+<body>
 
-    <div class="layout-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>L-MACK</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/minutas/list.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
-                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
-            </nav>
-            <div class="sidebar-footer">
-                <h:form>
-                    <p:commandButton value="Cerrar sesión"
-                                     icon="pi pi-sign-out"
-                                     action="#{loginBean.cerrarSesion}"
-                                     styleClass="btn-logout"
-                                     ajax="false"/>
-                </h:form>
-            </div>
-        </aside>
-        
-        <main class="main-content">
-            <div class="content-wrapper">
-                <div class="form-header">
-                    <h2>
-                        <i class="pi pi-truck" style="margin-right: 10px;"></i>
-                        #{trasladoRecursoBean.modoEdicion ? 'Editar Traslado' : 'Registrar Traslado'}
-                    </h2>
-                </div>
+<div class="layout-container">
 
-                <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>L-MACK</h3>
+        </div>
 
-                <h:form id="formTraslado">
-                    <p:panel header="Datos del Traslado">
-                        <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+        <nav class="sidebar-nav">
+            <a href="{% url 'index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'listar_asistencias' %}">📋 Asistencia</a>
+            <a href="{% url 'listar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'listar_traslados' %}" class="active">🚚 Traslados</a>
+            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+        </nav>
 
-                            <h:outputLabel value="Recurso:" for="recurso" />
-                            <p:selectOneMenu id="recurso" 
-                                             value="#{trasladoRecursoBean.traslado.recursoId}" 
-                                             required="true" 
-                                             requiredMessage="Debe seleccionar un recurso"
-                                             filter="true"
-                                             style="width: 100%;">
-                                <f:selectItem itemLabel="Seleccione un recurso" itemValue="0" />
-                                <f:selectItems value="#{trasladoRecursoBean.recursos}" 
-                                              var="rec"
-                                              itemLabel="#{rec.nombre} (Serial: #{rec.serial})" 
-                                              itemValue="#{rec.idRecurso}" />
-                            </p:selectOneMenu>
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout"> Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
 
-                            <h:outputLabel value="Ambiente Origen:" for="ambienteOrigen" />
-                            <p:selectOneMenu id="ambienteOrigen" 
-                                             value="#{trasladoRecursoBean.traslado.ambienteOrigen}" 
-                                             required="true" 
-                                             requiredMessage="Debe seleccionar un ambiente de origen"
-                                             filter="true"
-                                             style="width: 100%;">
-                                <f:selectItem itemLabel="Seleccione un ambiente origen" itemValue="0" />
-                                <f:selectItems value="#{trasladoRecursoBean.ambientes}" 
-                                              var="amb"
-                                              itemLabel="Ambiente #{amb.numero} - #{amb.tipo}" 
-                                              itemValue="#{amb.idAmbiente}" />
-                            </p:selectOneMenu>
+    <!-- CONTENIDO -->
+    <main class="main-content">
+        <div class="content-wrapper">
 
-                            <h:outputLabel value="Ambiente Destino:" for="ambienteDestino" />
-                            <p:selectOneMenu id="ambienteDestino" 
-                                             value="#{trasladoRecursoBean.traslado.ambienteDestino}" 
-                                             required="true" 
-                                             requiredMessage="Debe seleccionar un ambiente de destino"
-                                             filter="true"
-                                             style="width: 100%;">
-                                <f:selectItem itemLabel="Seleccione un ambiente destino" itemValue="0" />
-                                <f:selectItems value="#{trasladoRecursoBean.ambientes}" 
-                                              var="amb"
-                                              itemLabel="Ambiente #{amb.numero} - #{amb.tipo}" 
-                                              itemValue="#{amb.idAmbiente}" />
-                            </p:selectOneMenu>
+            <form method="post">
+                {% csrf_token %}
 
-<<<<<<< HEAD
-                            <h:outputLabel value="Fecha y Hora del Traslado: *" for="fechaTraslado" />
-                            <h:panelGroup>
-                                <p:calendar id="fechaTraslado"
-                                            value="#{trasladoRecursoBean.fechaTrasladoDate}"
-                                            required="true"
-                                            requiredMessage="Debe seleccionar fecha y hora del traslado"
-                                            pattern="dd/MM/yyyy HH:mm"
-                                            showIcon="true"
-                                            showTime="true"
-                                            locale="es"
-                                            mindate="#{java.util.Date()}"
-                                            maxdate="#{java.util.Date()}"
-                                            style="width: 100%;"/>
-                                <p:message for="fechaTraslado" display="text" styleClass="text-danger"/>
-                                <h:outputText value="Solo se permite la fecha de hoy" style="font-size: 0.85em; color: #666; display: block;"/>
-                            </h:panelGroup>
-=======
-                            <h:outputLabel value="Fecha y Hora del Traslado:" for="fechaTraslado" />
-                            <p:calendar id="fechaTraslado"
-                                        value="#{trasladoRecursoBean.fechaTrasladoDate}"
-                                        required="true"
-                                        requiredMessage="Debe seleccionar fecha y hora del traslado"
-                                        pattern="dd/MM/yyyy HH:mm"
-                                        showIcon="true"
-                                        showTime="true"
-                                        locale="es"
-                                        style="width: 100%;"/>
->>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                <div class="form-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">
+                            {% if modo_edicion %}Editar Traslado{% else %}Registrar Traslado{% endif %}
+                        </h3>
+                    </div>
 
-                            <h:outputLabel value="Observación:" for="observacion" />
-                            <p:inputTextarea id="observacion" 
-                                             value="#{trasladoRecursoBean.traslado.observacion}" 
-                                             rows="4"
-                                             cols="50"
-                                             autoResize="false"
-                                             style="width: 100%;"/>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
 
-                        </h:panelGrid>
+                    <div class="form-section">
+                        <h5 class="mb-4">Datos del Traslado</h5>
 
-                        <div class="form-actions" style="margin-top: 20px;">
-                            <p:commandButton value="Guardar"
-                                             action="#{trasladoRecursoBean.guardar}"
-                                             icon="pi pi-save"
-                                             ajax="false"
-                                             styleClass="btn-primary"/>
-                            <p:commandButton value="Cancelar"
-                                             action="/pages/instructor/traslados/listarTraslados.xhtml?faces-redirect=true"
-                                             icon="pi pi-times"
-                                             ajax="false"
-                                             styleClass="btn-secondary"/>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Recurso *</label>
+                                <select name="recurso" class="form-select" required>
+                                    <option value="">Seleccione un recurso...</option>
+                                    {% for r in recursos %}
+                                        <option value="{{ r.id }}"
+                                            {% if traslado.recurso_id == r.id %}selected{% endif %}>
+                                            {{ r.nombre }} (Serial: {{ r.serial }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha y hora del traslado *</label>
+                                <input type="datetime-local"
+                                       name="fecha"
+                                       class="form-control"
+                                       value="{{ traslado.fecha|date:'Y-m-d\\TH:i' }}"
+                                       required>
+                                <small class="text-muted">Solo se permite la fecha de hoy</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Ambiente Origen *</label>
+                                <select name="ambiente_origen" class="form-select" required>
+                                    <option value="">Seleccione un ambiente...</option>
+                                    {% for a in ambientes %}
+                                        <option value="{{ a.id }}"
+                                            {% if traslado.ambiente_origen_id == a.id %}selected{% endif %}>
+                                            Ambiente {{ a.numero }} - {{ a.tipo }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Ambiente Destino *</label>
+                                <select name="ambiente_destino" class="form-select" required>
+                                    <option value="">Seleccione un ambiente...</option>
+                                    {% for a in ambientes %}
+                                        <option value="{{ a.id }}"
+                                            {% if traslado.ambiente_destino_id == a.id %}selected{% endif %}>
+                                            Ambiente {{ a.numero }} - {{ a.tipo }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Observación</label>
+                                <textarea name="observacion" class="form-control" rows="4">{{ traslado.observacion }}</textarea>
+                            </div>
                         </div>
 
-                    </p:panel>
-                </h:form>
-            </div>
-        </main>
-    </div>
+                        <div class="btn-group-actions">
+                            <a href="{% url 'listar_traslados' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if modo_edicion %}Guardar Cambios{% else %}Guardar{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-</h:body>
+        </div>
+    </main>
+
+</div>
+
+</body>
 </html>
-
