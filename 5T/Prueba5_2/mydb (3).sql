@@ -20,9 +20,13 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `mydb`
 --
+<<<<<<< HEAD
 drop database if exists mydb;
 create database mydb;
 use mydb;
+=======
+
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 -- --------------------------------------------------------
 
 --

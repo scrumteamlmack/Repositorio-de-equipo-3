@@ -40,48 +40,33 @@
                                 <li><a href="{{ route('usuarios.index') }}">Consultar Usuarios</a></li>
                             </ul>
                         </li>
+                        <!-- ✅ Fichas -->
                         <li onclick="toggleSubmenu(this)">
-                            <span>Minutas</span>
+                            <span>Fichas</span>
                             <ul class="submenu">
-                                <li><a href="{{ route('minutas.create') }}">Registrar Minuta</a></li>
-                                <li><a href="{{ route('minutas.index') }}">Consultar Minutas</a></li>
-                                <li><a href="{{ route('minutas.historial') }}" >Ver Historial</a></li>
+                                <li><a href="{{ route('fichas.create') }}">Registrar Ficha</a></li>
+                                <li><a href="{{ route('fichas.index') }}">Consultar Fichas</a></li>
                             </ul>
+                        </li>
+                         <li onclick="toggleSubmenu(this)">
+                            <span>Ambientes</span>
+                            <ul class="submenu">
+                                <li><a href="{{ route('ambientes.create') }}">Registrar Ambiente</a></li>
+                                <li><a href="{{ route('ambientes.index') }}">Consultar Ambiente</a></li>
+                            </ul>
+                        </li>
                         </li>
                         <li onclick="toggleSubmenu(this)">
                             <span>Recursos</span>
                             <ul class="submenu">
                                 <li><a href=" {{ route('recursos.create') }}">Registrar Recurso</a></li>
                                 <li><a href="{{  route('recursos.index') }}">Consultar Recursos</a></li>
-                            </ul>
-                        </li>
-                        <li onclick="toggleSubmenu(this)">
+</ul>
+</li> <li onclick="toggleSubmenu(this)">
                             <span>Traslado Recursos</span>
                             <ul class="submenu">
                                 <li><a href=" {{ route('traslados.create') }}">Registrar Traslado</a></li>
                                 <li><a href="{{  route('traslados.index') }}">Consultar Traslado</a></li>
-                            </ul>
-                        </li>
-                        <li onclick="toggleSubmenu(this)">
-                            <span>Incidentes</span>
-                            <ul class="submenu">
-                                <li><a href="{{ route('incidentes.create') }}">Registrar Incidente</a></li>
-                                <li><a href="{{ route('incidentes.index') }}">Consultar Incidente</a></li>
-                                <li><a href="{{ route('historico_incidentes.index') }}">Histórico Incidentes</a></li>
-                            </ul>
-                        </li>
-                        <li onclick="toggleSubmenu(this)">
-                            <span>Asistencias</span>
-                            <ul class="submenu">
-                                <li><a href="{{ route('registro_inasistencia.create') }}">Registrar Asistencia</a></li>
-                                <li><a href="{{ route('registro_inasistencia.index') }}">Consultar Asistencia</a></li>
-                            </ul>
-                        </li>
-                        <li onclick="toggleSubmenu(this)">
-                            <span>Ambientes</span>
-                            <ul class="submenu">
-                                <li><a href="{{ route('ambientes.create') }}">Registrar Ambiente</a></li>
-                                <li><a href="{{ route('ambientes.index') }}">Consultar Ambiente</a></li>
                             </ul>
                         </li>
                     </ul>

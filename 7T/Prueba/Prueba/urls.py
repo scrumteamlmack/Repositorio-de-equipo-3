@@ -22,6 +22,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mackapp.urls')),
     path('', include('LoginApp.urls')),
+    path('', include('AdminApp.urls')),
+    path('', include('AprenApp.urls')),
+    path('', include('GuardaApp.urls')),
+    path('', include('InstApp.urls')),
+    
+    
     
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

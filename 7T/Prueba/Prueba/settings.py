@@ -43,7 +43,11 @@ INSTALLED_APPS = [
     'data_wizard',
     'data_wizard.sources',
     'mackapp',
-    'LoginApp'
+    'LoginApp',
+    'AdminApp',
+    'AprenApp',
+    'GuardaApp',
+    'InstApp',
 ]
 
 

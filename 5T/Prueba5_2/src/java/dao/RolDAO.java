@@ -27,7 +27,11 @@ public class RolDAO {
             }
             
         } catch (SQLException e) {
+<<<<<<< HEAD
             System.err.println("RolDAO: Error al listar roles: " + e.getMessage());
+=======
+            System.err.println("❌ RolDAO: Error al listar roles: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         
@@ -52,7 +56,11 @@ public class RolDAO {
             }
             
         } catch (SQLException e) {
+<<<<<<< HEAD
             System.err.println("RolDAO: Error al buscar rol por ID: " + e.getMessage());
+=======
+            System.err.println("❌ RolDAO: Error al buscar rol por ID: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         

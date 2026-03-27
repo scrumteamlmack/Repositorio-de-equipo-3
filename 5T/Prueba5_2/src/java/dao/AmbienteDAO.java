@@ -44,10 +44,17 @@ public class AmbienteDAO {
     }
 
     public int guardar(Ambiente ambiente) {
+<<<<<<< HEAD
  
         int siguienteId = obtenerSiguienteId();
         if (siguienteId <= 0) {
             System.err.println("AmbienteDAO.guardar: No se pudo obtener el siguiente ID");
+=======
+        // Obtener el siguiente ID disponible ya que la tabla no tiene AUTO_INCREMENT
+        int siguienteId = obtenerSiguienteId();
+        if (siguienteId <= 0) {
+            System.err.println("❌ AmbienteDAO.guardar: No se pudo obtener el siguiente ID");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             return -1;
         }
         
@@ -61,11 +68,19 @@ public class AmbienteDAO {
             ps.setString(5, ambiente.getEstado());
             int filas = ps.executeUpdate();
             if (filas > 0) {
+<<<<<<< HEAD
                 System.out.println("AmbienteDAO.guardar: Ambiente guardado con ID: " + siguienteId);
                 return siguienteId;
             }
         } catch (SQLException e) {
             System.err.println("AmbienteDAO.guardar: Error SQL: " + e.getMessage());
+=======
+                System.out.println("✅ AmbienteDAO.guardar: Ambiente guardado con ID: " + siguienteId);
+                return siguienteId;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ AmbienteDAO.guardar: Error SQL: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return -1;
@@ -80,7 +95,11 @@ public class AmbienteDAO {
                 return rs.getInt("siguiente_id");
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
             System.err.println("AmbienteDAO.obtenerSiguienteId: Error: " + e.getMessage());
+=======
+            System.err.println("❌ AmbienteDAO.obtenerSiguienteId: Error: " + e.getMessage());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         return -1;

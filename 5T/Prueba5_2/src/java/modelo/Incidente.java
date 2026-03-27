@@ -1,6 +1,10 @@
 package modelo;
 
+<<<<<<< HEAD
 
+=======
+import java.io.Serializable;
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;

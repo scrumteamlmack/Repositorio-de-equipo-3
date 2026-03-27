@@ -28,7 +28,11 @@ public class AsistenciaAprendizBean implements Serializable {
 
     @PostConstruct
     public void init() {
+<<<<<<< HEAD
         System.out.println("AsistenciaAprendizBean.init: Inicializando bean");
+=======
+        System.out.println("🔍 AsistenciaAprendizBean.init: Inicializando bean");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
         cargarAsistencias();
     }
 
@@ -36,11 +40,19 @@ public class AsistenciaAprendizBean implements Serializable {
         try {
             if (loginBean != null && loginBean.isAutenticado() && loginBean.getUsuarioAutenticado() != null) {
                 int idAprendiz = loginBean.getUsuarioAutenticado().getIdUsuario();
+<<<<<<< HEAD
                 System.out.println("ID Aprendiz: " + idAprendiz);
                 asistencias = asistenciaDAO.listarPorAprendiz(idAprendiz);
                 System.out.println(" Asistencias cargadas: " + (asistencias != null ? asistencias.size() : 0));
             } else {
                 System.err.println(" No hay usuario autenticado");
+=======
+                System.out.println("   - ID Aprendiz: " + idAprendiz);
+                asistencias = asistenciaDAO.listarPorAprendiz(idAprendiz);
+                System.out.println("   - Asistencias cargadas: " + (asistencias != null ? asistencias.size() : 0));
+            } else {
+                System.err.println("   ⚠️ No hay usuario autenticado");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 asistencias = new ArrayList<>();
             }
         } catch (Exception e) {

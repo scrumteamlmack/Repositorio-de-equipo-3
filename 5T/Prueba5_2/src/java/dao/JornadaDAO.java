@@ -12,6 +12,7 @@ import java.util.List;
 public class JornadaDAO {
     
     public List<Jornada> listar() {
+<<<<<<< HEAD
         System.out.println("JornadaDAO.listar: Iniciando consulta de jornadas");
         List<Jornada> jornadas = new ArrayList<>();
         String sql = "SELECT id_jornada, nombre_jornada FROM jornada ORDER BY nombre_jornada";
@@ -23,11 +24,28 @@ public class JornadaDAO {
                 return jornadas;
             }
             System.out.println("JornadaDAO.listar: Conexión establecida");
+=======
+        System.out.println("🔍 JornadaDAO.listar: Iniciando consulta de jornadas");
+        List<Jornada> jornadas = new ArrayList<>();
+        String sql = "SELECT id_jornada, nombre_jornada FROM jornada ORDER BY nombre_jornada";
+        System.out.println("   - SQL: " + sql);
+        
+        try (Connection con = ConnBD.conectar()) {
+            if (con == null) {
+                System.err.println("❌ JornadaDAO.listar: No se pudo establecer conexión");
+                return jornadas;
+            }
+            System.out.println("✅ JornadaDAO.listar: Conexión establecida");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             
             try (PreparedStatement ps = con.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
                 
+<<<<<<< HEAD
                 System.out.println("Ejecutando consulta...");
+=======
+                System.out.println("   - Ejecutando consulta...");
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
                 int contador = 0;
                 
                 while (rs.next()) {
@@ -36,6 +54,7 @@ public class JornadaDAO {
                     j.setNombreJornada(rs.getString("nombre_jornada"));
                     jornadas.add(j);
                     contador++;
+<<<<<<< HEAD
                     System.out.println("Jornada encontrada: ID=" + j.getIdJornada() + ", Nombre=" + j.getNombreJornada());
                 }
                 
@@ -46,6 +65,18 @@ public class JornadaDAO {
             System.err.println("JornadaDAO.listar: Error SQL: " + e.getMessage());
             System.err.println("SQL State: " + e.getSQLState());
             System.err.println("Error Code: " + e.getErrorCode());
+=======
+                    System.out.println("   - Jornada encontrada: ID=" + j.getIdJornada() + ", Nombre=" + j.getNombreJornada());
+                }
+                
+                System.out.println("✅ JornadaDAO.listar: Total de jornadas encontradas: " + contador);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("❌ JornadaDAO.listar: Error SQL: " + e.getMessage());
+            System.err.println("   - SQL State: " + e.getSQLState());
+            System.err.println("   - Error Code: " + e.getErrorCode());
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
             e.printStackTrace();
         }
         

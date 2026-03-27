@@ -83,7 +83,11 @@
         .sidebar button {
             width: 100%;
             padding: 10px;
+<<<<<<< HEAD
             background: #d9534f;
+=======
+            background: #009879;
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
             border: none;
             color: white;
             cursor: pointer;
@@ -93,7 +97,11 @@
         }
 
         .sidebar button:hover {
+<<<<<<< HEAD
             background: #c9302c;
+=======
+            background: #009879;
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
         }
 
         /* ----------- CONTENIDO ----------- */
