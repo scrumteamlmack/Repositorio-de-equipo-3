@@ -1,0 +1,57 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}{% if modo == "editar" %}Editar Traslado{% else %}Nuevo Traslado{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; font-weight: 600;">
+        {% if modo == "editar" %}Editar{% else %}Nuevo{% endif %} Traslado
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Recurso</label>
+            <select class="form-select" name="recurso_id" required>
+                <option value="">Seleccione...</option>
+                {% for r in recursos %}
+                <option value="{{ r.id_recurso }}" {% if traslado and traslado.recurso_id == r.id_recurso %}selected{% endif %}>{{ r.nombre_recurso }} ({{ r.serial_recurso }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Ambiente origen</label>
+            <select class="form-select" name="ambiente_origen_id" required>
+                <option value="">Seleccione...</option>
+                {% for a in ambientes %}
+                <option value="{{ a.id_ambiente }}" {% if traslado and traslado.ambiente_origen_id == a.id_ambiente %}selected{% endif %}>{{ a.num_ambiente }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Ambiente destino</label>
+            <select class="form-select" name="ambiente_destino" required>
+                <option value="">Seleccione...</option>
+                {% for a in ambientes %}
+                <option value="{{ a.id_ambiente }}" {% if traslado and traslado.ambiente_destino == a.id_ambiente %}selected{% endif %}>
+                    {{ a.num_ambiente }} - {{ a.tipo_ambiente }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Fecha y hora</label>
+            <input class="form-control" type="datetime-local" name="fecha_traslado" value="{% if traslado %}{{ traslado.fecha_traslado|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Observacion</label>
+            <input class="form-control" type="text" name="observacion" value="{{ traslado.observacion|default:'' }}">
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'guarda_traslados' %}" class="btn btn-secondary">Cancelar</a>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -25,6 +25,8 @@ from LoginApp.models import (
     TipoRecurso,
 )
 
+MAX_MEDIUMINT = 8_388_607
+
 def _hash_nueva_contrasena(plain: str) -> str:
     """Mismo criterio que registros recientes en BD: SHA-256 en hexadecimal."""
     return hashlib.sha256(plain.encode("utf-8")).hexdigest()
@@ -114,9 +116,18 @@ def _render_admin(request, template_name, extra_context=None):
 
 
 def cerrar_sesion(request):
+    # Este proyecto maneja sesión propia con `request.session['usuario_id']`.
+    # Siempre la limpiamos, incluso si no se usa `django.contrib.auth`.
+    request.session.pop("usuario_id", None)
+    try:
+        request.session.flush()
+    except Exception:
+        # Si el backend de sesión no permite flush por algún motivo,
+        # al menos ya eliminamos la clave principal.
+        pass
     if request.user.is_authenticated:
         logout(request)
-        messages.success(request, "Te saliste primo")
+    messages.success(request, "Sesión cerrada correctamente.")
     return redirect("siza")
 
 
@@ -462,6 +473,16 @@ def crear_ficha(request):
                 "formFicha.html",
                 {"instructores": instructores, "ficha": {"numFicha": num_raw, "instructorId": inst_raw or ""}},
             )
+        if num_ficha < 1 or num_ficha > MAX_MEDIUMINT:
+            messages.error(
+                request,
+                f"El número de ficha debe estar entre 1 y {MAX_MEDIUMINT}.",
+            )
+            return _render_admin(
+                request,
+                "formFicha.html",
+                {"instructores": instructores, "ficha": {"numFicha": num_raw, "instructorId": inst_raw or ""}},
+            )
         if not inst_raw:
             messages.error(request, "Seleccione un instructor.")
             return _render_admin(
@@ -530,6 +551,20 @@ def editar_ficha(request, ficha_id):
             num_ficha = int(num_raw)
         except ValueError:
             messages.error(request, "Número de ficha inválido.")
+            return _render_admin(
+                request,
+                "formFicha.html",
+                {
+                    "instructores": instructores,
+                    "ficha": {"numFicha": num_raw, "instructorId": inst_raw or ficha_ctx["instructorId"]},
+                    "idFichaEditar": ficha_id,
+                },
+            )
+        if num_ficha < 1 or num_ficha > MAX_MEDIUMINT:
+            messages.error(
+                request,
+                f"El número de ficha debe estar entre 1 y {MAX_MEDIUMINT}.",
+            )
             return _render_admin(
                 request,
                 "formFicha.html",

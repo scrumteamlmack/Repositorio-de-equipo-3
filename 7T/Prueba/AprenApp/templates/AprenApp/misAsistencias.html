@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Mis Asistencias - L-MACK</title>
+    <title>Mis Inasistencias - L-MACK</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0"/>
@@ -121,8 +121,8 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="{% url 'aprendiz_index' %}" class="sidebar-link">🏠 Inicio</a>
-                <a href="{% url 'listar_asistencias' %}" class="sidebar-link">📋 Mis Asistencias</a>
-                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
+                <a href="{% url 'listar_asistencias' %}" class="sidebar-link">📋 Mis inasistencias</a>
+                <a href="{% url 'perfil_aprendiz' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
                 <form method="post" action="{% url 'logout' %}">
@@ -135,7 +135,7 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="form-header">
-                    <h2>✅ Mis Asistencias</h2>
+                    <h2>✅ Mis Inasistencias</h2>
                 </div>
 
                 {% if messages %}

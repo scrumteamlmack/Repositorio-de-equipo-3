@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'LoginApp',
     'AdminApp',
     'AprenApp',
+    'GuardaApp',
 ]
 
 
