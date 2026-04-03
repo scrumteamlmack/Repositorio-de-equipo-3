@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'AprenApp',
     'GuardaApp',
     'InstApp',
+    'UsuarioApp',
 ]
 
 
