@@ -23,12 +23,9 @@ urlpatterns = [
     path('', include('mackapp.urls')),
     path('', include('LoginApp.urls')),
     path('', include('AdminApp.urls')),
-    path('', include('AprenApp.urls')),
     path('', include('GuardaApp.urls')),
     path('', include('InstApp.urls')),
-    
-    
-    
+    path('', include('AprenApp.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

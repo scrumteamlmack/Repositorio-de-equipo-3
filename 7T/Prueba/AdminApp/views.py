@@ -1,7 +1,10 @@
 import hashlib
 from collections import defaultdict
+from io import BytesIO
 from urllib.parse import urlencode
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.db import IntegrityError, transaction
 from django.db.models import Max, Q
@@ -9,6 +12,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font
+
+from Prueba.report_utils import landscape_pdf_response, maybe_int, q_param as admin_q, safe_q_part as admin_safe_q
 
 from LoginApp.models import (
     Usuario,
@@ -186,12 +193,29 @@ def perfil(request):
 
 
 def listar_usuarios(request):
+    q = admin_q(request)
     roles_por_usuario = defaultdict(list)
     for ur in UserRol.objects.select_related("id_rol").all():
         roles_por_usuario[ur.id_usuario_id].append(ur.id_rol.nombre_rol)
 
+    qs = Usuario.objects.all().order_by("id_usuario")
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(p_nombre__icontains=q)
+            | Q(s_nombre__icontains=q)
+            | Q(p_apellido__icontains=q)
+            | Q(s_apellido__icontains=q)
+            | Q(correo__icontains=q)
+            | Q(tipo_documento__icontains=q)
+            | Q(userrol_set__id_rol__nombre_rol__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_usuario=nu) | Q(num_documento=nu)
+        qs = qs.filter(cond).distinct()
+
     filas = []
-    for u in Usuario.objects.all().order_by("id_usuario"):
+    for u in qs:
         nombres = " ".join(filter(None, [u.p_nombre, u.s_nombre])).strip()
         apellidos = " ".join(filter(None, [u.p_apellido, u.s_apellido])).strip()
         roles = roles_por_usuario.get(u.id_usuario, [])
@@ -204,7 +228,7 @@ def listar_usuarios(request):
                 "rol": ", ".join(roles) if roles else "—",
             }
         )
-    return _render_admin(request, "listarUsuarios.html", {"usuarios": filas})
+    return _render_admin(request, "listarUsuarios.html", {"usuarios": filas, "q": q})
 
 
 def form_usuario(request):
@@ -442,10 +466,23 @@ def _instructores_para_select():
 
 
 def listar_fichas(request):
-    filas = []
+    q = admin_q(request)
     qs = Ficha.objects.select_related(
         "instructor_usuario_id_usuario__usuario_id_usuario"
     ).order_by("num_ficha")
+    if q:
+        nu = maybe_int(q)
+        uq = (
+            Q(instructor_usuario_id_usuario__usuario_id_usuario__p_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__p_apellido__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_apellido__icontains=q)
+        )
+        if nu is not None:
+            uq |= Q(idficha=nu) | Q(num_ficha=nu)
+        qs = qs.filter(uq).distinct()
+
+    filas = []
     for f in qs:
         u = f.instructor_usuario_id_usuario.usuario_id_usuario
         instructor = " ".join(filter(None, [u.p_nombre, u.p_apellido])).strip()
@@ -456,7 +493,7 @@ def listar_fichas(request):
                 "instructor": instructor or "—",
             }
         )
-    return _render_admin(request, "listarFichas.html", {"fichas": filas})
+    return _render_admin(request, "listarFichas.html", {"fichas": filas, "q": q})
 
 
 def crear_ficha(request):
@@ -683,10 +720,25 @@ def _ambiente_form_desde_modelo(a: Ambiente):
 
 
 def listar_programas(request):
-    filas = []
+    q = admin_q(request)
     qs = Programas.objects.select_related("jornada", "modalidad", "coordinacion").order_by(
         "id_programas"
     )
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(nombre_programa__icontains=q)
+            | Q(nivel_formacion__icontains=q)
+            | Q(duracion__icontains=q)
+            | Q(jornada__nombre_jornada__icontains=q)
+            | Q(modalidad__nombre_modalidad__icontains=q)
+            | Q(coordinacion__nombre_coordinacion__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_programas=nu)
+        qs = qs.filter(cond)
+
+    filas = []
     for p in qs:
         filas.append(
             {
@@ -699,7 +751,7 @@ def listar_programas(request):
                 "p_coordinacion": (p.coordinacion.nombre_coordinacion or "").strip() or "—",
             }
         )
-    return _render_admin(request, "listarProgramas.html", {"programas": filas})
+    return _render_admin(request, "listarProgramas.html", {"programas": filas, "q": q})
 
 
 def _context_form_programa(programa_dict=None):
@@ -831,10 +883,19 @@ def eliminar_programa(request, programa_id):
 
 
 def listar_recursos(request):
-    q = (request.GET.get("q") or "").strip()
+    q = admin_q(request)
     filtro = Q()
     if q:
-        filtro = Q(nombre_recurso__icontains=q) | Q(serial_recurso__icontains=q)
+        nu = maybe_int(q)
+        filtro = (
+            Q(nombre_recurso__icontains=q)
+            | Q(serial_recurso__icontains=q)
+            | Q(estado__icontains=q)
+            | Q(observacion__icontains=q)
+            | Q(tipo_recurso__recurso_tipo__icontains=q)
+        )
+        if nu is not None:
+            filtro |= Q(id_recurso=nu) | Q(num_recurso=nu) | Q(ambiente__num_ambiente=nu)
     filas = []
     qs = (
         Recursos.objects.filter(filtro)
@@ -854,7 +915,7 @@ def listar_recursos(request):
                 "r_ambiente": str(r.ambiente.num_ambiente),
             }
         )
-    return _render_admin(request, "listarRecursos.html", {"recursos": filas})
+    return _render_admin(request, "listarRecursos.html", {"recursos": filas, "q": q})
 
 
 def _context_form_recurso(recurso_dict=None):
@@ -992,8 +1053,17 @@ def eliminar_recurso(request, recurso_id):
 
 
 def listar_ambientes(request):
+    q = admin_q(request)
+    qs = Ambiente.objects.all().order_by("id_ambiente")
+    if q:
+        nu = maybe_int(q)
+        cond = Q(tipo_ambiente__icontains=q) | Q(estado__icontains=q)
+        if nu is not None:
+            cond |= Q(id_ambiente=nu) | Q(num_ambiente=nu) | Q(capacidad=nu)
+        qs = qs.filter(cond)
+
     filas = []
-    for am in Ambiente.objects.all().order_by("id_ambiente"):
+    for am in qs:
         filas.append(
             {
                 "am_id": am.id_ambiente,
@@ -1003,7 +1073,7 @@ def listar_ambientes(request):
                 "am_estado": (am.estado or "").strip() or "—",
             }
         )
-    return _render_admin(request, "listarAmbientes.html", {"ambientes": filas})
+    return _render_admin(request, "listarAmbientes.html", {"ambientes": filas, "q": q})
 
 
 def _context_form_ambiente(ambiente_dict=None):
@@ -1216,9 +1286,388 @@ def eliminar_ambiente(request, ambiente_id):
 
 
 
+def _admin_excel_headers(ws, headers):
+    ws.append(headers)
+    for col_idx in range(1, len(headers) + 1):
+        c = ws.cell(row=1, column=col_idx)
+        c.font = Font(bold=True)
+        c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
 
+def exportar_usuarios_excel(request):
+    q = admin_q(request)
+    roles_por_usuario = defaultdict(list)
+    for ur in UserRol.objects.select_related("id_rol").all():
+        roles_por_usuario[ur.id_usuario_id].append(ur.id_rol.nombre_rol)
+    qs = Usuario.objects.all().order_by("id_usuario")
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(p_nombre__icontains=q)
+            | Q(s_nombre__icontains=q)
+            | Q(p_apellido__icontains=q)
+            | Q(s_apellido__icontains=q)
+            | Q(correo__icontains=q)
+            | Q(tipo_documento__icontains=q)
+            | Q(userrol_set__id_rol__nombre_rol__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_usuario=nu) | Q(num_documento=nu)
+        qs = qs.filter(cond).distinct()
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Usuarios"
+    _admin_excel_headers(ws, ["ID", "Nombre", "Apellido", "Correo", "Rol"])
+    for u in qs:
+        nombres = " ".join(filter(None, [u.p_nombre, u.s_nombre])).strip()
+        apellidos = " ".join(filter(None, [u.p_apellido, u.s_apellido])).strip()
+        roles = ", ".join(roles_por_usuario.get(u.id_usuario, [])) or "—"
+        ws.append([u.id_usuario, nombres or "—", apellidos or "—", u.correo, roles])
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    resp = HttpResponse(
+        buf.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    resp["Content-Disposition"] = f'attachment; filename="usuarios_{admin_safe_q(q)}.xlsx"'
+    return resp
 
+
+def exportar_usuarios_pdf(request):
+    q = admin_q(request)
+    roles_por_usuario = defaultdict(list)
+    for ur in UserRol.objects.select_related("id_rol").all():
+        roles_por_usuario[ur.id_usuario_id].append(ur.id_rol.nombre_rol)
+    qs = Usuario.objects.all().order_by("id_usuario")
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(p_nombre__icontains=q)
+            | Q(s_nombre__icontains=q)
+            | Q(p_apellido__icontains=q)
+            | Q(s_apellido__icontains=q)
+            | Q(correo__icontains=q)
+            | Q(tipo_documento__icontains=q)
+            | Q(userrol_set__id_rol__nombre_rol__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_usuario=nu) | Q(num_documento=nu)
+        qs = qs.filter(cond).distinct()
+    rows = []
+    for u in qs:
+        nombres = " ".join(filter(None, [u.p_nombre, u.s_nombre])).strip()
+        apellidos = " ".join(filter(None, [u.p_apellido, u.s_apellido])).strip()
+        roles = ", ".join(roles_por_usuario.get(u.id_usuario, [])) or "—"
+        rows.append([str(u.id_usuario), nombres or "—", apellidos or "—", u.correo, roles])
+    return landscape_pdf_response(
+        "Reporte de Usuarios",
+        q,
+        ["ID", "Nombre", "Apellido", "Correo", "Rol"],
+        rows,
+        [0.08, 0.22, 0.22, 0.28, 0.20],
+        f"usuarios_{admin_safe_q(q)}.pdf",
+    )
+
+
+def exportar_fichas_excel(request):
+    q = admin_q(request)
+    qs = Ficha.objects.select_related("instructor_usuario_id_usuario__usuario_id_usuario").order_by(
+        "num_ficha"
+    )
+    if q:
+        nu = maybe_int(q)
+        uq = (
+            Q(instructor_usuario_id_usuario__usuario_id_usuario__p_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__p_apellido__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_apellido__icontains=q)
+        )
+        if nu is not None:
+            uq |= Q(idficha=nu) | Q(num_ficha=nu)
+        qs = qs.filter(uq).distinct()
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Fichas"
+    _admin_excel_headers(ws, ["ID", "Número ficha", "Instructor"])
+    for f in qs:
+        u = f.instructor_usuario_id_usuario.usuario_id_usuario
+        instructor = " ".join(filter(None, [u.p_nombre, u.p_apellido])).strip() or "—"
+        ws.append([f.idficha, f.num_ficha, instructor])
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    resp = HttpResponse(
+        buf.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    resp["Content-Disposition"] = f'attachment; filename="fichas_{admin_safe_q(q)}.xlsx"'
+    return resp
+
+
+def exportar_fichas_pdf(request):
+    q = admin_q(request)
+    qs = Ficha.objects.select_related("instructor_usuario_id_usuario__usuario_id_usuario").order_by(
+        "num_ficha"
+    )
+    if q:
+        nu = maybe_int(q)
+        uq = (
+            Q(instructor_usuario_id_usuario__usuario_id_usuario__p_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_nombre__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__p_apellido__icontains=q)
+            | Q(instructor_usuario_id_usuario__usuario_id_usuario__s_apellido__icontains=q)
+        )
+        if nu is not None:
+            uq |= Q(idficha=nu) | Q(num_ficha=nu)
+        qs = qs.filter(uq).distinct()
+    rows = []
+    for f in qs:
+        u = f.instructor_usuario_id_usuario.usuario_id_usuario
+        instructor = " ".join(filter(None, [u.p_nombre, u.p_apellido])).strip() or "—"
+        rows.append([str(f.idficha), str(f.num_ficha), instructor])
+    return landscape_pdf_response(
+        "Reporte de Fichas",
+        q,
+        ["ID", "Número ficha", "Instructor"],
+        rows,
+        [0.12, 0.28, 0.60],
+        f"fichas_{admin_safe_q(q)}.pdf",
+    )
+
+
+def exportar_programas_excel(request):
+    q = admin_q(request)
+    qs = Programas.objects.select_related("jornada", "modalidad", "coordinacion").order_by("id_programas")
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(nombre_programa__icontains=q)
+            | Q(nivel_formacion__icontains=q)
+            | Q(duracion__icontains=q)
+            | Q(jornada__nombre_jornada__icontains=q)
+            | Q(modalidad__nombre_modalidad__icontains=q)
+            | Q(coordinacion__nombre_coordinacion__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_programas=nu)
+        qs = qs.filter(cond)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Programas"
+    _admin_excel_headers(
+        ws,
+        ["ID", "Nombre", "Nivel", "Duración", "Jornada", "Modalidad", "Coordinación"],
+    )
+    for p in qs:
+        ws.append(
+            [
+                p.id_programas,
+                (p.nombre_programa or "").strip() or "—",
+                (p.nivel_formacion or "").strip() or "—",
+                (p.duracion or "").strip() or "—",
+                (p.jornada.nombre_jornada or "").strip() or "—",
+                (p.modalidad.nombre_modalidad or "").strip() or "—",
+                (p.coordinacion.nombre_coordinacion or "").strip() or "—",
+            ]
+        )
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    resp = HttpResponse(
+        buf.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    resp["Content-Disposition"] = f'attachment; filename="programas_{admin_safe_q(q)}.xlsx"'
+    return resp
+
+
+def exportar_programas_pdf(request):
+    q = admin_q(request)
+    qs = Programas.objects.select_related("jornada", "modalidad", "coordinacion").order_by("id_programas")
+    if q:
+        nu = maybe_int(q)
+        cond = (
+            Q(nombre_programa__icontains=q)
+            | Q(nivel_formacion__icontains=q)
+            | Q(duracion__icontains=q)
+            | Q(jornada__nombre_jornada__icontains=q)
+            | Q(modalidad__nombre_modalidad__icontains=q)
+            | Q(coordinacion__nombre_coordinacion__icontains=q)
+        )
+        if nu is not None:
+            cond |= Q(id_programas=nu)
+        qs = qs.filter(cond)
+    rows = []
+    for p in qs:
+        rows.append(
+            [
+                str(p.id_programas),
+                (p.nombre_programa or "").strip() or "—",
+                (p.nivel_formacion or "").strip() or "—",
+                (p.duracion or "").strip() or "—",
+                (p.jornada.nombre_jornada or "").strip() or "—",
+                (p.modalidad.nombre_modalidad or "").strip() or "—",
+                (p.coordinacion.nombre_coordinacion or "").strip() or "—",
+            ]
+        )
+    return landscape_pdf_response(
+        "Reporte de Programas",
+        q,
+        ["ID", "Nombre", "Nivel", "Duración", "Jornada", "Modalidad", "Coordinación"],
+        rows,
+        [0.06, 0.20, 0.12, 0.10, 0.14, 0.14, 0.24],
+        f"programas_{admin_safe_q(q)}.pdf",
+    )
+
+
+def exportar_recursos_excel(request):
+    q = admin_q(request)
+    filtro = Q()
+    if q:
+        nu = maybe_int(q)
+        filtro = (
+            Q(nombre_recurso__icontains=q)
+            | Q(serial_recurso__icontains=q)
+            | Q(estado__icontains=q)
+            | Q(observacion__icontains=q)
+            | Q(tipo_recurso__recurso_tipo__icontains=q)
+        )
+        if nu is not None:
+            filtro |= Q(id_recurso=nu) | Q(num_recurso=nu) | Q(ambiente__num_ambiente=nu)
+    qs = Recursos.objects.filter(filtro).select_related("tipo_recurso", "ambiente").order_by("id_recurso")
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Recursos"
+    _admin_excel_headers(
+        ws,
+        ["ID", "Nombre", "Serial", "Número", "Tipo", "Estado", "Ambiente", "Observación"],
+    )
+    for r in qs:
+        ws.append(
+            [
+                r.id_recurso,
+                (r.nombre_recurso or "").strip() or "—",
+                (r.serial_recurso or "").strip() or "—",
+                r.num_recurso,
+                (r.tipo_recurso.recurso_tipo or "").strip() or "—",
+                (r.estado or "").strip() or "—",
+                str(r.ambiente.num_ambiente) if r.ambiente_id else "",
+                (r.observacion or "").strip(),
+            ]
+        )
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    resp = HttpResponse(
+        buf.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    resp["Content-Disposition"] = f'attachment; filename="recursos_{admin_safe_q(q)}.xlsx"'
+    return resp
+
+
+def exportar_recursos_pdf(request):
+    q = admin_q(request)
+    filtro = Q()
+    if q:
+        nu = maybe_int(q)
+        filtro = (
+            Q(nombre_recurso__icontains=q)
+            | Q(serial_recurso__icontains=q)
+            | Q(estado__icontains=q)
+            | Q(observacion__icontains=q)
+            | Q(tipo_recurso__recurso_tipo__icontains=q)
+        )
+        if nu is not None:
+            filtro |= Q(id_recurso=nu) | Q(num_recurso=nu) | Q(ambiente__num_ambiente=nu)
+    qs = Recursos.objects.filter(filtro).select_related("tipo_recurso", "ambiente").order_by("id_recurso")
+    rows = []
+    for r in qs:
+        rows.append(
+            [
+                str(r.id_recurso),
+                (r.nombre_recurso or "").strip() or "—",
+                (r.serial_recurso or "").strip() or "—",
+                str(r.num_recurso),
+                (r.tipo_recurso.recurso_tipo or "").strip() or "—",
+                (r.estado or "").strip() or "—",
+                str(r.ambiente.num_ambiente) if r.ambiente_id else "",
+                (r.observacion or "").strip(),
+            ]
+        )
+    return landscape_pdf_response(
+        "Reporte de Recursos",
+        q,
+        ["ID", "Nombre", "Serial", "Número", "Tipo", "Estado", "Ambiente", "Observación"],
+        rows,
+        [0.06, 0.14, 0.12, 0.07, 0.12, 0.10, 0.09, 0.30],
+        f"recursos_{admin_safe_q(q)}.pdf",
+    )
+
+
+def exportar_ambientes_admin_excel(request):
+    q = admin_q(request)
+    qs = Ambiente.objects.all().order_by("id_ambiente")
+    if q:
+        nu = maybe_int(q)
+        cond = Q(tipo_ambiente__icontains=q) | Q(estado__icontains=q)
+        if nu is not None:
+            cond |= Q(id_ambiente=nu) | Q(num_ambiente=nu) | Q(capacidad=nu)
+        qs = qs.filter(cond)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Ambientes"
+    _admin_excel_headers(ws, ["ID", "Número", "Capacidad", "Tipo", "Estado"])
+    for a in qs:
+        ws.append(
+            [
+                a.id_ambiente,
+                a.num_ambiente,
+                a.capacidad,
+                (a.tipo_ambiente or "").strip(),
+                (a.estado or "").strip(),
+            ]
+        )
+    buf = BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    resp = HttpResponse(
+        buf.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    resp["Content-Disposition"] = f'attachment; filename="ambientes_{admin_safe_q(q)}.xlsx"'
+    return resp
+
+
+def exportar_ambientes_admin_pdf(request):
+    q = admin_q(request)
+    qs = Ambiente.objects.all().order_by("id_ambiente")
+    if q:
+        nu = maybe_int(q)
+        cond = Q(tipo_ambiente__icontains=q) | Q(estado__icontains=q)
+        if nu is not None:
+            cond |= Q(id_ambiente=nu) | Q(num_ambiente=nu) | Q(capacidad=nu)
+        qs = qs.filter(cond)
+    rows = []
+    for a in qs:
+        rows.append(
+            [
+                str(a.id_ambiente),
+                str(a.num_ambiente),
+                str(a.capacidad),
+                (a.tipo_ambiente or "").strip(),
+                (a.estado or "").strip(),
+            ]
+        )
+    return landscape_pdf_response(
+        "Reporte de Ambientes",
+        q,
+        ["ID", "Número", "Capacidad", "Tipo", "Estado"],
+        rows,
+        [0.12, 0.14, 0.14, 0.35, 0.25],
+        f"ambientes_{admin_safe_q(q)}.pdf",
+    )
 
 
 ##⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠻⣿⣿⣿⣿⣿⣿

@@ -23,10 +23,6 @@
         .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
         .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
-        .badge { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; }
-        .bg-success { background: #dcfce7; color: #15803d; }
-        .bg-warning { background: #fef3c7; color: #92400e; }
-        .bg-danger { background: #fee2e2; color: #b91c1c; }
     </style>
 </head>
 
@@ -79,9 +75,20 @@
                 </a>
             </div>
 
-            <!-- FILTRO (reemplazo PrimeFaces) -->
-            <form method="get" class="mb-3">
-                <input type="text" name="q" class="form-control" placeholder="Buscar recurso..." value="{{ request.GET.q }}">
+            <form id="recursos-search-form" method="get" class="row g-2 mb-3 align-items-end">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar por nombre, serial, estado, tipo, ambiente..."
+                           value="{{ q|default:'' }}">
+                </div>
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-success">Buscar</button>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-success" href="{% url 'exportar_recursos_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-danger" href="{% url 'exportar_recursos_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+                </div>
             </form>
 
             <!-- TABLA -->
@@ -111,33 +118,25 @@
                         <!-- RELACIONES -->
                         <td>{{ r.r_tipo }}</td>
                         <td>
-                            <span class="badge
-                                {% if r.r_estado == 'Disponible' or r.r_estado == 'Operativo' %}
-                                    bg-success text-dark
-                                {% elif r.r_estado == 'Dañado' %}
-                                    bg-danger text-dark
-                                {% else %}
-                                    bg-warning text-dark
-                                {% endif %}
-                            ">
-                                {{ r.r_estado }}
-                            </span>
+                            {% if r.r_estado == 'Disponible' or r.r_estado == 'Operativo' %}
+                                <span class="lm-badge-soft-success">{{ r.r_estado }}</span>
+                            {% elif r.r_estado == 'Dañado' %}
+                                <span class="lm-badge-soft-danger">{{ r.r_estado }}</span>
+                            {% else %}
+                                <span class="lm-badge-soft-warning">{{ r.r_estado }}</span>
+                            {% endif %}
                         </td>
                         <td>{{ r.r_ambiente }}</td>
 
                         <td>{{ r.r_observacion|default:"—" }}</td>
 
                         <td>
-                            <a href="{% url 'editar_recurso' r.r_id %}" class="btn btn-sm btn-primary">
-                                ✏️
-                            </a>
+                            <a href="{% url 'editar_recurso' r.r_id %}" class="btn btn-sm btn-info">Editar</a>
 
                             <form method="post" action="{% url 'eliminar_recurso' r.r_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar recurso?');">
-                                    🗑️
-                                </button>
+                                        onclick="return confirm('¿Eliminar recurso?');">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -155,5 +154,29 @@
 
 </div>
 
+<script>
+(function () {
+    var form = document.getElementById('recursos-search-form');
+    if (!form) return;
+    var input = form.querySelector('input[name="q"]');
+    if (!input) return;
+    if (sessionStorage.getItem('adminLiveSearch') === 'recursos') {
+        sessionStorage.removeItem('adminLiveSearch');
+        requestAnimationFrame(function () {
+            input.focus();
+            var len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
+    }
+    var t = null;
+    input.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(function () {
+            sessionStorage.setItem('adminLiveSearch', 'recursos');
+            form.submit();
+        }, 350);
+    });
+})();
+</script>
 </body>
 </html>
