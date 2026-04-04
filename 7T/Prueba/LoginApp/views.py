@@ -7,6 +7,13 @@ from django.contrib import messages
 from .models import Usuario, UserRol
 
 
+def _no_cache(response: HttpResponse) -> HttpResponse:
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+    return response
+
+
 def _contrasena_coincide(almacenada: str, ingresada: str) -> bool:
     """La BD guarda MD5 (32 hex), SHA-256 (64 hex) o texto plano según el registro."""
     almacenada = (almacenada or "").strip()
@@ -22,10 +29,24 @@ def _contrasena_coincide(almacenada: str, ingresada: str) -> bool:
 
 
 def login_view(request):
-    # IMPORTANTE:
-    # En este proyecto el login se usa también como "pantalla de entrada".
-    # No auto-redirigimos en GET aunque exista sesión, porque rompe la navegabilidad
-    # (al clickear "Iniciar sesión" se debe ver el formulario).
+    # Si ya hay sesión, evita que el botón "Atrás" vuelva al login.
+    if request.method == "GET":
+        usuario_id = request.session.get("usuario_id")
+        if usuario_id:
+            user = Usuario.objects.filter(pk=usuario_id).first()
+            if user:
+                user_rol = UserRol.objects.filter(id_usuario=user).select_related("id_rol").first()
+                rol = (user_rol.id_rol.nombre_rol or "").strip().lower() if user_rol else ""
+
+                if rol in ("admin", "administrador"):
+                    return _no_cache(redirect("admin_index"))
+                if rol == "instructor":
+                    return _no_cache(redirect("instructor_index"))
+                if rol == "aprendiz":
+                    return _no_cache(redirect("Aprendiz_index"))
+                if rol == "guarda de seguridad":
+                    return _no_cache(redirect("guarda_index"))
+                return _no_cache(redirect("index"))
 
     if request.method == 'POST':
         cedula = request.POST.get('Cedula')
@@ -36,7 +57,7 @@ def login_view(request):
 
             if not _contrasena_coincide(user.contrasena, password):
                 messages.error(request, "Contraseña incorrecta")
-                return (render(request, "login.html"))
+                return _no_cache(render(request, "login.html"))
 
             # GUARDAR SESIÓN
             request.session['usuario_id'] = user.id_usuario
@@ -47,24 +68,23 @@ def login_view(request):
 
             # REDIRIGIR A OTRA APP
             if rol in ("admin", "administrador"):
-
-                return redirect('admin_index')
-
-            if rol == "instructor":
-                return redirect('index')
-
-            if rol == "aprendiz":
-                return redirect('aprendiz_index')
-
-            if rol == "guarda de seguridad":
-                return redirect('guarda_index')
-
-            return redirect('index')
-
+                return _no_cache(redirect('admin_index'))
+            
+            elif rol in ("instructor",):
+                return _no_cache(redirect('instructor_index'))
+            
+            elif rol in ("aprendiz",):
+                return _no_cache(redirect('Aprendiz_index'))
+            
+            elif rol in ("guarda de seguridad",):
+                return _no_cache(redirect('guarda_index'))
+            
+            else:
+                return _no_cache(redirect('index'))
 
         except Usuario.DoesNotExist:
             messages.error(request, "Usuario no encontrado")
         except UserRol.DoesNotExist:
             messages.error(request, "Usuario sin rol")
 
-    return (render(request, "login.html"))
+    return _no_cache(render(request, "login.html"))

@@ -79,10 +79,20 @@
         const input = form.querySelector('input[name="q"]');
         if (!input) return;
 
-        let t = null;
+        if (sessionStorage.getItem('guardaLiveSearch') === 'traslados') {
+            sessionStorage.removeItem('guardaLiveSearch');
+            requestAnimationFrame(function () {
+                input.focus();
+                var len = input.value.length;
+                input.setSelectionRange(len, len);
+            });
+        }
+
+        var t = null;
         input.addEventListener('input', function () {
             clearTimeout(t);
             t = setTimeout(function () {
+                sessionStorage.setItem('guardaLiveSearch', 'traslados');
                 form.submit();
             }, 350);
         });

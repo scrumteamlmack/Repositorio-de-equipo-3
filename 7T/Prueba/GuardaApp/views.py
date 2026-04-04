@@ -5,7 +5,7 @@ import re
 
 from django.contrib import messages
 from django.db import IntegrityError, transaction
-from django.db.models import Max, Q
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -15,6 +15,8 @@ from django.views.decorators.http import require_POST
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
 
+from Prueba.report_utils import landscape_pdf_response, q_param as _q_param, safe_q_part as _safe_q_part
+
 from LoginApp.models import (
     Ambiente,
     GuardaSeguridad,
@@ -23,7 +25,6 @@ from LoginApp.models import (
     RegistroIncidente,
     RegistroMinuta,
     Rol,
-    TipoIncidente,
     TrasladoRecurso,
     UserRol,
     Usuario,
@@ -35,7 +36,6 @@ def _no_cache(response: HttpResponse) -> HttpResponse:
     response["Pragma"] = "no-cache"
     response["Expires"] = "0"
     return response
-
 
 
 def _usuario_sesion(request):
@@ -105,30 +105,10 @@ def _replace_redirect(url_name: str, kwargs=None) -> HttpResponse:
     return _no_cache(HttpResponse(html))
 
 
-def _next_id(model, field_name: str) -> int:
-    current = model.objects.aggregate(mx=Max(field_name)).get("mx") or 0
-    return int(current) + 1
-
-
-def _q_param(request) -> str:
-    return (request.GET.get("q") or "").strip()
-
-
 def _maybe_int(value: str):
     if value and re.fullmatch(r"\d+", str(value).strip()):
         return int(value)
     return None
-
-
-def _safe_q_part(q: str) -> str:
-    """
-    Convierte el filtro en una parte segura para el nombre del archivo.
-    """
-    q = (q or "").strip()
-    if not q:
-        return "todo"
-    q = re.sub(r"[^0-9A-Za-z_-]+", "_", q).strip("_")
-    return q[:50] if q else "todo"
 
 
 def _filtrar_minutas(minutas_qs, q: str):
@@ -350,63 +330,40 @@ def listar_incidentes(request):
 
 @never_cache
 def crear_incidente(request):
-    ambientes = Ambiente.objects.all().order_by("num_ambiente")
-    tipos = TipoIncidente.objects.all().order_by("tipo_incidente")
+    """El guarda solo consulta incidentes; el registro lo gestiona el instructor."""
     usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-
-    if request.method == "POST":
-        try:
-            RegistroIncidente.objects.create(
-                descripcion=(request.POST.get("descripcion") or "").strip() or None,
-                fecha_incidente=request.POST.get("fecha_incidente"),
-                hora_incidente=request.POST.get("hora_incidente"),
-                ambiente_id=int(request.POST.get("ambiente_id")),
-                tipo_inc_id=int(request.POST.get("tipo_inc_id")),
-                usuario_id_usuario=usuario,
-            )
-            messages.success(request, "Incidente creado correctamente.")
-            return _replace_redirect("guarda_incidentes")
-        except (TypeError, ValueError, IntegrityError):
-            messages.error(request, "No se pudo crear el incidente.")
-    return _render_guarda(request, "guarda/incidente_form.html", {"ambientes": ambientes, "tipos": tipos, "modo": "crear"})
+    messages.info(
+        request,
+        "Los incidentes los registra el instructor desde su panel. Aquí solo puedes consultarlos y exportarlos.",
+    )
+    return _no_cache(redirect("guarda_incidentes"))
 
 
 @never_cache
 def editar_incidente(request, incidente_id):
-    _, denied = _acceso_guarda_o_login(request)
+    usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-    incidente = get_object_or_404(RegistroIncidente, pk=incidente_id)
-    ambientes = Ambiente.objects.all().order_by("num_ambiente")
-    tipos = TipoIncidente.objects.all().order_by("tipo_incidente")
-
-    if request.method == "POST":
-        try:
-            incidente.descripcion = (request.POST.get("descripcion") or "").strip() or None
-            incidente.fecha_incidente = request.POST.get("fecha_incidente")
-            incidente.hora_incidente = request.POST.get("hora_incidente")
-            incidente.ambiente_id = int(request.POST.get("ambiente_id"))
-            incidente.tipo_inc_id = int(request.POST.get("tipo_inc_id"))
-            incidente.save()
-            messages.success(request, "Incidente actualizado correctamente.")
-            return _replace_redirect("guarda_incidentes")
-        except (TypeError, ValueError, IntegrityError):
-            messages.error(request, "No se pudo actualizar el incidente.")
-    return _render_guarda(request, "guarda/incidente_form.html", {"incidente": incidente, "ambientes": ambientes, "tipos": tipos, "modo": "editar"})
+    messages.info(
+        request,
+        "El guarda no puede modificar incidentes; solo consultarlos.",
+    )
+    return _no_cache(redirect("guarda_incidentes"))
 
 
 @require_POST
 @never_cache
 def eliminar_incidente(request, incidente_id):
-    _, denied = _acceso_guarda_o_login(request)
+    usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-    incidente = get_object_or_404(RegistroIncidente, pk=incidente_id)
-    incidente.delete()
-    messages.success(request, "Incidente eliminado correctamente.")
-    return _replace_redirect("guarda_incidentes")
+    messages.info(
+        request,
+        "El guarda no puede eliminar incidentes; solo consultarlos.",
+    )
+    return _no_cache(redirect("guarda_incidentes"))
 
 
 @never_cache
@@ -570,64 +527,28 @@ def exportar_minutas_pdf(request):
     )
     minutas = _filtrar_minutas(minutas, q)
 
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.units import cm
-    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-
-    styles = getSampleStyleSheet()
-    buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4)
-
-    elements = [Paragraph("Reporte de Minutas", styles["Title"]), Spacer(1, 12)]
-    subtitle = f"Filtro: {q}" if q else "Sin filtro"
-    elements.append(Paragraph(subtitle, styles["BodyText"]))
-    elements.append(Spacer(1, 12))
-
-    data = [
-        [
-            "ID",
-            "Ambiente",
-            "Recibo",
-            "Entrega",
-            "Estado",
-            "Novedad",
-            "Descripción",
-        ]
-    ]
+    headers = ["ID", "Ambiente", "Recibo", "Entrega", "Estado", "Novedad", "Descripción"]
+    rows = []
     for m in minutas:
-        data.append(
+        rows.append(
             [
                 str(m.id_minuta),
                 str(m.ambiente.num_ambiente) if m.ambiente_id else "",
-                m.fecha_hora_recibo.strftime("%Y-%m-%d %H:%M:%S") if m.fecha_hora_recibo else "",
-                m.fecha_hora_entrega.strftime("%Y-%m-%d %H:%M:%S") if m.fecha_hora_entrega else "",
+                m.fecha_hora_recibo.strftime("%Y-%m-%d %H:%M") if m.fecha_hora_recibo else "",
+                m.fecha_hora_entrega.strftime("%Y-%m-%d %H:%M") if m.fecha_hora_entrega else "",
                 m.estado or "",
                 m.novedad or "",
-                (m.descripcion_min or "")[:300],
+                m.descripcion_min or "",
             ]
         )
-
-    table = Table(data, repeatRows=1, colWidths=[1.0 * cm, 2.2 * cm, 2.6 * cm, 2.6 * cm, 2.1 * cm, 2.2 * cm, 4.0 * cm])
-    table.setStyle(
-        TableStyle(
-            [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f766e")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.whitesmoke]),
-            ]
-        )
+    resp = landscape_pdf_response(
+        "Reporte de Minutas",
+        q,
+        headers,
+        rows,
+        [0.05, 0.07, 0.11, 0.11, 0.09, 0.22, 0.35],
+        f"minutas_{_safe_q_part(q)}.pdf",
     )
-    elements.append(table)
-    doc.build(elements)
-
-    pdf_bytes = buf.getvalue()
-    resp = HttpResponse(pdf_bytes, content_type="application/pdf")
-    resp["Content-Disposition"] = f'attachment; filename="minutas_{_safe_q_part(q)}.pdf"'
     return _no_cache(resp)
 
 
@@ -688,59 +609,29 @@ def exportar_incidentes_pdf(request):
     )
     incidentes = _filtrar_incidentes(incidentes, q)
 
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.units import cm
-    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-
-    styles = getSampleStyleSheet()
-    buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4)
-
-    elements = [Paragraph("Reporte de Incidentes", styles["Title"]), Spacer(1, 12)]
-    subtitle = f"Filtro: {q}" if q else "Sin filtro"
-    elements.append(Paragraph(subtitle, styles["BodyText"]))
-    elements.append(Spacer(1, 12))
-
-    data = [["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Descripción", "Usuario"]]
+    headers = ["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Descripción", "Usuario"]
+    rows = []
     for i in incidentes:
         usuario = f"{i.usuario_id_usuario.p_nombre} {i.usuario_id_usuario.p_apellido}".strip()
-        data.append(
+        rows.append(
             [
                 str(i.id_incidente),
                 i.fecha_incidente.isoformat() if i.fecha_incidente else "",
                 str(i.hora_incidente) if i.hora_incidente else "",
                 str(i.ambiente.num_ambiente) if i.ambiente_id else "",
                 i.tipo_inc.tipo_incidente if i.tipo_inc_id else "",
-                (i.descripcion or "")[:300],
+                i.descripcion or "",
                 usuario,
             ]
         )
-
-    table = Table(
-        data,
-        repeatRows=1,
-        colWidths=[1.0 * cm, 2.0 * cm, 1.6 * cm, 2.2 * cm, 2.2 * cm, 4.2 * cm, 2.6 * cm],
+    resp = landscape_pdf_response(
+        "Reporte de Incidentes",
+        q,
+        headers,
+        rows,
+        [0.06, 0.09, 0.07, 0.08, 0.10, 0.35, 0.25],
+        f"incidentes_{_safe_q_part(q)}.pdf",
     )
-    table.setStyle(
-        TableStyle(
-            [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f766e")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.whitesmoke]),
-            ]
-        )
-    )
-    elements.append(table)
-    doc.build(elements)
-
-    pdf_bytes = buf.getvalue()
-    resp = HttpResponse(pdf_bytes, content_type="application/pdf")
-    resp["Content-Disposition"] = f'attachment; filename="incidentes_{_safe_q_part(q)}.pdf"'
     return _no_cache(resp)
 
 
@@ -800,24 +691,10 @@ def exportar_traslados_pdf(request):
     )
     traslados = _filtrar_traslados(traslados, q)
 
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.units import cm
-    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-
-    styles = getSampleStyleSheet()
-    buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4)
-
-    elements = [Paragraph("Reporte de Traslados", styles["Title"]), Spacer(1, 12)]
-    subtitle = f"Filtro: {q}" if q else "Sin filtro"
-    elements.append(Paragraph(subtitle, styles["BodyText"]))
-    elements.append(Spacer(1, 12))
-
-    data = [["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Observación"]]
+    headers = ["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Observación"]
+    rows = []
     for t in traslados:
-        data.append(
+        rows.append(
             [
                 str(t.id_traslado),
                 t.recurso.nombre_recurso if t.recurso_id else "",
@@ -825,33 +702,17 @@ def exportar_traslados_pdf(request):
                 str(t.ambiente_origen.num_ambiente) if t.ambiente_origen_id else "",
                 str(t.ambiente_destino or ""),
                 t.fecha_traslado.strftime("%Y-%m-%d %H:%M:%S") if t.fecha_traslado else "",
-                (t.observacion or "")[:300],
+                t.observacion or "",
             ]
         )
-
-    table = Table(
-        data,
-        repeatRows=1,
-        colWidths=[1.0 * cm, 3.0 * cm, 3.0 * cm, 2.0 * cm, 1.8 * cm, 2.6 * cm, 3.8 * cm],
+    resp = landscape_pdf_response(
+        "Reporte de Traslados",
+        q,
+        headers,
+        rows,
+        [0.07, 0.18, 0.14, 0.10, 0.10, 0.14, 0.27],
+        f"traslados_{_safe_q_part(q)}.pdf",
     )
-    table.setStyle(
-        TableStyle(
-            [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f766e")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.whitesmoke]),
-            ]
-        )
-    )
-    elements.append(table)
-    doc.build(elements)
-
-    pdf_bytes = buf.getvalue()
-    resp = HttpResponse(pdf_bytes, content_type="application/pdf")
-    resp["Content-Disposition"] = f'attachment; filename="traslados_{_safe_q_part(q)}.pdf"'
     return _no_cache(resp)
 
 
@@ -891,98 +752,65 @@ def exportar_ambientes_pdf(request):
     q = _q_param(request)
     ambientes = _filtrar_ambientes(Ambiente.objects.all(), q).order_by("id_ambiente")
 
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.units import cm
-    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-
-    styles = getSampleStyleSheet()
-    buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4)
-
-    elements = [Paragraph("Reporte de Ambientes", styles["Title"]), Spacer(1, 12)]
-    subtitle = f"Filtro: {q}" if q else "Sin filtro"
-    elements.append(Paragraph(subtitle, styles["BodyText"]))
-    elements.append(Spacer(1, 12))
-
-    data = [["ID", "Número", "Capacidad", "Tipo", "Estado"]]
+    headers = ["ID", "Número", "Capacidad", "Tipo", "Estado"]
+    rows = []
     for a in ambientes:
-        data.append([str(a.id_ambiente), str(a.num_ambiente), str(a.capacidad), a.tipo_ambiente or "", a.estado or ""])
-
-    table = Table(data, repeatRows=1, colWidths=[1.4 * cm, 2.2 * cm, 2.0 * cm, 3.8 * cm, 2.5 * cm])
-    table.setStyle(
-        TableStyle(
+        rows.append(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f766e")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.whitesmoke]),
+                str(a.id_ambiente),
+                str(a.num_ambiente),
+                str(a.capacidad),
+                a.tipo_ambiente or "",
+                a.estado or "",
             ]
         )
+    resp = landscape_pdf_response(
+        "Reporte de Ambientes",
+        q,
+        headers,
+        rows,
+        [0.12, 0.14, 0.14, 0.35, 0.25],
+        f"ambientes_{_safe_q_part(q)}.pdf",
     )
-    elements.append(table)
-    doc.build(elements)
-
-    pdf_bytes = buf.getvalue()
-    resp = HttpResponse(pdf_bytes, content_type="application/pdf")
-    resp["Content-Disposition"] = f'attachment; filename="ambientes_{_safe_q_part(q)}.pdf"'
     return _no_cache(resp)
 
 
 @never_cache
 def crear_ambiente(request):
-    _, denied = _acceso_guarda_o_login(request)
+    """El guarda solo consulta el estado de los ambientes."""
+    usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-    if request.method == "POST":
-        try:
-            Ambiente.objects.create(
-                id_ambiente=_next_id(Ambiente, "id_ambiente"),
-                num_ambiente=int(request.POST.get("num_ambiente")),
-                capacidad=int(request.POST.get("capacidad")),
-                tipo_ambiente=(request.POST.get("tipo_ambiente") or "").strip(),
-                estado=(request.POST.get("estado") or "").strip(),
-            )
-            messages.success(request, "Ambiente creado correctamente.")
-            return _replace_redirect("guarda_ambientes")
-        except (TypeError, ValueError, IntegrityError):
-            messages.error(request, "No se pudo crear el ambiente.")
-    return _render_guarda(request, "guarda/ambiente_form.html", {"modo": "crear"})
+    messages.info(
+        request,
+        "El guarda solo puede consultar ambientes. La creación y el mantenimiento los gestiona personal autorizado (por ejemplo administración).",
+    )
+    return _no_cache(redirect("guarda_ambientes"))
 
 
 @never_cache
 def editar_ambiente(request, ambiente_id):
-    _, denied = _acceso_guarda_o_login(request)
+    usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-    ambiente = get_object_or_404(Ambiente, pk=ambiente_id)
-    if request.method == "POST":
-        try:
-            ambiente.num_ambiente = int(request.POST.get("num_ambiente"))
-            ambiente.capacidad = int(request.POST.get("capacidad"))
-            ambiente.tipo_ambiente = (request.POST.get("tipo_ambiente") or "").strip()
-            ambiente.estado = (request.POST.get("estado") or "").strip()
-            ambiente.save()
-            messages.success(request, "Ambiente actualizado correctamente.")
-            return _replace_redirect("guarda_ambientes")
-        except (TypeError, ValueError, IntegrityError):
-            messages.error(request, "No se pudo actualizar el ambiente.")
-    return _render_guarda(request, "guarda/ambiente_form.html", {"ambiente": ambiente, "modo": "editar"})
+    messages.info(
+        request,
+        "El guarda no puede editar ambientes; solo consultarlos.",
+    )
+    return _no_cache(redirect("guarda_ambientes"))
 
 
 @require_POST
 @never_cache
 def eliminar_ambiente(request, ambiente_id):
-    _, denied = _acceso_guarda_o_login(request)
+    usuario, denied = _acceso_guarda_o_login(request)
     if denied:
         return denied
-    ambiente = get_object_or_404(Ambiente, pk=ambiente_id)
-    ambiente.delete()
-    messages.success(request, "Ambiente eliminado correctamente.")
-    return _replace_redirect("guarda_ambientes")
+    messages.info(
+        request,
+        "El guarda no puede eliminar ambientes; solo consultarlos.",
+    )
+    return _no_cache(redirect("guarda_ambientes"))
 
 
 @never_cache

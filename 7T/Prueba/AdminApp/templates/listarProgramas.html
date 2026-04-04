@@ -74,6 +74,23 @@
                 </a>
             </div>
 
+            <form id="programas-search-form" method="get" class="row g-2 mb-3 align-items-end">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="Buscar programa, nivel, jornada, modalidad..."
+                           value="{{ q|default:'' }}">
+                </div>
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-success">Buscar</button>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-success" href="{% url 'exportar_programas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-danger" href="{% url 'exportar_programas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+                </div>
+            </form>
+
             <!-- TABLA -->
             <table class="table table-striped table-hover">
                 <thead>
@@ -104,16 +121,12 @@
 
                         <!-- ACCIONES -->
                         <td>
-                            <a href="{% url 'editar_programa' p.p_id %}" class="btn btn-sm btn-secondary">
-                                ✏️
-                            </a>
+                            <a href="{% url 'editar_programa' p.p_id %}" class="btn btn-sm btn-info">Editar</a>
 
                             <form method="post" action="{% url 'eliminar_programa' p.p_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar programa?');">
-                                    🗑️
-                                </button>
+                                        onclick="return confirm('¿Eliminar programa?');">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -130,5 +143,29 @@
 
 </div>
 
+<script>
+(function () {
+    var form = document.getElementById('programas-search-form');
+    if (!form) return;
+    var input = form.querySelector('input[name="q"]');
+    if (!input) return;
+    if (sessionStorage.getItem('adminLiveSearch') === 'programas') {
+        sessionStorage.removeItem('adminLiveSearch');
+        requestAnimationFrame(function () {
+            input.focus();
+            var len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
+    }
+    var t = null;
+    input.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(function () {
+            sessionStorage.setItem('adminLiveSearch', 'programas');
+            form.submit();
+        }, 350);
+    });
+})();
+</script>
 </body>
 </html>

@@ -16,9 +16,6 @@
         .sidebar-nav a:hover { background: rgba(255,255,255,0.1); }
         .main-content { margin-left: 260px; padding: 20px; width: 100%; }
         .content-wrapper { background: white; padding: 25px; border-radius: 8px; }
-        .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
-        .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
-        .badge.bg-danger { background: #fee2e2 !important; color: #b91c1c !important; }
     </style>
 </head>
 
@@ -35,12 +32,12 @@
         <nav class="sidebar-nav">
             <a href="{% url 'inicio_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
-            <a href="{% url 'listar_asistencias' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor_asistencias' %}">📋 Asistencia</a>
             <a href="{% url 'consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'consultar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'instructor_perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -66,15 +63,15 @@
 
             <!-- BOTON NUEVO -->
             <div class="text-center mb-3">
-                <a href="{% url 'registrar_asistencia' %}" class="btn btn-primary">
+                <a href="{% url 'instructor_registrar_asistencia' %}" class="btn btn-primary">
                     ➕ Nuevo registro
                 </a>
             </div>
 
             <!-- EXPORTAR -->
             <div class="mb-3">
-                <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">📄 PDF</a>
-                <a href="{% url 'exportar_excel' %}" class="btn btn-success">📊 Excel</a>
+                <a href="{% url 'instructor_exportar_asistencias_pdf' %}" class="btn btn-primary">📄 PDF</a>
+                <a href="{% url 'instructor_exportar_asistencias_excel' %}" class="btn btn-success">📊 Excel</a>
             </div>
 
             <!-- TABLA -->
@@ -105,15 +102,13 @@
                         </td>
 
                         <td>
-                            <span class="badge 
-                                {% if asis.estado == 'S' %}bg-success
-                                {% elif asis.estado == 'R' %}bg-warning
-                                {% else %}bg-danger{% endif %}">
-                                
-                                {% if asis.estado == 'S' %}Asistió
-                                {% elif asis.estado == 'R' %}Retraso
-                                {% else %}No asistió{% endif %}
-                            </span>
+                            {% if asis.estado == 'S' %}
+                                <span class="lm-badge-soft-success">Asistió</span>
+                            {% elif asis.estado == 'R' %}
+                                <span class="lm-badge-soft-warning">Retraso</span>
+                            {% else %}
+                                <span class="lm-badge-soft-danger">No asistió</span>
+                            {% endif %}
                         </td>
 
                         <td>{{ asis.instructor.nombre }}</td>
@@ -121,12 +116,12 @@
                         <td>{{ asis.jornada.nombre }}</td>
 
                         <td>
-                            <a href="{% url 'editar_asistencia' asis.id %}" 
-                               class="btn btn-sm btn-warning">
+                            <a href="{% url 'instructor_editar_asistencia' asis.id %}" 
+                               class="btn btn-sm btn-info">
                                 Editar
                             </a>
 
-                            <form method="POST" action="{% url 'eliminar_asistencia' asis.id %}" style="display:inline;">
+                            <form method="POST" action="{% url 'instructor_eliminar_asistencia' asis.id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button type="submit"
                                         class="btn btn-sm btn-danger"

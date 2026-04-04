@@ -109,17 +109,6 @@
             margin-bottom: 20px;
         }
 
-        /* Badges — mismos colores del JSF original */
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-        .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
-        .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
-        .badge.bg-danger  { background: #fee2e2 !important; color: #b91c1c !important; }
     </style>
 </head>
 
@@ -132,12 +121,12 @@
             <nav class="sidebar-nav">
                 <a href="{% url 'instructor_index' %}" class="sidebar-link">🏠 Inicio</a>
                 <a href="{% url 'mis_fichas' %}" class="sidebar-link">📁 Mis Fichas</a>
-                <a href="{% url 'listar_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
+                <a href="{% url 'instructor_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
                 <a href="{% url 'listar_minutas' %}" class="sidebar-link active">📝 Minutas</a>
                 <a href="{% url 'listar_incidentes' %}" class="sidebar-link">⚠️ Incidentes</a>
                 <a href="{% url 'listar_traslados' %}" class="sidebar-link">🚚 Traslados</a>
                 <a href="{% url 'consultar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
-                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
+                <a href="{% url 'instructor_perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
                 <form method="post" action="{% url 'logout' %}">
@@ -162,21 +151,21 @@
                     {% endfor %}
                 {% endif %}
 
-                <!-- Toolbar de exportación -->
-                <div class="toolbar">
-                    <a href="{% url 'exportar_minutas_pdf' %}" class="btn btn-primary">📄 Exportar PDF</a>
-                    <a href="{% url 'exportar_minutas_excel' %}" class="btn btn-success">📊 Exportar Excel</a>
-                </div>
-
-                <!-- Filtro de búsqueda -->
-                <div style="margin-bottom: 15px;">
-                    <input type="text"
-                           id="filtroTabla"
-                           class="form-control"
-                           placeholder="🔍 Buscar minuta..."
-                           onkeyup="filtrarTabla()"
-                           style="max-width: 350px;"/>
-                </div>
+                <form id="inst-minutas-search-form" method="get" class="row g-2 mb-3 align-items-end">
+                    <div class="col-md-6">
+                        <input type="text" name="q" class="form-control" placeholder="Buscar minuta..."
+                               value="{{ q|default:'' }}">
+                    </div>
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-success">Buscar</button>
+                    </div>
+                    <div class="col-md-auto">
+                        <a class="btn btn-outline-success" href="{% url 'exportar_minutas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+                    </div>
+                    <div class="col-md-auto">
+                        <a class="btn btn-outline-danger" href="{% url 'exportar_minutas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+                    </div>
+                </form>
 
                 <table class="table table-striped table-hover" id="tablaMinutas">
                     <thead class="table-dark">
@@ -238,9 +227,9 @@
 
                             <td>
                                 {% if min.estado == 'Entregado' or min.estado == 'Normal' or min.estado == 'Disponible' %}
-                                    <span class="badge bg-success">{{ min.estado }}</span>
+                                    <span class="lm-badge-soft-success">{{ min.estado }}</span>
                                 {% else %}
-                                    <span class="badge bg-warning">{{ min.estado }}</span>
+                                    <span class="lm-badge-soft-warning">{{ min.estado }}</span>
                                 {% endif %}
                             </td>
 
@@ -256,42 +245,34 @@
                     </tbody>
                 </table>
 
-                <!-- Paginación -->
-                {% if minutas.has_other_pages %}
-                <nav>
-                    <ul class="pagination justify-content-center mt-3">
-                        {% if minutas.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ minutas.previous_page_number }}">«</a>
-                            </li>
-                        {% endif %}
-                        {% for num in minutas.paginator.page_range %}
-                            <li class="page-item {% if minutas.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if minutas.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ minutas.next_page_number }}">»</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
-
             </div>
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function filtrarTabla() {
-            const input = document.getElementById("filtroTabla").value.toLowerCase();
-            const filas = document.querySelectorAll("#tablaMinutas tbody tr");
-            filas.forEach(fila => {
-                fila.style.display = fila.textContent.toLowerCase().includes(input) ? "" : "none";
+        (function () {
+            var form = document.getElementById('inst-minutas-search-form');
+            if (!form) return;
+            var input = form.querySelector('input[name="q"]');
+            if (!input) return;
+            if (sessionStorage.getItem('instLiveSearch') === 'minutas') {
+                sessionStorage.removeItem('instLiveSearch');
+                requestAnimationFrame(function () {
+                    input.focus();
+                    var len = input.value.length;
+                    input.setSelectionRange(len, len);
+                });
+            }
+            var t = null;
+            input.addEventListener('input', function () {
+                clearTimeout(t);
+                t = setTimeout(function () {
+                    sessionStorage.setItem('instLiveSearch', 'minutas');
+                    form.submit();
+                }, 350);
             });
-        }
+        })();
     </script>
 </body>
 </html>

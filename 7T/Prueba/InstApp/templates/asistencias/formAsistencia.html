@@ -32,12 +32,12 @@
         <nav class="sidebar-nav">
             <a href="{% url 'inicio_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
-            <a href="{% url 'listar_asistencias' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor_asistencias' %}">📋 Asistencia</a>
             <a href="{% url 'consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'consultar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'instructor_perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -137,7 +137,7 @@
 
                         <!-- BOTONES -->
                         <div class="btn-group-actions">
-                            <a href="{% url 'listar_asistencias' %}" class="btn btn-secondary">
+                            <a href="{% url 'instructor_asistencias' %}" class="btn btn-secondary">
                                 Cancelar
                             </a>
 

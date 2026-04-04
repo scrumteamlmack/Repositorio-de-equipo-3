@@ -110,12 +110,12 @@
             <nav class="sidebar-nav">
                 <a href="{% url 'instructor_index' %}" class="sidebar-link">🏠 Inicio</a>
                 <a href="{% url 'mis_fichas' %}" class="sidebar-link">📁 Mis Fichas</a>
-                <a href="{% url 'listar_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
+                <a href="{% url 'instructor_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
                 <a href="{% url 'listar_minutas' %}" class="sidebar-link">📝 Minutas</a>
                 <a href="{% url 'listar_incidentes' %}" class="sidebar-link">⚠️ Incidentes</a>
                 <a href="{% url 'listar_traslados' %}" class="sidebar-link">🚚 Traslados</a>
                 <a href="{% url 'listar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
-                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
+                <a href="{% url 'instructor_perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
                 <form method="post" action="{% url 'logout' %}">
@@ -164,7 +164,7 @@
                         <div class="dashboard-card-icon">📋</div>
                         <div class="dashboard-card-title">Control de Asistencia</div>
                         <div class="dashboard-card-desc">Registra y consulta la asistencia de los aprendices</div>
-                        <a href="{% url 'listar_asistencia' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor_asistencia' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Asistencia ➡
                         </a>
                     </div>
@@ -191,7 +191,7 @@
                         <div class="dashboard-card-icon">👤</div>
                         <div class="dashboard-card-title">Mi Perfil</div>
                         <div class="dashboard-card-desc">Consulta y edita tu información personal</div>
-                        <a href="{% url 'perfil' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor_perfil' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Mi Perfil ➡
                         </a>
                     </div>

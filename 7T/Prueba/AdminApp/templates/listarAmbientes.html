@@ -22,9 +22,6 @@
         .sidebar-footer .btn-logout:hover { background-color: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
         .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
         .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .badge-success { background: #dcfce7; color: #15803d; }
-        .badge-warning { background: #fef3c7; color: #92400e; }
-        .badge-danger { background: #fee2e2; color: #b91c1c; }
     </style>
 </head>
 
@@ -77,6 +74,23 @@
                 </a>
             </div>
 
+            <form id="ambientes-admin-search-form" method="get" class="row g-2 mb-3 align-items-end">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="Buscar por ID, número, capacidad, tipo, estado..."
+                           value="{{ q|default:'' }}">
+                </div>
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-success">Buscar</button>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-success" href="{% url 'exportar_ambientes_admin_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+                </div>
+                <div class="col-md-auto">
+                    <a class="btn btn-outline-danger" href="{% url 'exportar_ambientes_admin_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+                </div>
+            </form>
+
             <!-- TABLA -->
             <table class="table table-striped table-hover">
                 <thead>
@@ -99,19 +113,19 @@
                         <td>{{ am.am_tipo }}</td>
                         <td>
                             {% if am.am_estado == "Disponible" or am.am_estado == "Operativo" %}
-                                <span class="badge badge-success">{{ am.am_estado }}</span>
+                                <span class="lm-badge-soft-success">{{ am.am_estado }}</span>
                             {% elif am.am_estado == "Ocupado" %}
-                                <span class="badge badge-danger">{{ am.am_estado }}</span>
+                                <span class="lm-badge-soft-danger">{{ am.am_estado }}</span>
                             {% else %}
-                                <span class="badge badge-warning">{{ am.am_estado }}</span>
+                                <span class="lm-badge-soft-warning">{{ am.am_estado }}</span>
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'editar_ambiente' am.am_id %}" class="btn btn-sm btn-secondary">✏️</a>
+                            <a href="{% url 'editar_ambiente' am.am_id %}" class="btn btn-sm btn-info">Editar</a>
                             <form method="post" action="{% url 'eliminar_ambiente' am.am_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar ambiente?');">🗑️</button>
+                                        onclick="return confirm('¿Eliminar ambiente?');">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -128,5 +142,29 @@
 
 </div>
 
+<script>
+(function () {
+    var form = document.getElementById('ambientes-admin-search-form');
+    if (!form) return;
+    var input = form.querySelector('input[name="q"]');
+    if (!input) return;
+    if (sessionStorage.getItem('adminLiveSearch') === 'ambientes_admin') {
+        sessionStorage.removeItem('adminLiveSearch');
+        requestAnimationFrame(function () {
+            input.focus();
+            var len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
+    }
+    var t = null;
+    input.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(function () {
+            sessionStorage.setItem('adminLiveSearch', 'ambientes_admin');
+            form.submit();
+        }, 350);
+    });
+})();
+</script>
 </body>
 </html>
