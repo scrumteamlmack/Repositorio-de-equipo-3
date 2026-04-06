@@ -4,6 +4,137 @@
 {% block title %}L-MACK - Iniciar Sesión{% endblock %}
 
 {% block content %}
+<style>
+    .login-container {
+        position: relative;
+        overflow: hidden;
+        padding: 48px 20px;
+    }
+
+    .login-container::before,
+    .login-container::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(45, 134, 89, 0.08);
+        z-index: 0;
+    }
+
+    .login-container::before {
+        width: 260px;
+        height: 260px;
+        top: 40px;
+        left: -90px;
+    }
+
+    .login-container::after {
+        width: 320px;
+        height: 320px;
+        right: -120px;
+        bottom: -80px;
+    }
+
+    .login-card {
+        position: relative;
+        z-index: 1;
+        max-width: 460px;
+        border: 1px solid rgba(45, 134, 89, 0.12);
+        box-shadow: 0 20px 45px rgba(30, 93, 63, 0.14);
+        padding: 42px 38px 34px;
+    }
+
+    .login-header {
+        margin-bottom: 28px;
+    }
+
+    .login-header::before {
+        content: "L-MACK";
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(45, 134, 89, 0.12);
+        color: var(--primary-green);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+    }
+
+    .login-header h2 {
+        margin-bottom: 8px;
+        font-size: 30px;
+    }
+
+    .login-subtitle {
+        color: var(--text-gray);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .login-form-group label {
+        margin-bottom: 10px;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .login-form-group .form-control {
+        padding: 0.85rem 1rem !important;
+        border-color: #d7dfd8 !important;
+        background-color: #fcfcfa !important;
+    }
+
+    .login-form-group .form-control::placeholder {
+        color: #98a2a0;
+    }
+
+    .login-message {
+        margin-bottom: 16px;
+        padding: 12px 14px;
+        border-left: 4px solid #dc3545;
+        border-radius: 8px;
+        background: #fff1f2;
+        color: #991b1b;
+        font-size: 14px;
+    }
+
+    .login-submit {
+        width: 100%;
+        padding: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em;
+        box-shadow: 0 10px 20px rgba(45, 134, 89, 0.18);
+    }
+
+    .login-submit:hover {
+        transform: translateY(-1px);
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 24px;
+        color: var(--text-gray);
+        font-size: 14px;
+    }
+
+    .login-footer a {
+        color: var(--primary-green);
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(45, 134, 89, 0.3);
+    }
+
+    .login-footer a:hover {
+        color: var(--dark-green);
+        border-bottom-color: var(--dark-green);
+    }
+
+    @media (max-width: 576px) {
+        .login-card {
+            padding: 32px 22px 28px;
+        }
+    }
+</style>
 <!-- LOGIN FORM -->
 <div class="login-container">
     <div class="login-card">
@@ -11,10 +142,11 @@
         <!-- HEADER -->
         <div class="login-header">
             <h2>Iniciar Sesión</h2>
+            <p class="login-subtitle">Ingresa tus datos para acceder al sistema.</p>
         </div>
 
         <!-- FORM -->
-        <form method="POST" action="{% url 'login:login' %}">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             {% if next %}
                 <input type="hidden" name="next" value="{{ next }}">
@@ -23,35 +155,48 @@
             <!-- MENSAJES -->
             {% if messages %}
                 {% for message in messages %}
-                    <div style="margin-bottom:10px; color:red;">
+                    <div class="login-message">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
 
             <div class="login-form-group">
-                <label>Número de documento</label>
-                <input type="text" name="Cedula" placeholder="Número de documento" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                <label for="cedula">Numero de documento</label>
+                <input
+                    id="cedula"
+                    type="text"
+                    name="Cedula"
+                    class="form-control"
+                    placeholder="Numero"
+                    required
+                >
             </div>
 
             <div class="login-form-group">
-                <label>Contraseña</label>
-                <input type="password" name="contraseña" placeholder="Contraseña" required
-                    style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                <label for="contrasena">Contraseña</label>
+                <input
+                    id="contrasena"
+                    type="password"
+                    name="contraseña"
+                    class="form-control"
+                    placeholder="Contraseña"
+                    required
+                >
             </div>
 
-            <button type="submit" class="btn-primary"
-                style="width: 100%; margin-top: 10px;">
-                Entrar
-            </button>
+            <div style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary login-submit">
+                    Entrar
+                </button>
+            </div>
         </form>
 
         <!-- FOOTER -->
-        <div style="text-align: center; margin-top: 25px; color: var(--text-gray); font-size: 14px;">
+        <div class="login-footer">
             <p>
                 ¿No tienes cuenta?
-                <a href="#" style="color: var(--primary-green); text-decoration: underline;">
+                <a href="#">
                     Regístrate aquí
                 </a>
             </p>
