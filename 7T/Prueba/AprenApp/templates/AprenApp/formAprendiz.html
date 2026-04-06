@@ -170,17 +170,17 @@
                 <h3>L-MACK</h3>
             </div>
             <nav class="sidebar-nav">
-                <a href="{% url 'admin_index' %}" class="sidebar-link">🏠 Inicio</a>
-                <a href="{% url 'listar_usuarios' %}" class="sidebar-link">👥 Usuarios</a>
-                <a href="{% url 'form_usuario' %}" class="sidebar-link">➕ Crear Usuario</a>
-                <a href="{% url 'listar_fichas' %}" class="sidebar-link">📁 Fichas</a>
-                <a href="{% url 'listar_programas' %}" class="sidebar-link">📚 Programas</a>
-                <a href="{% url 'listar_recursos' %}" class="sidebar-link">💻 Recursos</a>
-                <a href="{% url 'listar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
-                <a href="{% url 'perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
+                <a href="{% url 'admin_panel:admin_index' %}" class="sidebar-link">🏠 Inicio</a>
+                <a href="{% url 'admin_panel:listar_usuarios' %}" class="sidebar-link">👥 Usuarios</a>
+                <a href="{% url 'admin_panel:form_usuario' %}" class="sidebar-link">➕ Crear Usuario</a>
+                <a href="{% url 'admin_panel:listar_fichas' %}" class="sidebar-link">📁 Fichas</a>
+                <a href="{% url 'admin_panel:listar_programas' %}" class="sidebar-link">📚 Programas</a>
+                <a href="{% url 'admin_panel:listar_recursos' %}" class="sidebar-link">💻 Recursos</a>
+                <a href="{% url 'admin_panel:listar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
+                <a href="{% url 'admin_panel:perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
-                <form method="post" action="{% url 'logout' %}">
+                <form method="post" action="{% url 'admin_panel:logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-logout"> Cerrar sesión</button>
                 </form>
@@ -206,7 +206,7 @@
                     <div class="panel-header">📋 Datos del Aprendiz</div>
                     <div class="panel-body">
 
-                        <form method="post" action="{% url 'guardar_aprendiz' %}">
+                        <form method="post" action="{% url 'aprendiz:guardar_aprendiz' %}">
                             {% csrf_token %}
 
                             <!-- Pasar el id del usuario por campo oculto -->
@@ -248,7 +248,7 @@
 
                             <div class="form-actions">
                                 <button type="submit" class="btn-guardar">💾 Guardar Aprendiz</button>
-                                <a href="{% url 'listar_usuarios' %}" class="btn-cancelar">✖ Cancelar</a>
+                                <a href="{% url 'admin_panel:listar_usuarios' %}" class="btn-cancelar">✖ Cancelar</a>
                             </div>
 
                         </form>

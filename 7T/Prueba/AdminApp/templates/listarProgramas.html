@@ -36,18 +36,18 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
@@ -67,27 +67,32 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- BOTÓN -->
-            <div class="mb-3">
-                <a href="{% url 'crear_programa' %}" class="btn btn-primary">
-                    ➕ Nuevo Programa
-                </a>
+            <!-- BOTÓN Y EXPORTACIONES -->
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+                <a href="{% url 'admin_panel:crear_programa' %}" class="btn btn-primary">➕ Nuevo Programa</a>
+                <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.modalidad %}modalidad={{ filtros.modalidad }}&{% endif %}{% if filtros.jornada %}jornada={{ filtros.jornada }}&{% endif %}export=pdf" class="btn btn-danger">📄 PDF</a>
+                <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.modalidad %}modalidad={{ filtros.modalidad }}&{% endif %}{% if filtros.jornada %}jornada={{ filtros.jornada }}&{% endif %}export=excel" class="btn btn-success">📊 Excel</a>
             </div>
 
-            <form id="programas-search-form" method="get" class="row g-2 mb-3 align-items-end">
-                <div class="col-md-6">
-                    <input type="text" name="q" class="form-control"
-                           placeholder="Buscar programa, nivel, jornada, modalidad..."
-                           value="{{ q|default:'' }}">
-                </div>
-                <div class="col-md-auto">
-                    <button type="submit" class="btn btn-success">Buscar</button>
-                </div>
-                <div class="col-md-auto">
-                    <a class="btn btn-outline-success" href="{% url 'exportar_programas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
-                </div>
-                <div class="col-md-auto">
-                    <a class="btn btn-outline-danger" href="{% url 'exportar_programas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+            <!-- Filtros multicriterio -->
+            <form method="get" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; margin-bottom:16px;">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; color:#374151;">Buscar programa</label>
+                        <input type="text" name="q" class="form-control form-control-sm" placeholder="Nombre o nivel..." value="{{ filtros.q }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; color:#374151;">Modalidad</label>
+                        <input type="text" name="modalidad" class="form-control form-control-sm" placeholder="Ej: Presencial" value="{{ filtros.modalidad }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; color:#374151;">Jornada</label>
+                        <input type="text" name="jornada" class="form-control form-control-sm" placeholder="Ej: Madrugada" value="{{ filtros.jornada }}">
+                    </div>
+                    <div class="col-md-2 d-flex gap-1">
+                        <button type="submit" class="btn btn-sm btn-primary w-100">🔍 Filtrar</button>
+                        <a href="{% url 'admin_panel:listar_programas' %}" class="btn btn-sm btn-outline-secondary w-100">✕</a>
+                    </div>
                 </div>
             </form>
 
@@ -121,12 +126,16 @@
 
                         <!-- ACCIONES -->
                         <td>
-                            <a href="{% url 'editar_programa' p.p_id %}" class="btn btn-sm btn-info">Editar</a>
+                            <a href="{% url 'admin_panel:editar_programa' p.p_id %}" class="btn btn-sm btn-secondary">
+                                ✏️
+                            </a>
 
-                            <form method="post" action="{% url 'eliminar_programa' p.p_id %}" style="display:inline;">
+                            <form method="post" action="{% url 'admin_panel:eliminar_programa' p.p_id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar programa?');">Eliminar</button>
+                                        onclick="return confirm('¿Eliminar programa?');">
+                                    🗑️
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -143,29 +152,5 @@
 
 </div>
 
-<script>
-(function () {
-    var form = document.getElementById('programas-search-form');
-    if (!form) return;
-    var input = form.querySelector('input[name="q"]');
-    if (!input) return;
-    if (sessionStorage.getItem('adminLiveSearch') === 'programas') {
-        sessionStorage.removeItem('adminLiveSearch');
-        requestAnimationFrame(function () {
-            input.focus();
-            var len = input.value.length;
-            input.setSelectionRange(len, len);
-        });
-    }
-    var t = null;
-    input.addEventListener('input', function () {
-        clearTimeout(t);
-        t = setTimeout(function () {
-            sessionStorage.setItem('adminLiveSearch', 'programas');
-            form.submit();
-        }, 350);
-    });
-})();
-</script>
 </body>
 </html>

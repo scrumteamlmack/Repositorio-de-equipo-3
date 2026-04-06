@@ -30,18 +30,18 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'inicio_instructor' %}">🏠 Inicio</a>
-            <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
-            <a href="{% url 'instructor_asistencias' %}">📋 Asistencia</a>
-            <a href="{% url 'consultar_minutas' %}">📝 Minutas</a>
-            <a href="{% url 'listar_incidentes' %}">⚠️ Incidentes</a>
-            <a href="{% url 'listar_traslados' %}">🚚 Traslados</a>
-            <a href="{% url 'consultar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'instructor_perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:perfil' %}" class="active">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
-            <form method="POST" action="{% url 'logout' %}">
+            <form method="POST" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
@@ -72,44 +72,44 @@
 
                         <div class="row">
 
-                            <!-- APRENDIZ -->
-                            <div class="col-md-6">
-                                <label class="form-label">Aprendiz</label>
-                                <select name="aprendiz" class="form-select" required>
-                                    <option value="">Seleccione un aprendiz...</option>
-                                    {% for usuario in aprendices %}
-                                        <option value="{{ usuario.id }}">
-                                            {{ usuario.nombre }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                    <!-- APRENDIZ -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Aprendiz</label>
+                                        <select name="aprendiz_id" class="form-select" required>
+                                            <option value="">Seleccione un aprendiz...</option>
+                                            {% for ap in aprendices %}
+                                                <option value="{{ ap.usuario_id_usuario_id }}">
+                                                    {{ ap.usuario_id_usuario.p_nombre }} {{ ap.usuario_id_usuario.p_apellido }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                            <!-- INSTRUCTOR -->
-                            <div class="col-md-6">
-                                <label class="form-label">Instructor</label>
-                                <select name="instructor" class="form-select" required>
-                                    <option value="">Seleccione un instructor...</option>
-                                    {% for usuario in instructores %}
-                                        <option value="{{ usuario.id }}">
-                                            {{ usuario.nombre }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                    <!-- INSTRUCTOR -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Instructor</label>
+                                        <select name="instructor_id" class="form-select" required>
+                                            <option value="">Seleccione un instructor...</option>
+                                            {% for ins in instructores %}
+                                                <option value="{{ ins.usuario_id_usuario_id }}">
+                                                    {{ ins.usuario_id_usuario.p_nombre }} {{ ins.usuario_id_usuario.p_apellido }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                            <!-- JORNADA -->
-                            <div class="col-md-6">
-                                <label class="form-label">Jornada</label>
-                                <select name="jornada" class="form-select" required>
-                                    <option value="">Seleccione una jornada...</option>
-                                    {% for jornada in jornadas %}
-                                        <option value="{{ jornada.id }}">
-                                            {{ jornada.nombre }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                    <!-- JORNADA -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Jornada</label>
+                                        <select name="jornada_id" class="form-select" required>
+                                            <option value="">Seleccione una jornada...</option>
+                                            {% for j in jornadas %}
+                                                <option value="{{ j.id_jornada }}">
+                                                    {{ j.nombre_jornada }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
                             <!-- ESTADO -->
                             <div class="col-md-6">
@@ -137,7 +137,7 @@
 
                         <!-- BOTONES -->
                         <div class="btn-group-actions">
-                            <a href="{% url 'instructor_asistencias' %}" class="btn btn-secondary">
+                            <a href="{% url 'instructor:listar_asistencias_instructor' %}" class="btn btn-secondary">
                                 Cancelar
                             </a>
 

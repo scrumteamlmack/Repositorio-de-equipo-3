@@ -2,9 +2,10 @@
 {% block title %}Ambientes{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Consulta de Ambientes</h2>
+    <h2>Gestion de Ambientes</h2>
+    <!-- Botón Nuevo Ambiente oculto para el rol de Guarda (Solo consulta) -->
+    <!-- <a href="{% url 'guarda:guarda_ambiente_crear' %}" class="btn btn-primary">➕ Nuevo Ambiente</a> -->
 </div>
-<p class="text-muted small mb-3">Solo consulta. La creación y modificación de ambientes no corresponde al módulo de guarda.</p>
 
 <form id="ambientes-search-form" method="get" class="row g-2 mb-3">
     <div class="col-md-6">
@@ -20,10 +21,10 @@
         <button type="submit" class="btn btn-success">Buscar</button>
     </div>
     <div class="col-md-auto">
-        <a class="btn btn-outline-success" href="{% url 'guarda_ambientes_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+        <a class="btn btn-outline-success" href="{% url 'guarda:guarda_ambientes_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
     </div>
     <div class="col-md-auto">
-        <a class="btn btn-outline-danger" href="{% url 'guarda_ambientes_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+        <a class="btn btn-outline-danger" href="{% url 'guarda:guarda_ambientes_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
     </div>
 </form>
 
@@ -45,27 +46,23 @@
                 <td>{{ a.num_ambiente }}</td>
                 <td>{{ a.capacidad }}</td>
                 <td>{{ a.tipo_ambiente }}</td>
+                <td>{{ a.estado }}</td>
+                {% comment %}
                 <td>
-                    {% with e=a.estado %}
-                    {% if e == "Disponible" %}
-                        <span class="lm-badge-soft-success">{{ e }}</span>
-                    {% elif e == "En Uso" %}
-                        <span class="lm-badge-soft-info">{{ e }}</span>
-                    {% elif e == "Ocupado" %}
-                        <span class="lm-badge-soft-danger">{{ e }}</span>
-                    {% elif e == "Mantenimiento" or e == "En mantenimiento" %}
-                        <span class="lm-badge-soft-warning">{{ e }}</span>
-                    {% elif e == "Inhabilitado" %}
-                        <span class="lm-badge-soft-neutral">{{ e }}</span>
-                    {% else %}
-                        <span class="lm-badge-soft-neutral">{{ e }}</span>
-                    {% endif %}
-                    {% endwith %}
+                    <a href="{% url 'guarda:guarda_ambiente_editar' a.id_ambiente %}" class="btn btn-sm btn-info">Editar</a>
+                    <form method="post" action="{% url 'guarda:guarda_ambiente_eliminar' a.id_ambiente %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('¿Seguro que desea eliminar este ambiente ({{ a.tipo_ambiente }} - #{{ a.num_ambiente }})?')">
+                            Eliminar
+                        </button>
+                    </form>
                 </td>
+                {% endcomment %}
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     {% if q %}
                         <div class="alert alert-warning mb-0">No se encontraron resultados.</div>
                     {% else %}
@@ -85,20 +82,10 @@
         const input = form.querySelector('input[name="q"]');
         if (!input) return;
 
-        if (sessionStorage.getItem('guardaLiveSearch') === 'ambientes') {
-            sessionStorage.removeItem('guardaLiveSearch');
-            requestAnimationFrame(function () {
-                input.focus();
-                var len = input.value.length;
-                input.setSelectionRange(len, len);
-            });
-        }
-
-        var t = null;
+        let t = null;
         input.addEventListener('input', function () {
             clearTimeout(t);
             t = setTimeout(function () {
-                sessionStorage.setItem('guardaLiveSearch', 'ambientes');
                 form.submit();
             }, 350);
         });

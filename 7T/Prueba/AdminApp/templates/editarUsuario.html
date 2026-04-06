@@ -36,18 +36,18 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
@@ -98,10 +98,10 @@
                                 <label>Tipo Documento</label>
                                 <select name="tipoDocumento" class="form-select">
                                     <option value="">Seleccione...</option>
-                                    <option value="CC" {% if usuario.tipoDocumento == "CC" %}selected{% endif %}>CC</option>
-                                    <option value="TI" {% if usuario.tipoDocumento == "TI" %}selected{% endif %}>TI</option>
-                                    <option value="CE" {% if usuario.tipoDocumento == "CE" %}selected{% endif %}>CE</option>
-                                    <option value="OTRO" {% if usuario.tipoDocumento == "OTRO" %}selected{% endif %}>OTRO</option>
+                                    <option value="CC" {% if usuario.tipoDocumento == "CC" %}selected{% endif %}>Cédula de Ciudadanía (CC)</option>
+                                    <option value="TI" {% if usuario.tipoDocumento == "TI" %}selected{% endif %}>Tarjeta de Identidad (TI)</option>
+                                    <option value="CE" {% if usuario.tipoDocumento == "CE" %}selected{% endif %}>Cédula de Extranjería (CE)</option>
+                                    <option value="PEP" {% if usuario.tipoDocumento == "PEP" %}selected{% endif %}>Permiso Especial de Permanencia (PEP)</option>
                                 </select>
                             </div>
 
@@ -132,7 +132,7 @@
                         </div>
 
                         <div class="btn-group-actions">
-                            <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{% url 'admin_panel:listar_usuarios' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
                     </div>

@@ -19,13 +19,13 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from Prueba import settings
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('mackapp.urls')),
-    path('', include('LoginApp.urls')),
-    path('', include('AdminApp.urls')),
-    path('', include('GuardaApp.urls')),
-    path('', include('InstApp.urls')),
-    path('', include('AprenApp.urls')),
+    path('admin_django/', admin.site.urls),  # Renombrado para no chocar con AdminApp
+    path('', include('mackapp.urls', namespace='mackapp')), # Raiz, landing page
+    path('auth/', include('LoginApp.urls', namespace='login')),
+    path('admin_panel/', include('AdminApp.urls', namespace='admin_panel')),
+    path('aprendiz/', include('AprenApp.urls', namespace='aprendiz')),
+    path('guarda/', include('GuardaApp.urls', namespace='guarda')),
+    path('instructor/', include('InstApp.urls', namespace='instructor')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,5 +1,3 @@
-from io import BytesIO
-
 from django.http import HttpResponse
 from django.shortcuts import render
 import hashlib
@@ -15,38 +13,24 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
 from LoginApp.models import RegistroInasistencia, UserRol, Usuario
-from openpyxl import Workbook
-from openpyxl.styles import Alignment, Font
-from Prueba.report_utils import landscape_pdf_response, maybe_int, q_param, safe_q_part
 
 
 def _redirigir_a_login(request, next_name: str):
     messages.warning(request, "Inicie sesión para continuar.")
-    return redirect(f"{reverse('login')}?{urlencode({'next': reverse(next_name)})}")
+    return redirect(f"{reverse('login:login')}?{urlencode({'next': reverse(next_name)})}")
 
 
-def _asistencias_qs(uid: int, q: str):
-    qs = RegistroInasistencia.objects.filter(aprendiz_usuario_id_usuario_id=uid).select_related(
-        "jornada",
-        "instructor_usuario_id_usuario__usuario_id_usuario",
-    )
-    if q:
-        nu = maybe_int(q)
-        cond = (
-            Q(estado_inasistencia__icontains=q)
-            | Q(jornada__nombre_jornada__icontains=q)
-            | Q(instructor_usuario_id_usuario__usuario_id_usuario__p_nombre__icontains=q)
-            | Q(instructor_usuario_id_usuario__usuario_id_usuario__p_apellido__icontains=q)
+def _asistencias(uid: int):
+    qs = (
+        RegistroInasistencia.objects.filter(aprendiz_usuario_id_usuario_id=uid)
+        .select_related(
+            "jornada",
+            "instructor_usuario_id_usuario__usuario_id_usuario",
         )
-        if nu is not None:
-            cond |= Q(id_inasistencia=nu)
-        qs = qs.filter(cond)
-    return qs.order_by("-fecha_inasistencia", "-id_inasistencia")
-
-
-def _asistencias(uid: int, q: str = ""):
+        .order_by("-fecha_inasistencia", "-id_inasistencia")
+    )
     filas = []
-    for a in _asistencias_qs(uid, q):
+    for a in qs:
         iu = a.instructor_usuario_id_usuario.usuario_id_usuario
         filas.append(
             {
@@ -75,11 +59,10 @@ def listar_asistencias(request):
     uid = request.session.get("usuario_id")
     if not uid:
         return _redirigir_a_login(request, "listar_asistencias")
-    q = q_param(request)
     return render(
         request,
         "AprenApp/asistencias/listarAsistencias.html",
-        {"asistencias": _asistencias(int(uid), q), "q": q},
+        {"asistencias": _asistencias(int(uid))},
     )
 
 
@@ -98,73 +81,11 @@ def registrar_aprendiz(request):
 
 
 def exportar_asistencias_pdf(request):
-    uid = request.session.get("usuario_id")
-    if not uid:
-        return _redirigir_a_login(request, "listar_asistencias")
-    q = q_param(request)
-    qs = _asistencias_qs(int(uid), q)
-    headers = ["ID", "Fecha", "Estado", "Instructor", "Jornada"]
-    rows = []
-    for a in qs:
-        iu = a.instructor_usuario_id_usuario.usuario_id_usuario
-        inst = " ".join(filter(None, [iu.p_nombre, iu.p_apellido])).strip()
-        est = (a.estado_inasistencia or "").strip()
-        estado_txt = "Asistió" if est == "S" else ("Retardo" if est == "R" else "Faltó")
-        rows.append(
-            [
-                str(a.id_inasistencia),
-                a.fecha_inasistencia.isoformat() if a.fecha_inasistencia else "",
-                estado_txt,
-                inst,
-                (a.jornada.nombre_jornada or "").strip(),
-            ]
-        )
-    return landscape_pdf_response(
-        "Mis inasistencias",
-        q,
-        headers,
-        rows,
-        [0.10, 0.18, 0.14, 0.28, 0.30],
-        f"inasistencias_{safe_q_part(q)}.pdf",
-    )
+    return HttpResponse("Exportacion PDF pendiente de implementacion.")
 
 
 def exportar_asistencias_excel(request):
-    uid = request.session.get("usuario_id")
-    if not uid:
-        return _redirigir_a_login(request, "listar_asistencias")
-    q = q_param(request)
-    qs = _asistencias_qs(int(uid), q)
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Inasistencias"
-    headers = ["ID", "Fecha", "Estado código", "Instructor", "Jornada"]
-    ws.append(headers)
-    for col_idx in range(1, len(headers) + 1):
-        c = ws.cell(row=1, column=col_idx)
-        c.font = Font(bold=True)
-        c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    for a in qs:
-        iu = a.instructor_usuario_id_usuario.usuario_id_usuario
-        inst = " ".join(filter(None, [iu.p_nombre, iu.p_apellido])).strip()
-        ws.append(
-            [
-                a.id_inasistencia,
-                a.fecha_inasistencia.isoformat() if a.fecha_inasistencia else "",
-                (a.estado_inasistencia or "").strip(),
-                inst,
-                (a.jornada.nombre_jornada or "").strip(),
-            ]
-        )
-    buf = BytesIO()
-    wb.save(buf)
-    buf.seek(0)
-    resp = HttpResponse(
-        buf.getvalue(),
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
-    resp["Content-Disposition"] = f'attachment; filename="inasistencias_{safe_q_part(q)}.xlsx"'
-    return resp
+    return HttpResponse("Exportacion Excel pendiente de implementacion.")
 
 
 def perfil_aprendiz(request):
@@ -172,12 +93,31 @@ def perfil_aprendiz(request):
     if not uid:
         return _redirigir_a_login(request, "perfil_aprendiz")
 
+    from LoginApp.models import Aprendiz
     u = get_object_or_404(Usuario, pk=uid)
     roles_qs = UserRol.objects.filter(id_usuario=u).select_related("id_rol")
     roles_detalle = ", ".join(ur.id_rol.nombre_rol for ur in roles_qs) or "Sin rol asignado"
     nombre_completo = " ".join(
         filter(None, [u.p_nombre, u.s_nombre, u.p_apellido, u.s_apellido])
     ).strip() or u.correo
+
+    # Datos académicos del aprendiz
+    programa_nombre = None
+    modalidad_nombre = None
+    num_ficha = None
+    try:
+        aprendiz = Aprendiz.objects.select_related(
+            'programas_id_programas__modalidad',
+            'ficha_idficha',
+        ).get(usuario_id_usuario=u)
+        if aprendiz.programas_id_programas:
+            programa_nombre = aprendiz.programas_id_programas.nombre_programa
+            if aprendiz.programas_id_programas.modalidad:
+                modalidad_nombre = aprendiz.programas_id_programas.modalidad.nombre_modalidad
+        if aprendiz.ficha_idficha:
+            num_ficha = aprendiz.ficha_idficha.num_ficha
+    except Aprendiz.DoesNotExist:
+        pass
 
     return render(
         request,
@@ -194,6 +134,9 @@ def perfil_aprendiz(request):
                 "num_documento": u.num_documento,
                 "correo": u.correo,
                 "roles": roles_detalle,
+                "programa": programa_nombre,
+                "modalidad": modalidad_nombre,
+                "num_ficha": num_ficha,
             },
         },
     )

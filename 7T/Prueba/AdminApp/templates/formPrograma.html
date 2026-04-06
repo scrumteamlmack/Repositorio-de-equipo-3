@@ -47,17 +47,17 @@
             <h3>L-MACK</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout"> Cerrar sesión</button>
             </form>
@@ -121,7 +121,7 @@
                         </div>
 
                         <div class="btn-group-actions">
-                            <a href="{% url 'listar_programas' %}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{% url 'admin_panel:listar_programas' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">{% if idProgramaEditar %}Guardar Cambios{% else %}Guardar{% endif %}</button>
                         </div>
                     </div>

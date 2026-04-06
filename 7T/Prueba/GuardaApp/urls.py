@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 
+app_name = 'guarda'
+
 urlpatterns = [
     path("guarda/panel/", views.guarda_index, name="guarda_index"),
     path("guarda/logout/", views.cerrar_sesion_guarda, name="guarda_logout"),

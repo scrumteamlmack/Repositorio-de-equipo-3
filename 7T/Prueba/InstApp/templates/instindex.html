@@ -108,17 +108,17 @@
                 <h3>L-MACK</h3>
             </div>
             <nav class="sidebar-nav">
-                <a href="{% url 'instructor_index' %}" class="sidebar-link">🏠 Inicio</a>
-                <a href="{% url 'mis_fichas' %}" class="sidebar-link">📁 Mis Fichas</a>
-                <a href="{% url 'instructor_asistencia' %}" class="sidebar-link">📋 Asistencia</a>
-                <a href="{% url 'listar_minutas' %}" class="sidebar-link">📝 Minutas</a>
-                <a href="{% url 'listar_incidentes' %}" class="sidebar-link">⚠️ Incidentes</a>
-                <a href="{% url 'listar_traslados' %}" class="sidebar-link">🚚 Traslados</a>
-                <a href="{% url 'listar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
-                <a href="{% url 'instructor_perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
-            </nav>
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:perfil' %}" class="active">👤 Mi Perfil</a>
+        </nav>
             <div class="sidebar-footer">
-                <form method="post" action="{% url 'logout' %}">
+                <form method="post" action="{% url 'admin_panel:logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-logout">Cerrar sesión</button>
                 </form>
@@ -143,7 +143,7 @@
                 <!-- MENSAJE DE BIENVENIDA -->
                 <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 20px; border-radius: 8px;">
                     <h3 style="margin: 0; color: white;">
-                        👤 Bienvenido, {{ request.user.first_name }}
+                        👤 Bienvenido, {{ user_logged_in.p_nombre }}
                     </h3>
                     <p style="margin: 10px 0 0 0; opacity: 0.9;">Gestiona tus fichas, aprendices y actividades desde este panel</p>
                 </div>
@@ -155,7 +155,7 @@
                         <div class="dashboard-card-icon">📁</div>
                         <div class="dashboard-card-title">Mis Fichas</div>
                         <div class="dashboard-card-desc">Consulta las fichas asignadas y los aprendices registrados</div>
-                        <a href="{% url 'mis_fichas' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor:mis_fichas' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Mis Fichas ➡
                         </a>
                     </div>
@@ -164,7 +164,7 @@
                         <div class="dashboard-card-icon">📋</div>
                         <div class="dashboard-card-title">Control de Asistencia</div>
                         <div class="dashboard-card-desc">Registra y consulta la asistencia de los aprendices</div>
-                        <a href="{% url 'instructor_asistencia' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor:listar_asistencia' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Asistencia ➡
                         </a>
                     </div>
@@ -173,7 +173,7 @@
                         <div class="dashboard-card-icon">📝</div>
                         <div class="dashboard-card-title">Registro de Minutas</div>
                         <div class="dashboard-card-desc">Gestiona el registro de minutas de ambientes</div>
-                        <a href="{% url 'listar_minutas' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor:consultar_minutas' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Minutas ➡
                         </a>
                     </div>
@@ -182,7 +182,7 @@
                         <div class="dashboard-card-icon">⚠️</div>
                         <div class="dashboard-card-title">Registro de Incidentes</div>
                         <div class="dashboard-card-desc">Registra y gestiona incidentes en los ambientes</div>
-                        <a href="{% url 'listar_incidentes' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'instructor:listar_incidentes' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Incidentes ➡
                         </a>
                     </div>
@@ -191,7 +191,7 @@
                         <div class="dashboard-card-icon">👤</div>
                         <div class="dashboard-card-title">Mi Perfil</div>
                         <div class="dashboard-card-desc">Consulta y edita tu información personal</div>
-                        <a href="{% url 'instructor_perfil' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
+                        <a href="{% url 'admin_panel:perfil' %}" class="btn btn-primary" style="width: 100%; margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none;">
                             Ver Mi Perfil ➡
                         </a>
                     </div>

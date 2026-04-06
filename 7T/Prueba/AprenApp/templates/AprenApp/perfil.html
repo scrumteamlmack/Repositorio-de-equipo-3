@@ -41,12 +41,12 @@
             <h3>L-MACK</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'aprendiz_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_asistencias' %}">📋 Mis Inasistencias</a>
-            <a href="{% url 'perfil_aprendiz' %}">👤 Mi Perfil</a>
+            <a href="{% url 'aprendiz:aprendiz_index' %}">🏠 Inicio</a>
+            <a href="{% url 'aprendiz:listar_asistencias' %}">📋 Mis Inasistencias</a>
+            <a href="{% url 'aprendiz:perfil_aprendiz' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
@@ -57,7 +57,7 @@
         <div class="content-wrapper">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <h1 class="h4 mb-0" style="color: var(--primary-green);">👤 Mi perfil</h1>
-                <a href="{% url 'aprendiz_index' %}" class="btn btn-outline-secondary btn-sm">← Volver</a>
+                <a href="{% url 'aprendiz:aprendiz_index' %}" class="btn btn-outline-secondary btn-sm">← Volver</a>
             </div>
 
             {% if messages %}
@@ -103,6 +103,31 @@
                             <dt>Roles en el sistema</dt>
                             <dd>{{ usuario_perfil.roles }}</dd>
                         </dl>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="border rounded p-4" style="border-color: #bbf7d0 !important; background: #f0fdf4;">
+                        <h3 class="h6 mb-4" style="color: var(--primary-green);">🎓 Datos académicos</h3>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <dl class="perfil-dl mb-0">
+                                    <dt>Programa de formación</dt>
+                                    <dd>{{ usuario_perfil.programa|default:"—" }}</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-4">
+                                <dl class="perfil-dl mb-0">
+                                    <dt>Modalidad</dt>
+                                    <dd>{{ usuario_perfil.modalidad|default:"—" }}</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-4">
+                                <dl class="perfil-dl mb-0">
+                                    <dt>Número de ficha</dt>
+                                    <dd>{{ usuario_perfil.num_ficha|default:"—" }}</dd>
+                                </dl>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

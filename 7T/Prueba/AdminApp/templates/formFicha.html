@@ -47,17 +47,17 @@
             <h3>L-MACK</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout"> Cerrar sesión</button>
             </form>
@@ -66,7 +66,7 @@
 
     <main class="main-content">
         <div class="content-wrapper">
-            <form method="post" action="{% if idFichaEditar %}{% url 'editar_ficha' idFichaEditar %}{% else %}{% url 'crear_ficha' %}{% endif %}">
+            <form method="post" action="{% if idFichaEditar %}{% url 'admin_panel:editar_ficha' idFichaEditar %}{% else %}{% url 'admin_panel:crear_ficha' %}{% endif %}">
                 {% csrf_token %}
                 <div class="form-container">
                     <div style="margin-bottom: 25px;">
@@ -85,22 +85,24 @@
                         <h5 style="margin-bottom: 20px;">Datos de la Ficha</h5>
 
                         <div class="mb-3">
-                            <label class="form-label">Número de ficha</label>
-                            <input type="number" name="numFicha" value="{{ ficha.numFicha }}" class="form-control" placeholder="Ej: 2271021" required min="1" max="8388607">
+                            <label class="form-label">{{ form.num_ficha.label }}</label>
+                            {{ form.num_ficha }}
+                            {% if form.num_ficha.errors %}
+                                <div class="text-danger small">{{ form.num_ficha.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Instructor asignado</label>
-                            <select name="instructorId" class="form-select" required>
-                                <option value="">Seleccione…</option>
-                                {% for inst in instructores %}
-                                    <option value="{{ inst.id }}" {% if ficha.instructorId|stringformat:"s" == inst.id|stringformat:"s" %}selected{% endif %}>{{ inst.nombre }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label">{{ form.instructor_usuario_id_usuario.label }}</label>
+                            {{ form.instructor_usuario_id_usuario }}
+                            {% if form.instructor_usuario_id_usuario.errors %}
+                                <div class="text-danger small">{{ form.instructor_usuario_id_usuario.errors }}</div>
+                            {% endif %}
+                            <div class="form-text small">Seleccione el instructor responsable de esta ficha.</div>
                         </div>
 
                         <div class="btn-group-actions">
-                            <a href="{% url 'listar_fichas' %}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{% url 'admin_panel:listar_fichas' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">{% if idFichaEditar %}Guardar Cambios{% else %}Guardar{% endif %}</button>
                         </div>
                     </div>

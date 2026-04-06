@@ -3,20 +3,23 @@ from django.urls import path
 from . import views
 
 
+app_name = 'instructor'
+
 urlpatterns = [
     path("instructor/", views.instructor_index, name="instructor_index"),
     path("inicio-instructor/", views.inicio_instructor, name="inicio_instructor"),
     path("index-instructor/", views.index_instructor, name="index_instructor"),
-    path("instructor/perfil/", views.perfil, name="instructor_perfil"),
+    path("instructor/perfil/", views.perfil, name="perfil"),
+    path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
     path("instructor/fichas/", views.mis_fichas, name="mis_fichas"),
     path("instructor/fichas/<int:ficha_id>/aprendices/", views.ver_aprendices, name="ver_aprendices"),
-    path("instructor/asistencias/", views.listar_asistencias, name="instructor_asistencias"),
-    path("instructor/asistencia/", views.listar_asistencia, name="instructor_asistencia"),
-    path("instructor/asistencias/nueva/", views.registrar_asistencia, name="instructor_registrar_asistencia"),
-    path("instructor/asistencias/<int:asistencia_id>/editar/", views.editar_asistencia, name="instructor_editar_asistencia"),
-    path("instructor/asistencias/<int:asistencia_id>/eliminar/", views.eliminar_asistencia, name="instructor_eliminar_asistencia"),
-    path("instructor/asistencias/exportar/pdf/", views.exportar_pdf, name="instructor_exportar_asistencias_pdf"),
-    path("instructor/asistencias/exportar/excel/", views.exportar_excel, name="instructor_exportar_asistencias_excel"),
+    path("instructor/asistencias/", views.listar_asistencias_instructor, name="listar_asistencias_instructor"),
+    path("instructor/asistencia/", views.listar_asistencia, name="listar_asistencia"),
+    path("instructor/asistencias/nueva/", views.registrar_asistencia, name="registrar_asistencia"),
+    path("instructor/asistencias/<int:asistencia_id>/editar/", views.editar_asistencia, name="editar_asistencia"),
+    path("instructor/asistencias/<int:asistencia_id>/eliminar/", views.eliminar_asistencia, name="eliminar_asistencia"),
+    path("instructor/asistencias/exportar/pdf/", views.exportar_pdf, name="exportar_pdf"),
+    path("instructor/asistencias/exportar/excel/", views.exportar_excel, name="exportar_excel"),
     path("instructor/minutas/", views.listar_minutas, name="listar_minutas"),
     path("instructor/minutas/consultar/", views.consultar_minutas, name="consultar_minutas"),
     path("instructor/minutas/exportar/pdf/", views.exportar_minutas_pdf, name="exportar_minutas_pdf"),
