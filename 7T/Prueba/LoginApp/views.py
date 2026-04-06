@@ -74,7 +74,7 @@ def login_view(request):
                 return _no_cache(redirect('instructor_index'))
             
             elif rol in ("aprendiz",):
-                return _no_cache(redirect('Aprendiz_index'))
+                return _no_cache(redirect('aprendiz_index'))
             
             elif rol in ("guarda de seguridad",):
                 return _no_cache(redirect('guarda_index'))

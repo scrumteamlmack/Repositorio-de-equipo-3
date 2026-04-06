@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST
+from django.contrib.auth import logout
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
@@ -202,11 +203,12 @@ def guarda_index(request):
 
 @never_cache
 def cerrar_sesion_guarda(request):
-    request.session.flush()
-    response = _no_cache(render(request, "guarda/siza.html", {}))
-    response["Clear-Site-Data"] = '"cache", "storage"'
+    logout(request)
+    response = redirect('login') 
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
     return response
-
 
 @never_cache
 def listar_minutas(request):

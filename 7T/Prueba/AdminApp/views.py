@@ -14,6 +14,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
+from django.views.decorators.cache import never_cache
 
 from Prueba.report_utils import landscape_pdf_response, maybe_int, q_param as admin_q, safe_q_part as admin_safe_q
 
@@ -122,20 +123,26 @@ def _render_admin(request, template_name, extra_context=None):
     return render(request, template_name, context)
 
 
+@never_cache
 def cerrar_sesion(request):
-    # Este proyecto maneja sesión propia con `request.session['usuario_id']`.
-    # Siempre la limpiamos, incluso si no se usa `django.contrib.auth`.
     request.session.pop("usuario_id", None)
+
     try:
         request.session.flush()
     except Exception:
-        # Si el backend de sesión no permite flush por algún motivo,
-        # al menos ya eliminamos la clave principal.
         pass
+
     if request.user.is_authenticated:
         logout(request)
+
     messages.success(request, "Sesión cerrada correctamente.")
-    return redirect("siza")
+
+    response = redirect("siza")
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+
+    return response
 
 
 def admin_index(request):
