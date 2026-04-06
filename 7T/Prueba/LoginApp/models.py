@@ -497,6 +497,12 @@ class Usuario(models.Model):
     correo = models.CharField(max_length=100, db_comment='Correo institucional.\n')
     contrasena = models.CharField(max_length=100, db_column='Contraseña')
 
+    def get_full_name(self):
+        return f"{self.p_nombre} {self.p_apellido}".strip()
+
+    def __str__(self):
+        return self.get_full_name()
+
     class Meta:
         managed = True
         db_table = 'usuario'

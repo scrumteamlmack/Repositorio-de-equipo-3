@@ -4,6 +4,7 @@ Vistas del módulo Instructor con todas las correcciones y mejoras.
 """
 import io
 from types import SimpleNamespace
+from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
@@ -14,7 +15,7 @@ from django.views.decorators.http import require_POST
 from LoginApp.models import (
     Ambiente, Aprendiz, Ficha, RegistroInasistencia, RegistroMinuta,
     TrasladoRecurso, RegistroIncidente, TipoIncidente, Instructor, Usuario,
-    Programas,
+    Programas, Jornada, HistoricoIncidentes
 )
 from .export_utils import (
     generar_pdf_response, construir_pdf,
@@ -159,9 +160,17 @@ def listar_asistencias_instructor(request):
 
     instructor = get_object_or_404(Instructor, usuario_id_usuario_id=uid)
 
+    # Obtenemos las fichas asignadas al instructor
+    fichas_asignadas = Ficha.objects.filter(instructor_usuario_id_usuario=instructor)
+    
+    # Filtramos las asistencias:
+    # 1. Donde el aprendiz pertenece a una de mis fichas
+    #    O
+    # 2. Donde yo soy el responsable de haber registrado la asistencia
     qs = RegistroInasistencia.objects.filter(
-        instructor_usuario_id_usuario=instructor
-    ).select_related(
+        Q(aprendiz_usuario_id_usuario__ficha_idficha__in=fichas_asignadas) |
+        Q(instructor_usuario_id_usuario=instructor)
+    ).distinct().select_related(
         'aprendiz_usuario_id_usuario__usuario_id_usuario',
         'jornada',
         'instructor_usuario_id_usuario__usuario_id_usuario',
@@ -252,10 +261,11 @@ def registrar_asistencia(request):
     
     if request.method == "POST":
         try:
-            aprendiz_id = int(request.POST.get("aprendiz_id"))
+            aprendiz_id = request.POST.get("aprendiz_id")
             fecha = request.POST.get("fecha")
             estado = request.POST.get("estado")
-            jornada_id = int(request.POST.get("jornada_id"))
+            jornada_id = request.POST.get("jornada_id")
+            instructor_id = request.POST.get("instructor_id") or instructor.pk
             
             # Validación de fecha (Solo hoy)
             fecha_dt = datetime.strptime(fecha, "%Y-%m-%d").date()
@@ -265,11 +275,11 @@ def registrar_asistencia(request):
                 return redirect('instructor:listar_asistencias_instructor')
 
             RegistroInasistencia.objects.create(
-                aprendiz_usuario_id_usuario_id=aprendiz_id,
-                instructor_usuario_id_usuario=instructor,
+                aprendiz_usuario_id_usuario_id=int(aprendiz_id),
+                instructor_usuario_id_usuario_id=int(instructor_id),
                 fecha_inasistencia=fecha_dt,
                 estado_inasistencia=estado,
-                jornada_id=jornada_id,
+                jornada_id=int(jornada_id),
             )
             messages.success(request, "Asistencia registrada correctamente.")
             return redirect('instructor:listar_asistencias_instructor')
@@ -277,7 +287,9 @@ def registrar_asistencia(request):
             messages.error(request, f"No se pudo registrar la asistencia: {str(e)}")
 
     return render(request, "asistencias/formAsistencia.html", {
-        "aprendices": Aprendiz.objects.all(), # Simplificado para el ejemplo
+        "aprendices": Aprendiz.objects.select_related('usuario_id_usuario').all(),
+        "instructores": Instructor.objects.select_related('usuario_id_usuario').all(),
+        "jornadas": Jornada.objects.all(),
         "hoy": _fecha_hoy(),
     })
 
@@ -293,12 +305,25 @@ def editar_asistencia(request, asistencia_id):
             messages.error(request, "Solo se permite editar asistencias con fecha de hoy.")
             return redirect('instructor:listar_asistencias_instructor')
             
-        asistencia.estado_inasistencia = request.POST.get("estado")
-        asistencia.save()
-        messages.success(request, "Asistencia actualizada.")
-        return redirect('instructor:listar_asistencias_instructor')
+        try:
+            asistencia.aprendiz_usuario_id_usuario_id = int(request.POST.get("aprendiz_id"))
+            asistencia.instructor_usuario_id_usuario_id = int(request.POST.get("instructor_id"))
+            asistencia.jornada_id = int(request.POST.get("jornada_id"))
+            asistencia.estado_inasistencia = request.POST.get("estado")
+            asistencia.fecha_inasistencia = fecha_dt
+            asistencia.save()
+            messages.success(request, "Asistencia actualizada.")
+            return redirect('instructor:listar_asistencias_instructor')
+        except (TypeError, ValueError, IntegrityError) as e:
+            messages.error(request, f"No se pudo actualizar la asistencia: {str(e)}")
         
-    return render(request, "asistencias/editarAsistencia.html", {"asistencia": asistencia})
+    return render(request, "asistencias/editarAsistencia.html", {
+        "asistencia": asistencia,
+        "aprendices": Aprendiz.objects.select_related('usuario_id_usuario').all(),
+        "instructores": Instructor.objects.select_related('usuario_id_usuario').all(),
+        "jornadas": Jornada.objects.all(),
+        "hoy": _fecha_hoy(),
+    })
 
 
 def eliminar_asistencia(request, asistencia_id):
@@ -563,6 +588,8 @@ def editar_incidente(request, incidente_id):
 @require_POST
 def eliminar_incidente(request, incidente_id):
     incidente = get_object_or_404(RegistroIncidente, pk=incidente_id)
+    # Eliminamos el historial relacionado para evitar IntegrityError (Constraint FK)
+    HistoricoIncidentes.objects.filter(incidente=incidente).delete()
     incidente.delete()
     messages.success(request, "Incidente eliminado correctamente.")
     return redirect('instructor:listar_incidentes')

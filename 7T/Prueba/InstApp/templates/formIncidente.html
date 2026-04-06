@@ -184,9 +184,9 @@
                             <div class="col-md-6">
                                 <label class="form-label">Fecha del incidente</label>
                                 <input type="date"
-                                       name="fecha"
+                                       name="fecha_incidente"
                                        class="form-control"
-                                       value="{{ incidente.fecha|date:'Y-m-d' }}"
+                                       value="{{ incidente.fecha_incidente|date:'Y-m-d' }}"
                                        max="{{ hoy }}"
                                        required>
                                 <small class="text-muted">No puede ser futura</small>
@@ -195,20 +195,20 @@
                             <div class="col-md-6">
                                 <label class="form-label">Hora del incidente</label>
                                 <input type="time"
-                                       name="hora"
+                                       name="hora_incidente"
                                        class="form-control"
-                                       value="{{ incidente.hora }}"
+                                       value="{{ incidente.hora_incidente|time:'H:i' }}"
                                        required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Ambiente</label>
-                                <select name="ambiente" class="form-select" required>
+                                <select name="ambiente_id" class="form-select" required>
                                     <option value="">Seleccione un ambiente...</option>
                                     {% for amb in ambientes %}
-                                        <option value="{{ amb.id }}"
-                                            {% if incidente.ambiente.id == amb.id %}selected{% endif %}>
-                                            Ambiente {{ amb.numero }} - {{ amb.tipo }}
+                                        <option value="{{ amb.id_ambiente }}"
+                                            {% if incidente.ambiente_id == amb.id_ambiente %}selected{% endif %}>
+                                            Ambiente {{ amb.num_ambiente }} - {{ amb.tipo_ambiente }}
                                         </option>
                                     {% endfor %}
                                 </select>
@@ -216,12 +216,12 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Tipo de incidente</label>
-                                <select name="tipo_incidente" class="form-select" required>
+                                <select name="tipo_inc_id" class="form-select" required>
                                     <option value="">Seleccione un tipo...</option>
                                     {% for tipo in tipos %}
-                                        <option value="{{ tipo.id }}"
-                                            {% if incidente.tipo_incidente.id == tipo.id %}selected{% endif %}>
-                                            {{ tipo.nombre }}
+                                        <option value="{{ tipo.id_tipo_inc }}"
+                                            {% if incidente.tipo_inc_id == tipo.id_tipo_inc %}selected{% endif %}>
+                                            {{ tipo.tipo_incidente }}
                                         </option>
                                     {% endfor %}
                                 </select>
@@ -229,7 +229,9 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Instructor reportador</label>
-                                <input type="text" class="form-control" value="{{ user.get_full_name }}" readonly>
+                                <input type="text" class="form-control" 
+                                       value="{% if modo_edicion %}{{ incidente.usuario_id_usuario.get_full_name }}{% else %}{{ user_logged_in.get_full_name }}{% endif %}" 
+                                       readonly>
                                 <small class="text-muted">Asignado automáticamente</small>
                             </div>
 
