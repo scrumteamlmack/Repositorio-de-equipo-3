@@ -1,0 +1,62 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}{% if modo == "editar" %}Editar Minuta{% else %}Nueva Minuta{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; font-weight: 600;">
+        {% if modo == "editar" %}Editar{% else %}Nueva{% endif %} Minuta
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Ambiente</label>
+            <select class="form-select" name="ambiente_id" required>
+                <option value="">Seleccione...</option>
+                {% for a in ambientes %}
+                <option value="{{ a.id_ambiente }}" {% if minuta and minuta.ambiente_id == a.id_ambiente %}selected{% endif %}>
+                    {{ a.num_ambiente }} - {{ a.tipo_ambiente }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Responsable</label>
+            <select class="form-select" name="responsable_id" required>
+                <option value="">Seleccione...</option>
+                {% for r in responsables %}
+                <option value="{{ r.usuario_id_usuario_id }}" {% if minuta and minuta.responsable_id == r.usuario_id_usuario_id %}selected{% endif %}>
+                    {{ r.usuario_id_usuario.p_nombre }} {{ r.usuario_id_usuario.p_apellido }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Fecha y hora de recibo</label>
+            <input class="form-control" type="datetime-local" name="fecha_hora_recibo" value="{% if minuta %}{{ minuta.fecha_hora_recibo|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Fecha y hora de entrega</label>
+            <input class="form-control" type="datetime-local" name="fecha_hora_entrega" value="{% if minuta %}{{ minuta.fecha_hora_entrega|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Estado</label>
+            <input class="form-control" type="text" name="estado" value="{{ minuta.estado|default:'' }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Novedad</label>
+            <input class="form-control" type="text" name="novedad" value="{{ minuta.novedad|default:'' }}">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Descripcion</label>
+            <textarea class="form-control" name="descripcion_min" rows="3">{{ minuta.descripcion_min|default:'' }}</textarea>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'guarda:guarda_minutas' %}" class="btn btn-secondary">Cancelar</a>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

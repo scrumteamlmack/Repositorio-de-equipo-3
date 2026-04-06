@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Mis Inasistencias - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Badges de estado */
+        .badge-presente  { background-color: #198754; color: white; }
+        .badge-ausente   { background-color: #dc3545; color: white; }
+        .badge-excusado  { background-color: #ffc107; color: black; }
+        .badge-tardanza  { background-color: #0dcaf0; color: black; }
+        .badge-desconocido { background-color: #6c757d; color: white; }
+    </style>
+</head>
+
+<body>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'aprendiz:aprendiz_index' %}" class="sidebar-link">🏠 Inicio</a>
+                <a href="{% url 'aprendiz:listar_asistencias' %}" class="sidebar-link">📋 Mis inasistencias</a>
+                <a href="{% url 'aprendiz:perfil_aprendiz' %}" class="sidebar-link">👤 Mi Perfil</a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="post" action="{% url 'admin_panel:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout"> Cerrar sesión</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="form-header">
+                    <h2>✅ Mis Inasistencias</h2>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Toolbar de exportación -->
+                <div class="toolbar">
+                    <a href="{% url 'aprendiz:exportar_asistencias_pdf' %}" class="btn btn-primary">📄 Exportar PDF</a>
+                    <a href="{% url 'aprendiz:exportar_asistencias_excel' %}" class="btn btn-success">📊 Exportar Excel</a>
+                </div>
+
+                <!-- Filtro de búsqueda -->
+                <div style="margin-bottom: 15px;">
+                    <input type="text"
+                           id="filtroTabla"
+                           class="form-control"
+                           placeholder="🔍 Buscar en la tabla..."
+                           onkeyup="filtrarTabla()"
+                           style="max-width: 350px;"/>
+                </div>
+
+                <table class="table table-striped table-hover" id="tablaAsistencias">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th style="width: 120px;">Fecha</th>
+                            <th style="width: 120px;">Estado</th>
+                            <th>Instructor</th>
+                            <th style="width: 150px;">Jornada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asis in asistencias %}
+                        <tr>
+                            <td>{{ asis.id_asistencia }}</td>
+
+                            <td>
+                                {% if asis.fecha %}
+                                    {{ asis.fecha|date:"d/m/Y" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if asis.estado == 'P' %}
+                                    <span class="badge badge-presente rounded-pill px-3 py-2">Presente</span>
+                                {% elif asis.estado == 'A' %}
+                                    <span class="badge badge-ausente rounded-pill px-3 py-2">Ausente</span>
+                                {% elif asis.estado == 'E' %}
+                                    <span class="badge badge-excusado rounded-pill px-3 py-2">Excusado</span>
+                                {% elif asis.estado == 'T' %}
+                                    <span class="badge badge-tardanza rounded-pill px-3 py-2">Tardanza</span>
+                                {% else %}
+                                    <span class="badge badge-desconocido rounded-pill px-3 py-2">Desconocido</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if asis.instructor_nombre %}
+                                    {{ asis.instructor_nombre }}
+                                {% else %}
+                                    Instructor {{ asis.instructor_usuario_id }}
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if asis.jornada_nombre %}
+                                    {{ asis.jornada_nombre }}
+                                {% else %}
+                                    Jornada {{ asis.jornada_id }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No hay asistencias registradas
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                {% if asistencias.has_other_pages %}
+                <nav>
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if asistencias.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ asistencias.previous_page_number }}">«</a>
+                            </li>
+                        {% endif %}
+                        {% for num in asistencias.paginator.page_range %}
+                            <li class="page-item {% if asistencias.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if asistencias.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ asistencias.next_page_number }}">»</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filtrarTabla() {
+            const input = document.getElementById("filtroTabla").value.toLowerCase();
+            const filas = document.querySelectorAll("#tablaAsistencias tbody tr");
+            filas.forEach(fila => {
+                fila.style.display = fila.textContent.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
