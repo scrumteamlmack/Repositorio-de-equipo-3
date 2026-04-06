@@ -6,9 +6,9 @@
 <h2>Panel de Guarda de Seguridad</h2>
 
 <div class="card mb-4" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 20px; border-radius: 8px;">
-    <h4 style="margin: 0;">Bienvenid@, {{ usuario_actual.p_nombre }}</h4>
+    <h4 style="margin: 0;">Bienvenid@, {{ user_logged_in.p_nombre }}</h4>
     <p class="mb-0" style="margin-top: 8px; opacity: 0.95;">
-        Gestiona minutas y traslados; consulta incidentes y ambientes desde este panel.
+        Gestiona minutas, incidentes, traslados y ambientes desde este panel.
     </p>
 </div>
 
@@ -19,7 +19,7 @@
                 <div style="font-size: 28px; margin-bottom: 8px;">📝</div>
                 <h5 style="margin-bottom: 8px;">Registro de Minutas</h5>
                 <p style="color:#6b7280; margin-bottom: 16px;">Gestiona el registro de minutas de ambientes.</p>
-                <a href="{% url 'guarda_minutas' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Minutas</a>
+                <a href="{% url 'guarda:guarda_minutas' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Minutas</a>
             </div>
         </div>
     </div>
@@ -28,9 +28,9 @@
         <div class="card h-100">
             <div class="card-body text-center">
                 <div style="font-size: 28px; margin-bottom: 8px;">⚠️</div>
-                <h5 style="margin-bottom: 8px;">Consulta de Incidentes</h5>
-                <p style="color:#6b7280; margin-bottom: 16px;">Consulta los incidentes registrados por instructores (solo lectura).</p>
-                <a href="{% url 'guarda_incidentes' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Incidentes</a>
+                <h5 style="margin-bottom: 8px;">Registro de Incidentes</h5>
+                <p style="color:#6b7280; margin-bottom: 16px;">Registra y gestiona incidentes en los ambientes.</p>
+                <a href="{% url 'guarda:guarda_incidentes' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Incidentes</a>
             </div>
         </div>
     </div>
@@ -39,9 +39,9 @@
         <div class="card h-100">
             <div class="card-body text-center">
                 <div style="font-size: 28px; margin-bottom: 8px;">🏢</div>
-                <h5 style="margin-bottom: 8px;">Consulta de Ambientes</h5>
-                <p style="color:#6b7280; margin-bottom: 16px;">Consulta el estado de los ambientes (solo lectura).</p>
-                <a href="{% url 'guarda_ambientes' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Ambientes</a>
+                <h5 style="margin-bottom: 8px;">Gestion de Ambientes</h5>
+                <p style="color:#6b7280; margin-bottom: 16px;">Consulta y gestiona los ambientes.</p>
+                <a href="{% url 'guarda:guarda_ambientes' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Ambientes</a>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                 <div style="font-size: 28px; margin-bottom: 8px;">🔁</div>
                 <h5 style="margin-bottom: 8px;">Registro de Traslados</h5>
                 <p style="color:#6b7280; margin-bottom: 16px;">Controla los traslados de recursos entre ambientes.</p>
-                <a href="{% url 'guarda_traslados' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Traslados</a>
+                <a href="{% url 'guarda:guarda_traslados' %}" class="btn btn-success" style="width: 100%; margin-top: 5px; padding: 10px 20px;">Ver Traslados</a>
             </div>
         </div>
     </div>

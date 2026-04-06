@@ -37,18 +37,18 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
@@ -68,27 +68,28 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- BOTÓN -->
-            <div class="mb-3">
-                <a href="{% url 'crear_ficha' %}" class="btn btn-primary">
-                    ➕ Nueva Ficha
-                </a>
+            <!-- BOTÓN Y EXPORTACIONES -->
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+                <a href="{% url 'admin_panel:crear_ficha' %}" class="btn btn-primary">➕ Nueva Ficha</a>
+                <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.instructor %}instructor={{ filtros.instructor }}&{% endif %}export=pdf" class="btn btn-danger">📄 PDF</a>
+                <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.instructor %}instructor={{ filtros.instructor }}&{% endif %}export=excel" class="btn btn-success">📊 Excel</a>
             </div>
 
-            <form id="fichas-search-form" method="get" class="row g-2 mb-3 align-items-end">
-                <div class="col-md-6">
-                    <input type="text" name="q" class="form-control"
-                           placeholder="Buscar por ID, número de ficha, instructor..."
-                           value="{{ q|default:'' }}">
-                </div>
-                <div class="col-md-auto">
-                    <button type="submit" class="btn btn-success">Buscar</button>
-                </div>
-                <div class="col-md-auto">
-                    <a class="btn btn-outline-success" href="{% url 'exportar_fichas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
-                </div>
-                <div class="col-md-auto">
-                    <a class="btn btn-outline-danger" href="{% url 'exportar_fichas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+            <!-- Filtros multicriterio -->
+            <form method="get" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; margin-bottom:16px;">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; color:#374151;">Número de ficha</label>
+                        <input type="text" name="q" class="form-control form-control-sm" placeholder="Ej: 2560421" value="{{ filtros.q }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; color:#374151;">Instructor</label>
+                        <input type="text" name="instructor" class="form-control form-control-sm" placeholder="Nombre o apellido" value="{{ filtros.instructor }}">
+                    </div>
+                    <div class="col-md-2 d-flex gap-1">
+                        <button type="submit" class="btn btn-sm btn-primary w-100">🔍 Filtrar</button>
+                        <a href="{% url 'admin_panel:listar_fichas' %}" class="btn btn-sm btn-outline-secondary w-100">✕</a>
+                    </div>
                 </div>
             </form>
 
@@ -113,12 +114,16 @@
 
                         <!-- ACCIONES -->
                         <td>
-                            <a href="{% url 'editar_ficha' f.id %}" class="btn btn-sm btn-info">Editar</a>
+                            <a href="{% url 'admin_panel:editar_ficha' f.id %}" class="btn btn-sm btn-secondary">
+                                ✏️
+                            </a>
 
-                            <form method="post" action="{% url 'eliminar_ficha' f.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'admin_panel:eliminar_ficha' f.id %}" style="display:inline;">
                                 {% csrf_token %}
                                 <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar ficha?');">Eliminar</button>
+                                        onclick="return confirm('¿Eliminar ficha?');">
+                                    🗑️
+                                </button>
                             </form>
                         </td>
 
@@ -136,29 +141,5 @@
 
 </div>
 
-<script>
-(function () {
-    var form = document.getElementById('fichas-search-form');
-    if (!form) return;
-    var input = form.querySelector('input[name="q"]');
-    if (!input) return;
-    if (sessionStorage.getItem('adminLiveSearch') === 'fichas') {
-        sessionStorage.removeItem('adminLiveSearch');
-        requestAnimationFrame(function () {
-            input.focus();
-            var len = input.value.length;
-            input.setSelectionRange(len, len);
-        });
-    }
-    var t = null;
-    input.addEventListener('input', function () {
-        clearTimeout(t);
-        t = setTimeout(function () {
-            sessionStorage.setItem('adminLiveSearch', 'fichas');
-            form.submit();
-        }, 350);
-    });
-})();
-</script>
 </body>
 </html>

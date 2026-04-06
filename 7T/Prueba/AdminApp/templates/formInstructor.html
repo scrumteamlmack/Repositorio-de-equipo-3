@@ -38,17 +38,17 @@
             <h3>L-MACK</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'crear_usuario' %}">➕ Crear Usuario</a>
-            <a href="{% url 'listar_fichas' %}">📁 Fichas</a>
-            <a href="{% url 'listar_programas' %}">📚 Programas</a>
-            <a href="{% url 'listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'perfil' %}">👤 Mi Perfil</a>
-        </nav>
+                <a href="{% url 'admin_panel:admin_index' %}" class="sidebar-link">🏠 Inicio</a>
+                <a href="{% url 'admin_panel:listar_usuarios' %}" class="sidebar-link">👥 Usuarios</a>
+                <a href="{% url 'admin_panel:form_usuario' %}" class="sidebar-link">➕ Crear Usuario</a>
+                <a href="{% url 'admin_panel:listar_fichas' %}" class="sidebar-link">📁 Fichas</a>
+                <a href="{% url 'admin_panel:listar_programas' %}" class="sidebar-link">📚 Programas</a>
+                <a href="{% url 'admin_panel:listar_recursos' %}" class="sidebar-link">💻 Recursos</a>
+                <a href="{% url 'admin_panel:listar_ambientes' %}" class="sidebar-link">🏢 Ambientes</a>
+                <a href="{% url 'admin_panel:perfil' %}" class="sidebar-link">👤 Mi Perfil</a>
+            </nav>
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout"> Cerrar sesión</button>
             </form>

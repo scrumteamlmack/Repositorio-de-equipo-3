@@ -32,14 +32,17 @@ class Ambiente(models.Model):
         managed = False
         db_table = 'ambiente'
 
+    def __str__(self):
+        return f"Ambiente {self.num_ambiente}"
+
 
 class Aprendiz(models.Model):
     usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Identificador del aprendiz (usuario base).\n')  # Field name made lowercase.
-    programas_id_programas = models.ForeignKey('Programas', models.DO_NOTHING, db_column='programas_id_programas', db_comment='Llave forßnea. Programa de formaci¾n del aprendiz.\n')
-    ficha_idficha = models.ForeignKey('Ficha', models.DO_NOTHING, db_column='ficha_idficha')
+    programas_id_programas = models.ForeignKey('Programas', models.DO_NOTHING, db_column='programas_id_programas', db_comment='Llave forßnea. Programa de formaci¾n del aprendiz.\n', null=True, blank=True)
+    ficha_idficha = models.ForeignKey('Ficha', models.DO_NOTHING, db_column='ficha_idficha', null=True, blank=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'aprendiz'
 
 
@@ -121,13 +124,16 @@ class Coordinacion(models.Model):
         managed = False
         db_table = 'coordinacion'
 
+    def __str__(self):
+        return self.nombre_coordinacion
+
 
 class Coordinador(models.Model):
     usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Usuario que tiene el rol de coordinador.\n')  # Field name made lowercase.
-    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Llave forßnea. Relaciona con la coordinaci¾n que lidera.\n\n')
+    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Llave forßnea. Relaciona con la coordinaci¾n que lidera.\n\n', null=True, blank=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'coordinador'
 
 
@@ -244,13 +250,23 @@ class DjangoSession(models.Model):
 
 
 class Ficha(models.Model):
-    idficha = models.IntegerField(primary_key=True)
-    num_ficha = models.IntegerField(db_column='Num_ficha')  # Field name made lowercase.
-    instructor_usuario_id_usuario = models.ForeignKey('Instructor', models.DO_NOTHING, db_column='instructor_Usuario_id_usuario')  # Field name made lowercase.
+    idficha = models.AutoField(primary_key=True)
+    num_ficha = models.IntegerField(db_column='Num_ficha', unique=True)
+    instructor_usuario_id_usuario = models.ForeignKey(
+        'Instructor',
+        models.DO_NOTHING,
+        db_column='instructor_Usuario_id_usuario',
+        null=True,
+        blank=True,
+        related_name='fichas'
+    )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ficha'
+
+    def __str__(self):
+        return str(self.num_ficha)
 
 
 class GuardaSeguridad(models.Model):
@@ -260,7 +276,7 @@ class GuardaSeguridad(models.Model):
     estado = models.CharField(max_length=8, db_comment='Estado laboral del guarda (activo/inactivo).\n\n')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'guarda_seguridad'
 
 
@@ -281,12 +297,16 @@ class Instructor(models.Model):
     usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Usuario que act·a como instructor.\n')  # Field name made lowercase.
     email = models.CharField(max_length=100, db_comment='Correo electr¾nico institucional.\n')
     telefono = models.CharField(max_length=20, db_comment='TelÚfono de contacto.\n')
-    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Coordinaci¾n a la que pertenece.\n')
+    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Coordinaci¾n a la que pertenece.\n', null=True, blank=True)
     estado = models.CharField(max_length=8, db_comment='Estado laboral (activo, inactivo).\n')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'instructor'
+
+    def __str__(self):
+        u = self.usuario_id_usuario
+        return f"{u.p_nombre} {u.p_apellido}".strip() or f"Instructor ID {self.pk}"
 
 
 class Jornada(models.Model):
@@ -297,6 +317,9 @@ class Jornada(models.Model):
         managed = False
         db_table = 'jornada'
 
+    def __str__(self):
+        return self.nombre_jornada
+
 
 class Modalidad(models.Model):
     id_modalidad = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador de la modalidad.\n')
@@ -305,6 +328,9 @@ class Modalidad(models.Model):
     class Meta:
         managed = False
         db_table = 'modalidad'
+
+    def __str__(self):
+        return self.nombre_modalidad
 
 
 class Programas(models.Model):
@@ -319,6 +345,9 @@ class Programas(models.Model):
     class Meta:
         managed = False
         db_table = 'programas'
+
+    def __str__(self):
+        return self.nombre_programa
 
 
 class Recursos(models.Model):
@@ -388,6 +417,9 @@ class Rol(models.Model):
         managed = False
         db_table = 'rol'
 
+    def __str__(self):
+        return self.nombre_rol
+
 
 class SourcesFilesource(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -446,11 +478,11 @@ class TrasladoRecurso(models.Model):
 
 class UserRol(models.Model):
     id_user_rol = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del registro.\n')
-    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario', db_comment='Usuario asociado.\n')
-    id_rol = models.ForeignKey(Rol, models.DO_NOTHING, db_column='id_rol', db_comment='Rol asignado al usuario.\n\n')
+    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario', db_comment='Usuario asociado.\n', null=True, blank=True)
+    id_rol = models.ForeignKey(Rol, models.DO_NOTHING, db_column='id_rol', db_comment='Rol asignado al usuario.\n\n', null=True, blank=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'user_rol'
 
 
@@ -466,5 +498,5 @@ class Usuario(models.Model):
     contrasena = models.CharField(max_length=100, db_column='Contraseña')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'usuario'

@@ -140,18 +140,18 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'index_instructor' %}">🏠 Inicio</a>
-            <a href="{% url 'mis_fichas' %}">📁 Mis Fichas</a>
-            <a href="{% url 'instructor_asistencias' %}">📋 Asistencia</a>
-            <a href="{% url 'listar_minutas' %}">📝 Minutas</a>
-            <a href="{% url 'listar_incidentes' %}" class="active">⚠️ Incidentes</a>
-            <a href="{% url 'listar_traslados' %}">🚚 Traslados</a>
-            <a href="{% url 'listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'instructor_perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:perfil' %}" class="active">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout"> Cerrar sesión</button>
             </form>
@@ -240,7 +240,7 @@
                         </div>
 
                         <div class="btn-group-actions">
-                            <a href="{% url 'listar_incidentes' %}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{% url 'instructor:listar_incidentes' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">
                                 {% if modo_edicion %}Guardar Cambios{% else %}Guardar{% endif %}
                             </button>

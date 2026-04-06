@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Gestion de Minutas</h2>
-    <a href="{% url 'guarda_minuta_crear' %}" class="btn btn-primary">➕ Nueva Minuta</a>
+    <a href="{% url 'guarda:guarda_minuta_crear' %}" class="btn btn-primary">➕ Nueva Minuta</a>
 </div>
 
 <form id="minutas-search-form" method="get" class="row g-2 mb-3">
@@ -20,10 +20,10 @@
         <button type="submit" class="btn btn-success">Buscar</button>
     </div>
     <div class="col-md-auto">
-        <a class="btn btn-outline-success" href="{% url 'guarda_minutas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
+        <a class="btn btn-outline-success" href="{% url 'guarda:guarda_minutas_excel' %}?q={{ q|urlencode }}">Descargar Excel</a>
     </div>
     <div class="col-md-auto">
-        <a class="btn btn-outline-danger" href="{% url 'guarda_minutas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
+        <a class="btn btn-outline-danger" href="{% url 'guarda:guarda_minutas_pdf' %}?q={{ q|urlencode }}">Descargar PDF</a>
     </div>
 </form>
 
@@ -47,8 +47,8 @@
                 <td>{{ m.fecha_hora_entrega }}</td>
                 <td>{{ m.estado }}</td>
                 <td>
-                    <a href="{% url 'guarda_minuta_editar' m.id_minuta %}" class="btn btn-sm btn-info">Editar</a>
-                    <form method="post" action="{% url 'guarda_minuta_eliminar' m.id_minuta %}" style="display:inline;">
+                    <a href="{% url 'guarda:guarda_minuta_editar' m.id_minuta %}" class="btn btn-sm btn-info">Editar</a>
+                    <form method="post" action="{% url 'guarda:guarda_minuta_eliminar' m.id_minuta %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-danger"
                                 onclick="return confirm('¿Seguro que desea eliminar esta minuta (Ambiente {{ m.ambiente.num_ambiente }}, ID {{ m.id_minuta }})?')">
@@ -79,20 +79,10 @@
         const input = form.querySelector('input[name="q"]');
         if (!input) return;
 
-        if (sessionStorage.getItem('guardaLiveSearch') === 'minutas') {
-            sessionStorage.removeItem('guardaLiveSearch');
-            requestAnimationFrame(function () {
-                input.focus();
-                var len = input.value.length;
-                input.setSelectionRange(len, len);
-            });
-        }
-
-        var t = null;
+        let t = null;
         input.addEventListener('input', function () {
             clearTimeout(t);
             t = setTimeout(function () {
-                sessionStorage.setItem('guardaLiveSearch', 'minutas');
                 form.submit();
             }, 350);
         });

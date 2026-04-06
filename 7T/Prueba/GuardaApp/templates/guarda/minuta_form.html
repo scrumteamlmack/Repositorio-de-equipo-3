@@ -41,18 +41,7 @@
         </div>
         <div class="col-md-6">
             <label class="form-label">Estado</label>
-            <select class="form-select" name="estado" required>
-                <option value="">Seleccione...</option>
-                <option value="Ocupado" {% if minuta.estado == "Ocupado" %}selected{% endif %}>Ocupado</option>
-                <option value="Disponible" {% if minuta.estado == "Disponible" %}selected{% endif %}>Disponible</option>
-                <option value="En mantenimiento" {% if minuta.estado == "En mantenimiento" %}selected{% endif %}>En mantenimiento</option>
-                <option value="Inhabilitado" {% if minuta.estado == "Inhabilitado" %}selected{% endif %}>Inhabilitado</option>
-                {% if minuta %}
-                {% if minuta.estado and minuta.estado != "Ocupado" and minuta.estado != "Disponible" and minuta.estado != "En mantenimiento" and minuta.estado != "Inhabilitado" %}
-                <option value="{{ minuta.estado }}" selected>{{ minuta.estado }}</option>
-                {% endif %}
-                {% endif %}
-            </select>
+            <input class="form-control" type="text" name="estado" value="{{ minuta.estado|default:'' }}" required>
         </div>
         <div class="col-md-6">
             <label class="form-label">Novedad</label>
@@ -64,7 +53,7 @@
         </div>
     </div>
     <div class="mt-3">
-        <a href="{% url 'guarda_minutas' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'guarda:guarda_minutas' %}" class="btn btn-secondary">Cancelar</a>
         <button class="btn btn-primary" type="submit">Guardar</button>
     </div>
         </form>

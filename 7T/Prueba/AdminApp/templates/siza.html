@@ -130,7 +130,7 @@
             {% endfor %}
         {% endif %}
 
-        <a href="{% url 'login' %}" class="btn-login">
+        <a href="{% url 'login:login' %}" class="btn-login">
             🔐 Volver a iniciar sesión
         </a>
 
@@ -144,7 +144,7 @@
     <!-- Redirige al login automáticamente después de 10 segundos -->
     <script>
         setTimeout(() => {
-            window.location.href = "{% url 'login' %}";
+            window.location.href = "{% url 'login:login' %}";
         }, 10000);
     </script>
 </body>
