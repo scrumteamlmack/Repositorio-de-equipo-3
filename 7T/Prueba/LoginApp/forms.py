@@ -21,7 +21,16 @@ class BaseUserForm(forms.ModelForm):
         ],
         label="Tipo de Documento"
     )
-    num_documento = forms.IntegerField(label="Número de Documento", validators=[validate_documento_longitud])
+    num_documento = forms.CharField(
+        label="Número de Documento", 
+        validators=[validate_solo_numeros, validate_documento_longitud],
+        widget=forms.TextInput(attrs={
+            'oninput': "this.value = this.value.replace(/[^0-9]/g, '')",
+            'placeholder': 'Ej: 123456789',
+            'pattern': '[0-9]*',
+            'title': 'Solo se permiten números'
+        })
+    )
     correo = forms.EmailField(label="Correo Institucional")
     contrasena = forms.CharField(label="Contraseña", widget=forms.PasswordInput, validators=[validate_password_strength])
     rol = forms.ModelChoiceField(queryset=Rol.objects.all(), label="Rol", required=True)

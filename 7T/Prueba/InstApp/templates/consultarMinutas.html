@@ -120,6 +120,7 @@
                         <th style="width:160px">Fecha Recibo</th>
                         <th style="width:160px">Fecha Entrega</th>
                         <th style="width:110px">Estado</th>
+                        <th style="width:120px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -173,6 +174,10 @@
                         {% else %}
                             <span class="text-muted">—</span>
                         {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'instructor:detalle_minuta' m.id_minuta %}" class="btn btn-xs btn-outline-primary py-0 px-2" style="font-size: 11px;">🔍 Ver detalles</a>
                     </td>
                 </tr>
                 {% empty %}

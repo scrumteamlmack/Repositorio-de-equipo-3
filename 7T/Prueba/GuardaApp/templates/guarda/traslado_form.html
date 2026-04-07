@@ -6,26 +6,41 @@
         {% if modo == "editar" %}Editar{% else %}Nuevo{% endif %} Traslado
     </div>
     <div class="card-body">
-        <form method="post">
+        <form method="post" id="trasladoForm">
             {% csrf_token %}
     <div class="row g-3">
         <div class="col-md-6">
             <label class="form-label">Recurso</label>
-            <select class="form-select" name="recurso_id" required>
+            <select class="form-select" id="recurso_id" name="recurso_id" required>
                 <option value="">Seleccione...</option>
                 {% for r in recursos %}
-                <option value="{{ r.id_recurso }}" {% if traslado and traslado.recurso_id == r.id_recurso %}selected{% endif %}>{{ r.nombre_recurso }} ({{ r.serial_recurso }})</option>
+                <option
+                    value="{{ r.id_recurso }}"
+                    data-ambiente-id="{{ r.ambiente_id }}"
+                    data-ambiente-num="{{ r.ambiente.num_ambiente }}"
+                    {% if traslado and traslado.recurso_id == r.id_recurso %}selected{% endif %}
+                >
+                    {{ r.nombre_recurso }} ({{ r.serial_recurso }})
+                </option>
                 {% endfor %}
             </select>
         </div>
         <div class="col-md-3">
             <label class="form-label">Ambiente origen</label>
-            <select class="form-select" name="ambiente_origen_id" required>
-                <option value="">Seleccione...</option>
-                {% for a in ambientes %}
-                <option value="{{ a.id_ambiente }}" {% if traslado and traslado.ambiente_origen_id == a.id_ambiente %}selected{% endif %}>{{ a.num_ambiente }}</option>
-                {% endfor %}
-            </select>
+            <input
+                class="form-control"
+                id="ambiente_origen_label"
+                type="text"
+                value="{% if traslado and traslado.ambiente_origen %}{{ traslado.ambiente_origen.num_ambiente }}{% endif %}"
+                placeholder="Se asigna automaticamente"
+                readonly
+            >
+            <input
+                id="ambiente_origen_id"
+                type="hidden"
+                name="ambiente_origen_id"
+                value="{% if traslado and traslado.ambiente_origen_id %}{{ traslado.ambiente_origen_id }}{% endif %}"
+            >
         </div>
         <div class="col-md-3">
             <label class="form-label">Ambiente destino</label>
@@ -40,7 +55,18 @@
         </div>
         <div class="col-md-6">
             <label class="form-label">Fecha y hora</label>
-            <input class="form-control" type="datetime-local" name="fecha_traslado" value="{% if traslado %}{{ traslado.fecha_traslado|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+            <input
+                class="form-control"
+                id="fecha_traslado"
+                type="datetime-local"
+                name="fecha_traslado"
+                data-fecha-actual="{{ fecha_actual }}"
+                min="{{ fecha_minima }}"
+                max="{{ fecha_maxima }}"
+                value="{% if traslado %}{{ traslado.fecha_traslado|date:'Y-m-d\\TH:i' }}{% else %}{{ fecha_hora_actual }}{% endif %}"
+                required
+            >
+            <div class="form-text">La fecha siempre debe ser la de hoy. Solo puedes cambiar la hora.</div>
         </div>
         <div class="col-md-6">
             <label class="form-label">Observacion</label>
@@ -54,4 +80,62 @@
         </form>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const trasladoForm = document.getElementById("trasladoForm");
+    const recursoSelect = document.getElementById("recurso_id");
+    const ambienteOrigenId = document.getElementById("ambiente_origen_id");
+    const ambienteOrigenLabel = document.getElementById("ambiente_origen_label");
+    const fechaTrasladoInput = document.getElementById("fecha_traslado");
+
+    function sincronizarAmbienteOrigen() {
+        const selected = recursoSelect.options[recursoSelect.selectedIndex];
+        const ambienteId = selected ? selected.dataset.ambienteId || "" : "";
+        const ambienteNum = selected ? selected.dataset.ambienteNum || "" : "";
+
+        ambienteOrigenId.value = ambienteId;
+        ambienteOrigenLabel.value = ambienteNum;
+    }
+
+    function fijarFechaActualManteniendoHora() {
+        const fechaActual = fechaTrasladoInput.dataset.fechaActual;
+        if (!fechaActual) {
+            return;
+        }
+
+        const valor = fechaTrasladoInput.value || "";
+        const partes = valor.split("T");
+        const hora = partes.length > 1 && partes[1] ? partes[1] : "00:00";
+        fechaTrasladoInput.value = fechaActual + "T" + hora;
+    }
+
+    function fechaEsActual() {
+        const fechaActual = fechaTrasladoInput.dataset.fechaActual;
+        const valor = fechaTrasladoInput.value || "";
+        return valor.startsWith(fechaActual + "T");
+    }
+
+    function validarFechaActual() {
+        if (fechaEsActual()) {
+            fechaTrasladoInput.setCustomValidity("");
+            return true;
+        }
+
+        fechaTrasladoInput.setCustomValidity("No puede asignar una fecha diferente a la actual.");
+        fechaTrasladoInput.reportValidity();
+        return false;
+    }
+
+    recursoSelect.addEventListener("change", sincronizarAmbienteOrigen);
+    fechaTrasladoInput.addEventListener("input", validarFechaActual);
+    fechaTrasladoInput.addEventListener("change", validarFechaActual);
+    trasladoForm.addEventListener("submit", function (event) {
+        if (!validarFechaActual()) {
+            event.preventDefault();
+        }
+    });
+    sincronizarAmbienteOrigen();
+    validarFechaActual();
+});
+</script>
 {% endblock %}

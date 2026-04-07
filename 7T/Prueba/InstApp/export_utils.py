@@ -86,8 +86,47 @@ def construir_pdf(
         Paragraph(titulo, titulo_style),
         Spacer(1, 0.3 * cm),
     ]
-    datos = [cabeceras] + filas
-    tabla = Table(datos, repeatRows=1)
+
+    texto_style = ParagraphStyle(
+        "texto_tabla",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=8,
+        leading=10,
+        alignment=TA_LEFT,
+    )
+    header_style = ParagraphStyle(
+        "header_tabla",
+        parent=styles["BodyText"],
+        fontName="Helvetica-Bold",
+        fontSize=9,
+        leading=11,
+        alignment=TA_CENTER,
+        textColor=colors.white,
+    )
+
+    def _cell_len(value):
+        return max(4, min(len(str(value or "")), 40))
+
+    wrapped_headers = [Paragraph(str(c), header_style) for c in cabeceras]
+    wrapped_rows = [
+        [Paragraph(str(valor if valor is not None else ""), texto_style) for valor in fila]
+        for fila in filas
+    ]
+    datos = [wrapped_headers] + wrapped_rows
+
+    total_width = doc.width
+    col_weights = []
+    for col_idx, cabecera in enumerate(cabeceras):
+        max_len = _cell_len(cabecera)
+        for fila in filas:
+            if col_idx < len(fila):
+                max_len = max(max_len, _cell_len(fila[col_idx]))
+        col_weights.append(max_len)
+
+    weight_sum = sum(col_weights) or len(cabeceras)
+    col_widths = [(peso / weight_sum) * total_width for peso in col_weights]
+    tabla = Table(datos, repeatRows=1, colWidths=col_widths)
     tabla.setStyle(_estilos_tabla())
     elements.append(tabla)
     doc.build(elements)

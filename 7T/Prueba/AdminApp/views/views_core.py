@@ -29,6 +29,9 @@ from LoginApp.models import (
 from .utils import *
 from LoginApp.decorators import login_requerido, rol_requerido
 
+from django.views.decorators.cache import never_cache
+
+@never_cache
 def cerrar_sesion(request):
     # Este proyecto maneja sesión propia con `request.session['usuario_id']`.
     # Siempre la limpiamos, incluso si no se usa `django.contrib.auth`.
@@ -45,6 +48,8 @@ def cerrar_sesion(request):
     return redirect('admin_panel:siza')
 
 
+@never_cache
+@rol_requerido(['admin', 'administrador'])
 def admin_index(request):
     return _render_admin(request, "admin_index.html")
 
@@ -53,22 +58,28 @@ def uadmin(request):
     return redirect('admin_panel:admin_index')
 
 
+@never_cache
+@rol_requerido(['admin', 'administrador'])
 def index_admin(request):
     return _render_admin(request, "indexAdmin.html")
 
 
+@never_cache
 def siza(request):
     return render(request, "siza.html")
 
 
+@rol_requerido(['admin', 'administrador'])
 def form_instructor(request):
     return _render_admin(request, "formInstructor.html")
 
 
+@rol_requerido(['admin', 'administrador'])
 def form_coordinador(request):
     return _render_admin(request, "formCoordinador.html")
 
 
+@rol_requerido(['admin', 'administrador'])
 def form_guarda(request):
     return _render_admin(request, "formGuarda.html")
 

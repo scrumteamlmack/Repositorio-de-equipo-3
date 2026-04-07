@@ -138,6 +138,8 @@
                         <td>{{ inc.tipo_inc.tipo_incidente|default:"—" }}</td>
                         <td>{{ inc.usuario_id_usuario.p_nombre }} {{ inc.usuario_id_usuario.p_apellido }}</td>
                         <td>
+                            <a href="{% url 'instructor:detalle_incidente' inc.id_incidente %}"
+                               class="btn btn-sm btn-outline-primary">🔍</a>
                             <a href="{% url 'instructor:editar_incidente' inc.id_incidente %}"
                                class="btn btn-sm btn-secondary">✏️</a>
                             <form method="post" action="{% url 'instructor:eliminar_incidente' inc.id_incidente %}"

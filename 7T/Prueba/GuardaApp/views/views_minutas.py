@@ -36,7 +36,7 @@ from LoginApp.decorators import login_requerido, rol_requerido
 
 @never_cache
 def listar_minutas(request):
-    q = _q_param(request)
+    filtros = _get_minutas_filters(request)
     minutas = (
         RegistroMinuta.objects.select_related(
             "ambiente",
@@ -46,8 +46,12 @@ def listar_minutas(request):
         .all()
         .order_by("-fecha_hora_recibo")
     )
-    minutas = _filtrar_minutas(minutas, q)
-    return _render_guarda(request, "guarda/minutas_list.html", {"minutas": minutas, "q": q})
+    minutas = _aplicar_filtros_minutas(minutas, filtros)
+    return _render_guarda(
+        request,
+        "guarda/minutas_list.html",
+        {"minutas": minutas, "filtros": filtros, "hay_filtros": any(filtros.values())},
+    )
 
 
 @never_cache
@@ -77,9 +81,13 @@ def crear_minuta(request):
 
         # Validación de fecha (Solo hoy)
         hoy = datetime.now().date()
-        if fecha_recibo.date() != hoy:
+        if fecha_recibo.date() != hoy or fecha_entrega.date() != hoy:
             messages.error(request, f"Error: Solo se permite registrar minutas con la fecha del día actual ({hoy}).")
-            return _render_guarda(request, "guarda/minuta_form.html", {"ambientes": ambientes, "responsables": responsables, "modo": "crear"})
+            return _render_guarda(
+                request, 
+                "guarda/minuta_form.html", 
+                {"ambientes": ambientes, "responsables": responsables, "modo": "crear", "hoy_str": hoy.strftime('%Y-%m-%d')}
+            )
 
         guarda = GuardaSeguridad.objects.filter(usuario_id_usuario=usuario).first()
         if not guarda:
@@ -102,7 +110,12 @@ def crear_minuta(request):
     return _render_guarda(
         request,
         "guarda/minuta_form.html",
-        {"ambientes": ambientes, "responsables": responsables, "modo": "crear"},
+        {
+            "ambientes": ambientes, 
+            "responsables": responsables, 
+            "modo": "crear", 
+            "hoy_str": datetime.now().strftime('%Y-%m-%d')
+        },
     )
 
 
@@ -132,7 +145,13 @@ def editar_minuta(request, minuta_id):
     return _render_guarda(
         request,
         "guarda/minuta_form.html",
-        {"minuta": minuta, "ambientes": ambientes, "responsables": responsables, "modo": "editar"},
+        {
+            "minuta": minuta, 
+            "ambientes": ambientes, 
+            "responsables": responsables, 
+            "modo": "editar",
+            "hoy_str": datetime.now().strftime('%Y-%m-%d')
+        },
     )
 
 
@@ -146,5 +165,21 @@ def eliminar_minuta(request, minuta_id):
     minuta.delete()
     messages.success(request, "Minuta eliminada correctamente.")
     return _replace_redirect('guarda:guarda_minutas')
+
+
+@never_cache
+def detalle_minuta(request, minuta_id):
+    _, denied = _acceso_guarda_o_login(request)
+    if denied:
+        return denied
+    minuta = get_object_or_404(
+        RegistroMinuta.objects.select_related(
+            "ambiente",
+            "guarda_seguridad_usuario_id_usuario__usuario_id_usuario",
+            "responsable__usuario_id_usuario",
+        ),
+        pk=minuta_id
+    )
+    return _render_guarda(request, "guarda/minuta_detalle.html", {"minuta": minuta})
 
 

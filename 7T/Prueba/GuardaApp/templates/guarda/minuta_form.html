@@ -33,15 +33,31 @@
         </div>
         <div class="col-md-6">
             <label class="form-label">Fecha y hora de recibo</label>
-            <input class="form-control" type="datetime-local" name="fecha_hora_recibo" value="{% if minuta %}{{ minuta.fecha_hora_recibo|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+            <input class="form-control" type="datetime-local" 
+                   name="fecha_hora_recibo" 
+                   min="{{ hoy_str }}T00:00" 
+                   max="{{ hoy_str }}T23:59"
+                   value="{% if minuta %}{{ minuta.fecha_hora_recibo|date:'Y-m-d\\TH:i' }}{% endif %}" 
+                   required>
+            <small class="text-muted">Solo se permite la fecha de hoy</small>
         </div>
         <div class="col-md-6">
             <label class="form-label">Fecha y hora de entrega</label>
-            <input class="form-control" type="datetime-local" name="fecha_hora_entrega" value="{% if minuta %}{{ minuta.fecha_hora_entrega|date:'Y-m-d\\TH:i' }}{% endif %}" required>
+            <input class="form-control" type="datetime-local" 
+                   name="fecha_hora_entrega" 
+                   min="{{ hoy_str }}T00:00" 
+                   max="{{ hoy_str }}T23:59"
+                   value="{% if minuta %}{{ minuta.fecha_hora_entrega|date:'Y-m-d\\TH:i' }}{% endif %}" 
+                   required>
+            <small class="text-muted">Solo se permite la fecha de hoy</small>
         </div>
         <div class="col-md-6">
-            <label class="form-label">Estado</label>
-            <input class="form-control" type="text" name="estado" value="{{ minuta.estado|default:'' }}" required>
+            <label class="form-label">Estado del Ambiente</label>
+            <select class="form-select" name="estado" required>
+                <option value="">Seleccione...</option>
+                <option value="Disponible" {% if minuta.estado == "Disponible" %}selected{% endif %}>Disponible</option>
+                <option value="Ocupado" {% if minuta.estado == "Ocupado" %}selected{% endif %}>Ocupado</option>
+            </select>
         </div>
         <div class="col-md-6">
             <label class="form-label">Novedad</label>

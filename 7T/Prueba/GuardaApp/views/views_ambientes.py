@@ -36,10 +36,14 @@ from LoginApp.decorators import login_requerido, rol_requerido
 
 @never_cache
 def listar_ambientes(request):
-    q = _q_param(request)
+    filtros = _get_ambientes_filters(request)
     ambientes = Ambiente.objects.all().order_by("id_ambiente")
-    ambientes = _filtrar_ambientes(ambientes, q)
-    return _render_guarda(request, "guarda/ambientes_list.html", {"ambientes": ambientes, "q": q})
+    ambientes = _aplicar_filtros_ambientes(ambientes, filtros)
+    return _render_guarda(
+        request,
+        "guarda/ambientes_list.html",
+        {"ambientes": ambientes, "filtros": filtros, "hay_filtros": any(filtros.values())},
+    )
 
 
 @never_cache

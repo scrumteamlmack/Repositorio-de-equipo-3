@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.db import IntegrityError
 from django.db.models import Q
 from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
 
 from LoginApp.models import (
     Ambiente, Aprendiz, Ficha, RegistroInasistencia, RegistroMinuta,
@@ -21,6 +22,7 @@ from .export_utils import (
     generar_pdf_response, construir_pdf,
     generar_excel_response, estilizar_excel, guardar_excel_en_response,
 )
+from LoginApp.decorators import rol_requerido
 
 
 def _fecha_hoy():
@@ -31,14 +33,20 @@ def _fecha_hoy():
 #  INICIO / INDEX
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
+@rol_requerido(['instructor'])
 def instructor_index(request):
     return render(request, "instindex.html")
 
 
+@never_cache
+@rol_requerido(['instructor'])
 def inicio_instructor(request):
     return instructor_index(request)
 
 
+@never_cache
+@rol_requerido(['instructor'])
 def index_instructor(request):
     return instructor_index(request)
 
@@ -47,6 +55,8 @@ def index_instructor(request):
 #  FICHAS
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
+@rol_requerido(['instructor'])
 def mis_fichas(request):
     uid = request.session.get('usuario_id')
     if not uid:
@@ -92,6 +102,7 @@ def mis_fichas(request):
     return render(request, "misFichas.html", {"fichas": fichas, "q": q})
 
 
+@never_cache
 def ver_aprendices(request, ficha_id):
     ficha = get_object_or_404(Ficha, pk=ficha_id)
 
@@ -152,6 +163,8 @@ def ver_aprendices(request, ficha_id):
 #  ASISTENCIAS
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
+@rol_requerido(['instructor'])
 def listar_asistencias_instructor(request):
     uid = request.session.get('usuario_id')
     if not uid:
@@ -255,6 +268,7 @@ def listar_asistencia(request):
     return listar_asistencias_instructor(request)
 
 
+@never_cache
 def registrar_asistencia(request):
     uid = request.session.get('usuario_id')
     instructor = get_object_or_404(Instructor, usuario_id_usuario_id=uid)
@@ -291,9 +305,11 @@ def registrar_asistencia(request):
         "instructores": Instructor.objects.select_related('usuario_id_usuario').all(),
         "jornadas": Jornada.objects.all(),
         "hoy": _fecha_hoy(),
+        "instructor": instructor,
     })
 
 
+@never_cache
 def editar_asistencia(request, asistencia_id):
     asistencia = get_object_or_404(RegistroInasistencia, pk=asistencia_id)
     if request.method == "POST":
@@ -317,12 +333,16 @@ def editar_asistencia(request, asistencia_id):
         except (TypeError, ValueError, IntegrityError) as e:
             messages.error(request, f"No se pudo actualizar la asistencia: {str(e)}")
         
+    uid = request.session.get('usuario_id')
+    instructor_actual = get_object_or_404(Instructor, usuario_id_usuario_id=uid)
+    
     return render(request, "asistencias/editarAsistencia.html", {
         "asistencia": asistencia,
         "aprendices": Aprendiz.objects.select_related('usuario_id_usuario').all(),
         "instructores": Instructor.objects.select_related('usuario_id_usuario').all(),
         "jornadas": Jornada.objects.all(),
         "hoy": _fecha_hoy(),
+        "instructor_actual": instructor_actual,
     })
 
 
@@ -351,6 +371,8 @@ def exportar_excel(request):
 #  MINUTAS
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
+@rol_requerido(['instructor'])
 def listar_minutas(request):
     qs = RegistroMinuta.objects.select_related(
         'ambiente',
@@ -458,6 +480,8 @@ def exportar_minutas_excel(request):
 #  INCIDENTES
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
+@rol_requerido(['instructor'])
 def listar_incidentes(request):
     qs = RegistroIncidente.objects.select_related(
         "ambiente", "tipo_inc", "usuario_id_usuario"
@@ -544,7 +568,7 @@ def crear_incidente(request):
         try:
             RegistroIncidente.objects.create(
                 descripcion=(request.POST.get("descripcion") or "").strip() or None,
-                fecha_incidente=request.POST.get("fecha_incidente"),
+                fecha_incidente=timezone.localdate(), # Forzamos la fecha actual
                 hora_incidente=request.POST.get("hora_incidente"),
                 ambiente_id=int(request.POST.get("ambiente_id")),
                 tipo_inc_id=int(request.POST.get("tipo_inc_id")),
@@ -611,6 +635,7 @@ def exportar_incidentes_excel(request):
 #  TRASLADOS
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
 def listar_traslados(request):
     qs = TrasladoRecurso.objects.select_related(
         "recurso",
@@ -730,6 +755,7 @@ def exportar_traslados_excel(request):
 #  AMBIENTES
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
 def listar_ambientes(request):
     qs = Ambiente.objects.all().order_by("num_ambiente")
 
@@ -813,6 +839,7 @@ def exportar_ambientes_excel(request):
 #  PERFIL INSTRUCTOR
 # ─────────────────────────────────────────────────────────────────
 
+@never_cache
 def perfil(request):
     uid = request.session.get('usuario_id')
     if not uid:
@@ -834,6 +861,7 @@ def perfil(request):
     return render(request, "perfilInstructor.html", {"usuario_perfil": usuario_perfil})
 
 
+@never_cache
 def editar_perfil(request):
     uid = request.session.get('usuario_id')
     if not uid:
@@ -859,3 +887,25 @@ def editar_perfil(request):
         return redirect('instructor:perfil')
 
     return render(request, 'editarPerfilInstructor.html', {'usuario': usuario})
+@never_cache
+@rol_requerido(['instructor'])
+def detalle_minuta(request, minuta_id):
+    minuta = get_object_or_404(
+        RegistroMinuta.objects.select_related(
+            'ambiente',
+            'responsable__usuario_id_usuario',
+            'guarda_seguridad_usuario_id_usuario__usuario_id_usuario',
+        ),
+        pk=minuta_id
+    )
+    return render(request, "minuta_detalle.html", {"minuta": minuta})
+
+
+@never_cache
+@rol_requerido(['instructor'])
+def detalle_incidente(request, incidente_id):
+    incidente = get_object_or_404(
+        RegistroIncidente.objects.select_related("ambiente", "tipo_inc", "usuario_id_usuario"),
+        pk=incidente_id
+    )
+    return render(request, "incidente_detalle.html", {"incidente": incidente})

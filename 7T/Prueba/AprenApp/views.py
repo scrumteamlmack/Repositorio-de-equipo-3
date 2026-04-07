@@ -10,14 +10,15 @@ from django.db.models import Max, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.views.decorators.cache import never_cache
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+
 from LoginApp.models import RegistroInasistencia, UserRol, Usuario
 
 
 def _redirigir_a_login(request, next_name: str):
     messages.warning(request, "Inicie sesión para continuar.")
-    return redirect(f"{reverse('login:login')}?{urlencode({'next': reverse(next_name)})}")
+    return redirect(f"{reverse('login:login')}?{urlencode({'next': reverse('aprendiz:' + next_name)})}")
 
 
 def _asistencias(uid: int):
@@ -46,6 +47,7 @@ def _asistencias(uid: int):
     return filas
 
 
+@never_cache
 def aprendiz_index(request):
     uid = request.session.get("usuario_id")
     if not uid:
@@ -55,6 +57,7 @@ def aprendiz_index(request):
     return render(request, "AprenApp/index.html", {"aprendiz_nombre": nombre})
 
 
+@never_cache
 def listar_asistencias(request):
     uid = request.session.get("usuario_id")
     if not uid:
@@ -88,6 +91,7 @@ def exportar_asistencias_excel(request):
     return HttpResponse("Exportacion Excel pendiente de implementacion.")
 
 
+@never_cache
 def perfil_aprendiz(request):
     uid = request.session.get("usuario_id")
     if not uid:

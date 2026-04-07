@@ -186,10 +186,10 @@
                                 <input type="date"
                                        name="fecha_incidente"
                                        class="form-control"
-                                       value="{{ incidente.fecha_incidente|date:'Y-m-d' }}"
-                                       max="{{ hoy }}"
+                                       value="{% if modo_edicion %}{{ incidente.fecha_incidente|date:'Y-m-d' }}{% else %}{{ hoy }}{% endif %}"
+                                       readonly
                                        required>
-                                <small class="text-muted">No puede ser futura</small>
+                                <small class="text-muted">La fecha se asigna automáticamente al día actual</small>
                             </div>
 
                             <div class="col-md-6">

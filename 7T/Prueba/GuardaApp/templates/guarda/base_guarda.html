@@ -60,6 +60,57 @@
         .btn-logout:hover { background-color: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
         .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
         .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .module-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .module-title {
+            margin: 0;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+        .module-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .module-toolbar > a {
+            display: none;
+        }
+        .filters-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+        .filters-card label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+        .filters-card .form-control,
+        .filters-card .form-select {
+            height: 38px;
+        }
+        .filters-actions {
+            display: flex;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 20px;
+            }
+            .filters-actions {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>

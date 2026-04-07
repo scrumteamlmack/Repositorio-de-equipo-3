@@ -36,14 +36,18 @@ from LoginApp.decorators import login_requerido, rol_requerido
 
 @never_cache
 def listar_incidentes(request):
-    q = _q_param(request)
+    filtros = _get_incidentes_filters(request)
     incidentes = (
         RegistroIncidente.objects.select_related("ambiente", "tipo_inc", "usuario_id_usuario")
         .all()
         .order_by("-fecha_incidente", "-hora_incidente")
     )
-    incidentes = _filtrar_incidentes(incidentes, q)
-    return _render_guarda(request, "guarda/incidentes_list.html", {"incidentes": incidentes, "q": q})
+    incidentes = _aplicar_filtros_incidentes(incidentes, filtros)
+    return _render_guarda(
+        request,
+        "guarda/incidentes_list.html",
+        {"incidentes": incidentes, "filtros": filtros, "hay_filtros": any(filtros.values())},
+    )
 
 
 @never_cache
@@ -105,5 +109,17 @@ def eliminar_incidente(request, incidente_id):
     incidente.delete()
     messages.success(request, "Incidente eliminado correctamente.")
     return _replace_redirect('guarda:guarda_incidentes')
+
+
+@never_cache
+def detalle_incidente(request, incidente_id):
+    _, denied = _acceso_guarda_o_login(request)
+    if denied:
+        return denied
+    incidente = get_object_or_404(
+        RegistroIncidente.objects.select_related("ambiente", "tipo_inc", "usuario_id_usuario"),
+        pk=incidente_id
+    )
+    return _render_guarda(request, "guarda/incidente_detalle.html", {"incidente": incidente})
 
 
