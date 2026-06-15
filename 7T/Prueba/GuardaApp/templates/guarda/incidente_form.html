@@ -37,6 +37,15 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="col-md-6">
+            <label class="form-label">Nivel de gravedad</label>
+            <select class="form-select" name="nivel_gravedad" required>
+                <option value="">Seleccione...</option>
+                {% for nivel in niveles_gravedad %}
+                <option value="{{ nivel }}" {% if incidente and incidente.nivel_gravedad == nivel %}selected{% endif %}>{{ nivel }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="col-12">
             <label class="form-label">Descripcion</label>
             <textarea class="form-control" rows="3" name="descripcion">{{ incidente.descripcion|default:'' }}</textarea>

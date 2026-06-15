@@ -18,9 +18,19 @@
             <div class="col-md-6 mb-3">
                 <label class="text-muted small text-uppercase fw-bold">Estado</label>
                 <div>
-                    <span class="badge {% if minuta.estado == 'Buen estado' %}bg-success{% else %}bg-warning text-dark{% endif %} px-3 py-2">
-                        {{ minuta.estado }}
-                    </span>
+                    {% if minuta.estado %}
+                        {% with e=minuta.estado|lower %}
+                            {% if "disponible" in e or "bueno" in e or "bien" in e %}
+                                <span class="badge bg-success px-3 py-2">{{ minuta.estado }}</span>
+                            {% elif "regular" in e %}
+                                <span class="badge bg-warning text-dark px-3 py-2">{{ minuta.estado }}</span>
+                            {% else %}
+                                <span class="badge bg-danger px-3 py-2">{{ minuta.estado }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
                 </div>
             </div>
         </div>

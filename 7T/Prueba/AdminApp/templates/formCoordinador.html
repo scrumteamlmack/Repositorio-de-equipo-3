@@ -39,12 +39,14 @@
         </div>
         <nav class="sidebar-nav">
             <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
-            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}" style="background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white;">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:form_usuario' %}">➕ Crear Usuario</a>
             <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
             <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
             <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
             <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}">📅 Asignación Instructores</a>
+            <a href="{% url 'admin_panel:importar_usuarios_csv' %}">📥 Importar CSV</a>
             <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">

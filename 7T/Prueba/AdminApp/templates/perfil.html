@@ -150,7 +150,9 @@
             <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
             <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
             <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
+            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}">📅 Asignación Instructores</a>
+            <a href="{% url 'admin_panel:importar_usuarios_csv' %}">📥 Importar CSV</a>
+            <a href="{% url 'admin_panel:perfil' %}" style="background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white;">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
             <form method="post" action="{% url 'admin_panel:logout' %}">

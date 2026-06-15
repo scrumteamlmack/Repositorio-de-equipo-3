@@ -33,14 +33,15 @@
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
-            <a href="{% url 'instructor:consultar_minutas' %}" class="active">📝 Minutas</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -71,9 +72,19 @@
 
                     <div class="detail-label">Estado Reportado</div>
                     <div class="detail-value">
-                        <span class="badge {% if 'bueno' in minuta.estado|lower %}bg-success{% else %}bg-warning text-dark{% endif %} px-3 py-2">
-                            {{ minuta.estado|default:"—" }}
-                        </span>
+                        {% if minuta.estado %}
+                            {% with e=minuta.estado|lower %}
+                                {% if "disponible" in e or "bueno" in e or "bien" in e %}
+                                    <span class="badge bg-success px-3 py-2">{{ minuta.estado }}</span>
+                                {% elif "regular" in e %}
+                                    <span class="badge bg-warning text-dark px-3 py-2">{{ minuta.estado }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger px-3 py-2">{{ minuta.estado }}</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6">

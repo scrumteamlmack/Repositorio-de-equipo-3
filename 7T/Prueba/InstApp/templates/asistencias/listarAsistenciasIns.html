@@ -33,14 +33,15 @@
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>👤 L-MACK</h3></div>
-        <nav class="sidebar-nav">
-            <a href="{% url 'instructor:inicio_instructor' %}">🏠 Inicio</a>
+                <nav class="sidebar-nav">
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
-            <a href="{% url 'instructor:listar_asistencias_instructor' %}" class="active">📋 Asistencia</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
             <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
-            <a href="{% url 'instructor:consultar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">

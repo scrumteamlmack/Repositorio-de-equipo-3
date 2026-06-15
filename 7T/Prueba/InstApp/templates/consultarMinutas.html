@@ -36,14 +36,15 @@
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
-            <a href="{% url 'instructor:consultar_minutas' %}" class="active">📝 Minutas</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -117,7 +118,7 @@
                         <th>Ambiente</th>
                         <th>Guarda de Seguridad</th>
                         <th>Instructor Responsable</th>
-                        <th style="width:160px">Fecha Recibo</th>
+                        <th style="width:160px">Fecha Recibido</th>
                         <th style="width:160px">Fecha Entrega</th>
                         <th style="width:110px">Estado</th>
                         <th style="width:120px">Acciones</th>
@@ -163,10 +164,10 @@
                     <td>
                         {% if m.estado %}
                             {% with e=m.estado|lower %}
-                                {% if "bueno" in e or "bien" in e %}
+                                {% if "disponible" in e or "bueno" in e or "bien" in e %}
                                     <span class="badge bg-success">{{ m.estado }}</span>
                                 {% elif "regular" in e %}
-                                    <span class="badge bg-warning">{{ m.estado }}</span>
+                                    <span class="badge bg-warning text-dark">{{ m.estado }}</span>
                                 {% else %}
                                     <span class="badge bg-danger">{{ m.estado }}</span>
                                 {% endif %}

@@ -27,20 +27,25 @@
         .detail-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
         .detail-value { font-size: 16px; color: #111827; font-weight: 500; margin-bottom: 20px; }
         .detail-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; margin-top: 10px; }
+        .gravedad-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 110px; padding: 0.45rem 0.95rem; border-radius: 999px; font-size: 0.9rem; font-weight: 700; }
+        .gravedad-bajo { background: #dcfce7; color: #166534; }
+        .gravedad-medio { background: #fef3c7; color: #92400e; }
+        .gravedad-alto { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
             <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
-            <a href="{% url 'instructor:listar_incidentes' %}" class="active">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -82,6 +87,24 @@
 
                     <div class="detail-label">Hora Estimada</div>
                     <div class="detail-value">{{ incidente.hora_incidente }}</div>
+
+                    <div class="detail-label">Nivel de gravedad</div>
+                    <div class="detail-value">
+                        <span class="gravedad-badge gravedad-{{ incidente.nivel_gravedad|default:'medio'|lower }}">
+                            {{ incidente.nivel_gravedad|default:"Medio" }}
+                        </span>
+                    </div>
+
+                    <div class="detail-label">Estado del Incidente</div>
+                    <div class="detail-value">
+                        {% if incidente.estado == 'Abierto' %}
+                            <span class="badge bg-danger rounded-pill px-3 py-2">Abierto</span>
+                        {% elif incidente.estado == 'En Proceso' %}
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">En Proceso</span>
+                        {% else %}
+                            <span class="badge bg-success rounded-pill px-3 py-2">Cerrado</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -101,10 +124,53 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 mb-5">
                 <div class="detail-label">Descripción de los Hechos</div>
                 <div class="detail-box" style="white-space: pre-wrap; line-height: 1.6; border-left: 4px solid #ef4444;">
                     {{ incidente.descripcion|default:"No se proporcionó una descripción del incidente." }}
+                </div>
+            </div>
+
+            <hr class="my-5">
+
+            <div class="row mt-4">
+                <!-- Columna de Historial / Seguimiento -->
+                <div class="col-md-7">
+                    <h4 class="mb-4">📋 Historial de Seguimiento</h4>
+                    <div class="timeline" style="border-left: 2px solid #e5e7eb; padding-left: 20px; position: relative;">
+                        {% for h in historicos %}
+                            <div class="timeline-item mb-4" style="position: relative;">
+                                <div class="timeline-marker" style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--primary-green); position: absolute; left: -27px; top: 6px; border: 2px solid white;"></div>
+                                <div class="text-muted small fw-bold">{{ h.fecha_registro|date:"d/m/Y H:i" }}</div>
+                                <div class="text-dark mt-1" style="font-size: 14px; font-weight: 500;">{{ h.descripcion }}</div>
+                            </div>
+                        {% empty %}
+                            <div class="text-muted italic">No hay notas de seguimiento registradas para este incidente.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Columna de Registrar Seguimiento -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm border-0 p-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0 !important;">
+                        <h4 class="mb-3" style="font-size: 18px; color: #1e293b;">✍️ Registrar Seguimiento / Estado</h4>
+                        <form method="post" action="{% url 'instructor:actualizar_estado_incidente' incidente.id_incidente %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="estado" class="form-label fw-bold small text-muted">CAMBIAR ESTADO</label>
+                                <select name="estado" id="estado" class="form-select form-select-sm">
+                                    <option value="Abierto" {% if incidente.estado == 'Abierto' %}selected{% endif %}>Abierto</option>
+                                    <option value="En Proceso" {% if incidente.estado == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                                    <option value="Cerrado" {% if incidente.estado == 'Cerrado' %}selected{% endif %}>Cerrado</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comentario" class="form-label fw-bold small text-muted">AÑADIR COMENTARIO O NOTA</label>
+                                <textarea name="comentario" id="comentario" rows="3" class="form-control form-control-sm" placeholder="Escribe detalles del avance o acción tomada..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Actualizar Seguimiento</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 

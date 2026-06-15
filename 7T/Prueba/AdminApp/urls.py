@@ -26,6 +26,7 @@ urlpatterns = [
     path("usuarios/<int:usuario_id>/coordinador/", views.crear_coordinador_detalle, name="crear_coordinador_detalle"),
     path("usuarios/exportar/pdf/", views.exportar_usuarios_pdf, name="exportar_usuarios_pdf"),
     path("usuarios/exportar/excel/", views.exportar_usuarios_excel, name="exportar_usuarios_excel"),
+    path("usuarios/importar/csv/", views.importar_usuarios_csv, name="importar_usuarios_csv"),
     # Fichas
     path("fichas/", views.listar_fichas, name="listar_fichas"),
     path("fichas/nueva/", views.crear_ficha, name="crear_ficha"),
@@ -54,4 +55,9 @@ urlpatterns = [
     path("ambientes/<int:ambiente_id>/eliminar/", views.eliminar_ambiente, name="eliminar_ambiente"),
     path("ambientes/exportar/pdf/", views.exportar_ambientes_pdf, name="exportar_ambientes_pdf"),
     path("ambientes/exportar/excel/", views.exportar_ambientes_excel, name="exportar_ambientes_excel"),
+
+    # Asignaciones de Ambientes
+    path("ambientes/asignaciones/", views.listar_asignaciones_ambientes, name="listar_asignaciones_ambientes"),
+    path("ambientes/asignaciones/nueva/", views.crear_asignacion_ambiente, name="crear_asignacion_ambiente"),
+    path("ambientes/asignaciones/<int:asignacion_id>/eliminar/", views.eliminar_asignacion_ambiente, name="eliminar_asignacion_ambiente"),
 ]

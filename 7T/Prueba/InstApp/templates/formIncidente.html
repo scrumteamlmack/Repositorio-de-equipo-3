@@ -139,7 +139,7 @@
             <h3>L-MACK</h3>
         </div>
 
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
@@ -147,7 +147,8 @@
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
-            <a href="{% url 'instructor:perfil' %}" class="active">👤 Mi Perfil</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
+            <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -222,6 +223,19 @@
                                         <option value="{{ tipo.id_tipo_inc }}"
                                             {% if incidente.tipo_inc_id == tipo.id_tipo_inc %}selected{% endif %}>
                                             {{ tipo.tipo_incidente }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Nivel de gravedad</label>
+                                <select name="nivel_gravedad" class="form-select" required>
+                                    <option value="">Seleccione un nivel...</option>
+                                    {% for nivel in niveles_gravedad %}
+                                        <option value="{{ nivel }}"
+                                            {% if incidente.nivel_gravedad == nivel %}selected{% endif %}>
+                                            {{ nivel }}
                                         </option>
                                     {% endfor %}
                                 </select>

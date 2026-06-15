@@ -1,5 +1,5 @@
 
-__all__ = ['_no_cache', '_usuario_sesion', '_es_guarda', '_acceso_guarda_o_login', '_render_guarda', '_replace_redirect', '_next_id', '_q_param', '_maybe_int', '_safe_q_part', '_get_ambientes_filters', '_aplicar_filtros_ambientes', '_get_minutas_filters', '_aplicar_filtros_minutas', '_get_incidentes_filters', '_aplicar_filtros_incidentes', '_get_traslados_filters', '_aplicar_filtros_traslados', '_filters_to_suffix', '_filtrar_minutas', '_filtrar_incidentes', '_filtrar_traslados', '_filtrar_ambientes']
+__all__ = ['_no_cache', '_usuario_sesion', '_es_guarda', '_acceso_guarda_o_login', '_render_guarda', '_replace_redirect', '_next_id', '_q_param', '_maybe_int', '_safe_q_part', '_get_ambientes_filters', '_aplicar_filtros_ambientes', '_get_minutas_filters', '_aplicar_filtros_minutas', '_get_incidentes_filters', '_aplicar_filtros_incidentes', '_get_traslados_filters', '_aplicar_filtros_traslados', '_filters_to_suffix', '_filtrar_minutas', '_filtrar_incidentes', '_filtrar_traslados', '_filtrar_ambientes', '_liberar_minutas_vencidas']
 from datetime import datetime
 from io import BytesIO
 import json
@@ -160,6 +160,7 @@ def _filtrar_incidentes(incidentes_qs, q: str):
     conds = (
         Q(descripcion__icontains=q)
         | Q(tipo_inc__tipo_incidente__icontains=q)
+        | Q(nivel_gravedad__icontains=q)
         | Q(usuario_id_usuario__p_nombre__icontains=q)
         | Q(usuario_id_usuario__p_apellido__icontains=q)
     )
@@ -316,6 +317,7 @@ def _get_incidentes_filters(request) -> dict:
         "hora": _get_str_param(request, "hora"),
         "ambiente": _get_str_param(request, "ambiente"),
         "tipo": _get_str_param(request, "tipo"),
+        "gravedad": _get_str_param(request, "gravedad"),
         "descripcion": _get_str_param(request, "descripcion"),
         "usuario": _get_str_param(request, "usuario"),
     }
@@ -327,6 +329,7 @@ def _aplicar_filtros_incidentes(incidentes_qs, filtros: dict):
     hora = filtros.get("hora")
     ambiente = _maybe_int(filtros.get("ambiente"))
     tipo = filtros.get("tipo")
+    gravedad = filtros.get("gravedad")
     descripcion = filtros.get("descripcion")
     usuario = filtros.get("usuario")
 
@@ -344,6 +347,8 @@ def _aplicar_filtros_incidentes(incidentes_qs, filtros: dict):
         incidentes_qs = incidentes_qs.filter(ambiente__num_ambiente=ambiente)
     if tipo:
         incidentes_qs = incidentes_qs.filter(tipo_inc__tipo_incidente__icontains=tipo)
+    if gravedad:
+        incidentes_qs = incidentes_qs.filter(nivel_gravedad__iexact=gravedad)
     if descripcion:
         incidentes_qs = incidentes_qs.filter(descripcion__icontains=descripcion)
     if usuario:
@@ -393,5 +398,41 @@ def _aplicar_filtros_traslados(traslados_qs, filtros: dict):
         traslados_qs = traslados_qs.filter(observacion__icontains=observacion)
 
     return traslados_qs
+
+
+def _liberar_minutas_vencidas():
+    from django.utils import timezone
+    from LoginApp.models import RegistroMinuta, Ambiente
+    from django.db import transaction
+    
+    ahora = timezone.localtime()
+    
+    minutas_vencidas = RegistroMinuta.objects.filter(
+        estado="Ocupado",
+        fecha_hora_entrega__lt=ahora
+    )
+    
+    if minutas_vencidas.exists():
+        try:
+            with transaction.atomic():
+                for m in minutas_vencidas:
+                    m.estado = "Disponible"
+                    m.save(update_fields=['estado'])
+                    
+                    amb = m.ambiente
+                    if amb.estado == "Ocupado":
+                        otra_ocupada = RegistroMinuta.objects.filter(
+                            ambiente=amb,
+                            fecha_hora_recibo__lte=ahora,
+                            fecha_hora_entrega__gte=ahora,
+                            estado="Ocupado"
+                        ).exclude(pk=m.pk).exists()
+                        
+                        if not otra_ocupada:
+                            amb.estado = "Disponible"
+                            amb.save(update_fields=['estado'])
+        except Exception:
+            pass
+
 
 

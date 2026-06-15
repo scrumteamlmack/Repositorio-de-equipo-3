@@ -41,14 +41,15 @@
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
             <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
-            <a href="{% url 'instructor:listar_ambientes' %}" class="active">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -132,7 +133,9 @@
                         <th>Número</th>
                         <th>Capacidad</th>
                         <th>Tipo</th>
-                        <th style="width:150px">Estado</th>
+                        <th>Estado</th>
+                        <th>Instructor Asignado</th>
+                        <th>Aprendices Asignados</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,6 +155,20 @@
                                 <span class="badge bg-danger">{{ amb.estado }}</span>
                             {% endif %}
                         {% endwith %}
+                    </td>
+                    <td>
+                        {% if amb.instructor_asignado != "Sin asignar" %}
+                            <span class="fw-bold text-success">{{ amb.instructor_asignado }}</span>
+                        {% else %}
+                            <span class="text-muted">Sin asignar</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if amb.num_aprendices > 0 %}
+                            <span class="badge bg-info text-dark fw-bold">{{ amb.num_aprendices }}</span>
+                        {% else %}
+                            <span class="text-muted">0</span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}

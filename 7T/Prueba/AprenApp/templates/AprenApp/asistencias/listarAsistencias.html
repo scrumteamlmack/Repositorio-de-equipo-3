@@ -176,6 +176,7 @@
                             <th style="width: 120px; text-align: center;">Estado</th>
                             <th style="width: 200px;">Instructor</th>
                             <th style="width: 150px; text-align: center;">Jornada</th>
+                            <th style="width: 180px; text-align: center;">Justificación</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,36 +192,55 @@
                                 {% endif %}
                             </td>
 
-                            <!-- Estado: S=Asistió, R=Retardo, otro=Faltó -->
-                            <td style="text-align: center;">
-                                {% if asis.estado == 'S' %}
-                                    <span class="badge bg-success">Asistió</span>
-                                {% elif asis.estado == 'R' %}
-                                    <span class="badge bg-warning">Retardo</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Faltó</span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if asis.instructor_nombre %}
-                                    {{ asis.instructor_nombre }}
-                                {% else %}
-                                    Instructor {{ asis.instructor_usuario_id }}
-                                {% endif %}
-                            </td>
-
-                            <td style="text-align: center;">
-                                {% if asis.jornada_nombre %}
-                                    {{ asis.jornada_nombre }}
-                                {% else %}
-                                    Jornada {{ asis.jornada_id }}
-                                {% endif %}
-                            </td>
+                             <!-- Estado: S=Asistió, R=Retardo, J=Justificada, otro=Faltó -->
+                             <td style="text-align: center;">
+                                 {% if asis.estado == 'S' %}
+                                     <span class="badge bg-success">Asistió</span>
+                                 {% elif asis.estado == 'R' %}
+                                     <span class="badge bg-warning">Retardo</span>
+                                 {% elif asis.estado == 'J' %}
+                                     <span class="badge bg-info text-dark" style="background-color: #e0f2fe !important; color: #0369a1 !important;">Justificada</span>
+                                 {% else %}
+                                     <span class="badge bg-danger">Faltó</span>
+                                 {% endif %}
+                             </td>
+ 
+                             <td>
+                                 {% if asis.instructor_nombre %}
+                                     {{ asis.instructor_nombre }}
+                                 {% else %}
+                                     Instructor {{ asis.instructor_usuario_id }}
+                                 {% endif %}
+                             </td>
+ 
+                             <td style="text-align: center;">
+                                 {% if asis.jornada_nombre %}
+                                     {{ asis.jornada_nombre }}
+                                 {% else %}
+                                     Jornada {{ asis.jornada_id }}
+                                 {% endif %}
+                             </td>
+                             <td style="text-align: center;">
+                                 {% if asis.justificacion_estado %}
+                                     {% if asis.justificacion_estado == 'Pendiente' %}
+                                         <span class="badge bg-warning text-dark">Pendiente</span>
+                                     {% elif asis.justificacion_estado == 'Aprobada' %}
+                                         <span class="badge bg-success" style="background-color: #dcfce7 !important; color: #15803d !important;">Aprobada</span>
+                                     {% else %}
+                                         <span class="badge bg-danger" style="background-color: #fee2e2 !important; color: #b91c1c !important;">Rechazada</span>
+                                     {% endif %}
+                                 {% elif asis.estado == 'N' %}
+                                     <a href="{% url 'aprendiz:subir_justificacion' asis.id_asistencia %}" class="btn btn-sm btn-outline-primary fw-bold" style="padding: 2px 8px; font-size: 12px;">
+                                         📄 Justificar
+                                     </a>
+                                 {% else %}
+                                     <span class="text-muted">—</span>
+                                 {% endif %}
+                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
+                            <td colspan="6" class="text-center text-muted py-4">
                                 No hay asistencias registradas
                             </td>
                         </tr>

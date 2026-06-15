@@ -1,20 +1,13 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
 
 class AlertasInasistencia(models.Model):
-    id_alerta = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador de la alerta.\n')
-    aprendiz_id = models.IntegerField(db_comment='Llave forßnea. Relaciona la alerta con el aprendiz.\n')
-    cantidad_fallas = models.IntegerField(db_comment='N·mero acumulado de inasistencias.\n')
-    fecha_alerta = models.DateTimeField(db_comment='Fecha de generaci¾n de la alerta.\n')
-    mensaje = models.TextField(db_comment='Descripci¾n o detalle de la alerta.\n')
-    coordinacion = models.ForeignKey('Coordinacion', models.DO_NOTHING, db_comment='Coordinaci¾n que recibe o emite la alerta.\n\n')
+    id_alerta = models.AutoField(primary_key=True)
+    aprendiz_id = models.IntegerField()
+    cantidad_fallas = models.IntegerField()
+    fecha_alerta = models.DateTimeField()
+    mensaje = models.TextField()
+    coordinacion = models.ForeignKey('Coordinacion', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -22,11 +15,11 @@ class AlertasInasistencia(models.Model):
 
 
 class Ambiente(models.Model):
-    id_ambiente = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador ·nico del ambiente.\n')
-    num_ambiente = models.SmallIntegerField(db_comment='N·mero o c¾digo del ambiente fÝsico.\n')
-    capacidad = models.SmallIntegerField(db_comment='Cantidad de personas que pueden estar en un ambiente')
-    tipo_ambiente = models.CharField(max_length=45, db_comment='Tipo del ambiente (auditorio, sala, aula, etc.).\n')
-    estado = models.CharField(max_length=30, db_comment='Estado actual del ambiente (disponible, ocupado, mantenimiento, etc.).\n')
+    id_ambiente = models.IntegerField(primary_key=True)
+    num_ambiente = models.SmallIntegerField()
+    capacidad = models.SmallIntegerField()
+    tipo_ambiente = models.CharField(max_length=45)
+    estado = models.CharField(max_length=30)
 
     class Meta:
         managed = False
@@ -37,9 +30,18 @@ class Ambiente(models.Model):
 
 
 class Aprendiz(models.Model):
-    usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Identificador del aprendiz (usuario base).\n')  # Field name made lowercase.
-    programas_id_programas = models.ForeignKey('Programas', models.DO_NOTHING, db_column='programas_id_programas', db_comment='Llave forßnea. Programa de formaci¾n del aprendiz.\n', null=True, blank=True)
-    ficha_idficha = models.ForeignKey('Ficha', models.DO_NOTHING, db_column='ficha_idficha', null=True, blank=True)
+    usuario_id_usuario = models.OneToOneField(
+        'Usuario', models.DO_NOTHING,
+        db_column='Usuario_id_usuario', primary_key=True
+    )
+    programas_id_programas = models.ForeignKey(
+        'Programas', models.DO_NOTHING,
+        db_column='programas_id_programas', null=True, blank=True
+    )
+    ficha_idficha = models.ForeignKey(
+        'Ficha', models.DO_NOTHING,
+        db_column='ficha_idficha', null=True, blank=True
+    )
 
     class Meta:
         managed = True
@@ -116,9 +118,9 @@ class AuthUserUserPermissions(models.Model):
 
 
 class Coordinacion(models.Model):
-    id_coordinacion = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador de la coordinaci¾n.\n')
-    nombre_coordinacion = models.CharField(max_length=45, db_comment='Nombre de la coordinaci¾n (ej. tecnologia e innovacion).\n')
-    correo_coordinacion = models.CharField(max_length=30, db_comment='Correo electr¾nico institucional de la coordinaci¾n.\n\n')
+    id_coordinacion = models.AutoField(primary_key=True)
+    nombre_coordinacion = models.CharField(max_length=45)
+    correo_coordinacion = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -129,8 +131,14 @@ class Coordinacion(models.Model):
 
 
 class Coordinador(models.Model):
-    usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Usuario que tiene el rol de coordinador.\n')  # Field name made lowercase.
-    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Llave forßnea. Relaciona con la coordinaci¾n que lidera.\n\n', null=True, blank=True)
+    usuario_id_usuario = models.OneToOneField(
+        'Usuario', models.DO_NOTHING,
+        db_column='Usuario_id_usuario', primary_key=True
+    )
+    coordinacion_id_coordinacion = models.ForeignKey(
+        Coordinacion, models.DO_NOTHING,
+        db_column='coordinacion_id_coordinacion', null=True, blank=True
+    )
 
     class Meta:
         managed = True
@@ -253,12 +261,9 @@ class Ficha(models.Model):
     idficha = models.AutoField(primary_key=True)
     num_ficha = models.IntegerField(db_column='Num_ficha', unique=True)
     instructor_usuario_id_usuario = models.ForeignKey(
-        'Instructor',
-        models.DO_NOTHING,
+        'Instructor', models.DO_NOTHING,
         db_column='instructor_Usuario_id_usuario',
-        null=True,
-        blank=True,
-        related_name='fichas'
+        null=True, blank=True, related_name='fichas'
     )
 
     class Meta:
@@ -270,10 +275,13 @@ class Ficha(models.Model):
 
 
 class GuardaSeguridad(models.Model):
-    usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Clave primaria y forßnea. Usuario que cumple funciones de guarda de seguridad.\n')  # Field name made lowercase.
-    turno = models.CharField(max_length=6, db_comment='Turno del guarda(ej. ma±ana, tarde, etc...)')
-    fecha_ingreso = models.DateField(db_comment='Fecha de ingreso laboral del guarda.\n')
-    estado = models.CharField(max_length=8, db_comment='Estado laboral del guarda (activo/inactivo).\n\n')
+    usuario_id_usuario = models.OneToOneField(
+        'Usuario', models.DO_NOTHING,
+        db_column='Usuario_id_usuario', primary_key=True
+    )
+    turno = models.CharField(max_length=6)
+    fecha_ingreso = models.DateField()
+    estado = models.CharField(max_length=8)
 
     class Meta:
         managed = True
@@ -281,12 +289,12 @@ class GuardaSeguridad(models.Model):
 
 
 class HistoricoIncidentes(models.Model):
-    id_historico = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del historial del incidente.\n')
-    incidente = models.ForeignKey('RegistroIncidente', models.DO_NOTHING, db_comment='Llave forßnea. Incidente asociado.\n')
-    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING, db_comment='Llave forßnea. Ambiente en donde ocurri¾.\n')
-    tipo_incidente = models.ForeignKey('TipoIncidente', models.DO_NOTHING, db_comment='Llave forßnea. Tipo de incidente registrado.\n')
-    descripcion = models.TextField(blank=True, null=True, db_comment='Descripci¾n de los hechos o seguimiento.\n')
-    fecha_registro = models.DateTimeField(db_comment='Fecha del registro en el historial.\n\n')
+    id_historico = models.AutoField(primary_key=True)
+    incidente = models.ForeignKey('RegistroIncidente', models.DO_NOTHING)
+    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING)
+    tipo_incidente = models.ForeignKey('TipoIncidente', models.DO_NOTHING)
+    descripcion = models.TextField(blank=True, null=True)
+    fecha_registro = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -294,11 +302,17 @@ class HistoricoIncidentes(models.Model):
 
 
 class Instructor(models.Model):
-    usuario_id_usuario = models.OneToOneField('Usuario', models.DO_NOTHING, db_column='Usuario_id_usuario', primary_key=True, db_comment='Llave primaria y forßnea. Usuario que act·a como instructor.\n')  # Field name made lowercase.
-    email = models.CharField(max_length=100, db_comment='Correo electr¾nico institucional.\n')
-    telefono = models.CharField(max_length=20, db_comment='TelÚfono de contacto.\n')
-    coordinacion_id_coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_column='coordinacion_id_coordinacion', db_comment='Coordinaci¾n a la que pertenece.\n', null=True, blank=True)
-    estado = models.CharField(max_length=8, db_comment='Estado laboral (activo, inactivo).\n')
+    usuario_id_usuario = models.OneToOneField(
+        'Usuario', models.DO_NOTHING,
+        db_column='Usuario_id_usuario', primary_key=True
+    )
+    email = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=20)
+    coordinacion_id_coordinacion = models.ForeignKey(
+        Coordinacion, models.DO_NOTHING,
+        db_column='coordinacion_id_coordinacion', null=True, blank=True
+    )
+    estado = models.CharField(max_length=8)
 
     class Meta:
         managed = True
@@ -310,8 +324,8 @@ class Instructor(models.Model):
 
 
 class Jornada(models.Model):
-    id_jornada = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador de la jornada.\n')
-    nombre_jornada = models.CharField(max_length=9, db_comment='Nombre de la jornada (ma±ana, tarde, noche).\n\n')
+    id_jornada = models.IntegerField(primary_key=True)
+    nombre_jornada = models.CharField(max_length=9)
 
     class Meta:
         managed = False
@@ -322,8 +336,8 @@ class Jornada(models.Model):
 
 
 class Modalidad(models.Model):
-    id_modalidad = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador de la modalidad.\n')
-    nombre_modalidad = models.CharField(max_length=10, db_comment='Nombre de la modalidad (presencial, sincronica).\n\n')
+    id_modalidad = models.IntegerField(primary_key=True)
+    nombre_modalidad = models.CharField(max_length=10)
 
     class Meta:
         managed = False
@@ -334,13 +348,13 @@ class Modalidad(models.Model):
 
 
 class Programas(models.Model):
-    id_programas = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador del programa acadÚmico.\n')
-    nombre_programa = models.CharField(max_length=50, db_comment='Nombre del programa.\n')
-    nivel_formacion = models.CharField(max_length=30, db_comment='Nivel de formaci¾n (tecn¾logo, tÚcnico, etc.).\n')
-    duracion = models.CharField(max_length=50, db_comment='Duraci¾n estimada del programa.\n')
-    jornada = models.ForeignKey(Jornada, models.DO_NOTHING, db_comment='Jornada asignada.\n')
-    modalidad = models.ForeignKey(Modalidad, models.DO_NOTHING, db_comment='Modalidad del programa.\n')
-    coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING, db_comment='Coordinaci¾n responsable del programa.\n\n')
+    id_programas = models.IntegerField(primary_key=True)
+    nombre_programa = models.CharField(max_length=50)
+    nivel_formacion = models.CharField(max_length=30)
+    duracion = models.CharField(max_length=50)
+    jornada = models.ForeignKey(Jornada, models.DO_NOTHING)
+    modalidad = models.ForeignKey(Modalidad, models.DO_NOTHING)
+    coordinacion = models.ForeignKey(Coordinacion, models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -351,14 +365,14 @@ class Programas(models.Model):
 
 
 class Recursos(models.Model):
-    id_recurso = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del recurso.\n')
-    serial_recurso = models.CharField(max_length=100, db_comment='Serial fÝsico o interno del recurso.\n')
-    num_recurso = models.IntegerField(db_comment='Nombre del recurso en el ambiente.\n')
-    nombre_recurso = models.CharField(max_length=60, db_comment='Nombre del recurso.\n')
-    tipo_recurso = models.ForeignKey('TipoRecurso', models.DO_NOTHING, db_column='tipo_recurso', db_comment='Llave forßnea. Tipo de recurso.\n')
-    estado = models.CharField(max_length=16, blank=True, null=True, db_comment='Estado del recurso (operativo, da±ado, en mantenimiento).\n')
-    observacion = models.TextField(blank=True, null=True, db_comment='Observacion hacia algun recurso.')
-    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING, db_comment='Llave foranea, Ambiente al que pertenece.')
+    id_recurso = models.AutoField(primary_key=True)
+    serial_recurso = models.CharField(max_length=100)
+    num_recurso = models.IntegerField()
+    nombre_recurso = models.CharField(max_length=60)
+    tipo_recurso = models.ForeignKey('TipoRecurso', models.DO_NOTHING, db_column='tipo_recurso')
+    estado = models.CharField(max_length=16, blank=True, null=True)
+    observacion = models.TextField(blank=True, null=True)
+    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -366,41 +380,99 @@ class Recursos(models.Model):
 
 
 class RegistroInasistencia(models.Model):
-    id_inasistencia = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del registro.\n')
-    fecha_inasistencia = models.DateField(db_comment='Fecha del registro de asistencia.\n')
-    estado_inasistencia = models.CharField(max_length=1, db_comment='Estado: S (asisti¾), R (retraso), N (no asistio).\n')
-    jornada = models.ForeignKey(Jornada, models.DO_NOTHING, db_comment='Jornada del aprendiz.\n')
-    aprendiz_usuario_id_usuario = models.ForeignKey(Aprendiz, models.DO_NOTHING, db_column='aprendiz_Usuario_id_usuario', db_comment='Llave forßnea al aprendiz.\n\n')  # Field name made lowercase.
-    instructor_usuario_id_usuario = models.ForeignKey(Instructor, models.DO_NOTHING, db_column='instructor_Usuario_id_usuario')  # Field name made lowercase.
+    TIPO_CHOICES = (
+        ('Justificada', 'Justificada'),
+        ('No justificada', 'No justificada'),
+    )
+
+    id_inasistencia = models.AutoField(primary_key=True)
+    fecha_inasistencia = models.DateField()
+    estado_inasistencia = models.CharField(max_length=1)
+    jornada = models.ForeignKey(Jornada, models.DO_NOTHING)
+    aprendiz_usuario_id_usuario = models.ForeignKey(
+        Aprendiz, models.DO_NOTHING, db_column='aprendiz_Usuario_id_usuario'
+    )
+    instructor_usuario_id_usuario = models.ForeignKey(
+        Instructor, models.DO_NOTHING, db_column='instructor_Usuario_id_usuario'
+    )
+    tipo_inasistencia = models.CharField(
+        max_length=20, choices=TIPO_CHOICES, blank=True, null=True
+    )
+
+    def save(self, *args, **kwargs):
+        # Auto-asignar tipo según el estado
+        if self.estado_inasistencia == 'N' and not self.tipo_inasistencia:
+            self.tipo_inasistencia = 'No justificada'
+        elif self.estado_inasistencia in ('S', 'R'):
+            self.tipo_inasistencia = None
+        super().save(*args, **kwargs)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'registro_inasistencia'
 
 
 class RegistroIncidente(models.Model):
-    id_incidente = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del incidente.\n\n')
-    descripcion = models.TextField(blank=True, null=True, db_comment='Descripci¾n general del incidente.\n')
-    fecha_incidente = models.DateField(db_comment='Fecha en que ocurri¾.\n')
-    hora_incidente = models.TimeField(db_comment='Hora en que ocurrio.')
-    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING, db_comment='Ambiente donde sucedi¾.\n')
-    tipo_inc = models.ForeignKey('TipoIncidente', models.DO_NOTHING, db_comment='Tipo de incidente.\n')
+    NIVELES_GRAVEDAD = (
+        ('Bajo', 'Bajo'),
+        ('Medio', 'Medio'),
+        ('Alto', 'Alto'),
+    )
+    ESTADOS_INCIDENTE = (
+        ('Abierto', 'Abierto'),
+        ('En Proceso', 'En Proceso'),
+        ('Cerrado', 'Cerrado'),
+    )
+
+    id_incidente = models.AutoField(primary_key=True)
+    descripcion = models.TextField(blank=True, null=True)
+    fecha_incidente = models.DateField()
+    hora_incidente = models.TimeField()
+    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING)
+    tipo_inc = models.ForeignKey('TipoIncidente', models.DO_NOTHING)
+    nivel_gravedad = models.CharField(max_length=10, choices=NIVELES_GRAVEDAD, blank=True, null=True)
     usuario_id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_id_usuario')
+    estado = models.CharField(max_length=20, choices=ESTADOS_INCIDENTE, default='Abierto')
+
+    def save(self, *args, **kwargs):
+        """Registrar en historial cuando el estado cambia."""
+        old_estado = None
+        is_update = self.pk is not None
+        if is_update:
+            try:
+                old_estado = RegistroIncidente.objects.values_list('estado', flat=True).get(pk=self.pk)
+            except RegistroIncidente.DoesNotExist:
+                pass
+
+        super().save(*args, **kwargs)
+
+        if is_update and old_estado and old_estado != self.estado:
+            from django.utils import timezone
+            HistoricoIncidentes.objects.create(
+                incidente=self,
+                ambiente=self.ambiente,
+                tipo_incidente=self.tipo_inc,
+                descripcion=f"Cambio de estado: '{old_estado}' → '{self.estado}'",
+                fecha_registro=timezone.now(),
+            )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'registro_incidente'
 
 
 class RegistroMinuta(models.Model):
-    id_minuta = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del registro de minuta.\n')
-    fecha_hora_recibo = models.DateTimeField(db_comment='Fecha y hora de recibo del ambiente.\n')
-    fecha_hora_entrega = models.DateTimeField(db_comment='Fecha y hora de entrega.\n')
-    novedad = models.TextField(blank=True, null=True, db_comment='Novedad o eventualidad ocurrida.\n')
-    descripcion_min = models.TextField(blank=True, null=True, db_comment='Observaciones generales.\n')
-    estado = models.TextField(db_comment='Estado general del ambiente al momento.\n')
-    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING, db_comment='Ambiente relacionado.\n')
-    guarda_seguridad_usuario_id_usuario = models.ForeignKey(GuardaSeguridad, models.DO_NOTHING, db_column='guarda_seguridad_Usuario_id_usuario', db_comment='Guarda que recibi¾ o entreg¾.\n\n')  # Field name made lowercase.
+    id_minuta = models.AutoField(primary_key=True)
+    fecha_hora_recibo = models.DateTimeField()
+    fecha_hora_entrega = models.DateTimeField()
+    novedad = models.TextField(blank=True, null=True)
+    descripcion_min = models.TextField(blank=True, null=True)
+    estado = models.TextField()
+    ambiente = models.ForeignKey(Ambiente, models.DO_NOTHING)
+    guarda_seguridad_usuario_id_usuario = models.ForeignKey(
+        GuardaSeguridad, models.DO_NOTHING,
+        db_column='guarda_seguridad_Usuario_id_usuario'
+    )
     responsable = models.ForeignKey(Instructor, models.DO_NOTHING)
     registro_minutacol = models.CharField(max_length=45, blank=True, null=True)
 
@@ -410,8 +482,8 @@ class RegistroMinuta(models.Model):
 
 
 class Rol(models.Model):
-    id_rol = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador del rol.\n')
-    nombre_rol = models.CharField(max_length=45, db_comment='Nombre del rol (aprendiz, instructor, etc.).\n\n')
+    id_rol = models.IntegerField(primary_key=True)
+    nombre_rol = models.CharField(max_length=45)
 
     class Meta:
         managed = False
@@ -444,19 +516,22 @@ class SourcesUrlsource(models.Model):
 
 
 class TipoIncidente(models.Model):
-    id_tipo_inc = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador del tipo de incidente.\n')
-    tipo_incidente = models.CharField(max_length=45, db_comment='Nombre del tipo.\n')
-    observacion_inc = models.TextField(db_comment='Observaci¾n adicional.\n\n')
+    id_tipo_inc = models.IntegerField(primary_key=True)
+    tipo_incidente = models.CharField(max_length=45)
+    observacion_inc = models.TextField()
 
     class Meta:
         managed = False
         db_table = 'tipo_incidente'
 
+    def __str__(self):
+        return self.tipo_incidente
+
 
 class TipoRecurso(models.Model):
-    id_tipo_recurso = models.IntegerField(primary_key=True, db_comment='Clave primaria. Identificador del tipo de recurso.\n')
-    recurso_tipo = models.CharField(max_length=45, db_comment='Nombre del tipo (ej. PC, proyector, aire, etc.).\n')
-    descripcion_tipo = models.CharField(max_length=60, blank=True, null=True, db_comment='Descripci¾n adicional.\n\n')
+    id_tipo_recurso = models.IntegerField(primary_key=True)
+    recurso_tipo = models.CharField(max_length=45)
+    descripcion_tipo = models.CharField(max_length=60, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -464,22 +539,35 @@ class TipoRecurso(models.Model):
 
 
 class TrasladoRecurso(models.Model):
-    id_traslado = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del traslado.\n')
-    recurso = models.ForeignKey(Recursos, models.DO_NOTHING, db_comment='Recurso trasladado.\n')
-    ambiente_origen = models.ForeignKey(Ambiente, models.DO_NOTHING, db_column='ambiente_origen', db_comment='Ambiente de origen.\n')
-    ambiente_destino = models.IntegerField(db_comment='Ambiente de destino.\n')
-    fecha_traslado = models.DateTimeField(db_comment='Fecha del traslado.\n')
-    observacion = models.TextField(blank=True, null=True, db_comment='Observaciones del traslado.\n\n')
+    id_traslado = models.AutoField(primary_key=True)
+    recurso = models.ForeignKey(Recursos, models.DO_NOTHING)
+    ambiente_origen = models.ForeignKey(Ambiente, models.DO_NOTHING, db_column='ambiente_origen')
+    ambiente_destino = models.IntegerField()
+    fecha_traslado = models.DateTimeField()
+    observacion = models.TextField(blank=True, null=True)
+    instructor_origen = models.ForeignKey(
+        'Instructor', models.SET_NULL,
+        db_column='instructor_origen',
+        null=True, blank=True,
+        related_name='traslados_autorizados'
+    )
+    instructor_destino = models.ForeignKey(
+        'Instructor', models.SET_NULL,
+        db_column='instructor_destino',
+        null=True, blank=True,
+        related_name='traslados_recibidos'
+    )
+    tiempo_prestamo = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'traslado_recurso'
 
 
 class UserRol(models.Model):
-    id_user_rol = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del registro.\n')
-    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario', db_comment='Usuario asociado.\n', null=True, blank=True)
-    id_rol = models.ForeignKey(Rol, models.DO_NOTHING, db_column='id_rol', db_comment='Rol asignado al usuario.\n\n', null=True, blank=True)
+    id_user_rol = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario', null=True, blank=True)
+    id_rol = models.ForeignKey(Rol, models.DO_NOTHING, db_column='id_rol', null=True, blank=True)
 
     class Meta:
         managed = True
@@ -487,15 +575,31 @@ class UserRol(models.Model):
 
 
 class Usuario(models.Model):
-    id_usuario = models.AutoField(primary_key=True, db_comment='Clave primaria. Identificador del usuario.\n')
-    p_nombre = models.CharField(max_length=50, db_comment='Primer nombre.\n')
-    s_nombre = models.CharField(max_length=50, blank=True, null=True, db_comment='Segundo nombre.\n')
-    p_apellido = models.CharField(max_length=45, db_comment='Primer apellido.\n')
-    s_apellido = models.CharField(max_length=45, blank=True, null=True, db_comment='Segundo apellido.\n')
-    tipo_documento = models.CharField(max_length=4, db_comment='Tipo de documento.\n')
-    num_documento = models.IntegerField(db_comment='N·mero de documento.\n')
-    correo = models.CharField(max_length=100, db_comment='Correo institucional.\n')
+    id_usuario = models.AutoField(primary_key=True)
+    p_nombre = models.CharField(max_length=50)
+    s_nombre = models.CharField(max_length=50, blank=True, null=True)
+    p_apellido = models.CharField(max_length=45)
+    s_apellido = models.CharField(max_length=45, blank=True, null=True)
+    tipo_documento = models.CharField(max_length=4)
+    num_documento = models.IntegerField()
+    correo = models.CharField(max_length=100)
     contrasena = models.CharField(max_length=100, db_column='Contraseña')
+
+    # Propiedades requeridas para compatibilidad con Django auth
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    def get_username(self):
+        return str(self.num_documento)
 
     def get_full_name(self):
         return f"{self.p_nombre} {self.p_apellido}".strip()
@@ -506,3 +610,106 @@ class Usuario(models.Model):
     class Meta:
         managed = True
         db_table = 'usuario'
+
+
+# ─── NUEVOS MODELOS ──────────────────────────────────────────────────────────
+
+class AsignacionAmbiente(models.Model):
+    """Relaciona instructores con ambientes físicos por trimestre."""
+    id_asignacion = models.AutoField(primary_key=True)
+    instructor = models.ForeignKey(
+        Instructor, models.CASCADE,
+        db_column='instructor_Usuario_id_usuario',
+        related_name='asignaciones'
+    )
+    ambiente = models.ForeignKey(
+        Ambiente, models.CASCADE,
+        db_column='ambiente_id',
+        related_name='asignaciones'
+    )
+    jornada = models.ForeignKey(
+        'Jornada', models.DO_NOTHING,
+        db_column='jornada_id',
+        related_name='asignaciones',
+        null=True, blank=True
+    )
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    trimestre = models.CharField(max_length=50)
+    estado = models.CharField(max_length=20, default='ACTIVO')
+
+    class Meta:
+        managed = True
+        db_table = 'asignacion_ambiente'
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        super().clean()
+        if self.fecha_inicio and self.fecha_fin:
+            if self.fecha_inicio > self.fecha_fin:
+                raise ValidationError({
+                    'fecha_inicio': 'La fecha de inicio no puede ser posterior a la fecha de fin.'
+                })
+            
+            # Chequear traslapes si jornada está definida
+            if self.jornada:
+                # El conflicto se da solo si el MISMO instructor intenta ser asignado
+                # al mismo ambiente en la misma jornada en fechas traslapadas.
+                conflictos = AsignacionAmbiente.objects.filter(
+                    instructor=self.instructor,
+                    ambiente=self.ambiente,
+                    jornada=self.jornada,
+                    estado='ACTIVO',
+                    fecha_inicio__lte=self.fecha_fin,
+                    fecha_fin__gte=self.fecha_inicio
+                )
+                if self.pk:
+                    conflictos = conflictos.exclude(pk=self.pk)
+                if conflictos.exists():
+                    raise ValidationError(
+                        f"Este instructor ya tiene asignado el Ambiente {self.ambiente.num_ambiente} "
+                        f"en la jornada '{self.jornada}' en el rango de fechas seleccionado."
+                    )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    @property
+    def esta_activa_hoy(self):
+        from django.utils import timezone
+        hoy = timezone.localdate()
+        return self.estado == 'ACTIVO' and self.fecha_inicio <= hoy <= self.fecha_fin
+
+    def __str__(self):
+        jornada_str = self.jornada.nombre_jornada if self.jornada else "Sin jornada"
+        return f"{self.instructor} → Ambiente {self.ambiente} ({jornada_str}) | {self.trimestre}"
+
+
+class Justificacion(models.Model):
+    """Justificación en PDF subida por un aprendiz para una inasistencia."""
+    ESTADOS = (
+        ('Pendiente', 'Pendiente'),
+        ('Aprobada', 'Aprobada'),
+        ('Rechazada', 'Rechazada'),
+    )
+
+    id_justificacion = models.AutoField(primary_key=True)
+    inasistencia = models.OneToOneField(
+        RegistroInasistencia, models.CASCADE,
+        db_column='registro_inasistencia_id',
+        related_name='justificacion'
+    )
+    pdf_file = models.FileField(db_column='archivo_pdf', upload_to='justificaciones/')
+    estado = models.CharField(db_column='estado', max_length=20, choices=ESTADOS, default='Pendiente')
+    observacion = models.TextField(db_column='descripcion', blank=True, null=True)
+    fecha_creacion = models.DateTimeField(db_column='created_at', auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'justificacion'
+
+    def __str__(self):
+        return f"Justificación #{self.id_justificacion} – Inasistencia #{self.inasistencia_id}"
+
+

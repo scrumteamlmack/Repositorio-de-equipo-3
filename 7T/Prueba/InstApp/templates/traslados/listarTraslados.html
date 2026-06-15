@@ -32,14 +32,15 @@
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
             <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
             <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
-            <a href="{% url 'instructor:listar_traslados' %}" class="active">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -109,6 +110,9 @@
                         <th>Origen</th>
                         <th>Destino</th>
                         <th style="width:130px">Fecha</th>
+                        <th>Instructor Presta</th>
+                        <th>Instructor Recibe</th>
+                        <th>Duración</th>
                         <th>Observación</th>
                     </tr>
                 </thead>
@@ -125,11 +129,14 @@
                             <small class="text-muted">{{ tras.fecha_traslado|date:"H:i" }}</small>
                         {% else %}—{% endif %}
                     </td>
+                    <td>{{ tras.instructor_origen_nombre }}</td>
+                    <td>{{ tras.instructor_destino_nombre }}</td>
+                    <td>{{ tras.tiempo_prestamo }}</td>
                     <td class="obs-cell">{{ tras.observacion }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">No hay traslados registrados</td>
+                    <td colspan="9" class="text-center text-muted py-4">No hay traslados registrados</td>
                 </tr>
                 {% endfor %}
                 </tbody>

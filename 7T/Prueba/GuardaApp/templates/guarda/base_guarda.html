@@ -29,7 +29,19 @@
             background-color: var(--dark-green);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .sidebar-header h3 { margin: 0; color: white; font-size: 24px; font-weight: 600; }
+        .sidebar-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
         .sidebar-nav { padding: 20px 0; flex: 1; }
         .sidebar-nav a {
             display: block;
@@ -120,11 +132,11 @@
             <h3>L-MACK</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'guarda:guarda_index' %}">🏠 Dashboard</a>
-            <a href="{% url 'guarda:guarda_ambientes' %}">🏢 Gestionar Ambientes</a>
-            <a href="{% url 'guarda:guarda_incidentes' %}">⚠️ Gestionar Incidentes</a>
-            <a href="{% url 'guarda:guarda_minutas' %}">📝 Gestionar Minutas</a>
-            <a href="{% url 'guarda:guarda_traslados' %}">🔁 Gestionar Traslados</a>
+            <a href="{% url 'guarda:guarda_index' %}">🏠 Inicio</a>
+            <a href="{% url 'guarda:guarda_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'guarda:guarda_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'guarda:guarda_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'guarda:guarda_traslados' %}">🔁 Traslados</a>
             <a href="{% url 'guarda:guarda_perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">

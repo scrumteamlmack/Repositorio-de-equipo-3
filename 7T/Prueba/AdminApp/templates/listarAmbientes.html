@@ -41,11 +41,13 @@
         <nav class="sidebar-nav">
             <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
             <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
-            <a href="{% url 'admin_panel:crear_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:form_usuario' %}">➕ Crear Usuario</a>
             <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
             <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
             <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
-            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}" style="background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white;">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}">📅 Asignación Instructores</a>
+            <a href="{% url 'admin_panel:importar_usuarios_csv' %}">📥 Importar CSV</a>
             <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
         </nav>
 
@@ -73,6 +75,7 @@
             <!-- BOTÓN CREAR Y EXPORTACIONES -->
             <div class="mb-3 d-flex gap-2 flex-wrap">
                 <a href="{% url 'admin_panel:crear_ambiente' %}" class="btn btn-primary">➕ Nuevo Ambiente</a>
+                <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}" class="btn btn-warning text-dark fw-bold">📅 Asignar Instructores</a>
                 <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.tipo %}tipo={{ filtros.tipo }}&{% endif %}{% if filtros.estado %}estado={{ filtros.estado }}&{% endif %}export=pdf" class="btn btn-danger">📄 PDF</a>
                 <a href="?{% if filtros.q %}q={{ filtros.q }}&{% endif %}{% if filtros.tipo %}tipo={{ filtros.tipo }}&{% endif %}{% if filtros.estado %}estado={{ filtros.estado }}&{% endif %}export=excel" class="btn btn-success">📊 Excel</a>
             </div>
@@ -108,6 +111,8 @@
                         <th>Capacidad</th>
                         <th>Tipo</th>
                         <th>Estado</th>
+                        <th>Instructor Asignado</th>
+                        <th>N° Aprendices</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -129,6 +134,20 @@
                             {% endif %}
                         </td>
                         <td>
+                            {% if am.instructor_asignado != "Sin asignar" %}
+                                <span class="fw-bold text-success">{{ am.instructor_asignado }}</span>
+                            {% else %}
+                                <span class="text-muted">Sin asignar</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">
+                            {% if am.num_aprendices > 0 %}
+                                <span class="badge bg-info text-dark fw-bold">{{ am.num_aprendices }}</span>
+                            {% else %}
+                                <span class="text-muted">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
                             <a href="{% url 'admin_panel:editar_ambiente' am.am_id %}" class="btn btn-sm btn-secondary">✏️</a>
                             <form method="post" action="{% url 'admin_panel:eliminar_ambiente' am.am_id %}" style="display:inline;">
                                 {% csrf_token %}
@@ -139,7 +158,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6">No hay ambientes registrados</td>
+                        <td colspan="8">No hay ambientes registrados</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -407,3 +407,155 @@ def eliminar_usuario(request, usuario_id):
     return redirect('admin_panel:listar_usuarios')
 
 
+# ─────────────────────────────────────────────────────────────────
+#  IMPORTACIÓN MASIVA DE USUARIOS POR CSV
+# ─────────────────────────────────────────────────────────────────
+
+def importar_usuarios_csv(request):
+    """
+    Importa usuarios desde un CSV con las siguientes columnas (encabezado obligatorio):
+    p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento, num_documento,
+    correo, contrasena, rol, [num_ficha o coordinacion_id]
+
+    - Ignora duplicados por num_documento o correo.
+    - Hashea la contraseña con MD5.
+    - Crea el perfil de rol correspondiente (Aprendiz / Instructor / Guarda / Coordinador).
+    """
+    uid = request.session.get('usuario_id')
+    if not uid:
+        return redirect('login:login')
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('csv_file')
+        if not archivo:
+            messages.error(request, "Selecciona un archivo CSV.")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        if not archivo.name.lower().endswith('.csv'):
+            messages.error(request, "El archivo debe ser CSV.")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        import csv
+        import io
+
+        CAMPOS_REQUERIDOS = {
+            'p_nombre', 'p_apellido', 'tipo_documento',
+            'num_documento', 'correo', 'contrasena', 'rol'
+        }
+
+        try:
+            texto = archivo.read().decode('utf-8-sig')
+            reader = csv.DictReader(io.StringIO(texto))
+            encabezados = set(reader.fieldnames or [])
+
+            if not CAMPOS_REQUERIDOS.issubset(encabezados):
+                faltantes = CAMPOS_REQUERIDOS - encabezados
+                messages.error(request, f"Faltan columnas en el CSV: {', '.join(faltantes)}")
+                return redirect('admin_panel:importar_usuarios_csv')
+
+            creados = 0
+            omitidos = 0
+            errores = []
+
+            for i, fila in enumerate(reader, start=2):
+                num_doc_raw = (fila.get('num_documento') or '').strip()
+                correo_val  = (fila.get('correo') or '').strip()
+                rol_val     = (fila.get('rol') or '').strip().lower()
+
+                if not num_doc_raw or not correo_val:
+                    errores.append(f"Fila {i}: num_documento o correo vacíos.")
+                    continue
+
+                try:
+                    num_doc = int(num_doc_raw)
+                except ValueError:
+                    errores.append(f"Fila {i}: num_documento no es un número válido.")
+                    continue
+
+                # Verificar duplicados
+                if Usuario.objects.filter(num_documento=num_doc).exists() or \
+                   Usuario.objects.filter(correo=correo_val).exists():
+                    omitidos += 1
+                    continue
+
+                # Hashear contraseña
+                raw_pass = (fila.get('contrasena') or '').strip()
+                hashed   = hashlib.md5(raw_pass.encode('utf-8')).hexdigest()
+
+                with transaction.atomic():
+                    usuario = Usuario.objects.create(
+                        p_nombre      = (fila.get('p_nombre') or '').strip(),
+                        s_nombre      = (fila.get('s_nombre') or '').strip() or None,
+                        p_apellido    = (fila.get('p_apellido') or '').strip(),
+                        s_apellido    = (fila.get('s_apellido') or '').strip() or None,
+                        tipo_documento= (fila.get('tipo_documento') or 'CC').strip(),
+                        num_documento = num_doc,
+                        correo        = correo_val,
+                        contrasena    = hashed,
+                    )
+
+                    # Asignar rol
+                    rol_obj = Rol.objects.filter(nombre_rol__iexact=rol_val).first()
+                    if rol_obj:
+                        UserRol.objects.create(id_usuario=usuario, id_rol=rol_obj)
+
+                    # Crear perfil según rol
+                    if rol_val == 'aprendiz':
+                        ficha_id = (fila.get('num_ficha') or '').strip()
+                        ficha_obj = None
+                        if ficha_id:
+                            ficha_obj = Ficha.objects.filter(num_ficha=ficha_id).first()
+                        Aprendiz.objects.create(
+                            usuario_id_usuario=usuario,
+                            ficha_idficha=ficha_obj,
+                        )
+
+                    elif rol_val == 'instructor':
+                        coord_id = (fila.get('coordinacion_id') or '').strip()
+                        coord_obj = None
+                        if coord_id:
+                            coord_obj = Coordinacion.objects.filter(pk=coord_id).first()
+                        Instructor.objects.create(
+                            usuario_id_usuario=usuario,
+                            email=correo_val,
+                            telefono=(fila.get('telefono') or '').strip() or '000',
+                            coordinacion_id_coordinacion=coord_obj,
+                            estado='activo',
+                        )
+
+                    elif rol_val in ('guarda', 'guarda de seguridad'):
+                        from LoginApp.models import GuardaSeguridad
+                        from django.utils import timezone as tz
+                        GuardaSeguridad.objects.create(
+                            usuario_id_usuario=usuario,
+                            turno=(fila.get('turno') or 'día').strip()[:6],
+                            fecha_ingreso=tz.localdate(),
+                            estado='activo',
+                        )
+
+                    elif rol_val in ('coordinador', 'admin', 'administrador'):
+                        coord_id = (fila.get('coordinacion_id') or '').strip()
+                        coord_obj = Coordinacion.objects.filter(pk=coord_id).first() if coord_id else None
+                        Coordinador.objects.create(
+                            usuario_id_usuario=usuario,
+                            coordinacion_id_coordinacion=coord_obj,
+                        )
+
+                    creados += 1
+
+        except Exception as e:
+            messages.error(request, f"Error al procesar el CSV: {e}")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        resumen = f"{creados} usuario(s) creado(s), {omitidos} omitido(s) por duplicado."
+        if errores:
+            resumen += f" Errores en {len(errores)} fila(s)."
+            for err in errores[:10]:  # Mostrar máximo 10 errores
+                messages.warning(request, err)
+        messages.success(request, resumen)
+        return redirect('admin_panel:listar_usuarios')
+
+    return render(request, 'AdminApp/importarUsuariosCsv.html')
+
+
+
