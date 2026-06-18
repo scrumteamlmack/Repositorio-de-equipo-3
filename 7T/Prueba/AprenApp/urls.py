@@ -23,4 +23,9 @@ urlpatterns = [
         views.exportar_asistencias_excel,
         name="exportar_asistencias_excel",
     ),
+    path(
+        "aprendiz/asistencias/<int:asistencia_id>/justificar/",
+        views.subir_justificacion,
+        name="subir_justificacion",
+    ),
 ]

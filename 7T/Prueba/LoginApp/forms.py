@@ -74,26 +74,54 @@ class CoordinadorForm(forms.ModelForm):
         fields = ['coordinacion_id_coordinacion']
 
 class FichaForm(forms.ModelForm):
-    instructor_usuario_id_usuario = forms.ModelChoiceField(
+    instructores = forms.ModelMultipleChoiceField(
         queryset=Instructor.objects.all(),
-        label="Instructor Responsable",
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        label="Instructores Responsables",
+        required=True,
+        error_messages={
+            'required': 'Debes seleccionar al menos un instructor.'
+        },
+        widget=forms.SelectMultiple(attrs={'class': 'form-select', 'size': '6'})
     )
 
     class Meta:
         model = Ficha
-        fields = ['num_ficha', 'instructor_usuario_id_usuario']
+        fields = ['num_ficha', 'instructores']
         labels = {
             'num_ficha': 'Número de ficha',
         }
         widgets = {
-            'num_ficha': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 2271021'}),
+            'num_ficha': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ej: 2271021',
+                'oninput': "this.value = this.value.replace(/[^0-9]/g, '')",
+                'minlength': '7',
+                'pattern': '[0-9]*',
+            }),
         }
 
     def clean_num_ficha(self):
         num_ficha = self.cleaned_data.get('num_ficha')
-        if not self.instance.pk: # Only for NEW records
-            if Ficha.objects.filter(num_ficha=num_ficha).exists():
+        if num_ficha is not None:
+            # 1. No permitir números negativos
+            if num_ficha < 0:
+                raise forms.ValidationError("El número de ficha no puede ser negativo.")
+            
+            val_str = str(num_ficha)
+            
+            # 2. No iniciar por 0
+            if val_str.startswith('0'):
+                raise forms.ValidationError("El número de ficha no puede empezar por cero.")
+                
+            # 3. Mínimo 7 dígitos
+            if len(val_str) < 7:
+                raise forms.ValidationError("El número de ficha debe tener al menos 7 dígitos.")
+                
+            # 4. Validar unicidad (excluyendo la misma ficha si estamos editando)
+            qs = Ficha.objects.filter(num_ficha=num_ficha)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
                 raise forms.ValidationError("Este número de ficha ya está registrado en el sistema.")
+                
         return num_ficha

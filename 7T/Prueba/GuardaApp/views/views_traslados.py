@@ -53,10 +53,15 @@ def _fecha_traslado_desde_post(valor):
 
 def _contexto_form_traslado(modo, recursos, ambientes, traslado=None):
     ahora = timezone.localtime()
+    from LoginApp.models import Instructor
+    instructores = Instructor.objects.select_related("usuario_id_usuario").filter(estado="Activo")
+    if not instructores.exists():
+        instructores = Instructor.objects.select_related("usuario_id_usuario").all()
     return {
         "traslado": traslado,
         "recursos": recursos,
         "ambientes": ambientes,
+        "instructores": instructores,
         "modo": modo,
         "fecha_actual": ahora.strftime("%Y-%m-%d"),
         "fecha_minima": ahora.strftime("%Y-%m-%dT00:00"),
@@ -69,7 +74,7 @@ def _contexto_form_traslado(modo, recursos, ambientes, traslado=None):
 def listar_traslados(request):
     filtros = _get_traslados_filters(request)
     traslados_qs = (
-        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen")
+        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen", "instructor_origen__usuario_id_usuario", "instructor_destino__usuario_id_usuario")
         .all()
         .order_by("-fecha_traslado")
     )
@@ -110,12 +115,18 @@ def crear_traslado(request):
                 pk=int(request.POST.get("recurso_id")),
             )
             fecha_traslado = _fecha_traslado_desde_post(request.POST.get("fecha_traslado"))
+            inst_origen_id = request.POST.get("instructor_origen_id")
+            inst_destino_id = request.POST.get("instructor_destino_id")
+            
             TrasladoRecurso.objects.create(
                 recurso=recurso,
                 ambiente_origen=recurso.ambiente,
                 ambiente_destino=int(request.POST.get("ambiente_destino")),
                 fecha_traslado=fecha_traslado,
                 observacion=(request.POST.get("observacion") or "").strip() or None,
+                instructor_origen_id=int(inst_origen_id) if inst_origen_id else None,
+                instructor_destino_id=int(inst_destino_id) if inst_destino_id else None,
+                tiempo_prestamo=(request.POST.get("tiempo_prestamo") or "").strip() or None,
             )
             messages.success(request, "Traslado creado correctamente.")
             return _replace_redirect('guarda:guarda_traslados')
@@ -142,11 +153,17 @@ def editar_traslado(request, traslado_id):
                 Recursos.objects.select_related("ambiente"),
                 pk=int(request.POST.get("recurso_id")),
             )
+            inst_origen_id = request.POST.get("instructor_origen_id")
+            inst_destino_id = request.POST.get("instructor_destino_id")
+            
             traslado.recurso = recurso
             traslado.ambiente_origen = recurso.ambiente
             traslado.ambiente_destino = int(request.POST.get("ambiente_destino"))
             traslado.fecha_traslado = _fecha_traslado_desde_post(request.POST.get("fecha_traslado"))
             traslado.observacion = (request.POST.get("observacion") or "").strip() or None
+            traslado.instructor_origen_id = int(inst_origen_id) if inst_origen_id else None
+            traslado.instructor_destino_id = int(inst_destino_id) if inst_destino_id else None
+            traslado.tiempo_prestamo = (request.POST.get("tiempo_prestamo") or "").strip() or None
             traslado.save()
             messages.success(request, "Traslado actualizado correctamente.")
             return _replace_redirect('guarda:guarda_traslados')
@@ -171,3 +188,33 @@ def eliminar_traslado(request, traslado_id):
     return _replace_redirect('guarda:guarda_traslados')
 
 
+@never_cache
+def resolver_instructor_origen_ajax(request):
+    """
+    Endpoint AJAX para obtener el instructor asignado a un ambiente el día de hoy.
+    """
+    from django.http import JsonResponse
+    from LoginApp.models import AsignacionAmbiente
+    from django.utils import timezone
+
+    ambiente_id = request.GET.get("ambiente_id")
+    if not ambiente_id:
+        return JsonResponse({"success": False, "error": "No se proporcionó el ID del ambiente."})
+
+    hoy = timezone.localdate()
+    # Buscar una asignación activa en el ambiente seleccionado para hoy
+    asig = AsignacionAmbiente.objects.filter(
+        ambiente_id=ambiente_id,
+        fecha_inicio__lte=hoy,
+        fecha_fin__gte=hoy,
+        estado='ACTIVO'
+    ).select_related("instructor__usuario_id_usuario").first()
+
+    if asig:
+        return JsonResponse({
+            "success": True,
+            "instructor_id": asig.instructor.usuario_id_usuario_id,
+            "nombre": f"{asig.instructor.usuario_id_usuario.p_nombre} {asig.instructor.usuario_id_usuario.p_apellido}"
+        })
+
+    return JsonResponse({"success": False, "error": "No hay instructores asignados a este ambiente hoy."})

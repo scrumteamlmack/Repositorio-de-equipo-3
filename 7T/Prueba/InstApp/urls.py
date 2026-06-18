@@ -43,4 +43,9 @@ urlpatterns = [
     path("instructor/ambientes/consultar/", views.consultar_ambientes, name="consultar_ambientes"),
     path("instructor/ambientes/exportar/pdf/", views.exportar_ambientes_pdf, name="exportar_ambientes_pdf"),
     path("instructor/ambientes/exportar/excel/", views.exportar_ambientes_excel, name="exportar_ambientes_excel"),
+    # Justificaciones
+    path("instructor/justificaciones/", views.listar_justificaciones, name="listar_justificaciones"),
+    path("instructor/justificaciones/<int:justificacion_id>/resolver/", views.resolver_justificacion, name="resolver_justificacion"),
+    # Seguimiento de Incidentes
+    path("instructor/incidentes/<int:incidente_id>/actualizar-estado/", views.actualizar_estado_incidente, name="actualizar_estado_incidente"),
 ]

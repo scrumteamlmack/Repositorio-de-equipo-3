@@ -1,4 +1,4 @@
-﻿from io import BytesIO
+from io import BytesIO
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
@@ -225,7 +225,7 @@ def exportar_incidentes_excel(request):
     wb = Workbook()
     ws = wb.active
     ws.title = "Incidentes"
-    headers = ["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Descripcion", "Usuario"]
+    headers = ["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Gravedad", "Descripcion", "Usuario"]
     ws.append(headers)
     for col_idx in range(1, len(headers) + 1):
         c = ws.cell(row=1, column=col_idx)
@@ -240,6 +240,7 @@ def exportar_incidentes_excel(request):
             str(i.hora_incidente) if i.hora_incidente else "",
             i.ambiente.num_ambiente if i.ambiente_id else "",
             i.tipo_inc.tipo_incidente if i.tipo_inc_id else "",
+            i.nivel_gravedad or "",
             i.descripcion or "",
             usuario,
         ])
@@ -262,7 +263,7 @@ def exportar_incidentes_pdf(request):
     )
     incidentes = _aplicar_filtros_incidentes(incidentes, filtros)
 
-    headers = ["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Descripcion", "Usuario"]
+    headers = ["ID", "Fecha", "Hora", "Ambiente", "Tipo", "Gravedad", "Descripcion", "Usuario"]
     rows = []
     for i in incidentes:
         usuario = f"{i.usuario_id_usuario.p_nombre} {i.usuario_id_usuario.p_apellido}".strip()
@@ -272,13 +273,14 @@ def exportar_incidentes_pdf(request):
             str(i.hora_incidente) if i.hora_incidente else "",
             str(i.ambiente.num_ambiente) if i.ambiente_id else "",
             i.tipo_inc.tipo_incidente if i.tipo_inc_id else "",
+            i.nivel_gravedad or "",
             (i.descripcion or "")[:300],
             usuario,
         ])
 
     buf, doc, styles, elements = _pdf_doc("Reporte de Incidentes", filtros, landscape_mode=True)
     data = _build_wrapped_pdf_data(headers, rows, styles, colors)
-    table = Table(data, repeatRows=1, colWidths=[1.1 * cm, 2.1 * cm, 1.8 * cm, 2.0 * cm, 3.0 * cm, 9.0 * cm, 5.0 * cm])
+    table = Table(data, repeatRows=1, colWidths=[1.0 * cm, 2.0 * cm, 1.8 * cm, 1.8 * cm, 2.8 * cm, 2.0 * cm, 7.8 * cm, 4.8 * cm])
     table.setStyle(_pdf_table_styles(colors))
     elements.append(table)
     doc.build(elements)
@@ -292,7 +294,7 @@ def exportar_incidentes_pdf(request):
 def exportar_traslados_excel(request):
     filtros = _get_traslados_filters(request)
     traslados = (
-        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen")
+        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen", "instructor_origen__usuario_id_usuario", "instructor_destino__usuario_id_usuario")
         .all()
         .order_by("-fecha_traslado")
     )
@@ -304,7 +306,7 @@ def exportar_traslados_excel(request):
     wb = Workbook()
     ws = wb.active
     ws.title = "Traslados"
-    headers = ["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Observacion"]
+    headers = ["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Instructor Presta", "Instructor Recibe", "Duracion", "Observacion"]
     ws.append(headers)
     for col_idx in range(1, len(headers) + 1):
         c = ws.cell(row=1, column=col_idx)
@@ -312,6 +314,8 @@ def exportar_traslados_excel(request):
         c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
     for t in traslados:
+        instructor_origen = f"{t.instructor_origen.usuario_id_usuario.p_nombre} {t.instructor_origen.usuario_id_usuario.p_apellido}".strip() if t.instructor_origen else "—"
+        instructor_destino = f"{t.instructor_destino.usuario_id_usuario.p_nombre} {t.instructor_destino.usuario_id_usuario.p_apellido}".strip() if t.instructor_destino else "—"
         ws.append([
             t.id_traslado,
             t.recurso.nombre_recurso if t.recurso_id else "",
@@ -319,6 +323,9 @@ def exportar_traslados_excel(request):
             t.ambiente_origen.num_ambiente if t.ambiente_origen_id else "",
             destinos_map.get(t.ambiente_destino, t.ambiente_destino) or "",
             t.fecha_traslado.strftime("%Y-%m-%d %H:%M:%S") if t.fecha_traslado else "",
+            instructor_origen,
+            instructor_destino,
+            t.tiempo_prestamo or "—",
             t.observacion or "",
         ])
 
@@ -334,7 +341,7 @@ def exportar_traslados_pdf(request):
 
     filtros = _get_traslados_filters(request)
     traslados = (
-        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen")
+        TrasladoRecurso.objects.select_related("recurso", "ambiente_origen", "instructor_origen__usuario_id_usuario", "instructor_destino__usuario_id_usuario")
         .all()
         .order_by("-fecha_traslado")
     )
@@ -343,9 +350,11 @@ def exportar_traslados_pdf(request):
     destinos_ids = {t.ambiente_destino for t in traslados if t.ambiente_destino}
     destinos_map = {a.id_ambiente: a.num_ambiente for a in Ambiente.objects.filter(id_ambiente__in=destinos_ids)}
 
-    headers = ["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Observacion"]
+    headers = ["ID", "Recurso", "Serial", "Origen", "Destino", "Fecha", "Instructor Presta", "Instructor Recibe", "Duracion", "Observacion"]
     rows = []
     for t in traslados:
+        instructor_origen = f"{t.instructor_origen.usuario_id_usuario.p_nombre} {t.instructor_origen.usuario_id_usuario.p_apellido}".strip() if t.instructor_origen else "—"
+        instructor_destino = f"{t.instructor_destino.usuario_id_usuario.p_nombre} {t.instructor_destino.usuario_id_usuario.p_apellido}".strip() if t.instructor_destino else "—"
         rows.append([
             str(t.id_traslado),
             t.recurso.nombre_recurso if t.recurso_id else "",
@@ -353,12 +362,15 @@ def exportar_traslados_pdf(request):
             str(t.ambiente_origen.num_ambiente) if t.ambiente_origen_id else "",
             str(destinos_map.get(t.ambiente_destino, t.ambiente_destino) or ""),
             t.fecha_traslado.strftime("%Y-%m-%d %H:%M:%S") if t.fecha_traslado else "",
-            (t.observacion or "")[:300],
+            instructor_origen,
+            instructor_destino,
+            t.tiempo_prestamo or "—",
+            (t.observacion or "")[:150],
         ])
 
     buf, doc, styles, elements = _pdf_doc("Reporte de Traslados", filtros, landscape_mode=True)
     data = _build_wrapped_pdf_data(headers, rows, styles, colors)
-    table = Table(data, repeatRows=1, colWidths=[1.1 * cm, 4.0 * cm, 3.5 * cm, 2.1 * cm, 2.1 * cm, 3.0 * cm, 8.0 * cm])
+    table = Table(data, repeatRows=1, colWidths=[1.0 * cm, 3.0 * cm, 2.5 * cm, 1.5 * cm, 1.5 * cm, 2.5 * cm, 3.5 * cm, 3.5 * cm, 2.0 * cm, 5.0 * cm])
     table.setStyle(_pdf_table_styles(colors))
     elements.append(table)
     doc.build(elements)

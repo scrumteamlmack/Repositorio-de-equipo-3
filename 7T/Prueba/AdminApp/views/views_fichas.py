@@ -37,8 +37,8 @@ from LoginApp.forms import FichaForm
 from LoginApp.decorators import login_requerido, rol_requerido
 
 def listar_fichas(request):
-    qs = Ficha.objects.select_related(
-        "instructor_usuario_id_usuario__usuario_id_usuario"
+    qs = Ficha.objects.prefetch_related(
+        "instructores__usuario_id_usuario"
     ).all().order_by("num_ficha")
 
     # Filtros multicriterio
@@ -51,17 +51,18 @@ def listar_fichas(request):
             pass
     if instructor_q:
         qs = qs.filter(
-            instructor_usuario_id_usuario__usuario_id_usuario__p_nombre__icontains=instructor_q
-        ) | qs.filter(
-            instructor_usuario_id_usuario__usuario_id_usuario__p_apellido__icontains=instructor_q
-        )
+            Q(instructores__usuario_id_usuario__p_nombre__icontains=instructor_q) |
+            Q(instructores__usuario_id_usuario__p_apellido__icontains=instructor_q)
+        ).distinct()
 
     filas = []
     for f in qs:
-        nombre_inst = "—"
-        if f.instructor_usuario_id_usuario:
-            u = f.instructor_usuario_id_usuario.usuario_id_usuario
-            nombre_inst = " ".join(filter(None, [u.p_nombre, u.p_apellido])).strip() or f"ID {f.instructor_usuario_id_usuario.pk}"
+        nombres_inst = []
+        for inst in f.instructores.all():
+            u = inst.usuario_id_usuario
+            nombres_inst.append(" ".join(filter(None, [u.p_nombre, u.p_apellido])).strip() or f"ID {inst.pk}")
+        
+        nombre_inst = ", ".join(nombres_inst) if nombres_inst else "—"
             
         filas.append({
             "id": f.idficha,

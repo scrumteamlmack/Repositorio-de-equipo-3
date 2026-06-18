@@ -22,20 +22,25 @@
         .filtros-panel { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
         .filtros-panel label { font-size: 12px; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.04em; }
         .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+        .gravedad-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 88px; padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700; }
+        .gravedad-bajo { background: #dcfce7; color: #166534; }
+        .gravedad-medio { background: #fef3c7; color: #92400e; }
+        .gravedad-alto { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
 <div class="layout-container">
     <aside class="sidebar">
         <div class="sidebar-header"><h3>L-MACK</h3></div>
-        <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
             <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
             <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
             <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
             <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
-            <a href="{% url 'instructor:listar_incidentes' %}" class="active">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
             <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
             <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
             <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
         </nav>
         <div class="sidebar-footer">
@@ -98,11 +103,23 @@
                         </select>
                     </div>
                     <div class="col-md-2">
+                        <label>Gravedad</label>
+                        <select name="gravedad" class="form-control form-control-sm">
+                            <option value="">— Todas —</option>
+                            {% for nivel in niveles_gravedad %}
+                            <option value="{{ nivel }}"
+                                {% if filtros.gravedad == nivel %}selected{% endif %}>
+                                {{ nivel }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                         <label>Fecha desde</label>
                         <input type="date" name="fecha_desde" class="form-control form-control-sm"
                                value="{{ filtros.fecha_desde }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label>Fecha hasta</label>
                         <input type="date" name="fecha_hasta" class="form-control form-control-sm"
                                value="{{ filtros.fecha_hasta }}">
@@ -123,6 +140,7 @@
                         <th>Hora</th>
                         <th>Ambiente</th>
                         <th>Tipo</th>
+                        <th>Gravedad</th>
                         <th>Reportado por</th>
                         <th>Acciones</th>
                     </tr>
@@ -136,6 +154,11 @@
                         <td>{{ inc.hora_incidente|time:"H:i" }}</td>
                         <td>Amb. {{ inc.ambiente.num_ambiente|default:"—" }}</td>
                         <td>{{ inc.tipo_inc.tipo_incidente|default:"—" }}</td>
+                        <td>
+                            <span class="gravedad-badge gravedad-{{ inc.nivel_gravedad|default:'medio'|lower }}">
+                                {{ inc.nivel_gravedad|default:"Medio" }}
+                            </span>
+                        </td>
                         <td>{{ inc.usuario_id_usuario.p_nombre }} {{ inc.usuario_id_usuario.p_apellido }}</td>
                         <td>
                             <a href="{% url 'instructor:detalle_incidente' inc.id_incidente %}"
@@ -152,7 +175,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="8" class="text-center">No hay incidentes registrados</td>
+                        <td colspan="9" class="text-center">No hay incidentes registrados</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -320,6 +320,10 @@ class Migration(migrations.Migration):
                 ('id_inasistencia', models.AutoField(db_comment='Clave primaria. Identificador del registro.\n', primary_key=True, serialize=False)),
                 ('fecha_inasistencia', models.DateField(db_comment='Fecha del registro de asistencia.\n')),
                 ('estado_inasistencia', models.CharField(db_comment='Estado: S (asisti¾), R (retraso), N (no asistio).\n', max_length=1)),
+                ('jornada', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.jornada')),
+                ('aprendiz_usuario_id_usuario', models.ForeignKey(db_column='aprendiz_Usuario_id_usuario', on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.aprendiz')),
+                ('instructor_usuario_id_usuario', models.ForeignKey(db_column='instructor_Usuario_id_usuario', on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.instructor')),
+                ('tipo_inasistencia', models.CharField(blank=True, choices=[('Justificada', 'Justificada'), ('No justificada', 'No justificada')], max_length=20, null=True)),
             ],
             options={
                 'db_table': 'registro_inasistencia',
@@ -333,6 +337,11 @@ class Migration(migrations.Migration):
                 ('descripcion', models.TextField(blank=True, db_comment='Descripci¾n general del incidente.\n', null=True)),
                 ('fecha_incidente', models.DateField(db_comment='Fecha en que ocurri¾.\n')),
                 ('hora_incidente', models.TimeField(db_comment='Hora en que ocurrio.')),
+                ('ambiente', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.ambiente')),
+                ('tipo_inc', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.tipoincidente')),
+                ('nivel_gravedad', models.CharField(blank=True, choices=[('Bajo', 'Bajo'), ('Medio', 'Medio'), ('Alto', 'Alto')], max_length=10, null=True)),
+                ('usuario_id_usuario', models.ForeignKey(db_column='usuario_id_usuario', on_delete=django.db.models.deletion.DO_NOTHING, to='LoginApp.usuario')),
+                ('estado', models.CharField(choices=[('Abierto', 'Abierto'), ('En Proceso', 'En Proceso'), ('Cerrado', 'Cerrado')], default='Abierto', max_length=20)),
             ],
             options={
                 'db_table': 'registro_incidente',

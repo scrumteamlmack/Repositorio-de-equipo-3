@@ -54,6 +54,11 @@ INSTALLED_APPS = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Backend de autenticación personalizado (MD5/SHA-256 + Usuario model)
+AUTHENTICATION_BACKENDS = [
+    'LoginApp.backends.UsuarioBackend',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,6 +150,19 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
-MEDIA_ROOT = 'Prueba/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# ─────────────────────────────────────────────────────────────────
+#  CONFIGURACIÓN DE CORREO (Gmail SMTP)
+# ─────────────────────────────────────────────────────────────────
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = 'dscruzamado111@gmail.com'
+EMAIL_HOST_PASSWORD = 'djwyenenksxtygza'
+DEFAULT_FROM_EMAIL  = 'L-MACK SENA <dscruzamado111@gmail.com>'
+

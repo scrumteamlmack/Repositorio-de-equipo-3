@@ -265,11 +265,12 @@ def editar_usuario(request, usuario_id):
         p_apellido = request.POST.get("PApellido", "").strip()
         s_apellido = request.POST.get("SApellido", "").strip()
         tipo_doc = request.POST.get("tipoDocumento", "").strip()
+        num_doc = request.POST.get("numDocumento", "").strip()
         correo = request.POST.get("correo", "").strip()
         password = (request.POST.get("pass") or "").strip()
         rol_raw = request.POST.get("rolSeleccionado")
 
-        if not p_nombre or not p_apellido or not tipo_doc or not correo:
+        if not p_nombre or not p_apellido or not tipo_doc or not num_doc or not correo:
             messages.error(request, "Complete los campos obligatorios.")
             return _render_admin(
                 request,
@@ -280,6 +281,115 @@ def editar_usuario(request, usuario_id):
                     "idUsuarioEditar": usuario_id,
                 },
             )
+
+        # Validación backend para el número de documento
+        if not num_doc.isdigit():
+            messages.error(request, "El número de documento debe contener solo dígitos.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if num_doc.startswith('0'):
+            messages.error(request, "El número de documento no puede empezar por cero.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if len(num_doc) < 6 or len(num_doc) > 10:
+            messages.error(request, "El documento debe tener entre 6 y 10 dígitos.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+
+        try:
+            num_doc_val = int(num_doc)
+            if Usuario.objects.exclude(pk=u.pk).filter(num_documento=num_doc_val).exists():
+                messages.error(request, "Este número de documento ya está registrado por otro usuario.")
+                return _render_admin(
+                    request,
+                    "editarUsuario.html",
+                    {
+                        "roles": roles,
+                        "usuario": _usuario_a_formulario(u, rol_actual),
+                        "idUsuarioEditar": usuario_id,
+                    },
+                )
+        except ValueError:
+            messages.error(request, "Número de documento no válido.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+
+        # Validación backend de letras para nombres y apellidos
+        import re
+        nombre_pattern = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$'
+        if not re.match(nombre_pattern, p_nombre):
+            messages.error(request, "El primer nombre solo debe contener letras.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if s_nombre and not re.match(nombre_pattern, s_nombre):
+            messages.error(request, "El segundo nombre solo debe contener letras.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if not re.match(nombre_pattern, p_apellido):
+            messages.error(request, "El primer apellido solo debe contener letras.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+        if s_apellido and not re.match(nombre_pattern, s_apellido):
+            messages.error(request, "El segundo apellido solo debe contener letras.")
+            return _render_admin(
+                request,
+                "editarUsuario.html",
+                {
+                    "roles": roles,
+                    "usuario": _usuario_a_formulario(u, rol_actual),
+                    "idUsuarioEditar": usuario_id,
+                },
+            )
+
         if not rol_raw:
             messages.error(request, "Seleccione un rol.")
             return _render_admin(
@@ -321,15 +431,41 @@ def editar_usuario(request, usuario_id):
         u.p_apellido = p_apellido
         u.s_apellido = s_apellido or None
         u.tipo_documento = tipo_doc
+        u.num_documento = num_doc_val
         u.correo = correo
         if password:
             u.contrasena = _hash_nueva_contrasena(password)
+
+        # Determinar si el rol cambió
+        role_changed = False
+        if rol_actual and rol_id != rol_actual:
+            role_changed = True
 
         try:
             with transaction.atomic():
                 u.save()
                 UserRol.objects.filter(id_usuario=u).delete()
                 UserRol.objects.create(id_usuario=u, id_rol_id=rol_id)
+
+                if role_changed:
+                    # Identificar y eliminar los registros del rol viejo y sus dependencias
+                    aprendiz = Aprendiz.objects.filter(usuario_id_usuario=u).first()
+                    instructor = Instructor.objects.filter(usuario_id_usuario=u).first()
+                    guarda = GuardaSeguridad.objects.filter(usuario_id_usuario=u).first()
+
+                    if aprendiz:
+                        RegistroInasistencia.objects.filter(aprendiz_usuario_id_usuario=aprendiz).delete()
+                        aprendiz.delete()
+                    if instructor:
+                        RegistroInasistencia.objects.filter(instructor_usuario_id_usuario=instructor).delete()
+                        RegistroMinuta.objects.filter(responsable=instructor).delete()
+                        instructor.fichas_asignadas.clear()
+                        instructor.delete()
+                    if guarda:
+                        RegistroMinuta.objects.filter(guarda_seguridad_usuario_id_usuario=guarda).delete()
+                        guarda.delete()
+
+                    Coordinador.objects.filter(usuario_id_usuario=u).delete()
         except IntegrityError:
             messages.error(request, "No se pudo actualizar el usuario.")
             return _render_admin(
@@ -341,6 +477,19 @@ def editar_usuario(request, usuario_id):
                     "idUsuarioEditar": usuario_id,
                 },
             )
+
+        if role_changed:
+            rol = Rol.objects.get(pk=rol_id)
+            nombre_rol = rol.nombre_rol.lower()
+            messages.success(request, f"Se actualizó el usuario. Por favor complete los detalles para el nuevo rol de {rol.nombre_rol}.")
+            if "aprendiz" in nombre_rol:
+                return redirect('admin_panel:crear_aprendiz_detalle', usuario_id=u.id_usuario)
+            elif "instructor" in nombre_rol:
+                return redirect('admin_panel:crear_instructor_detalle', usuario_id=u.id_usuario)
+            elif "guarda" in nombre_rol:
+                return redirect('admin_panel:crear_guarda_detalle', usuario_id=u.id_usuario)
+            elif "admin" in nombre_rol or "coordinador" in nombre_rol:
+                return redirect('admin_panel:crear_coordinador_detalle', usuario_id=u.id_usuario)
 
         messages.success(request, "Usuario actualizado correctamente.")
         return redirect('admin_panel:listar_usuarios')
@@ -405,5 +554,199 @@ def eliminar_usuario(request, usuario_id):
             f"No se pudo eliminar el usuario debido a un error técnico: {str(e)}"
         )
     return redirect('admin_panel:listar_usuarios')
+
+
+# ─────────────────────────────────────────────────────────────────
+#  IMPORTACIÓN MASIVA DE USUARIOS POR CSV
+# ─────────────────────────────────────────────────────────────────
+
+def importar_usuarios_csv(request):
+    """
+    Importa usuarios desde un CSV con las siguientes columnas (encabezado obligatorio):
+    p_nombre, s_nombre, p_apellido, s_apellido, tipo_documento, num_documento,
+    correo, contrasena, rol, [num_ficha o coordinacion_id]
+
+    - Ignora duplicados por num_documento o correo.
+    - Hashea la contraseña con MD5.
+    - Crea el perfil de rol correspondiente (Aprendiz / Instructor / Guarda / Coordinador).
+    """
+    uid = request.session.get('usuario_id')
+    if not uid:
+        return redirect('login:login')
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('csv_file')
+        if not archivo:
+            messages.error(request, "Selecciona un archivo CSV.")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        if not archivo.name.lower().endswith('.csv'):
+            messages.error(request, "El archivo debe ser CSV.")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        import csv
+        import io
+
+        CAMPOS_REQUERIDOS = {
+            'p_nombre', 'p_apellido', 'tipo_documento',
+            'num_documento', 'correo', 'contrasena', 'rol'
+        }
+
+        try:
+            texto = archivo.read().decode('utf-8-sig')
+            reader = csv.DictReader(io.StringIO(texto))
+            encabezados = set(reader.fieldnames or [])
+
+            if not CAMPOS_REQUERIDOS.issubset(encabezados):
+                faltantes = CAMPOS_REQUERIDOS - encabezados
+                messages.error(request, f"Faltan columnas en el CSV: {', '.join(faltantes)}")
+                return redirect('admin_panel:importar_usuarios_csv')
+
+            creados = 0
+            omitidos = 0
+            errores = []
+
+            for i, fila in enumerate(reader, start=2):
+                num_doc_raw = (fila.get('num_documento') or '').strip()
+                correo_val  = (fila.get('correo') or '').strip()
+                rol_val     = (fila.get('rol') or '').strip().lower()
+
+                if not num_doc_raw or not correo_val:
+                    errores.append(f"Fila {i}: num_documento o correo vacíos.")
+                    continue
+
+                try:
+                    num_doc = int(num_doc_raw)
+                except ValueError:
+                    errores.append(f"Fila {i}: num_documento no es un número válido.")
+                    continue
+
+                # Verificar duplicados
+                if Usuario.objects.filter(num_documento=num_doc).exists() or \
+                   Usuario.objects.filter(correo=correo_val).exists():
+                    omitidos += 1
+                    continue
+
+                # Hashear contraseña
+                raw_pass = (fila.get('contrasena') or '').strip()
+                hashed   = hashlib.md5(raw_pass.encode('utf-8')).hexdigest()
+
+                with transaction.atomic():
+                    usuario = Usuario.objects.create(
+                        p_nombre      = (fila.get('p_nombre') or '').strip(),
+                        s_nombre      = (fila.get('s_nombre') or '').strip() or None,
+                        p_apellido    = (fila.get('p_apellido') or '').strip(),
+                        s_apellido    = (fila.get('s_apellido') or '').strip() or None,
+                        tipo_documento= (fila.get('tipo_documento') or 'CC').strip(),
+                        num_documento = num_doc,
+                        correo        = correo_val,
+                        contrasena    = hashed,
+                    )
+
+                    # Asignar rol
+                    rol_obj = Rol.objects.filter(nombre_rol__iexact=rol_val).first()
+                    if rol_obj:
+                        UserRol.objects.create(id_usuario=usuario, id_rol=rol_obj)
+
+                    # Crear perfil según rol
+                    if rol_val == 'aprendiz':
+                        ficha_id = (fila.get('num_ficha') or '').strip()
+                        ficha_obj = None
+                        if ficha_id:
+                            ficha_obj = Ficha.objects.filter(num_ficha=ficha_id).first()
+                        
+                        programa_raw = (fila.get('programa_id') or fila.get('programa') or '').strip()
+                        programa_obj = None
+                        if programa_raw:
+                            try:
+                                programa_obj = Programas.objects.filter(pk=int(programa_raw)).first()
+                            except ValueError:
+                                programa_obj = Programas.objects.filter(nombre_programa__icontains=programa_raw).first()
+                                
+                        Aprendiz.objects.create(
+                            usuario_id_usuario=usuario,
+                            ficha_idficha=ficha_obj,
+                            programas_id_programas=programa_obj,
+                        )
+
+                    elif rol_val == 'instructor':
+                        coord_raw = (fila.get('coordinacion_id') or fila.get('coordinacion') or fila.get('coordinación') or '').strip()
+                        coord_obj = None
+                        if coord_raw:
+                            try:
+                                coord_obj = Coordinacion.objects.filter(pk=int(coord_raw)).first()
+                            except ValueError:
+                                coord_obj = Coordinacion.objects.filter(nombre_coordinacion__icontains=coord_raw).first()
+                        
+                        estado_raw = (fila.get('estado') or '').strip().capitalize()
+                        if estado_raw not in ('Activo', 'Inactivo'):
+                            estado_raw = 'Activo'
+
+                        Instructor.objects.create(
+                            usuario_id_usuario=usuario,
+                            email=correo_val,
+                            telefono=(fila.get('telefono') or '').strip() or '3000000000',
+                            coordinacion_id_coordinacion=coord_obj,
+                            estado=estado_raw,
+                        )
+
+                    elif rol_val in ('guarda', 'guarda de seguridad'):
+                        from LoginApp.models import GuardaSeguridad
+                        from django.utils import timezone as tz
+                        from datetime import datetime
+
+                        fecha_ingreso_raw = (fila.get('fecha_ingreso') or '').strip()
+                        fecha_ingreso = None
+                        if fecha_ingreso_raw:
+                            for fmt in ('%Y-%m-%d', '%d/%m/%Y', '%Y/%m/%d'):
+                                try:
+                                    fecha_ingreso = datetime.strptime(fecha_ingreso_raw, fmt).date()
+                                    break
+                                except ValueError:
+                                    pass
+                        if not fecha_ingreso:
+                            fecha_ingreso = tz.localdate()
+
+                        estado_raw = (fila.get('estado') or '').strip().capitalize()
+                        if estado_raw not in ('Activo', 'Inactivo'):
+                            estado_raw = 'Activo'
+
+                        GuardaSeguridad.objects.create(
+                            usuario_id_usuario=usuario,
+                            turno=(fila.get('turno') or 'Mañana').strip().capitalize()[:6],
+                            fecha_ingreso=fecha_ingreso,
+                            estado=estado_raw,
+                        )
+
+                    elif rol_val in ('coordinador', 'admin', 'administrador'):
+                        coord_raw = (fila.get('coordinacion_id') or fila.get('coordinacion') or fila.get('coordinación') or '').strip()
+                        coord_obj = None
+                        if coord_raw:
+                            try:
+                                coord_obj = Coordinacion.objects.filter(pk=int(coord_raw)).first()
+                            except ValueError:
+                                coord_obj = Coordinacion.objects.filter(nombre_coordinacion__icontains=coord_raw).first()
+
+                        Coordinador.objects.create(
+                            usuario_id_usuario=usuario,
+                            coordinacion_id_coordinacion=coord_obj,
+                        )
+
+                    creados += 1
+
+        except Exception as e:
+            messages.error(request, f"Error al procesar el CSV: {e}")
+            return redirect('admin_panel:importar_usuarios_csv')
+
+        resumen = f"{creados} usuario(s) creado(s), {omitidos} omitido(s) por duplicado."
+        if errores:
+            resumen += f" Errores en {len(errores)} fila(s)."
+            for err in errores[:10]:  # Mostrar máximo 10 errores
+                messages.warning(request, err)
+        messages.success(request, resumen)
+        return redirect('admin_panel:listar_usuarios')
+
+    return render(request, 'AdminApp/importarUsuariosCsv.html')
+
 
 

@@ -36,6 +36,7 @@ from LoginApp.decorators import login_requerido, rol_requerido
 
 @never_cache
 def listar_ambientes(request):
+    _liberar_minutas_vencidas()
     filtros = _get_ambientes_filters(request)
     ambientes = Ambiente.objects.all().order_by("id_ambiente")
     ambientes = _aplicar_filtros_ambientes(ambientes, filtros)

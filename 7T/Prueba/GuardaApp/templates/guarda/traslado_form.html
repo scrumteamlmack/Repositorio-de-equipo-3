@@ -69,6 +69,32 @@
             <div class="form-text">La fecha siempre debe ser la de hoy. Solo puedes cambiar la hora.</div>
         </div>
         <div class="col-md-6">
+            <label class="form-label">Instructor que Presta / Autoriza</label>
+            <select class="form-select" name="instructor_origen_id" id="instructor_origen_id">
+                <option value="">Seleccione...</option>
+                {% for inst in instructores %}
+                <option value="{{ inst.usuario_id_usuario_id }}" {% if traslado and traslado.instructor_origen_id == inst.usuario_id_usuario_id %}selected{% endif %}>
+                    {{ inst.usuario_id_usuario.p_nombre }} {{ inst.usuario_id_usuario.p_apellido }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Instructor que Recibe</label>
+            <select class="form-select" name="instructor_destino_id">
+                <option value="">Seleccione...</option>
+                {% for inst in instructores %}
+                <option value="{{ inst.usuario_id_usuario_id }}" {% if traslado and traslado.instructor_destino_id == inst.usuario_id_usuario_id %}selected{% endif %}>
+                    {{ inst.usuario_id_usuario.p_nombre }} {{ inst.usuario_id_usuario.p_apellido }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Duración Estimada del Préstamo</label>
+            <input class="form-control" type="text" name="tiempo_prestamo" value="{{ traslado.tiempo_prestamo|default:'' }}" placeholder="Ej: 2 horas, 1 día, indefinido...">
+        </div>
+        <div class="col-md-6">
             <label class="form-label">Observacion</label>
             <input class="form-control" type="text" name="observacion" value="{{ traslado.observacion|default:'' }}">
         </div>
@@ -87,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const ambienteOrigenId = document.getElementById("ambiente_origen_id");
     const ambienteOrigenLabel = document.getElementById("ambiente_origen_label");
     const fechaTrasladoInput = document.getElementById("fecha_traslado");
+    const instructorOrigenSelect = document.getElementById("instructor_origen_id");
+    const modoEdicion = {% if traslado %}true{% else %}false{% endif %};
 
     function sincronizarAmbienteOrigen() {
         const selected = recursoSelect.options[recursoSelect.selectedIndex];
@@ -95,6 +123,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         ambienteOrigenId.value = ambienteId;
         ambienteOrigenLabel.value = ambienteNum;
+
+        // Fetch and auto-select the instructor assigned to this environment today (only in create mode)
+        if (ambienteId && instructorOrigenSelect && !modoEdicion) {
+            fetch(`{% url 'guarda:guarda_traslado_resolver_instructor' %}?ambiente_id=${ambienteId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.instructor_id) {
+                        instructorOrigenSelect.value = data.instructor_id;
+                    } else {
+                        instructorOrigenSelect.value = "";
+                    }
+                })
+                .catch(error => console.error("Error resolving instructor:", error));
+        }
     }
 
     function fijarFechaActualManteniendoHora() {

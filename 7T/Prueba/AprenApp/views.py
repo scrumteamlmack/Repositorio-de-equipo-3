@@ -13,7 +13,10 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.cache import never_cache
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
-from LoginApp.models import RegistroInasistencia, UserRol, Usuario
+from LoginApp.models import (
+    Aprendiz, Ficha, Instructor, Justificacion,
+    RegistroInasistencia, UserRol, Usuario
+)
 
 
 def _redirigir_a_login(request, next_name: str):
@@ -27,12 +30,16 @@ def _asistencias(uid: int):
         .select_related(
             "jornada",
             "instructor_usuario_id_usuario__usuario_id_usuario",
+            "justificacion",
         )
         .order_by("-fecha_inasistencia", "-id_inasistencia")
     )
     filas = []
     for a in qs:
         iu = a.instructor_usuario_id_usuario.usuario_id_usuario
+        just_estado = None
+        if hasattr(a, 'justificacion'):
+            just_estado = a.justificacion.estado
         filas.append(
             {
                 "id_asistencia": a.id_inasistencia,
@@ -42,6 +49,7 @@ def _asistencias(uid: int):
                 "instructor_usuario_id": a.instructor_usuario_id_usuario_id,
                 "jornada_nombre": (a.jornada.nombre_jornada or "").strip(),
                 "jornada_id": a.jornada_id,
+                "justificacion_estado": just_estado,
             }
         )
     return filas
@@ -144,3 +152,88 @@ def perfil_aprendiz(request):
             },
         },
     )
+
+
+# ─────────────────────────────────────────────────────────────────
+#  JUSTIFICACIONES (flujo aprendiz)
+# ─────────────────────────────────────────────────────────────────
+
+@never_cache
+def subir_justificacion(request, asistencia_id):
+    """
+    Permite al aprendiz subir un PDF como justificación para una inasistencia
+    con estado 'N'. Valida: solo PDF, máximo 2MB.
+    """
+    uid = request.session.get('usuario_id')
+    if not uid:
+        return _redirigir_a_login(request, 'listar_asistencias')
+
+    inasistencia = get_object_or_404(
+        RegistroInasistencia,
+        pk=asistencia_id,
+        aprendiz_usuario_id_usuario__usuario_id_usuario_id=uid,
+        estado_inasistencia='N',
+    )
+
+    # Evitar doble justificación
+    if hasattr(inasistencia, 'justificacion'):
+        messages.warning(request, "Ya existe una justificación registrada para esta inasistencia.")
+        return redirect('aprendiz:listar_asistencias')
+
+    if request.method == 'POST':
+        archivo = request.FILES.get('pdf_file')
+
+        if not archivo:
+            messages.error(request, "Debes seleccionar un archivo PDF.")
+        elif not archivo.name.lower().endswith('.pdf'):
+            messages.error(request, "Solo se aceptan archivos en formato PDF.")
+        elif archivo.size > 2 * 1024 * 1024:  # 2 MB
+            messages.error(request, "El archivo no puede superar los 2 MB.")
+        else:
+            justificacion = Justificacion.objects.create(
+                inasistencia=inasistencia,
+                pdf_file=archivo,
+                estado='Pendiente',
+            )
+
+            # Notificar al instructor a cargo
+            try:
+                from django.core.mail import EmailMessage
+                from django.conf import settings as django_settings
+
+                instructor = inasistencia.instructor_usuario_id_usuario
+                instructor_usuario = instructor.usuario_id_usuario
+                aprendiz_usuario = inasistencia.aprendiz_usuario_id_usuario.usuario_id_usuario
+
+                nombre_aprendiz = f"{aprendiz_usuario.p_nombre} {aprendiz_usuario.p_apellido}".strip()
+                nombre_instructor = f"{instructor_usuario.p_nombre} {instructor_usuario.p_apellido}".strip()
+                fecha_str = inasistencia.fecha_inasistencia.strftime("%d/%m/%Y")
+
+                asunto = f"[L-MACK] Nueva justificación de {nombre_aprendiz}"
+                cuerpo = (
+                    f"Estimado/a {nombre_instructor},\n\n"
+                    f"El aprendiz {nombre_aprendiz} ha subido una justificación "
+                    f"para su inasistencia del día {fecha_str}.\n\n"
+                    f"Por favor ingrese al sistema L-MACK y revise la sección "
+                    f"\"Justificaciones\" para aprobarla o rechazarla.\n\n"
+                    f"— Sistema L-MACK SENA"
+                )
+
+                email = EmailMessage(
+                    subject=asunto,
+                    body=cuerpo,
+                    from_email=getattr(django_settings, 'DEFAULT_FROM_EMAIL', 'no-reply@sena.edu.co'),
+                    to=[instructor_usuario.correo],
+                )
+                email.send(fail_silently=False)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).warning(f"No se pudo enviar correo al instructor: {e}")
+
+            messages.success(request, "Justificación enviada correctamente. Queda pendiente de revisión.")
+            return redirect('aprendiz:listar_asistencias')
+
+    return render(request, 'AprenApp/subirJustificacion.html', {
+        'inasistencia': inasistencia,
+    })
+
