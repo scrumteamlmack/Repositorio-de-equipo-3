@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Asistencia</ui:define>
+    <ui:define name="moduleTitle">Control de asistencia</ui:define>
+
+    <ui:define name="content">
+        <style>
+            .badge {
+                display: inline-block;
+                padding: 6px 12px;
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 700;
+            }
+            .badge.bg-success { background: #dcfce7 !important; color: #15803d !important; }
+            .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; }
+            .badge.bg-danger { background: #fee2e2 !important; color: #b91c1c !important; }
+        </style>
+        <div style="max-width:1100px;margin:32px auto;padding:0 16px;">
+            <h2 style="text-align:center;color:#10b981;margin-bottom:16px;">Registro de Inasistencias</h2>
+            
+            <h:form id="frmAsistencia" styleClass="ui-fluid">
+                <f:metadata>
+                    <f:viewAction action="#{loginBean.verificarSesionAdminInstructor}"/>
+                </f:metadata>
+
+                <div style="text-align:center;margin-bottom:16px;">
+                    <p:commandButton value="➕ Nuevo registro"
+                                     styleClass="btn btn-primary"
+                                     actionListener="#{asistenciaBean.prepararNuevo}"
+                                     update="dialogAsistencia"
+                                     oncomplete="PF('dlgAsistencia').show()"
+                                     ajax="false"/>
+                </div>
+
+                <p:panel header="Registro" styleClass="ui-noborder" style="display:none;">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel value="Aprendiz"/>
+                        <p:selectOneMenu value="#{asistenciaBean.asistencia.aprendizUsuarioId}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{asistenciaBean.aprendices}" var="aprendiz"
+                                           itemLabel="Aprendiz #{aprendiz.idUsuario}"
+                                           itemValue="#{aprendiz.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel value="Instructor"/>
+                        <p:selectOneMenu value="#{asistenciaBean.asistencia.instructorUsuarioId}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{asistenciaBean.instructores}" var="instructor"
+                                           itemLabel="Instructor #{instructor.idUsuario}"
+                                           itemValue="#{instructor.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel value="Jornada"/>
+                        <p:selectOneMenu value="#{asistenciaBean.asistencia.jornadaId}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{asistenciaBean.jornadas}" var="jornada"
+                                           itemLabel="#{jornada.nombreJornada}"
+                                           itemValue="#{jornada.idJornada}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:selectOneMenu value="#{asistenciaBean.asistencia.estado}" label="Estado" required="true">
+                            <f:selectItem itemLabel="Asistió (S)" itemValue="S"/>
+                            <f:selectItem itemLabel="Retraso (R)" itemValue="R"/>
+                            <f:selectItem itemLabel="No asistió (N)" itemValue="N"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:calendar value="#{asistenciaBean.fechaDate}"
+                                      showIcon="true" pattern="dd/MM/yyyy"
+                                      label="Fecha" required="true"/>
+                    </div>
+                </div>
+                <p:commandButton value="Guardar"
+                                 actionListener="#{asistenciaBean.guardar}"
+                                 update="tablaAsistencia"
+                                 ajax="false"
+                                 styleClass="ui-button-success"/>
+                <p:commandButton value="Cancelar" actionListener="#{asistenciaBean.prepararNuevo}"
+                                 update="@form" styleClass="ui-button-secondary"/>
+            </p:panel>
+
+                <p:toolbar style="margin-bottom: 10px;">
+                    <f:facet name="left">
+                        <p:commandButton value="📄 Exportar PDF"
+                                         icon="pi pi-file-pdf"
+                                         styleClass="btn-primary"
+                                         ajax="false">
+                            <p:dataExporter type="pdf" target="tablaAsistencia" fileName="asistencias"/>
+                        </p:commandButton>
+                        <p:commandButton value="📊 Exportar Excel"
+                                         icon="pi pi-file-excel"
+                                         styleClass="btn-success"
+                                         ajax="false">
+                            <p:dataExporter type="xls" target="tablaAsistencia" fileName="asistencias"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:dataTable id="tablaAsistencia" 
+                             value="#{asistenciaBean.asistencias}" 
+                             var="asis"
+                             filteredValue="#{asistenciaBean.asistenciasFiltradas}"
+                             emptyMessage="No hay asistencias registradas"
+                             paginator="true" 
+                             rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15,20"
+                             styleClass="table table-striped table-hover"
+                             style="margin-top:1rem;"
+                             exportable="true">
+                    <p:column headerText="ID" 
+                             filterBy="#{asis.idAsistencia}" 
+                             filterMatchMode="exact"
+                             style="width: 80px;">
+                        <h:outputText value="#{asis.idAsistencia}" />
+                    </p:column>
+                    <p:column headerText="Aprendiz" 
+                             filterBy="#{asis.aprendizUsuarioId}" 
+                             filterMatchMode="contains"
+                             style="width:150px;">
+                        Aprendiz #{asis.aprendizUsuarioId}
+                    </p:column>
+                    <p:column headerText="Fecha" 
+                             filterBy="#{asistenciaBean.formatearFecha(asis.fecha)}" 
+                             filterMatchMode="contains"
+                             style="width:120px;text-align:center;">
+                        <h:outputText value="#{asistenciaBean.formatearFecha(asis.fecha)}" rendered="#{asis.fecha != null}" />
+                    </p:column>
+                    <p:column headerText="Estado" 
+                             filterBy="#{asistenciaBean.getEstadoTexto(asis.estado)}" 
+                             filterMatchMode="contains"
+                             style="width:120px;text-align:center;">
+                        <h:outputText value="#{asistenciaBean.getEstadoTexto(asis.estado)}" 
+                                     styleClass="badge #{asis.estado == 'S' ? 'bg-success' : asis.estado == 'R' ? 'bg-warning' : 'bg-danger'}"/>
+                    </p:column>
+                    <p:column headerText="Instructor" 
+                             filterBy="#{asis.instructorUsuarioId}" 
+                             filterMatchMode="contains"
+                             style="width:150px;">
+                        Instructor #{asis.instructorUsuarioId}
+                    </p:column>
+                    <p:column headerText="Jornada" 
+                             filterBy="#{asis.jornadaId}" 
+                             filterMatchMode="contains"
+                             style="width:120px;text-align:center;">#{asis.jornadaId}</p:column>
+                    <p:column headerText="Acciones" 
+                             style="width:200px;text-align:center;"
+                             exportable="false">
+                        <div style="display: flex; gap: 5px; justify-content: center;">
+                            <p:commandButton value="Editar"
+                                             styleClass="btn btn-sm btn-warning"
+                                             actionListener="#{asistenciaBean.editar()}"
+                                             update="dialogAsistencia"
+                                             oncomplete="PF('dlgAsistencia').show()"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{asistenciaBean.idAsistenciaSeleccionada}" value="#{asis.idAsistencia}"/>
+                            </p:commandButton>
+                            <p:commandButton value="Eliminar"
+                                             styleClass="btn btn-sm btn-danger"
+                                             actionListener="#{asistenciaBean.eliminar()}"
+                                             update="tablaAsistencia"
+                                             onclick="return confirm('¿Eliminar registro?');"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{asistenciaBean.idAsistenciaSeleccionada}" value="#{asis.idAsistencia}"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog widgetVar="dlgAsistencia" header="Registro de Inasistencia" modal="true" width="650"
+                          resizable="false" id="dialogAsistencia">
+                    <h:form styleClass="ui-fluid">
+                        <p:panelGrid columns="2" columnClasses="col, col">
+                            <p:outputLabel value="Aprendiz" required="true"/>
+                            <p:selectOneMenu value="#{asistenciaBean.asistencia.aprendizUsuarioId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{asistenciaBean.aprendices}" var="aprendiz"
+                                               itemLabel="Aprendiz #{aprendiz.idUsuario}"
+                                               itemValue="#{aprendiz.idUsuario}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Instructor" required="true"/>
+                            <p:selectOneMenu value="#{asistenciaBean.asistencia.instructorUsuarioId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{asistenciaBean.instructores}" var="instructor"
+                                               itemLabel="Instructor #{instructor.idUsuario}"
+                                               itemValue="#{instructor.idUsuario}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Jornada" required="true"/>
+                            <p:selectOneMenu value="#{asistenciaBean.asistencia.jornadaId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{asistenciaBean.jornadas}" var="jornada"
+                                               itemLabel="#{jornada.nombreJornada}"
+                                               itemValue="#{jornada.idJornada}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Estado" required="true"/>
+                            <p:selectOneMenu value="#{asistenciaBean.asistencia.estado}" required="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                <f:selectItem itemLabel="Asistió (S)" itemValue="S"/>
+                                <f:selectItem itemLabel="Retraso (R)" itemValue="R"/>
+                                <f:selectItem itemLabel="No asistió (N)" itemValue="N"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha" required="true"/>
+                            <p:calendar value="#{asistenciaBean.fechaDate}"
+                                          showIcon="true" pattern="dd/MM/yyyy"
+                                          required="true"/>
+                        </p:panelGrid>
+
+                        <p:commandButton value="Guardar" actionListener="#{asistenciaBean.guardar}"
+                                         update=":frmAsistencia"
+                                         oncomplete="PF('dlgAsistencia').hide()"
+                                         style="display:inline-block;padding:12px 20px;background:#10b981;color:white;border-radius:10px;text-decoration:none;font-weight:600;border:none;cursor:pointer;"
+                                         ajax="false"/>
+                        <p:commandButton value="Cancelar" onclick="PF('dlgAsistencia').hide()"
+                                         styleClass="btn-secondary"/>
+                    </h:form>
+                </p:dialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+

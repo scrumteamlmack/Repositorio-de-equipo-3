@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Detalle de Incidente - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container { display: flex; min-height: 100vh; background-color: var(--cream-bg); }
+        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px 20px; background-color: var(--dark-green); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h3 { color: white; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header h3::before { content: "👤"; font-size: 28px; }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a { display: block; color: rgba(255,255,255,0.9); text-decoration: none; padding: 15px 25px; transition: all 0.3s; border-left: 3px solid transparent; font-size: 15px; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white; padding-left: 30px; }
+        .sidebar-nav a.active { background: rgba(255,255,255,0.15); border-left-color: white; color: white; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .sidebar-footer .btn-logout { width: 100%; padding: 12px 20px; background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sidebar-footer .btn-logout:hover { background-color: rgba(255,255,255,0.2); }
+        .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
+        .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        
+        .detail-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .detail-value { font-size: 16px; color: #111827; font-weight: 500; margin-bottom: 20px; }
+        .detail-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; margin-top: 10px; }
+        .gravedad-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 110px; padding: 0.45rem 0.95rem; border-radius: 999px; font-size: 0.9rem; font-weight: 700; }
+        .gravedad-bajo { background: #dcfce7; color: #166534; }
+        .gravedad-medio { background: #fef3c7; color: #92400e; }
+        .gravedad-alto { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-header"><h3>L-MACK</h3></div>
+                <nav class="sidebar-nav">
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
+            <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">🚨 Detalle de Incidente #{{ incidente.id_incidente }}</h2>
+                <a href="{% url 'instructor:listar_incidentes' %}" class="btn btn-outline-secondary">Volver al listado</a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-label">Ambiente de Formación</div>
+                    <div class="detail-value">
+                        {% if incidente.ambiente %}
+                            Ambiente {{ incidente.ambiente.num_ambiente }} - {{ incidente.ambiente.tipo_ambiente }}
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-label">Tipo de Incidente</div>
+                    <div class="detail-value">
+                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                            {{ incidente.tipo_inc.tipo_incidente|default:"General" }}
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-label">Fecha del Suceso</div>
+                    <div class="detail-value">{{ incidente.fecha_incidente|date:"d/m/Y"|default:"—" }}</div>
+
+                    <div class="detail-label">Hora Estimada</div>
+                    <div class="detail-value">{{ incidente.hora_incidente }}</div>
+
+                    <div class="detail-label">Nivel de gravedad</div>
+                    <div class="detail-value">
+                        <span class="gravedad-badge gravedad-{{ incidente.nivel_gravedad|default:'medio'|lower }}">
+                            {{ incidente.nivel_gravedad|default:"Medio" }}
+                        </span>
+                    </div>
+
+                    <div class="detail-label">Estado del Incidente</div>
+                    <div class="detail-value">
+                        {% if incidente.estado == 'Abierto' %}
+                            <span class="badge bg-danger rounded-pill px-3 py-2">Abierto</span>
+                        {% elif incidente.estado == 'En Proceso' %}
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">En Proceso</span>
+                        {% else %}
+                            <span class="badge bg-success rounded-pill px-3 py-2">Cerrado</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-label">Reportado por</div>
+                    <div class="detail-value">
+                        {{ incidente.usuario_id_usuario.p_nombre }}
+                        {{ incidente.usuario_id_usuario.p_apellido }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-label">Correo de contacto</div>
+                    <div class="detail-value text-muted">{{ incidente.usuario_id_usuario.correo|default:"Sin correo registrado" }}</div>
+                </div>
+            </div>
+
+            <div class="mt-4 mb-5">
+                <div class="detail-label">Descripción de los Hechos</div>
+                <div class="detail-box" style="white-space: pre-wrap; line-height: 1.6; border-left: 4px solid #ef4444;">
+                    {{ incidente.descripcion|default:"No se proporcionó una descripción del incidente." }}
+                </div>
+            </div>
+
+            <hr class="my-5">
+
+            <div class="row mt-4">
+                <!-- Columna de Historial / Seguimiento -->
+                <div class="col-md-7">
+                    <h4 class="mb-4">📋 Historial de Seguimiento</h4>
+                    <div class="timeline" style="border-left: 2px solid #e5e7eb; padding-left: 20px; position: relative;">
+                        {% for h in historicos %}
+                            <div class="timeline-item mb-4" style="position: relative;">
+                                <div class="timeline-marker" style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--primary-green); position: absolute; left: -27px; top: 6px; border: 2px solid white;"></div>
+                                <div class="text-muted small fw-bold">{{ h.fecha_registro|date:"d/m/Y H:i" }}</div>
+                                <div class="text-dark mt-1" style="font-size: 14px; font-weight: 500;">{{ h.descripcion }}</div>
+                            </div>
+                        {% empty %}
+                            <div class="text-muted italic">No hay notas de seguimiento registradas para este incidente.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Columna de Registrar Seguimiento -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm border-0 p-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0 !important;">
+                        <h4 class="mb-3" style="font-size: 18px; color: #1e293b;">✍️ Registrar Seguimiento / Estado</h4>
+                        <form method="post" action="{% url 'instructor:actualizar_estado_incidente' incidente.id_incidente %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="estado" class="form-label fw-bold small text-muted">CAMBIAR ESTADO</label>
+                                <select name="estado" id="estado" class="form-select form-select-sm">
+                                    <option value="Abierto" {% if incidente.estado == 'Abierto' %}selected{% endif %}>Abierto</option>
+                                    <option value="En Proceso" {% if incidente.estado == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                                    <option value="Cerrado" {% if incidente.estado == 'Cerrado' %}selected{% endif %}>Cerrado</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comentario" class="form-label fw-bold small text-muted">AÑADIR COMENTARIO O NOTA</label>
+                                <textarea name="comentario" id="comentario" rows="3" class="form-control form-control-sm" placeholder="Escribe detalles del avance o acción tomada..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Actualizar Seguimiento</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 text-center p-3 bg-light rounded shadow-sm">
+                <p class="text-muted mb-0 small">Este incidente está disponible para consulta de Instructores, Coordinadores y Guardas.</p>
+            </div>
+
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

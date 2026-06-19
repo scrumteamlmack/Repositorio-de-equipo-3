@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registrar Instructor - L-MACK</title>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+</h:head>
+
+<h:body>
+
+<h:form id="formInstructor">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">L-MACK</div>
+        <div class="menu">
+            <p:commandButton value="Inicio"
+                             icon="pi pi-home"
+                             action="/pages/admin/indexAdmin.xhtml?faces-redirect=true"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+            <p:menuButton value="Usuarios" icon="pi pi-users">
+                <p:menuitem value="Crear Usuario"
+                            icon="pi pi-plus"
+                            outcome="/pages/admin/formUsuario.xhtml"/>
+                <p:menuitem value="Listar Usuarios"
+                            icon="pi pi-list"
+                            outcome="/pages/admin/listarUsuarios.xhtml"/>
+            </p:menuButton>
+            <p:commandButton value="Cerrar sesión"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.cerrarSesion}"
+                             styleClass="btn-secondary"
+                             ajax="false"/>
+        </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{instructorBean.idUsuario}">
+                <f:converter converterId="javax.faces.Integer" />
+            </f:viewParam>
+            <f:event type="preRenderView" listener="#{instructorBean.init}" />
+        </f:metadata>
+
+        <div class="form-header">
+            <h2><i class="pi pi-user" style="margin-right: 10px;"></i>Registrar Instructor</h2>
+        </div>
+
+        <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+        <p:panel header="Datos del Instructor">
+            <h:panelGrid columns="2" cellpadding="15" columnClasses="label-col, input-col">
+                
+                <h:outputLabel value="Correo Electrónico:" for="email" />
+                <p:inputText id="email" 
+                             value="#{instructorBean.instructor.email}" 
+                             required="true"
+                             requiredMessage="El correo es obligatorio"
+                             placeholder="correo@institucional.com"/>
+
+<<<<<<< HEAD
+                <h:outputLabel value="Teléfono: *" for="telefono" />
+=======
+                <h:outputLabel value="Teléfono:" for="telefono" />
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                <p:inputText id="telefono" 
+                             value="#{instructorBean.instructor.telefono}" 
+                             required="true"
+                             requiredMessage="El teléfono es obligatorio"
+<<<<<<< HEAD
+                             validatorMessage="El teléfono debe tener entre 7 y 20 dígitos (solo números)"
+                             placeholder="3001234567">
+                    <f:validateLength minimum="7" maximum="20"/>
+                    <f:validateRegex pattern="^[0-9]+$"/>
+                </p:inputText>
+                <p:message for="telefono" display="text" styleClass="text-danger"/>
+                <h:outputText value="Solo números, entre 7 y 20 dígitos" style="font-size: 0.85em; color: #666; display: block;"/>
+=======
+                             placeholder="3001234567"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+
+                <h:outputLabel value="Coordinación:" for="coordinacion" />
+                <p:selectOneMenu id="coordinacion" 
+                                 value="#{instructorBean.instructor.coordinacionId}" 
+                                 required="true"
+                                 requiredMessage="Debe seleccionar una coordinación">
+                    <f:selectItem itemLabel="Seleccione una coordinación" itemValue="0" />
+                    <f:selectItems value="#{instructorBean.coordinaciones}" 
+                                  var="c"
+                                  itemLabel="#{c.nombreCoordinacion}" 
+                                  itemValue="#{c.idCoordinacion}" />
+                </p:selectOneMenu>
+
+                <h:outputLabel value="Estado:" for="estado" />
+                <p:selectOneMenu id="estado" 
+                                 value="#{instructorBean.instructor.estado}" 
+                                 required="true">
+                    <f:selectItem itemLabel="Activo" itemValue="Activo" />
+                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+
+            <div class="form-actions">
+                <p:commandButton value="Guardar Instructor"
+                                 action="#{instructorBean.guardar}"
+                                 icon="pi pi-save"
+                                 ajax="false"
+                                 styleClass="btn-primary"/>
+            </div>
+
+        </p:panel>
+    </div>
+
+</h:form>
+
+</h:body>
+</html>

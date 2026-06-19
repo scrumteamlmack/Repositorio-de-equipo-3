@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Sesión Cerrada - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: var(--cream-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .logout-container {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+        }
+
+        .logout-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .logout-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .logout-subtitle {
+            color: #6c757d;
+            font-size: 15px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .btn-login {
+            display: inline-block;
+            width: 100%;
+            padding: 14px 20px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: var(--dark-green);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 30px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e9ecef;
+            margin: 25px 0;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #adb5bd;
+        }
+
+        /* Animación de entrada */
+        .logout-container {
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logout-container">
+
+        <span class="brand">👤 L-MACK</span>
+
+        <span class="logout-icon">👋</span>
+
+        <div class="logout-title">¡Hasta pronto!</div>
+        <p class="logout-subtitle">
+            Tu sesión ha sido cerrada correctamente.<br/>
+            Tus datos están seguros.
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <a href="{% url 'login:login' %}" class="btn-login">
+            🔐 Volver a iniciar sesión
+        </a>
+
+        <hr class="divider"/>
+
+        <p class="footer-text">© L-MACK — Sistema de Gestión</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Redirige al login automáticamente después de 10 segundos -->
+    <script>
+        setTimeout(() => {
+            window.location.href = "{% url 'login:login' %}";
+        }, 10000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <title>{%block title%} L-MACK - Sistema de Gestión{%endblock%}
+    </title>
+</head>
+<body>
+    <div class="landing-container">
+    <header class="landing-header">
+            <div class="landing-logo">
+                <span>👤</span>
+                <span>L-MACK</span>
+            </div>
+            <div class="landing-header-buttons">
+                <a href="{% url 'mackapp:index' %}" class="landing-header-btn">Inicio</a>
+            </div>
+        </header>
+    {% block content %}
+    {%endblock%}
+
+    <footer class="landing-footer">
+            © 2025 L-MACK - Todos los derechos reservados
+    </footer>
+</div>
+</body>
+</html>

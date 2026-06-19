@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resolver Justificación - L-MACK</title>
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container { display: flex; min-height: 100vh; background-color: var(--cream-bg); }
+        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px 20px; background-color: var(--dark-green); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h3 { color: white; margin: 0; font-size: 24px; font-weight: 600; }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a { display: block; color: rgba(255,255,255,0.9); text-decoration: none; padding: 15px 25px; transition: all 0.3s; border-left: 3px solid transparent; font-size: 15px; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white; padding-left: 30px; }
+        .sidebar-nav a.active { background: rgba(255,255,255,0.15); border-left-color: white; color: white; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .sidebar-footer .btn-logout { width: 100%; padding: 12px 20px; background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
+        .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-header"><h3>L-MACK</h3></div>
+                <nav class="sidebar-nav">
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
+            <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper" style="max-width: 680px; margin: 0 auto;">
+            <div class="form-header mb-4">
+                <h2>✏️ Resolver Justificación #{{ justificacion.id_justificacion }}</h2>
+            </div>
+
+            <div class="card p-4 shadow-sm">
+                {% with ap=justificacion.inasistencia.aprendiz_usuario_id_usuario.usuario_id_usuario %}
+                <p><strong>Aprendiz:</strong> {{ ap.p_nombre }} {{ ap.p_apellido }}</p>
+                <p><strong>Correo:</strong> {{ ap.correo }}</p>
+                {% endwith %}
+                <p><strong>Fecha de inasistencia:</strong> {{ justificacion.inasistencia.fecha_inasistencia|date:"d/m/Y" }}</p>
+                <p><strong>Fecha de envío:</strong> {{ justificacion.fecha_creacion|date:"d/m/Y H:i" }}</p>
+
+                <div class="mb-4 mt-2">
+                    <a href="{{ justificacion.pdf_file.url }}" target="_blank" class="btn btn-outline-primary">
+                        📄 Ver PDF de Justificación
+                    </a>
+                </div>
+
+                <hr>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Observación (opcional):</label>
+                        <textarea name="observacion" class="form-control" rows="3" placeholder="Escribe el motivo de la decisión..."></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="accion" value="Aprobada" class="btn btn-success fw-bold">✔️ Aprobar</button>
+                        <button type="submit" name="accion" value="Rechazada" class="btn btn-danger fw-bold" onclick="return confirm('¿Seguro que deseas rechazar esta justificación?')">❌ Rechazar</button>
+                        <a href="{% url 'instructor:listar_justificaciones' %}" class="btn btn-secondary ms-auto">Volver</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

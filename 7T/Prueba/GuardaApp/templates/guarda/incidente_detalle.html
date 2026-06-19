@@ -1,0 +1,159 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}Detalle de Incidente{% endblock %}
+{% block content %}
+<style>
+    .gravedad-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 110px;
+        padding: 0.45rem 0.95rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+    .gravedad-bajo {
+        background: #dcfce7;
+        color: #166534;
+    }
+    .gravedad-medio {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .gravedad-alto {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+</style>
+<div class="mb-4">
+    <a href="{% url 'guarda:guarda_incidentes' %}" class="btn btn-outline-secondary">⬅️ Volver al listado</a>
+</div>
+
+<div class="shadow-sm border-0 card">
+    <div class="card-header bg-danger text-white py-3">
+        <h4 class="mb-0">🚨 Detalle de Incidente #{{ incidente.id_incidente }}</h4>
+    </div>
+    <div class="card-body p-4">
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Ambiente</label>
+                <p class="fs-5 fw-semibold text-dark">Ambiente {{ incidente.ambiente.num_ambiente }} - {{ incidente.ambiente.tipo_ambiente }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Tipo de Incidente</label>
+                <div>
+                    <span class="badge bg-danger rounded-pill px-3 py-2">
+                        {{ incidente.tipo_inc.tipo_incidente }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Nivel de gravedad</label>
+                <div>
+                    <span class="gravedad-badge gravedad-{{ incidente.nivel_gravedad|default:'medio'|lower }}">
+                        {{ incidente.nivel_gravedad|default:"Medio" }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Estado</label>
+                <div>
+                    {% if incidente.estado == 'Abierto' %}
+                        <span class="badge bg-danger rounded-pill px-3 py-2">Abierto</span>
+                    {% elif incidente.estado == 'En Proceso' %}
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2">En Proceso</span>
+                    {% else %}
+                        <span class="badge bg-success rounded-pill px-3 py-2">Cerrado</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4 opacity-25">
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Fecha del Suceso</label>
+                <p class="text-dark"><i class="far fa-calendar-alt me-2"></i>{{ incidente.fecha_incidente|date:"d/m/Y" }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Hora Estimada</label>
+                <p class="text-dark"><i class="far fa-clock me-2"></i>{{ incidente.hora_incidente }}</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Reportado por</label>
+                <p class="text-dark">
+                    <span class="fw-semibold">{{ incidente.usuario_id_usuario.p_nombre }} {{ incidente.usuario_id_usuario.p_apellido }}</span>
+                    {% if incidente.usuario_id_usuario.correo %}
+                        <span class="text-muted ms-2">({{ incidente.usuario_id_usuario.correo }})</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <hr class="my-4 opacity-25">
+
+        <div class="mb-5">
+            <label class="text-muted small text-uppercase fw-bold">Descripción Completa de los Hechos</label>
+            <div class="p-4 bg-light rounded border-start border-4 border-danger" style="white-space: pre-wrap; line-height: 1.6;">
+                {{ incidente.descripcion|default:"Sin descripción detallada disponible." }}
+            </div>
+        </div>
+
+        <hr class="my-5 opacity-25">
+
+        <div class="row">
+            <!-- Columna de Historial / Seguimiento -->
+            <div class="col-md-7 mb-4">
+                <h5 class="mb-4 text-dark"><i class="fas fa-list-ul me-2"></i>📋 Historial de Seguimiento</h5>
+                <div class="timeline" style="border-left: 2px solid #e5e7eb; padding-left: 20px; position: relative;">
+                    {% for h in historicos %}
+                        <div class="timeline-item mb-4" style="position: relative;">
+                            <div class="timeline-marker" style="width: 12px; height: 12px; border-radius: 50%; background-color: #dc3545; position: absolute; left: -27px; top: 6px; border: 2px solid white;"></div>
+                            <div class="text-muted small fw-bold">{{ h.fecha_registro|date:"d/m/Y H:i" }}</div>
+                            <div class="text-dark mt-1" style="font-size: 14px; font-weight: 500;">{{ h.descripcion }}</div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted italic">No hay notas de seguimiento registradas para este incidente.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Columna de Registrar Seguimiento -->
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0 p-4 bg-light">
+                    <h5 class="mb-3 text-dark"><i class="fas fa-pen-alt me-2"></i>✍️ Registrar Seguimiento</h5>
+                    <form method="post" action="{% url 'guarda:guarda_incidente_actualizar_estado' incidente.id_incidente %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="estado" class="form-label fw-bold small text-muted">ESTADO</label>
+                            <select name="estado" id="estado" class="form-select form-select-sm">
+                                <option value="Abierto" {% if incidente.estado == 'Abierto' %}selected{% endif %}>Abierto</option>
+                                <option value="En Proceso" {% if incidente.estado == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                                <option value="Cerrado" {% if incidente.estado == 'Cerrado' %}selected{% endif %}>Cerrado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comentario" class="form-label fw-bold small text-muted">COMENTARIO / NOTA DE SEGUIMIENTO</label>
+                            <textarea name="comentario" id="comentario" rows="3" class="form-control form-control-sm" placeholder="Escribe detalles del avance o acción tomada..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger btn-sm w-100 fw-bold">Actualizar Seguimiento</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer bg-white py-3">
+        <a href="{% url 'guarda:guarda_incidente_editar' incidente.id_incidente %}" class="btn btn-primary">✏️ Editar Registro</a>
+
+        <form method="post" action="{% url 'guarda:guarda_incidente_eliminar' incidente.id_incidente %}" style="display:inline;" onsubmit="return confirm('¿Seguro quieres eliminar este incidente permanentemente?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger ms-2">🗑️ Eliminar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

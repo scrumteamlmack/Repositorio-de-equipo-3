@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Asignación - L-MACK</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+
+    <link rel="stylesheet" href="{% static 'css/emac-style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <style>
+        .layout-container { display: flex; min-height: 100vh; background-color: var(--cream-bg); }
+        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px 20px; background-color: var(--dark-green); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .sidebar-header h3 { color: white; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header h3::before { content: "👤"; font-size: 28px; }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a { display: block; color: rgba(255, 255, 255, 0.9); text-decoration: none; padding: 15px 25px; transition: all 0.3s; border-left: 3px solid transparent; font-size: 15px; }
+        .sidebar-nav a:hover { background: rgba(255, 255, 255, 0.1); border-left-color: var(--light-green); color: white; padding-left: 30px; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto; }
+        .sidebar-footer .btn-logout { width: 100%; padding: 12px 20px; background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sidebar-footer .btn-logout:hover { background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.3); }
+        .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
+        .content-wrapper { background: var(--white); padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+        .form-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-section { background: var(--white); padding: 25px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .btn-group-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-gray); }
+        .row { display: flex; flex-wrap: wrap; margin: 0 -10px; }
+        .col-md-6 { flex: 0 0 50%; padding: 10px; }
+        .col-md-6 label { display: block; margin-bottom: 8px; color: var(--text-dark); font-weight: 500; }
+        @media (max-width: 768px) {
+            .sidebar { position: static; width: 100%; height: auto; }
+            .main-content { margin-left: 0; }
+            .layout-container { flex-direction: column; }
+            .col-md-6 { flex: 0 0 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>L-MACK</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:form_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}" style="background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white;">📅 Asignación Instructores</a>
+            <a href="{% url 'admin_panel:importar_usuarios_csv' %}">📥 Importar CSV</a>
+            <a href="{% url 'admin_panel:perfil' %}">👤 Mi Perfil</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <div class="content-wrapper">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-container">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">🏢 Registrar Asignación de Instructor</h3>
+                    </div>
+
+                    <!-- MENSAJES -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="form-section">
+                        <h5 class="mb-4">Detalles de la Asignación</h5>
+
+                        <div class="row">
+
+                            <!-- Instructor -->
+                            <div class="col-md-6 mb-3">
+                                <label for="instructor_id">Instructor</label>
+                                <select name="instructor_id" id="instructor_id" class="form-select" required>
+                                    <option value="">Seleccione un instructor...</option>
+                                    {% for inst in instructores %}
+                                        <option value="{{ inst.usuario_id_usuario_id }}">
+                                            {{ inst.usuario_id_usuario.p_nombre }} {{ inst.usuario_id_usuario.p_apellido }} (Doc: {{ inst.usuario_id_usuario.num_documento }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Ambiente -->
+                            <div class="col-md-6 mb-3">
+                                <label for="ambiente_id">Ambiente de Formación</label>
+                                <select name="ambiente_id" id="ambiente_id" class="form-select" required>
+                                    <option value="">Seleccione un ambiente...</option>
+                                    {% for amb in ambientes %}
+                                        <option value="{{ amb.id_ambiente }}">
+                                            Ambiente {{ amb.num_ambiente }} - {{ amb.tipo_ambiente }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Trimestre -->
+                            <div class="col-md-6 mb-3">
+                                <label for="trimestre">Trimestre</label>
+                                <input type="text" name="trimestre" id="trimestre" required
+                                       class="form-control" placeholder="Ej: Trimestre I 2026">
+                            </div>
+
+                            <!-- Jornada -->
+                            <div class="col-md-6 mb-3">
+                                <label for="jornada_id">Jornada</label>
+                                <select name="jornada_id" id="jornada_id" class="form-select">
+                                    <option value="">Seleccione una jornada (opcional)...</option>
+                                    {% for jor in jornadas %}
+                                        <option value="{{ jor.id_jornada }}">{{ jor.nombre_jornada }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="col-md-6 mb-3">
+                                <label for="estado">Estado de Asignación</label>
+                                <select name="estado" id="estado" class="form-select" required>
+                                    {% for est in estados %}
+                                        <option value="{{ est }}" {% if est == "ACTIVO" %}selected{% endif %}>{{ est }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+                            <!-- Fecha Inicio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_inicio">Fecha de Inicio</label>
+                                <input type="date" name="fecha_inicio" id="fecha_inicio" required class="form-control"
+                                       value="{{ fecha_inicio_def }}">
+                            </div>
+
+                            <!-- Fecha Fin -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_fin">Fecha de Fin</label>
+                                <input type="date" name="fecha_fin" id="fecha_fin" required class="form-control"
+                                       value="{{ fecha_fin_def }}">
+                            </div>
+
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="btn-group-actions">
+                            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}" class="btn btn-secondary">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">
+                                Guardar Asignación
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

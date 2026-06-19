@@ -1,0 +1,103 @@
+*{margin:0;padding:0;box-sizing:border-box;}
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f9fafb;
+    color: #374151;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header, footer {
+    background-color: #10b981;
+    color: white;
+    padding: 16px 32px;
+  }
+  header {
+    position: sticky;
+    top: 0;z-index: 1000;
+    display: flex;align-items: center;justify-content: space-between;
+  }
+  .logo {
+    font-weight: 600;
+    font-size: 1rem;
+    
+  }
+  .img {
+  width: 125px;
+  height: auto;
+}
+
+    nav a {
+  margin-left: 16px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  background-color: #059669; 
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: #047857; 
+  transform: scale(1.05);
+}
+
+  main {
+    flex-grow: 1;
+    max-width: 700px;
+    margin: 48px auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  h2 {
+    color: #10b981;
+    margin-bottom: 36px;
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 32px;
+  }
+  a.action-btn {
+    background-color: #10b981;
+    border-radius: 16px;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 24px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  a.action-btn .material-icons {
+    font-size: 48px;
+  }
+  a.action-btn:hover,
+  a.action-btn:focus {
+    background-color: #059669;
+    outline: none;
+    transform: translateY(-4px);
+  }
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  @media (max-width: 640px) {
+    main {
+      margin: 32px 16px;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }

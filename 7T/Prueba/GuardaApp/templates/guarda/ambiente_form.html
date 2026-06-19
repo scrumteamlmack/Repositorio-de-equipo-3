@@ -1,0 +1,36 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}{% if modo == "editar" %}Editar Ambiente{% else %}Nuevo Ambiente{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; font-weight: 600;">
+        {% if modo == "editar" %}Editar{% else %}Nuevo{% endif %} Ambiente
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Numero ambiente</label>
+            <input class="form-control" type="number" name="num_ambiente" value="{{ ambiente.num_ambiente|default:'' }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Capacidad</label>
+            <input class="form-control" type="number" name="capacidad" value="{{ ambiente.capacidad|default:'' }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Tipo</label>
+            <input class="form-control" type="text" name="tipo_ambiente" value="{{ ambiente.tipo_ambiente|default:'' }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Estado</label>
+            <input class="form-control" type="text" name="estado" value="{{ ambiente.estado|default:'' }}" required>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'guarda:guarda_ambientes' %}" class="btn btn-secondary">Cancelar</a>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

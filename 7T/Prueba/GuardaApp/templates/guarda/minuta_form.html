@@ -1,0 +1,233 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}{% if modo == "editar" %}Editar Minuta{% else %}Nueva Minuta{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; font-weight: 600;">
+        {% if modo == "editar" %}Editar{% else %}Nueva{% endif %} Minuta
+    </div>
+    <div class="card-body">
+        {% if messages %}
+            {% for m in messages %}
+                <div class="alert alert-{{ m.tags }} alert-dismissible fade show" role="alert">
+                    {{ m }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" id="minutaForm">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Responsable (Instructor)</label>
+                    <select class="form-select" name="responsable_id" id="responsable_id" required>
+                        <option value="">Seleccione...</option>
+                        {% for r in responsables %}
+                        <option value="{{ r.usuario_id_usuario_id }}" {% if minuta and minuta.responsable_id == r.usuario_id_usuario_id %}selected{% endif %}>
+                            {{ r.usuario_id_usuario.p_nombre }} {{ r.usuario_id_usuario.p_apellido }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Ambiente</label>
+                    <!-- Selector deshabilitado visualmente para evitar selección manual incorrecta -->
+                    <select class="form-select" id="ambiente_id" disabled style="background-color: #e9ecef;">
+                        <option value="">Seleccione un responsable...</option>
+                        {% for a in ambientes %}
+                        <option value="{{ a.id_ambiente }}" {% if minuta and minuta.ambiente_id == a.id_ambiente %}selected{% endif %}>
+                            {{ a.num_ambiente }} - {{ a.tipo_ambiente }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <!-- Campo hidden para asegurar el envío del ambiente seleccionado -->
+                    <input type="hidden" name="ambiente_id" id="ambiente_hidden" value="{% if minuta %}{{ minuta.ambiente_id }}{% endif %}">
+                    <small class="form-text d-block mt-1 text-muted" id="ambiente_status">
+                        Se resolverá automáticamente al seleccionar el responsable.
+                    </small>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Fecha y hora de recibido</label>
+                    <input class="form-control" type="datetime-local" 
+                           name="fecha_hora_recibo" 
+                           value="{% if minuta %}{{ minuta.fecha_hora_recibo|date:'Y-m-d\TH:i' }}{% else %}{{ fecha_hora_recibo_def }}{% endif %}" 
+                           readonly 
+                           style="background-color: #e9ecef; pointer-events: none;">
+                    <small class="text-muted">Campo autocompletado y de solo lectura</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Fecha y hora de entrega</label>
+                    <input class="form-control" type="datetime-local" 
+                           name="fecha_hora_entrega" 
+                           id="fecha_hora_entrega"
+                           value="{% if minuta %}{{ minuta.fecha_hora_entrega|date:'Y-m-d\TH:i' }}{% else %}{{ fecha_hora_entrega_def }}{% endif %}" 
+                           required>
+                    <small class="text-muted">Seleccione la fecha y hora de entrega</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Estado del Ambiente</label>
+                    <input class="form-control" type="text" name="estado" value="{% if minuta %}{{ minuta.estado }}{% else %}Ocupado{% endif %}" readonly style="background-color: #e9ecef;">
+                    <small class="text-muted">El ambiente quedará registrado con el estado indicado.</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Novedad</label>
+                    <input class="form-control" type="text" name="novedad" value="{{ minuta.novedad|default:'' }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-bold">Descripción</label>
+                    <textarea class="form-control" name="descripcion_min" rows="3">{{ minuta.descripcion_min|default:'' }}</textarea>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a href="{% url 'guarda:guarda_minutas' %}" class="btn btn-secondary">Cancelar</a>
+                <button class="btn btn-primary" type="submit" id="btnGuardar">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const responsableSelect = document.getElementById('responsable_id');
+    const ambienteSelect = document.getElementById('ambiente_id');
+    const ambienteHidden = document.getElementById('ambiente_hidden');
+    const ambienteStatus = document.getElementById('ambiente_status');
+    const btnGuardar = document.getElementById('btnGuardar');
+    const fechaReciboInput = document.querySelector('input[name="fecha_hora_recibo"]');
+    
+    // Capturar el ID inicial del ambiente si estamos editando
+    let initialAmbienteId = "{% if minuta %}{{ minuta.ambiente_id }}{% else %}{% endif %}";
+    const minutaId = "{% if minuta %}{{ minuta.id_minuta }}{% else %}{% endif %}";
+
+    function resolverAmbiente(instructorId) {
+        if (!instructorId) {
+            ambienteSelect.innerHTML = '<option value="">Seleccione un responsable...</option>';
+            ambienteSelect.value = "";
+            ambienteSelect.disabled = true;
+            ambienteSelect.style.backgroundColor = '#e9ecef';
+            ambienteHidden.value = "";
+            ambienteStatus.textContent = "Se resolverá automáticamente al seleccionar el responsable.";
+            ambienteStatus.className = "form-text d-block mt-1 text-muted";
+            btnGuardar.disabled = false;
+            return;
+        }
+
+        const fechaHoraStr = fechaReciboInput ? fechaReciboInput.value : "";
+        ambienteStatus.textContent = "Buscando asignación de ambiente activa...";
+        ambienteStatus.className = "form-text d-block mt-1 text-warning fw-semibold";
+
+        fetch(`{% url 'guarda:guarda_minuta_resolver_ambiente' %}?instructor_id=${instructorId}&fecha_hora=${fechaHoraStr}&minuta_id=${minutaId}`)
+            .then(response => response.json())
+            .then(data => {
+                ambienteSelect.innerHTML = "";
+                
+                if (data.success && data.ambientes && data.ambientes.length > 0) {
+                    // Si hay múltiples ambientes, añadir opción por defecto
+                    if (data.ambientes.length > 1) {
+                        const optDefault = document.createElement('option');
+                        optDefault.value = "";
+                        optDefault.textContent = "Seleccione un ambiente...";
+                        ambienteSelect.appendChild(optDefault);
+                    }
+
+                    let matchedOption = false;
+
+                    data.ambientes.forEach(amb => {
+                        const option = document.createElement('option');
+                        option.value = amb.id;
+                        option.textContent = `${amb.num} - ${amb.tipo}`;
+                        
+                        // Si coincide con el ambiente inicial o si solo hay uno
+                        if (initialAmbienteId && amb.id.toString() === initialAmbienteId.toString()) {
+                            option.selected = true;
+                            matchedOption = true;
+                        } else if (data.ambientes.length === 1 && !initialAmbienteId) {
+                            option.selected = true;
+                            matchedOption = true;
+                        }
+                        
+                        ambienteSelect.appendChild(option);
+                    });
+
+                    if (data.ambientes.length === 1) {
+                        ambienteSelect.disabled = true;
+                        ambienteSelect.style.backgroundColor = '#e9ecef';
+                        ambienteHidden.value = data.ambientes[0].id;
+                        ambienteStatus.textContent = `Asignación resuelta: Ambiente ${data.ambientes[0].num} (${data.ambientes[0].tipo})`;
+                        ambienteStatus.className = "form-text d-block mt-1 text-success fw-bold";
+                        btnGuardar.disabled = false;
+                    } else {
+                        ambienteSelect.disabled = false;
+                        ambienteSelect.style.backgroundColor = '';
+                        if (matchedOption) {
+                            ambienteSelect.value = initialAmbienteId;
+                            ambienteHidden.value = initialAmbienteId;
+                            ambienteStatus.textContent = "Ambiente cargado.";
+                            ambienteStatus.className = "form-text d-block mt-1 text-success fw-bold";
+                            btnGuardar.disabled = false;
+                        } else {
+                            ambienteSelect.value = "";
+                            ambienteHidden.value = "";
+                            ambienteStatus.textContent = "Múltiples ambientes asignados. Seleccione uno.";
+                            ambienteStatus.className = "form-text d-block mt-1 text-warning fw-bold";
+                            btnGuardar.disabled = true;
+                        }
+                    }
+                    
+                    // Limpiar el id inicial para que en los siguientes cambios no se auto-seleccione el anterior
+                    initialAmbienteId = "";
+
+                } else {
+                    const optEmpty = document.createElement('option');
+                    optEmpty.value = "";
+                    optEmpty.textContent = "Sin ambientes activos...";
+                    ambienteSelect.appendChild(optEmpty);
+                    
+                    ambienteSelect.value = "";
+                    ambienteSelect.disabled = true;
+                    ambienteSelect.style.backgroundColor = '#e9ecef';
+                    ambienteHidden.value = "";
+                    ambienteStatus.textContent = data.error || "El instructor no tiene ambientes asignados.";
+                    ambienteStatus.className = "form-text d-block mt-1 text-danger fw-bold";
+                    btnGuardar.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                ambienteStatus.textContent = "Error al conectar con el servidor para resolver el ambiente.";
+                ambienteStatus.className = "form-text d-block mt-1 text-danger fw-bold";
+                btnGuardar.disabled = true;
+            });
+    }
+
+    responsableSelect.addEventListener('change', function() {
+        resolverAmbiente(this.value);
+    });
+
+    ambienteSelect.addEventListener('change', function() {
+        ambienteHidden.value = this.value;
+        if (this.value) {
+            btnGuardar.disabled = false;
+            ambienteStatus.textContent = "Ambiente seleccionado.";
+            ambienteStatus.className = "form-text d-block mt-1 text-success fw-bold";
+        } else {
+            btnGuardar.disabled = true;
+            ambienteStatus.textContent = "Por favor, seleccione un ambiente.";
+            ambienteStatus.className = "form-text d-block mt-1 text-danger fw-bold";
+        }
+    });
+
+    // En modo edición o si ya viene cargado, resolver el ambiente al cargar la página
+    if (responsableSelect.value) {
+        resolverAmbiente(responsableSelect.value);
+    }
+});
+</script>
+{% endblock %}

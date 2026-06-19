@@ -1,0 +1,113 @@
+     body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        .dashboard {
+            display: flex;
+            width: 100%;
+        }
+
+        .btnInicio{
+        color: white;
+        text-decoration: none;
+        }
+
+        /* ----------- SIDEBAR ----------- */
+        .sidebar {
+            width: 250px;
+            background: #009879;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 20px 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar nav ul > li {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar nav ul > li:hover {
+            background: #007a63;
+        }
+
+        /* ----------- SUBMENÚS ----------- */
+        .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            background: #007a63;
+        }
+
+        .submenu li {
+            padding: 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .submenu li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            font-size: 14px;
+        }
+
+        .submenu li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ----------- BOTÓN CERRAR SESIÓN ----------- */
+        .sidebar form {
+            margin: 20px;
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 10px;
+<<<<<<< HEAD
+            background: #d9534f;
+=======
+            background: #009879;
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .sidebar button:hover {
+<<<<<<< HEAD
+            background: #c9302c;
+=======
+            background: #009879;
+>>>>>>> 6b4a9da6b570592154cd1b9ae2483bf24c9bd186
+        }
+
+        /* ----------- CONTENIDO ----------- */
+        .content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 20px;
+        }
+   

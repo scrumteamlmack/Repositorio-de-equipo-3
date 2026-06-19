@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Detalle de Minuta - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container { display: flex; min-height: 100vh; background-color: var(--cream-bg); }
+        .sidebar { width: 260px; background-color: var(--primary-green); color: white; padding: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.1); position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 25px 20px; background-color: var(--dark-green); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h3 { color: white; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header h3::before { content: "👤"; font-size: 28px; }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a { display: block; color: rgba(255,255,255,0.9); text-decoration: none; padding: 15px 25px; transition: all 0.3s; border-left: 3px solid transparent; font-size: 15px; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white; padding-left: 30px; }
+        .sidebar-nav a.active { background: rgba(255,255,255,0.15); border-left-color: white; color: white; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .sidebar-footer .btn-logout { width: 100%; padding: 12px 20px; background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sidebar-footer .btn-logout:hover { background-color: rgba(255,255,255,0.2); }
+        .main-content { flex: 1; margin-left: 260px; padding: 20px; min-height: 100vh; background-color: var(--cream-bg); }
+        .content-wrapper { background: var(--white); border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        
+        .detail-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .detail-value { font-size: 16px; color: #111827; font-weight: 500; margin-bottom: 20px; }
+        .detail-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-header"><h3>L-MACK</h3></div>
+                <nav class="sidebar-nav">
+            <a href="{% url 'instructor:index_instructor' %}">🏠 Inicio</a>
+            <a href="{% url 'instructor:mis_fichas' %}">📁 Mis Fichas</a>
+            <a href="{% url 'instructor:listar_asistencias_instructor' %}">📋 Asistencia</a>
+            <a href="{% url 'instructor:consultar_minutas' %}">📝 Minutas</a>
+            <a href="{% url 'instructor:listar_incidentes' %}">⚠️ Incidentes</a>
+            <a href="{% url 'instructor:listar_traslados' %}">🚚 Traslados</a>
+            <a href="{% url 'instructor:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'instructor:listar_justificaciones' %}">📋 Justificaciones</a>
+            <a href="{% url 'instructor:perfil' %}">👤 Mi Perfil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">📋 Detalle de Minuta #{{ minuta.id_minuta }}</h2>
+                <a href="{% url 'instructor:consultar_minutas' %}" class="btn btn-outline-secondary">Volver al listado</a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-label">Ambiente de Formación</div>
+                    <div class="detail-value">
+                        {% if minuta.ambiente %}
+                            Ambiente {{ minuta.ambiente.num_ambiente }} - {{ minuta.ambiente.tipo_ambiente }}
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-label">Estado Reportado</div>
+                    <div class="detail-value">
+                        {% if minuta.estado %}
+                            {% with e=minuta.estado|lower %}
+                                {% if "disponible" in e or "bueno" in e or "bien" in e %}
+                                    <span class="badge bg-success px-3 py-2">{{ minuta.estado }}</span>
+                                {% elif "regular" in e %}
+                                    <span class="badge bg-warning text-dark px-3 py-2">{{ minuta.estado }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger px-3 py-2">{{ minuta.estado }}</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-label">Fecha y Hora de Recibo</div>
+                    <div class="detail-value">{{ minuta.fecha_hora_recibo|date:"d/m/Y H:i"|default:"—" }}</div>
+
+                    <div class="detail-label">Fecha y Hora de Entrega</div>
+                    <div class="detail-value">{{ minuta.fecha_hora_entrega|date:"d/m/Y H:i"|default:"—" }}</div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-label">Guarda de Seguridad</div>
+                    <div class="detail-value">
+                        {{ minuta.guarda_seguridad_usuario_id_usuario.usuario_id_usuario.p_nombre }}
+                        {{ minuta.guarda_seguridad_usuario_id_usuario.usuario_id_usuario.p_apellido }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-label">Instructor Responsable</div>
+                    <div class="detail-value">
+                        {{ minuta.responsable.usuario_id_usuario.p_nombre }}
+                        {{ minuta.responsable.usuario_id_usuario.p_apellido }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="detail-label">Novedades Reportadas</div>
+                <div class="detail-box">
+                    {{ minuta.novedad|default:"Sin novedades registradas durante el turno." }}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="detail-label">Descripción Detallada</div>
+                <div class="detail-box" style="white-space: pre-wrap;">
+                    {{ minuta.descripcion_min|default:"No se proporcionó una descripción adicional." }}
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

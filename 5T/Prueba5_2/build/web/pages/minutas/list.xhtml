@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Minutas</ui:define>
+    <ui:define name="moduleTitle">Registro de minutas</ui:define>
+
+    <ui:define name="content">
+        <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/minuta.css"/>
+        
+        <div class="container">
+            <h1>Listado de Minutas</h1>
+            
+            <h:form id="frmMinutas" styleClass="ui-fluid">
+                <f:metadata>
+                    <f:viewAction action="#{loginBean.verificarSesionAdminGuarda}"/>
+                </f:metadata>
+
+                <p:commandButton value="Nueva Minuta"
+                                 styleClass="btn btn-success"
+                                 actionListener="#{minutaBean.prepararNuevo}"
+                                 update="dialogMinuta"
+                                 oncomplete="PF('dlgMinuta').show()"
+                                 ajax="false"/>
+
+                <p:panel header="Nueva minuta" styleClass="ui-noborder" style="display:none;">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{minutaBean.minuta.ambienteId}" required="true" filter="true"
+                                         label="Ambiente">
+                            <f:selectItems value="#{minutaBean.ambientes}" var="amb"
+                                           itemLabel="#{amb.numero} - #{amb.tipo}"
+                                           itemValue="#{amb.idAmbiente}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:outputLabel value="Guarda de seguridad"/>
+                        <p:selectOneMenu value="#{minutaBean.minuta.guardaId}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{minutaBean.guardas}" var="guarda"
+                                           itemLabel="Guarda #{guarda.idUsuario}"
+                                           itemValue="#{guarda.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:outputLabel value="Responsable (Instructor)"/>
+                        <p:selectOneMenu value="#{minutaBean.minuta.responsableId}" required="true" filter="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                            <f:selectItems value="#{minutaBean.instructores}" var="instructor"
+                                           itemLabel="Instructor #{instructor.idUsuario}"
+                                           itemValue="#{instructor.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:outputLabel value="Fecha/hora recibo" required="true"/>
+                        <p:calendar value="#{minutaBean.fechaReciboDate}" showIcon="true"
+                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                      required="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:outputLabel value="Fecha/hora entrega" required="true"/>
+                        <p:calendar value="#{minutaBean.fechaEntregaDate}" showIcon="true"
+                                      pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                      required="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:inputTextarea value="#{minutaBean.minuta.novedad}" label="Novedad" autoResize="false"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:inputTextarea value="#{minutaBean.minuta.descripcion}"
+                                         required="true"
+                                         autoResize="false" label="Descripción"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-3">
+                        <p:selectOneMenu value="#{minutaBean.minuta.estado}" required="true" label="Estado">
+                            <f:selectItem itemLabel="Normal" itemValue="Normal"/>
+                            <f:selectItem itemLabel="Novedad" itemValue="Novedad"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <p:commandButton value="Guardar"
+                                 actionListener="#{minutaBean.guardar}"
+                                 update="tablaMinutas"
+                                 ajax="false"
+                                 styleClass="ui-button-success"/>
+                <p:commandButton value="Cancelar" actionListener="#{minutaBean.prepararNuevo}"
+                                 update="@form" styleClass="ui-button-secondary"/>
+            </p:panel>
+
+                <p:dataTable id="tablaMinutas" value="#{minutaBean.minutas}" var="min"
+                             paginator="true" rows="10"
+                             styleClass="table table-striped table-hover"
+                             style="margin-top:1rem;">
+                    <p:column headerText="ID_minuta" style="width:100px;">#{min.idMinuta}</p:column>
+                    <p:column headerText="Guarda" style="width:120px;">Guarda #{min.guardaId}</p:column>
+                    <p:column headerText="Novedad" style="width:200px;">
+                        <h:outputText value="#{min.novedad != null ? min.novedad : '—'}"/>
+                    </p:column>
+                    <p:column headerText="Estado" exportValue="#{min.estado}" style="width:120px;">
+                        <span class="badge #{min.estado == 'activo' or min.estado == 'Normal' or min.estado == 'Disponible' ? 'bg-success' : 'bg-danger'}">
+                            #{min.estado}
+                        </span>
+                    </p:column>
+                    <p:column headerText="Ingreso" style="width:150px;">
+                        <h:outputText value="#{min.fechaRecibo}">
+                            <f:convertDateTime pattern="yyyy-MM-dd HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Entrega" style="width:150px;">
+                        <h:outputText value="#{min.fechaEntrega}">
+                            <f:convertDateTime pattern="yyyy-MM-dd HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Acciones" style="width:200px;">
+                        <div style="display: flex; gap: 5px;">
+                            <p:commandButton value="Ver"
+                                             styleClass="btn btn-sm btn-info"
+                                             actionListener="#{minutaBean.editar()}"
+                                             update="dialogMinuta"
+                                             oncomplete="PF('dlgMinuta').show()"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
+                            <p:commandButton value="Editar"
+                                             styleClass="btn btn-sm btn-primary"
+                                             actionListener="#{minutaBean.editar()}"
+                                             update="dialogMinuta"
+                                             oncomplete="PF('dlgMinuta').show()"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
+                            <p:commandButton value="Eliminar"
+                                             styleClass="btn btn-sm btn-danger"
+                                             actionListener="#{minutaBean.eliminar()}"
+                                             update="tablaMinutas"
+                                             onclick="return confirm('¿Eliminar minuta?');"
+                                             ajax="false">
+                                <f:setPropertyActionListener target="#{minutaBean.idMinutaSeleccionada}" value="#{min.idMinuta}"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog widgetVar="dlgMinuta" header="Registro de Minuta" modal="true" width="700"
+                          resizable="false" id="dialogMinuta">
+                    <h:form styleClass="ui-fluid">
+                        <p:panelGrid columns="2" columnClasses="col, col">
+                            <p:outputLabel value="Ambiente" required="true"/>
+                            <p:selectOneMenu value="#{minutaBean.minuta.ambienteId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{minutaBean.ambientes}" var="amb"
+                                               itemLabel="#{amb.numero} - #{amb.tipo}"
+                                               itemValue="#{amb.idAmbiente}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Guarda de seguridad" required="true"/>
+                            <p:selectOneMenu value="#{minutaBean.minuta.guardaId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{minutaBean.guardas}" var="guarda"
+                                               itemLabel="Guarda #{guarda.idUsuario}"
+                                               itemValue="#{guarda.idUsuario}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Responsable (Instructor)" required="true"/>
+                            <p:selectOneMenu value="#{minutaBean.minuta.responsableId}" required="true" filter="true">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}"/>
+                                <f:selectItems value="#{minutaBean.instructores}" var="instructor"
+                                               itemLabel="Instructor #{instructor.idUsuario}"
+                                               itemValue="#{instructor.idUsuario}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha/hora recibo" required="true"/>
+                            <p:calendar value="#{minutaBean.fechaReciboDate}" showIcon="true"
+                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                          required="true"/>
+
+                            <p:outputLabel value="Fecha/hora entrega" required="true"/>
+                            <p:calendar value="#{minutaBean.fechaEntregaDate}" showIcon="true"
+                                          pattern="dd/MM/yyyy HH:mm" showTime="true" hourFormat="24"
+                                          required="true"/>
+
+                            <p:outputLabel value="Novedad"/>
+                            <p:inputTextarea value="#{minutaBean.minuta.novedad}" autoResize="false"/>
+
+                            <p:outputLabel value="Descripción"/>
+                            <p:inputTextarea value="#{minutaBean.minuta.descripcion}" autoResize="false"/>
+
+                            <p:outputLabel value="Estado" required="true"/>
+                            <p:selectOneMenu value="#{minutaBean.minuta.estado}" required="true">
+                                <f:selectItem itemLabel="Disponible" itemValue="Disponible"/>
+                                <f:selectItem itemLabel="Ocupado" itemValue="Ocupado"/>
+                                <f:selectItem itemLabel="Normal" itemValue="Normal"/>
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                        <p:commandButton value="Guardar" actionListener="#{minutaBean.guardar}"
+                                         update=":frmMinutas"
+                                         oncomplete="PF('dlgMinuta').hide()"
+                                         styleClass="btn-success"
+                                         ajax="false"/>
+                        <p:commandButton value="Cancelar" onclick="PF('dlgMinuta').hide()"
+                                         styleClass="btn-secondary"/>
+                    </h:form>
+                </p:dialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+

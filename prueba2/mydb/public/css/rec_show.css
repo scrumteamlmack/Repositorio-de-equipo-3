@@ -1,0 +1,70 @@
+/* rec_show.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container p {
+    font-size: 16px;
+    margin: 12px 0;
+    color: #555;
+}
+
+.container p strong {
+    color: #222;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.actions a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.actions a:first-child {
+    background-color: #6c63ff;
+    color: white;
+}
+
+.actions a:first-child:hover {
+    background-color: #5548db;
+}
+
+.actions a:last-child {
+    background-color: #ffb703;
+    color: #333;
+}
+
+.actions a:last-child:hover {
+    background-color: #e09c02;
+}

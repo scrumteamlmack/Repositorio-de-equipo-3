@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Listar Incidentes - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/resources/css/emac-style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:viewAction action="#{loginBean.verificarSesionInstructor}"/>
+    </f:metadata>
+
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>L-MACK</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <h:link outcome="/pages/instructor/index.xhtml" value="🏠 Inicio" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/misFichas.xhtml" value="📁 Mis Fichas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/asistencias/listarAsistencias.xhtml" value="📋 Asistencia" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/consultarMinutas.xhtml" value="📝 Minutas" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/listarIncidentes.xhtml" value="⚠️ Incidentes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/traslados/listarTraslados.xhtml" value="🚚 Traslados" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/instructor/consultarAmbientes.xhtml" value="🏢 Ambientes" styleClass="sidebar-link"/>
+                <h:link outcome="/pages/perfil.xhtml" value="👤 Mi Perfil" styleClass="sidebar-link"/>
+            </nav>
+            <div class="sidebar-footer">
+                <h:form>
+                    <p:commandButton value="Cerrar sesión"
+                                     icon="pi pi-sign-out"
+                                     action="#{loginBean.cerrarSesion}"
+                                     styleClass="btn-logout"
+                                     ajax="false"/>
+                </h:form>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h:form id="formListar">
+<<<<<<< HEAD
+                    <p:growl id="mensajes" showDetail="true" life="3000"/>
+                    
+=======
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                    <div class="form-header">
+                        <h2><i class="pi pi-exclamation-triangle" style="margin-right: 10px;"></i>Lista de Incidentes</h2>
+                    </div>
+
+                    <p:messages showSummary="true" closable="true" severity="info,error,warn"/>
+
+                    <div style="margin-bottom: 20px;">
+                        <h:link value="➕ Nuevo Incidente"
+                                outcome="/pages/instructor/formIncidente.xhtml"
+                                styleClass="btn btn-primary"
+                                style="text-decoration: none; display: inline-block; padding: 8px 16px;">
+                            <i class="pi pi-plus" style="margin-right: 5px;"></i>
+                        </h:link>
+                    </div>
+
+                    <p:toolbar style="margin-bottom: 10px;">
+                        <f:facet name="left">
+                            <p:commandButton value="📄 Exportar PDF"
+                                             icon="pi pi-file-pdf"
+                                             styleClass="btn-primary"
+                                             ajax="false">
+                                <p:dataExporter type="pdf" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
+                            <p:commandButton value="📊 Exportar Excel"
+                                             icon="pi pi-file-excel"
+                                             styleClass="btn-success"
+                                             ajax="false">
+                                <p:dataExporter type="xls" target="tablaIncidentes" fileName="incidentes"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <div class="table-container">
+                        <p:dataTable id="tablaIncidentes"
+                                     value="#{incidenteBean.incidentes}" 
+                                     var="inc"
+                                     filteredValue="#{incidenteBean.incidentesFiltrados}"
+                                     emptyMessage="No hay incidentes registrados"
+                                     paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     rowsPerPageTemplate="5,10,15,20"
+                                     styleClass="table table-striped table-hover">
+
+                            <p:column headerText="ID" 
+                                     filterBy="#{inc.idIncidente}" 
+                                     filterMatchMode="exact"
+                                     style="width: 60px;">
+                                <h:outputText value="#{inc.idIncidente}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción" 
+                                     filterBy="#{inc.descripcion}" 
+                                     filterMatchMode="contains"
+                                     style="width: 300px;">
+                                <h:outputText value="#{inc.descripcion}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha" 
+                                     filterBy="#{incidenteBean.formatearFecha(inc.fecha)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.formatearFecha(inc.fecha)}"
+                                     style="width: 120px;">
+                                <h:outputText value="#{incidenteBean.formatearFecha(inc.fecha)}" />
+                            </p:column>
+
+                            <p:column headerText="Hora" 
+                                     filterBy="#{incidenteBean.formatearHora(inc.hora)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.formatearHora(inc.hora)}"
+                                     style="width: 100px;">
+                                <h:outputText value="#{incidenteBean.formatearHora(inc.hora)}" />
+                            </p:column>
+
+                            <p:column headerText="Ambiente"
+                                     filterBy="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}">
+                                <h:outputText value="#{incidenteBean.getNombreAmbiente(inc.idAmbiente)}" rendered="#{inc.idAmbiente > 0}" />
+                                <h:outputText value="-" rendered="#{inc.idAmbiente == 0}" style="color: #999;"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de Incidente"
+                                     filterBy="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}">
+                                <h:outputText value="#{incidenteBean.getNombreTipoIncidente(inc.idTipoIncidente)}" rendered="#{inc.idTipoIncidente > 0}" />
+                                <h:outputText value="-" rendered="#{inc.idTipoIncidente == 0}" style="color: #999;"/>
+                            </p:column>
+
+                            <p:column headerText="Reportado por"
+                                     filterBy="#{incidenteBean.getNombreInstructor(inc.idReportador)}" 
+                                     filterMatchMode="contains"
+                                     exportValue="#{incidenteBean.getNombreInstructor(inc.idReportador)}">
+                                <h:outputText value="#{incidenteBean.getNombreInstructor(inc.idReportador)}" rendered="#{inc.idReportador > 0}" />
+                                <h:outputText value="-" rendered="#{inc.idReportador == 0}" style="color: #999;"/>
+                            </p:column>
+
+                            <p:column headerText="Acciones" 
+                                     style="width: 150px;"
+                                     exportable="false">
+                                <div style="display: flex; gap: 5px;">
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     title="Editar"
+                                                     action="#{incidenteBean.editar(inc.idIncidente)}"
+                                                     ajax="false"
+                                                     styleClass="btn btn-sm btn-secondary"/>
+                                    <p:commandButton icon="pi pi-trash"
+                                                     title="Eliminar"
+<<<<<<< HEAD
+                                                     action="#{incidenteBean.eliminar(inc.idIncidente)}"
+                                                     update="@form"
+                                                     process="@this"
+                                                     onclick="if(!confirm('¿Está seguro de eliminar este incidente?')) return false;"
+                                                     styleClass="btn btn-sm btn-danger"/>
+=======
+                                                     actionListener="#{incidenteBean.eliminar(inc.idIncidente)}"
+                                                     update="@form"
+                                                     styleClass="btn btn-sm btn-danger"
+                                                     onclick="return confirm('¿Está seguro de eliminar este incidente?');"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                                </div>
+                            </p:column>
+
+                        </p:dataTable>
+                    </div>
+                </h:form>
+            </div>
+        </main>
+    </div>
+
+</h:body>
+</html>
+

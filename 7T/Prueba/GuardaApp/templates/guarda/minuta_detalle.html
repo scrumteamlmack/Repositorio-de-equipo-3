@@ -1,0 +1,82 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}Detalle de Minuta{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'guarda:guarda_minutas' %}" class="btn btn-outline-secondary">⬅️ Volver al listado</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-success text-white py-3">
+        <h4 class="mb-0">📋 Detalle de Minuta #{{ minuta.id_minuta }}</h4>
+    </div>
+    <div class="card-body p-4">
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Ambiente</label>
+                <p class="fs-5 fw-semibold text-dark">Ambiente {{ minuta.ambiente.num_ambiente }} - {{ minuta.ambiente.tipo_ambiente }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Estado</label>
+                <div>
+                    {% if minuta.estado %}
+                        {% with e=minuta.estado|lower %}
+                            {% if "disponible" in e or "bueno" in e or "bien" in e %}
+                                <span class="badge bg-success px-3 py-2">{{ minuta.estado }}</span>
+                            {% elif "regular" in e %}
+                                <span class="badge bg-warning text-dark px-3 py-2">{{ minuta.estado }}</span>
+                            {% else %}
+                                <span class="badge bg-danger px-3 py-2">{{ minuta.estado }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4 opacity-25">
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Fecha y Hora de Recibo</label>
+                <p class="text-dark"><i class="far fa-calendar-alt me-2"></i>{{ minuta.fecha_hora_recibo|date:"d/m/Y H:i" }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Fecha y Hora de Entrega</label>
+                <p class="text-dark"><i class="far fa-clock me-2"></i>{{ minuta.fecha_hora_entrega|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Guarda de Seguridad</label>
+                <p class="text-dark">{{ minuta.guarda_seguridad_usuario_id_usuario.usuario_id_usuario.p_nombre }} {{ minuta.guarda_seguridad_usuario_id_usuario.usuario_id_usuario.p_apellido }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="text-muted small text-uppercase fw-bold">Responsable (Instructor)</label>
+                <p class="text-dark">{{ minuta.responsable.usuario_id_usuario.p_nombre }} {{ minuta.responsable.usuario_id_usuario.p_apellido }}</p>
+            </div>
+        </div>
+
+        <hr class="my-4 opacity-25">
+
+        <div class="mb-4">
+            <label class="text-muted small text-uppercase fw-bold">Novedad</label>
+            <div class="p-3 bg-light rounded border">
+                {{ minuta.novedad|default:"Sin novedad registrada" }}
+            </div>
+        </div>
+
+        <div class="mb-0">
+            <label class="text-muted small text-uppercase fw-bold">Descripción Adicional</label>
+            <div class="p-3 bg-light rounded border" style="white-space: pre-wrap;">
+                {{ minuta.descripcion_min|default:"Sin descripción adicional" }}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-white py-3">
+        <a href="{% url 'guarda:guarda_minuta_editar' minuta.id_minuta %}" class="btn btn-primary">✏️ Editar Registro</a>
+    </div>
+</div>
+{% endblock %}

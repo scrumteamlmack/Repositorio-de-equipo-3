@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar Incidente - L-MACK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../vista/css/registrar_incidente.css" />
+  <link rel="shortcut icon" href="../resources/fondo oscuro N L-MACK.png" type="image/x-icon">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="../resources/fondo oscuro N L-MACK.png" alt="Logo L-MACK" class="img">
+    </div>
+    <nav>
+      <a href="../index.html">Inicio</a>
+      <a href="../html/login.html">Cerrar Sesión</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Registro de Incidentes</h2>
+
+    <!-- Botón para agregar nuevo incidente -->
+    <div class="acciones">
+      <button class="btn agregar" id="btnAbrirModal">+ Agregar Incidente</button>
+    </div>
+
+    <!-- Tabla CRUD -->
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+  <tr>
+    <th>Id del incidente</th>
+    <th>Descripcion</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th class="ambiente">Ambiente</th>
+    <th>Tipo</th>
+    <th>id del Instructor</th>
+    <th>Acciones</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>Incidente en el aula de sistemas.</td>
+    <td>2025-09-16</td>
+    <td>5:30am</td>
+    <td class="ambiente">701</td>
+    <td>ambientes</td>
+    <td>1021672531</td>
+    <td>
+      <div class="acciones-fila">
+        <button class="btn editar" id="btn">Editar</button>
+        <button class="btn eliminar"id="btn">Eliminar</button>
+      </div>
+    </td>
+  </tr>
+</tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 L-MACK - Registro de Incidentes
+  </footer>
+
+  <!-- Modal (ventana emergente) -->
+  <!-- Modal (ventana emergente) -->
+<div id="modal" class="modal">
+  <div class="modal-contenido">
+    <span class="cerrar" id="btnCerrarModal">&times;</span>
+    <h3>Registrar Incidente</h3>
+    <form id="formIncidente">
+
+      <label for="descripcion">Descripción del Incidente</label>
+      <textarea id="descripcion" name="descripcion" rows="5" placeholder="Describe el incidente con detalle" required></textarea>
+
+      <label for="ambiente">Ambiente del incidente</label>
+      <select name="ambiente" id="ambiente" required>
+        <option value="">Seleccione una opción</option>
+        <option value="701">701</option>
+        <option value="805">805</option>
+        <option value="402">402</option>
+        <option value="Biblioteca">Biblioteca</option>
+      </select>
+
+      <label for="fecha">Fecha del incidente</label>
+      <input type="date" id="fecha" name="fecha" required>
+
+      <label for="hora_incidente">Hora del incidente</label>
+      <input type="time" name="hora_incidente" id="hora_incidente" required>
+
+      <label for="nom_instructor">Nombre del instructor</label>
+      <select name="nom_instructor" id="nom_instructor" required>
+        <option value="">Seleccione una opción</option>
+        <option value="Javier Leonardo Pineda">Javier Leonardo Pineda</option>
+        <option value="Martha Patricia Cuervo">Martha Patricia Cuervo</option>
+        <option value="Maria Angelica Triviño">Maria Angelica Triviño</option>
+        <option value="Nelson Hernan Rodriguez">Nelson Hernan Rodriguez</option>
+      </select>     
+
+      <label for="tipo_incidente">Tipo de incidente</label>
+      <select name="tipo_incidente" id="tipo_incidente" required>
+        <option value="">Seleccione una opción</option>
+        <option value="Accidente">Accidente</option>
+        <option value="Falla técnica">Falla técnica</option>
+        <option value="Robo">Robo</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <button type="submit" class="btn agregar">Registrar</button>
+    </form>
+  </div>
+</div>
+
+  <script>
+    // Modal
+    const modal = document.getElementById("modal");
+    const btnAbrir = document.getElementById("btnAbrirModal");
+    const btnCerrar = document.getElementById("btnCerrarModal");
+
+    btnAbrir.onclick = () => modal.style.display = "flex";
+    btnCerrar.onclick = () => modal.style.display = "none";
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+    // Aquí puedes capturar el formulario
+    document.getElementById("formIncidente").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Incidente registrado (aquí iría la lógica CRUD con PHP/MySQL)");
+      modal.style.display = "none";
+    });
+  </script>
+
+</body>
+</html>

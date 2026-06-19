@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:panel header="Datos generales">
+        <h:form id="formUsuario">
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.PNombre}"
+                                 label="Primer nombre"
+                                 required="true"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.SNombre}"
+                                 label="Segundo nombre"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.PApellido}"
+                                 label="Primer apellido"
+                                 required="true"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.SApellido}"
+                                 label="Segundo apellido"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.tipoDocumento}"
+                                 label="Tipo documento"
+                                 required="true"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+<<<<<<< HEAD
+                    <p:inputText id="numDocumento"
+                                 value="#{usuarioBean.usuario.numDocumento}"
+                                 label="Número documento"
+                                 required="true"
+                                 requiredMessage="El número de documento es obligatorio"
+                                 validatorMessage="El número de documento debe tener entre 6 y 15 dígitos (solo números positivos)">
+                        <f:validateLongRange minimum="100000" maximum="999999999999999"/>
+                    </p:inputText>
+                    <p:message for="numDocumento" display="text"/>
+=======
+                    <p:inputText value="#{usuarioBean.usuario.numDocumento}"
+                                 label="Número documento"
+                                 required="true"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:inputText value="#{usuarioBean.usuario.correo}"
+                                 label="Correo"
+                                 required="true"/>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:selectOneMenu value="#{usuarioBean.rolSeleccionado}">
+                        <f:selectItems value="#{usuarioBean.roles}" var="rol"
+                                       itemLabel="#{rol.nombre}" itemValue="#{rol.idRol}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:password value="#{usuarioBean.usuario.pass}"
+                                label="Contraseña"
+                                feedback="false"
+                                required="#{usuarioBean.usuario.idUsuario == 0}"/>
+                </div>
+            </div>
+
+            <p:commandButton value="Guardar datos básicos"
+                             actionListener="#{usuarioBean.guardarDatosGenerales}"
+                             update="formUsuario perfilRol tablaUsuarios"
+                             process="@form"
+                             styleClass="ui-button-success"/>
+        </h:form>
+    </p:panel>
+
+    <p:panel header="Información específica del rol" style="margin-top:1.5rem;"
+             rendered="#{usuarioBean.mostrarPerfil}">
+        <h:form id="perfilRol">
+            <ui:fragment rendered="#{usuarioBean.rolSeleccionado == 3}">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <p:inputNumber value="#{usuarioBean.aprendiz.programaId}" label="ID Programa" required="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:inputNumber value="#{usuarioBean.aprendiz.fichaId}" label="ID Ficha" required="true"/>
+                    </div>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{usuarioBean.rolSeleccionado == 2}">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <p:inputText value="#{usuarioBean.instructor.email}" label="Correo institucional" required="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+<<<<<<< HEAD
+                        <p:inputText id="telefonoInst"
+                                     value="#{usuarioBean.instructor.telefono}" 
+                                     label="Teléfono"
+                                     validatorMessage="El teléfono debe tener entre 7 y 20 dígitos (solo números)">
+                            <f:validateLength minimum="7" maximum="20"/>
+                            <f:validateRegex pattern="^[0-9]*$"/>
+                        </p:inputText>
+                        <p:message for="telefonoInst" display="text"/>
+=======
+                        <p:inputText value="#{usuarioBean.instructor.telefono}" label="Teléfono"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:inputNumber value="#{usuarioBean.instructor.coordinacionId}" label="ID Coordinación" required="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:selectOneMenu value="#{usuarioBean.instructor.estado}" required="true">
+                            <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                            <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{usuarioBean.rolSeleccionado == 1}">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:inputNumber value="#{usuarioBean.coordinador.coordinacionId}" label="ID Coordinación" required="true"/>
+                    </div>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{usuarioBean.rolSeleccionado == 4}">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <p:selectOneMenu value="#{usuarioBean.guardaSeguridad.turno}" required="true">
+                            <f:selectItem itemLabel="Mañana" itemValue="Mañana"/>
+                            <f:selectItem itemLabel="Tarde" itemValue="Tarde"/>
+                            <f:selectItem itemLabel="Noche" itemValue="Noche"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+<<<<<<< HEAD
+                        <p:calendar id="fechaIngresoGuarda"
+                                    value="#{usuarioBean.guardaSeguridad.fechaIngreso}" 
+                                    showIcon="true"
+                                    pattern="dd/MM/yyyy" 
+                                    label="Fecha ingreso" 
+                                    required="true"
+                                    navigator="true"
+                                    yearRange="c-30:c+0"
+                                    maxdate="#{java.util.Date()}"/>
+                        <p:message for="fechaIngresoGuarda" display="text"/>
+=======
+                        <p:calendar value="#{usuarioBean.guardaSeguridad.fechaIngreso}" showIcon="true"
+                                      pattern="dd/MM/yyyy" label="Fecha ingreso" required="true"/>
+>>>>>>> ac35112eaecad7a929d85524ba6402890ab0acaf
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <p:selectOneMenu value="#{usuarioBean.guardaSeguridad.estado}" required="true">
+                            <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                            <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+            </ui:fragment>
+
+            <p:commandButton value="Guardar formulario del rol"
+                             actionListener="#{usuarioBean.guardarPerfilRol}"
+                             update="perfilRol tablaUsuarios formUsuario"
+                             styleClass="ui-button-primary"/>
+        </h:form>
+    </p:panel>
+</ui:composition>
+

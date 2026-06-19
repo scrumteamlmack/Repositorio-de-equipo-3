@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/layout/template.xhtml">
+
+    <ui:define name="title">Ambientes</ui:define>
+    <ui:define name="moduleTitle">Ambientes de formación</ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmAmbientes">
+            <p:dataTable value="#{ambienteBean.ambientes}" var="amb"
+                         id="tablaAmbientes"
+                         paginator="true" rows="10" styleClass="table table-striped table-hover">
+                <p:column headerText="Número">#{amb.numero}</p:column>
+                <p:column headerText="Capacidad">#{amb.capacidad}</p:column>
+                <p:column headerText="Tipo">#{amb.tipo}</p:column>
+                <p:column headerText="Estado">
+                    <p:tag severity="#{amb.estado eq 'Disponible' ? 'success' : 'warning'}"
+                           value="#{amb.estado}"/>
+                </p:column>
+                <p:column headerText="Acciones" style="width:150px;">
+                    <div style="display: flex; gap: 5px;">
+                        <p:commandButton value="Editar"
+                                         actionListener="#{ambienteBean.editar(amb.idAmbiente)}"
+                                         update=":dlgAmbiente"
+                                         oncomplete="PF('dlgAmbiente').show()"
+                                         styleClass="btn btn-sm btn-info"/>
+                        <p:commandButton value="Eliminar"
+                                         actionListener="#{ambienteBean.eliminar(amb.idAmbiente)}"
+                                         update="tablaAmbientes"
+                                         styleClass="btn btn-sm btn-danger"
+                                         onclick="return confirm('¿Desea eliminar el ambiente?');"/>
+                    </div>
+                </p:column>
+            </p:dataTable>
+
+            <p:commandButton value="Nuevo ambiente"
+                             styleClass="btn btn-primary"
+                             style="margin-top:1rem;"
+                             actionListener="#{ambienteBean.prepararNuevo}"
+                             update=":dlgAmbiente"
+                             oncomplete="PF('dlgAmbiente').show()"/>
+        </h:form>
+
+        <p:dialog widgetVar="dlgAmbiente" header="Ambiente"
+                  modal="true" width="500" id="dlgAmbiente">
+            <h:form>
+                <p:panelGrid columns="2" columnClasses="col-1,col-2" styleClass="ui-fluid">
+                    <p:outputLabel value="Número ambiente"/>
+                    <p:inputNumber value="#{ambienteBean.ambiente.numero}" required="true"/>
+
+                    <p:outputLabel value="Capacidad"/>
+                    <p:inputNumber value="#{ambienteBean.ambiente.capacidad}" required="true"/>
+
+                    <p:outputLabel value="Tipo"/>
+                    <p:inputText value="#{ambienteBean.ambiente.tipo}" required="true"/>
+
+                    <p:outputLabel value="Estado"/>
+                    <p:inputText value="#{ambienteBean.ambiente.estado}" required="true"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Guardar"
+                                 actionListener="#{ambienteBean.guardar}"
+                                 update=":frmAmbientes:tablaAmbientes"
+                                 oncomplete="PF('dlgAmbiente').hide()"
+                                 styleClass="ui-button-success"/>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+

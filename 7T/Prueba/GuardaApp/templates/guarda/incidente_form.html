@@ -1,0 +1,61 @@
+{% extends "guarda/base_guarda.html" %}
+{% block title %}{% if modo == "editar" %}Editar Incidente{% else %}Nuevo Incidente{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; font-weight: 600;">
+        {% if modo == "editar" %}Editar{% else %}Nuevo{% endif %} Incidente
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Fecha</label>
+            <input class="form-control" type="date" name="fecha_incidente" value="{{ incidente.fecha_incidente|date:'Y-m-d'|default:'' }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Hora</label>
+            <input class="form-control" type="time" name="hora_incidente" value="{{ incidente.hora_incidente|time:'H:i'|default:'' }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Ambiente (registrado en el sistema)</label>
+            <select class="form-select" name="ambiente_id" required>
+                <option value="">Seleccione...</option>
+                {% for a in ambientes %}
+                <option value="{{ a.id_ambiente }}" {% if incidente and incidente.ambiente_id == a.id_ambiente %}selected{% endif %}>
+                    {{ a.num_ambiente }} - {{ a.tipo_ambiente }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Tipo de incidente</label>
+            <select class="form-select" name="tipo_inc_id" required>
+                <option value="">Seleccione...</option>
+                {% for t in tipos %}
+                <option value="{{ t.id_tipo_inc }}" {% if incidente and incidente.tipo_inc_id == t.id_tipo_inc %}selected{% endif %}>{{ t.tipo_incidente }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Nivel de gravedad</label>
+            <select class="form-select" name="nivel_gravedad" required>
+                <option value="">Seleccione...</option>
+                {% for nivel in niveles_gravedad %}
+                <option value="{{ nivel }}" {% if incidente and incidente.nivel_gravedad == nivel %}selected{% endif %}>{{ nivel }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Descripcion</label>
+            <textarea class="form-control" rows="3" name="descripcion">{{ incidente.descripcion|default:'' }}</textarea>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'guarda:guarda_incidentes' %}" class="btn btn-secondary">Cancelar</a>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{%block title%}L-MACK{%endblock%}
+
+{% block content %}
+  <div class="landing-content">
+            <h1 class="landing-title">Bienvenido al Sistema de Gestión</h1>
+            <p class="landing-subtitle">
+                Accede fácilmente a tus funciones según tu rol: Instructor, Guarda, Aprendiz o Administrador.
+            </p>
+            <a href="{% url 'login:login' %}" class="landing-btn">Iniciar Sesión</a> 
+            
+        </div>
+{% endblock %}

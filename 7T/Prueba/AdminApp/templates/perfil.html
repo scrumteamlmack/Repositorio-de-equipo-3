@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Mi perfil - L-MACK</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/emac-style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 25px 20px;
+            background-color: var(--dark-green);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-header h3::before {
+            content: "👤";
+            font-size: 28px;
+        }
+        .sidebar-nav { padding: 20px 0; flex: 1; }
+        .sidebar-nav a {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--light-green);
+            color: white;
+            padding-left: 30px;
+        }
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        .sidebar-footer .btn-logout {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .sidebar-footer .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: var(--cream-bg);
+        }
+        .content-wrapper {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .perfil-hero {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .perfil-hero h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+        }
+        .perfil-hero p {
+            margin: 8px 0 0 0;
+            opacity: 0.92;
+        }
+        .perfil-dl dt {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text-gray, #6b7280);
+            margin-bottom: 4px;
+        }
+        .perfil-dl dd {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dark, #1f2937);
+            margin-bottom: 20px;
+            margin-left: 0;
+        }
+        @media (max-width: 768px) {
+            .layout-container { flex-direction: column; }
+            .sidebar { position: static; width: 100%; height: auto; }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>L-MACK</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'admin_panel:admin_index' %}">🏠 Inicio</a>
+            <a href="{% url 'admin_panel:listar_usuarios' %}">👥 Usuarios</a>
+            <a href="{% url 'admin_panel:form_usuario' %}">➕ Crear Usuario</a>
+            <a href="{% url 'admin_panel:listar_fichas' %}">📁 Fichas</a>
+            <a href="{% url 'admin_panel:listar_programas' %}">📚 Programas</a>
+            <a href="{% url 'admin_panel:listar_recursos' %}">💻 Recursos</a>
+            <a href="{% url 'admin_panel:listar_ambientes' %}">🏢 Ambientes</a>
+            <a href="{% url 'admin_panel:listar_asignaciones_ambientes' %}">📅 Asignación Instructores</a>
+            <a href="{% url 'admin_panel:importar_usuarios_csv' %}">📥 Importar CSV</a>
+            <a href="{% url 'admin_panel:perfil' %}" style="background: rgba(255,255,255,0.1); border-left-color: var(--light-green); color: white;">👤 Mi Perfil</a>
+        </nav>
+        <div class="sidebar-footer">
+            <form method="post" action="{% url 'admin_panel:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h1 class="h4 mb-0" style="color: var(--primary-green);">👤 Mi perfil</h1>
+                <a href="{% url 'admin_panel:admin_index' %}" class="btn btn-outline-secondary btn-sm">← Volver al panel</a>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="perfil-hero">
+                <h2>{{ usuario_perfil.nombre_completo }}</h2>
+                <p>ID usuario: {{ usuario_perfil.id }} · {{ usuario_perfil.roles }}</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-color: var(--border-gray, #e5e7eb) !important;">
+                        <h3 class="h6 mb-4" style="color: var(--primary-green);">Datos personales</h3>
+                        <dl class="perfil-dl mb-0">
+                            <dt>Primer nombre</dt>
+                            <dd>{{ usuario_perfil.p_nombre }}</dd>
+                            <dt>Segundo nombre</dt>
+                            <dd>{{ usuario_perfil.s_nombre|default:"—" }}</dd>
+                            <dt>Primer apellido</dt>
+                            <dd>{{ usuario_perfil.p_apellido }}</dd>
+                            <dt>Segundo apellido</dt>
+                            <dd>{{ usuario_perfil.s_apellido|default:"—" }}</dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="border rounded p-4 h-100" style="border-color: var(--border-gray, #e5e7eb) !important;">
+                        <h3 class="h6 mb-4" style="color: var(--primary-green);">Documento y contacto</h3>
+                        <dl class="perfil-dl mb-0">
+                            <dt>Tipo de documento</dt>
+                            <dd>{{ usuario_perfil.tipo_documento }}</dd>
+                            <dt>Número de documento</dt>
+                            <dd>{{ usuario_perfil.num_documento }}</dd>
+                            <dt>Correo institucional</dt>
+                            <dd>{{ usuario_perfil.correo }}</dd>
+                            <dt>Roles en el sistema</dt>
+                            <dd>{{ usuario_perfil.roles }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-muted small mt-4 mb-0">
+                La contraseña no se muestra por seguridad.
+                {% if puede_editar_perfil %}
+                    Puede actualizar sus datos desde <a href="{% url 'admin_panel:editar_usuario' usuario_perfil.id %}">editar su usuario</a>.
+                {% else %}
+                    Si necesita cambiar datos o contraseña, contacte a un administrador.
+                {% endif %}
+            </p>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
