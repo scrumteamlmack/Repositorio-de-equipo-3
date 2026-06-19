@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import dj_database_url
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@-*!0=fn6c==0hso7bt6n)t)o1mxczo(nzg^ts-uk4+w9dy1r6'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-@-*!0=fn6c==0hso7bt6n)t)o1mxczo(nzg^ts-uk4+w9dy1r6')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+
 
 
 # Application definition
@@ -62,6 +66,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'LoginApp.middleware.NoCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,14 +103,30 @@ WSGI_APPLICATION = 'Prueba.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb',
+        'NAME': 'railway',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-
+        'PASSWORD': 'vJNxCtfkHJNYpqlXnwjtSROAaGVriQgc',
+        'HOST': 'thomas.proxy.rlwy.net',
+        'PORT': '27059',
     }
 }
+
+# Configurar base de datos usando variables de entorno si están presentes
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=False
+    )
+elif os.environ.get('MYSQLHOST'):
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('MYSQLDATABASE', 'railway'),
+        'USER': os.environ.get('MYSQLUSER', 'root'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD', 'vJNxCtfkHJNYpqlXnwjtSROAaGVriQgc'),
+        'HOST': os.environ.get('MYSQLHOST', 'thomas.proxy.rlwy.net'),
+        'PORT': os.environ.get('MYSQLPORT', '27059'),
+    }
+
 
 
 # Password validation
@@ -150,6 +171,9 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Almacenamiento y compresión de archivos estáticos en producción
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -162,7 +186,7 @@ EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
 EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = 'dscruzamado111@gmail.com'
-EMAIL_HOST_PASSWORD = 'djwyenenksxtygza'
-DEFAULT_FROM_EMAIL  = 'L-MACK SENA <dscruzamado111@gmail.com>'
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', 'dscruzamado111@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'djwyenenksxtygza')
+DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL', 'L-MACK SENA <dscruzamado111@gmail.com>')
 
